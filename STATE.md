@@ -59,19 +59,36 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
   verified: the alias is the same instance, and builder methods return the *shim* type so
   chaining survives.
 
-### Phase 0 remaining — 3 actionable, 1 blocked
+- **End-to-end injection proven in a live launch.** `runData` with the service jar in
+  `run/mods/` and a real ATM10 mod in `run/mods-from-other-version/`:
 
-| Item | Blocked on |
+  ```
+  Found additional transformation services from discovery services: [translation-layer-spike.jar]
+         0 - translationlayer.spi.TranslationLocator from translation-layer-spike.jar
+  [translation-layer] found 1 jar(s) in mods-from-other-version
+  [translation-layer] injecting accelerated-decay-neoforge-21.0.0.jar
+  ```
+
+  The injected mod then reached dependency resolution and failed only on an unrelated missing
+  dependency (`architectury`) — i.e. it loaded. Negative control: with the service jar
+  removed, the mod is not found at all.
+
+- **Shim runtime linkage proven.** A real `@Mod` bundling `net/minecraftforge/**` exercised
+  all three shapes under the live module layers. `MinecraftForge.EVENT_BUS == NeoForge.EVENT_BUS`
+  returned **true** — the shim *is* NeoForge's bus, not a wrapper, so translated listeners
+  land on the bus NeoForge actually dispatches from. No `NoClassDefFoundError`, no
+  split-package rejection.
+
+### Phase 0 remaining — 3 items, none blocked
+
+| Item | Notes |
 |---|---|
-| **Pick the remapping toolchain** — the critical path, see gotcha #1 | nothing |
-| Hand-port one trivial mod both directions as ground truth | nothing |
-| Confirm remaining **(verify)** rows in ROADMAP §4 | nothing |
-| Prove `addPath` injection **and** shim runtime linkage in a live launch | **owner** — needs EULA acceptance or a display |
+| **Pick the remapping toolchain** | The critical path — see gotcha #1 |
+| Hand-port one trivial mod both directions | Ground truth for the transformer |
+| Confirm remaining **(verify)** rows in ROADMAP §4 | Several already retired by mining |
 
-The live-launch check is not urgent: both questions it would settle are already answered
-statically (SPI from FML source, shim linkage from compilation plus the empty-package
-finding), and Phase 1 has to launch the game anyway. **What compilation cannot prove is
-runtime linkage under the real module layers** — that stays open until then.
+Nothing now requires the owner. The EULA question is moot — `runData` needs no EULA
+(gotcha #11).
 
 **Next: the remapper.** Everything it needs (Mojang official mappings, SRG, Parchment) is a
 public download.
@@ -119,6 +136,16 @@ public download.
 9. **`net/minecraftforge/**` is free real estate.** NeoForge 21.1.248 and FML 4.0.43 ship
    *zero* classes in that package, so `forge-compat` owns it outright with no split-package
    conflict. This is what makes the shim-first architecture viable.
+
+10. **Log from the SERVICE layer with `LoggerFactory.getLogger(...)`, not
+    `ILaunchContext.LOGGER`.** The latter produced no visible output, which makes a working
+    locator look identical to one that never ran — an expensive thing to debug. A locally
+    obtained slf4j logger reaches the console fine.
+
+11. **`runData` is the cheap live-launch harness.** Datagen exercises the full FML boot,
+    including `ModDirTransformerDiscoverer` scanning `run/mods/`, runs headless, and exits on
+    its own in ~10s. **No EULA required** — only the dedicated server needs one. Use this for
+    Phase 1 verification rather than a client or server launch.
 
 ---
 

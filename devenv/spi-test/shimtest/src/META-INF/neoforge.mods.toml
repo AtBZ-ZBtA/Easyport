@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="CC0-1.0"
+
+[[mods]]
+modId="shimtest"
+version="0.0.1"
+displayName="Shim Linkage Test"
+description="Phase 0 spike: proves forge-compat shims link at runtime."
+
+[[dependencies.shimtest]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1,)"
+    ordering="NONE"
+    side="BOTH"

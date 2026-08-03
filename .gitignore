@@ -42,3 +42,7 @@ gradle-app.setting
 *.iml
 .DS_Store
 Thumbs.db
+
+# Live-launch test fixtures (contain third-party mods)
+devenv/**/run/
+devenv/spi-test/parked/

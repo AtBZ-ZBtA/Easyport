@@ -379,8 +379,10 @@ transformer.** Under-building it is the single decision that would blow up the s
 - [x] Feature-drift methodology settled (corroboration threshold + member-level matching)
 - [x] **Mod-discovery SPI go/no-go: GREEN** — same-launch injection from the mods folder,
       verified in FML 4.0.43 source and tested against a real service jar
-- [ ] Live-launch check: `addPath` injection **and** shim runtime linkage under the real
-      module layers (needs EULA acceptance or a display — owner decision)
+- [x] **Live-launch check passed** — `addPath` injection and shim runtime linkage both proven
+      via `runData` (headless, no EULA). Locator observed discovering, scanning and injecting;
+      negative control confirms attribution. `MinecraftForge.EVENT_BUS == NeoForge.EVENT_BUS`
+      is `true` under the real module layers.
 - [ ] Confirm every **(verify)** item in §4 against real sources
 - [ ] Hand-port one trivial mod both directions; record every change as ground truth
 - [x] **Rule mining works** — all 288 pairs mined, 231 rules scoring ≥ 1.0

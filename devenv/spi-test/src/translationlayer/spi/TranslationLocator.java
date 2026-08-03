@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforgespi.ILaunchContext;
 import net.neoforged.neoforgespi.locating.IDiscoveryPipeline;
@@ -29,6 +32,15 @@ import net.neoforged.neoforgespi.locating.ModFileDiscoveryAttributes;
  */
 public class TranslationLocator implements IModFileCandidateLocator {
 
+    /**
+     * Logger obtained the same way TransformerDiscovererConstants does.
+     *
+     * A locally-obtained slf4j logger reaches the console from the SERVICE module layer;
+     * ILaunchContext.LOGGER did not produce visible output when tried, which made a working
+     * locator indistinguishable from one that never ran. Prefer this.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(TranslationLocator.class);
+
     /** Folder users drop foreign-version mods into, relative to the game directory. */
     private static final String INBOX = "mods-from-other-version";
 
@@ -37,7 +49,7 @@ public class TranslationLocator implements IModFileCandidateLocator {
         Path inbox = FMLPaths.GAMEDIR.get().resolve(INBOX);
 
         if (!Files.isDirectory(inbox)) {
-            ILaunchContext.LOGGER.info("[translation-layer] no {} folder; nothing to do", INBOX);
+            LOGGER.info("[translation-layer] no {} folder; nothing to do", INBOX);
             return;
         }
 
@@ -47,20 +59,20 @@ public class TranslationLocator implements IModFileCandidateLocator {
                 .filter(p -> p.getFileName().toString().endsWith(".jar"))
                 .forEach(jars::add);
         } catch (IOException e) {
-            ILaunchContext.LOGGER.error("[translation-layer] could not read {}", inbox, e);
+            LOGGER.error("[translation-layer] could not read {}", inbox, e);
             return;
         }
 
-        ILaunchContext.LOGGER.info("[translation-layer] found {} jar(s) in {}", jars.size(), INBOX);
+        LOGGER.info("[translation-layer] found {} jar(s) in {}", jars.size(), INBOX);
 
         for (Path jar : jars) {
             // context.isLocated guards against handing the pipeline something another locator
             // already claimed, which would surface as a duplicate-mod error.
             if (context.isLocated(jar)) {
-                ILaunchContext.LOGGER.debug("[translation-layer] already located, skipping {}", jar.getFileName());
+                LOGGER.debug("[translation-layer] already located, skipping {}", jar.getFileName());
                 continue;
             }
-            ILaunchContext.LOGGER.info("[translation-layer] injecting {}", jar.getFileName());
+            LOGGER.info("[translation-layer] injecting {}", jar.getFileName());
             pipeline.addPath(jar, ModFileDiscoveryAttributes.DEFAULT, IncompatibleFileReporting.WARN_ALWAYS);
         }
     }
