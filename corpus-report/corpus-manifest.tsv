@@ -1,0 +1,913 @@
+side	modId	displayName	version	loader	tier	classes	forgeRefs	neoRefs	mixinConfigs	mixinClasses	hasAT	hasCoremod	nestedJars	sizeKB	file
+source	absentbydesign	Absent By Design Mod	1.9.0	FORGE	TRIVIAL	10	8	0	0	0	true	false	0	1643	absentbydesign-1.20.1-1.9.0.jar
+source	ad_astra	Ad Astra	1.15.20	FORGE	NIGHTMARE	556	12	0	2	46	false	false	0	7332	ad_astra-forge-1.20.1-1.15.20.jar
+source	ad_astra_giselle_addon	Ad Astra: Giselle Addon	6.20	FORGE	HARD	267	24	0	0	8	false	false	0	482	Ad-Astra-Giselle-Addon-forge-1.20.1-6.20.jar
+source	additional_lights	Additional Lights	2.1.7	FORGE	TRIVIAL	33	4	0	0	0	false	false	0	517	additional_lights-1.20.1-2.1.7.jar
+source	additionallanterns	Additional Lanterns	1.1.2	FORGE	TRIVIAL	16	2	0	0	0	true	false	0	3083	additionallanterns-1.1.2-forge-mc1.20.2.jar
+source	addonslib	Addons Lib	1.20.1-1.5	FORGE	TRIVIAL	37	28	0	0	0	false	false	0	95	addonslib-1.20.1-1.5.jar
+source	advanced_ae	Advanced AE	1.2.7-1.20.1	FORGE	HARD	308	70	0	2	13	true	false	0	2433	AdvancedAE-1.2.7-1.20.1.jar
+source	advancedperipherals	Advanced Peripherals	0.7.46r	FORGE	MODERATE	248	128	0	0	0	true	false	0	869	AdvancedPeripherals-1.20.1-0.7.46r.jar
+source	advgenerators	Advanced Generators	1.6.0.6	FORGE	MODERATE	251	100	0	0	0	false	false	0	893	advgenerators-1.6.0.6-mc1.20.1.jar
+source	ae2	Applied Energistics 2	15.4.9	FORGE	HARD	1832	282	0	2	19	true	false	0	8226	appliedenergistics2-forge-15.4.9.jar
+source	ae2additions	AE Additions	5.1.0	FORGE	HARD	185	44	0	1	1	true	false	0	754	AEAdditions-1.20.1-5.1.0.jar
+source	ae2insertexportcard	AE2 Insert Export Card	1.20.1-1.3.0	FORGE	HARD	20	12	0	1	3	true	false	0	208	ae2insertexportcard-1.20.1-1.3.0.jar
+source	ae2things	AE2 Things	1.2.1	FORGE	HARD	13	5	0	2	1	false	false	0	69	AE2-Things-1.2.1.jar
+source	ae2wtlib	AE2WTLib	15.3.0-forge	FORGE	HARD	115	6	0	2	4	false	false	0	222	ae2wtlib-15.3.0-forge.jar
+source	aeinfinitybooster	AEInfinityBooster	1.20.1-1.0.0+51	FORGE	HARD	12	8	0	1	5	false	false	0	25	AEInfinityBooster-1.20.1-1.0.0+51.jar
+source	aether	The Aether	1.20.1-1.5.2-neoforge	FORGE	NIGHTMARE	977	454	0	1	67	true	false	4	38814	aether-1.20.1-1.5.2-neoforge.jar
+source	aiimprovements	AI-Improvements	0.5.2	FORGE	TRIVIAL	20	8	0	0	0	true	false	0	28	AI-Improvements-1.20-0.5.2.jar
+source	aiotbotania	AIOT Botania	1.20.1-4.0.6	FORGE	TRIVIAL	67	40	0	0	0	true	false	0	192	aiotbotania-1.20.1-4.0.6.jar
+source	alchemistry	Alchemistry	2.3.4	FORGE	MODERATE	201	106	0	0	0	true	false	0	3568	alchemistry-1.20.1-2.3.4.jar
+source	alchemylib	AlchemyLib	1.0.30	FORGE	TRIVIAL	69	26	0	0	0	true	false	0	98	alchemylib-1.20.1-1.0.30.jar
+source	allthearcanistgear	All The Arcanist Gear	1.20.1-20.0.0	FORGE	TRIVIAL	28	18	0	1	0	false	false	0	109	allthearcanistgear-1.20.1-20.0.0.jar
+source	allthecompressed	AllTheCompressed	3.0.2	FORGE	TRIVIAL	25	12	0	0	0	false	false	0	3270	allthecompressed-1.20.1-3.0.2.jar
+source	alltheleaks	All The Leaks	1.0.7+1.20.1-forge	FORGE	NIGHTMARE	308	107	0	1	146	true	false	2	1145	alltheleaks-1.0.7+1.20.1-forge.jar
+source	allthemodium	Allthemodium	2.5.6	FORGE	HARD	176	100	0	1	1	true	false	0	1770	allthemodium-1.20.1-47.1.25-2.5.6.jar
+source	alltheores	AllTheOres	2.2.4	FORGE	TRIVIAL	39	18	0	0	0	true	false	0	1048	alltheores-1.20.1-47.1.3-2.2.4.jar
+source	allthetweaks	AllTheTweaks	2.3.2	FORGE	HARD	80	22	0	1	5	true	false	0	4702	allthetweaks-1.20.1-47.2.20-2.3.2.jar
+source	allthewizardgear	All The Wizard Gear	1.20.1-1.1.4	FORGE	HARD	18	15	0	1	1	false	false	0	117	allthewizardgear-1.20.1-1.1.4.jar
+source	almostunified	AlmostUnified	1.20.1-0.10.1	FORGE	HARD	111	2	0	1	8	false	false	0	212	almostunified-forge-1.20.1-0.10.1.jar
+source	amendments	Amendments	1.20-2.2.3	FORGE	NIGHTMARE	250	9	0	2	54	true	false	0	1262	amendments-1.20-2.2.3.jar
+source	angelring	Angel Ring 2	2.2.3	FORGE	TRIVIAL	35	32	0	0	0	false	false	0	116	angelring-1.20.1-2.3.1.jar
+source	apotheosis	Apotheosis	7.4.8	FORGE	NIGHTMARE	522	213	0	1	31	true	true	0	2738	Apotheosis-1.20.1-7.4.8.jar
+source	appbot	Applied Botanics	1.5.1	FORGE	HARD	57	10	0	1	4	false	false	0	241	applied-botanics-forge-1.5.1.jar
+source	appflux	AppliedFlux	1.20-1.3.4-forge	FORGE	HARD	82	27	0	2	15	false	false	0	244	AppliedFlux-1.20-1.3.4-forge.jar
+source	appleskin	AppleSkin	2.5.1+mc1.20.1	FORGE	TRIVIAL	29	13	0	0	0	false	false	0	46	appleskin-forge-mc1.20.1-2.5.1.jar
+source	appmek	Applied Mekanistics	1.4.2	FORGE	TRIVIAL	74	43	0	0	0	false	false	0	174	Applied-Mekanistics-1.4.2.jar
+source	aquaculture	Aquaculture 2	2.5.5	FORGE	TRIVIAL	120	76	0	0	0	true	false	0	587	Aquaculture-1.20.1-2.5.5.jar
+source	architectury	Architectury	9.2.14	FORGE	HARD	382	131	0	2	19	true	false	0	566	architectury-9.2.14-forge.jar
+source	ars_creo	Ars Creo	4.3.0	FORGE	TRIVIAL	32	17	0	1	0	false	false	0	70	ars_creo-1.20.1-4.3.0.jar
+source	ars_elemental	Ars Elemental	0.6.7.8	FORGE	HARD	273	138	0	1	15	true	false	0	1546	ars_elemental-1.20.1-0.6.7.8.jar
+source	ars_nouveau	Ars Nouveau	4.12.7	FORGE	NIGHTMARE	1465	543	0	1	32	true	false	2	12138	ars_nouveau-1.20.1-4.12.7-all.jar
+source	ars_ocultas	Ars Ocultas	1.2.2	FORGE	TRIVIAL	31	21	0	0	0	true	false	1	209	ars_ocultas-1.20.1-1.2.2-all.jar
+source	arseng	Ars Énergistique	1.2.0	FORGE	HARD	55	29	0	1	9	false	false	0	143	arseng-1.2.0.jar
+source	artifacts	Artifacts	9.5.16	FORGE	HARD	177	17	0	2	24	true	false	0	830	artifacts-forge-9.5.16.jar
+source	athena	Athena	3.1.2	FORGE	HARD	52	7	0	2	2	false	false	0	89	athena-forge-1.20.1-3.1.2.jar
+source	attributefix	AttributeFix	21.0.4	FORGE	HARD	9	2	0	1	1	false	false	0	19	AttributeFix-Forge-1.20.1-21.0.4.jar
+source	attributeslib	Apothic Attributes	1.3.7	FORGE	NIGHTMARE	112	31	0	1	17	true	true	0	222	ApothicAttributes-1.20.1-1.3.7.jar
+source	balm	Balm	7.3.37	FORGE	HARD	399	62	0	1	16	false	false	1	576	balm-forge-1.20.1-7.3.37-all.jar
+source	bambooeverything	Bamboo Everything	3.0.3+mc1.20.1	FORGE	TRIVIAL	14	1	0	0	0	true	false	0	171	BambooEverything-forge-3.0.3+mc1.20.1.jar
+source	bcc	Better Compatibility Checker	4.0.8	FORGE	HARD	20	5	0	2	6	false	false	0	25	BetterCompatibilityChecker-forge-4.0.8+mc1.20.1.jar
+source	bdlib	BdLib	1.27.0.8	FORGE	HARD	579	187	0	0	5	false	false	0	1229	bdlib-1.27.0.8-mc1.20.1.jar
+source	betteradvancements	Better Advancements	0.4.2.25	FORGE	TRIVIAL	36	8	0	0	0	true	false	0	95	BetterAdvancements-Forge-1.20.1-0.4.2.25.jar
+source	betterdeserttemples	YUNG's Better Desert Temples	1.20-Forge-3.0.3	FORGE	HARD	57	7	0	2	9	false	false	0	896	YungsBetterDesertTemples-1.20-Forge-3.0.3.jar
+source	betterdungeons	YUNG's Better Dungeons	1.20-Forge-4.0.4	FORGE	HARD	70	8	0	2	8	false	false	0	773	YungsBetterDungeons-1.20-Forge-4.0.4.jar
+source	betterendisland	YUNG's Better End Island	1.20-Forge-2.0.6	FORGE	HARD	40	4	0	2	9	false	false	0	378	YungsBetterEndIsland-1.20-Forge-2.0.6.jar
+source	betterf3	BetterF3	7.0.2	FORGE	HARD	52	4	0	2	11	true	false	0	457	BetterF3-7.0.2-Forge-1.20.1.jar
+source	betterfortresses	YUNG's Better Nether Fortresses	1.20-Forge-2.0.6	FORGE	HARD	31	6	0	2	6	false	false	0	604	YungsBetterNetherFortresses-1.20-Forge-2.0.6.jar
+source	betterjungletemples	YUNG's Better Jungle Temples	1.20-Forge-2.0.5	FORGE	HARD	38	5	0	2	8	false	false	0	787	YungsBetterJungleTemples-1.20-Forge-2.0.5.jar
+source	bettermineshafts	YUNG's Better Mineshafts	1.20-Forge-4.0.4	FORGE	HARD	50	6	0	2	4	false	false	0	481	YungsBetterMineshafts-1.20-Forge-4.0.4.jar
+source	betteroceanmonuments	YUNG's Better Ocean Monuments	1.20-Forge-3.0.4	FORGE	HARD	33	5	0	2	8	false	false	0	1009	YungsBetterOceanMonuments-1.20-Forge-3.0.4.jar
+source	betterp2p	Better P2P	1.5.0	FORGE	HARD	124	2	0	2	1	false	false	0	256	betterp2p-1.5.0-forge.jar
+source	betterstrongholds	YUNG's Better Strongholds	1.20-Forge-4.0.3	FORGE	HARD	36	7	0	2	2	false	false	0	462	YungsBetterStrongholds-1.20-Forge-4.0.3.jar
+source	betterwitchhuts	YUNG's Better Witch Huts	1.20-Forge-3.0.3	FORGE	HARD	24	5	0	2	5	false	false	0	174	YungsBetterWitchHuts-1.20-Forge-3.0.3.jar
+source	bhc	Baubley Heart Canisters	1.20.1-1.1.1	FORGE	TRIVIAL	42	30	0	0	0	false	false	0	121	baubley-heart-canisters-1.20.1-1.1.1.jar
+source	bigreactors	Extreme Reactors	1.20.1-2.0.94	FORGE	MODERATE	488	233	0	0	0	true	false	0	2500	ExtremeReactors2-1.20.1-2.0.94.jar
+source	biomesoplenty	Biomes O' Plenty	19.0.0.96	FORGE	HARD	325	11	0	2	2	true	false	0	21856	BiomesOPlenty-forge-1.20.1-19.0.0.96.jar
+source	blockui	UI Library Mod	1.20.1-1.0.194	FORGE	TRIVIAL	121	27	0	0	0	true	false	0	381	blockui-1.20.1-1.0.194.jar
+source	bloodmagic	Blood Magic	3.3.3-45	FORGE	MODERATE	829	355	0	1	0	true	false	0	14081	bloodmagic-1.20.1-3.3.3-45.jar
+source	blue_skies	Blue Skies	1.3.31	FORGE	NIGHTMARE	1040	308	0	1	19	true	true	0	81605	blue_skies-1.20.1-1.3.31.jar
+source	blueflame	Blue Flame Burning	1.20.0-1.0.3	FORGE	HARD	17	13	0	0	5	false	false	0	25	blueflame-1.20.0-1.0.3.jar
+source	bookshelf	Bookshelf	20.2.13	FORGE	HARD	180	14	0	2	24	false	false	0	335	Bookshelf-Forge-1.20.1-20.2.13.jar
+source	botania	Botania	1.20.1-450-FORGE	FORGE	NIGHTMARE	1367	75	0	2	84	true	false	0	11909	Botania-1.20.1-450-FORGE.jar
+source	botanypots	BotanyPots	13.0.41	FORGE	TRIVIAL	71	8	0	0	0	false	false	0	1032	BotanyPots-Forge-1.20.1-13.0.41.jar
+source	botanytrees	BotanyTrees	9.0.19	FORGE	TRIVIAL	3	1	0	0	0	false	false	0	255	BotanyTrees-Forge-1.20.1-9.0.19.jar
+source	botarium	Botarium	2.3.4	FORGE	TRIVIAL	90	34	0	0	0	false	false	0	153	botarium-forge-1.20.1-2.3.4.jar
+source	brandonscore	Brandon's Core	3.2.1.302	FORGE	HARD	309	83	0	2	5	true	false	0	1326	BrandonsCore-1.20.1-3.2.1.302-universal.jar
+source	buildinggadgets2	Building Gadgets 2	1.0.8	FORGE	MODERATE	153	77	0	0	0	true	false	0	3743	buildinggadgets2-1.0.8.jar
+source	bwncr	Bad Wither No Cookie Reloaded	3.17.2	FORGE	TRIVIAL	9	4	0	0	0	false	false	0	27	bwncr-forge-1.20.1-3.17.2.jar
+source	cabletiers	Cable Tiers	1.20.1-1.2.2	FORGE	HARD	82	36	0	1	2	true	false	0	291	cabletiers-1.20.1-1.2.2.jar
+source	caelus	Caelus API	3.2.0+1.20.1	FORGE	HARD	13	6	0	1	6	false	false	0	39	caelus-forge-3.2.0+1.20.1.jar
+source	cataclysm	cataclysm	3.16	FORGE	HARD	1200	504	0	1	23	true	false	0	124993	L_Enders_Cataclysm-3.16.jar
+source	caupona	Caupona	1.20.1-0.4.13	FORGE	HARD	312	182	0	1	3	true	false	0	2285	caupona-1.20.1-0.4.13.jar
+source	cfm	MrCrayfish's Furniture Mod	7.0.0-pre36	FORGE	HARD	148	78	0	1	2	true	false	0	2552	cfm-forge-1.20.1-7.0.0-pre36.jar
+source	charginggadgets	Charging Gadgets	1.11.0	FORGE	TRIVIAL	24	18	0	0	0	false	false	0	66	charginggadgets-1.11.0.jar
+source	charmofundying	Charm of Undying	6.5.0+1.20.1	FORGE	HARD	23	5	0	1	1	false	false	1	165	charmofundying-forge-6.5.0+1.20.1.jar
+source	chemlib	ChemLib	2.0.19	FORGE	TRIVIAL	59	35	0	0	0	false	false	0	13292	chemlib-1.20.1-2.0.19.jar
+source	chimes	Chimes	2.0.1	FORGE	TRIVIAL	39	30	0	0	0	false	false	0	12153	Chimes-v2.0.1-1.20.1.jar
+source	chipped	Chipped	3.0.7	FORGE	HARD	50	4	0	1	2	false	false	0	14707	chipped-forge-1.20.1-3.0.7.jar
+source	cleanswing	Clean Swing Through Grass	1.8	FORGE	TRIVIAL	1	1	0	0	0	true	false	0	8	cleanswing-1.20-1.8.jar
+source	clickadv	clickadv mod	1.20.1-3.8	FORGE	HARD	9	5	0	1	2	true	false	0	15	clickadv-1.20.1-3.8.jar
+source	cloth_config	Cloth Config v10 API	11.1.136	FORGE	MODERATE	633	91	0	0	0	true	false	0	1153	cloth-config-11.1.136-forge.jar
+source	clumps	Clumps	12.0.0.4	FORGE	HARD	15	4	0	1	2	false	false	0	19	Clumps-forge-1.20.1-12.0.0.4.jar
+source	codechickenlib	CodeChicken Lib	4.4.0.516	FORGE	HARD	704	81	0	2	5	true	false	0	1437	CodeChickenLib-1.20.1-4.4.0.516-universal.jar
+source	cofh_core	CoFH Core	11.0.2	FORGE	HARD	625	216	0	2	10	true	false	0	1474	cofh_core-1.20.1-11.0.2.56.jar
+source	colorfulhearts	Colorful Hearts	4.3.16	FORGE	HARD	62	13	0	2	3	true	false	0	119	colorfulhearts-forge-1.20.1-4.3.16.jar
+source	colorwheel	Colorwheel	1.0.0+mc1.20.1	FORGE	HARD	151	6	0	2	23	false	false	0	334	colorwheel-forge-1.0.0+mc1.20.1.jar
+source	comforts	Comforts	6.4.0+1.20.1	FORGE	HARD	59	17	0	1	3	false	false	1	373	comforts-forge-6.4.0+1.20.1.jar
+source	commoncapabilities	CommonCapabilities	2.9.9	FORGE	MODERATE	158	104	0	0	0	true	false	0	245	CommonCapabilities-1.20.1-2.9.9.jar
+source	computercraft	CC: Tweaked	1.113.1	FORGE	MODERATE	1189	50	0	0	0	true	false	2	2991	cc-tweaked-1.20.1-forge-1.113.1.jar
+source	computercraft	CC: Tweaked	1.116.1	FORGE	MODERATE	1185	45	0	0	0	true	false	2	3007	cc-tweaked-1.20.1-forge-1.116.1.jar
+source	configuration	Configuration	3.1.0	FORGE	HARD	216	3	0	1	3	true	false	0	429	configuration-forge-1.20.1-3.1.0.jar
+source	connectedglass	Connected Glass	1.1.14	FORGE	TRIVIAL	21	5	0	0	0	false	false	0	853	connectedglass-1.1.14-forge-mc1.20.1.jar
+source	connectivity	Connectivity Mod	1.20.1-7.2	FORGE	NIGHTMARE	71	6	0	1	30	true	false	0	109	connectivity-1.20.1-7.2.jar
+source	constructionwand	Construction Wand	1.20.1-2.11	FORGE	TRIVIAL	72	28	0	0	0	false	false	0	205	constructionwand-1.20.1-2.11.jar
+source	controlling	Controlling	12.0.2	FORGE	HARD	39	8	0	2	5	true	false	0	112	Controlling-forge-1.20.1-12.0.2.jar
+source	cookingforblockheads	CookingForBlockheads	16.0.14	FORGE	MODERATE	210	13	0	1	0	false	false	0	818	cookingforblockheads-forge-1.20.1-16.0.14.jar
+source	corail_woodcutter	Corail Woodcutter	3.0.6	FORGE	TRIVIAL	47	20	0	0	0	true	false	0	319	corail_woodcutter-1.20.1-3.0.6.jar
+source	corgilib	CorgiLib	4.0.1.3	FORGE	HARD	328	11	0	2	10	true	false	0	4170	CorgiLib-forge-1.20.1-4.0.1.3.jar
+source	corn_delight	Corn Delight	1.1.9-1.20.1	FORGE	TRIVIAL	21	14	0	0	0	false	false	0	168	corn_delight-1.1.9-1.20.1.jar
+source	cosmeticarmorreworked	CosmeticArmorReworked	1.20.1-v1a	FORGE	TRIVIAL	40	27	0	0	0	false	false	0	86	cosmeticarmorreworked-1.20.1-v1a.jar
+source	crafting_on_a_stick	Crafting On A Stick	1.1.5	FORGE	TRIVIAL	22	17	0	0	0	false	false	0	53	crafting-on-a-stick-1.20.1-1.1.5.jar
+source	craftingtweaks	CraftingTweaks	18.2.6	FORGE	TRIVIAL	84	2	0	1	0	false	false	0	225	craftingtweaks-forge-1.20.1-18.2.6.jar
+source	crash_assistant	Crash Assistant	1.10.10	FORGE	NIGHTMARE	211	2	0	0	0	false	true	2	937	CrashAssistant-forge-1.19-1.20.1-1.10.10.jar
+source	crashutilities	Crash Utilities	8.1.4	FORGE	TRIVIAL	96	34	0	0	0	true	false	0	227	crashutilities-8.1.4.jar
+source	create	Create	6.0.6	FORGE	NIGHTMARE	2625	940	0	1	54	true	false	4	18324	create-1.20.1-6.0.6.jar
+source	create_enchantment_industry	Create Enchantment Industry	1.3.3-for-create-6.0.6	FORGE	HARD	141	71	0	1	20	true	false	0	476	create_enchantment_industry-1.3.3-for-create-6.0.6.jar
+source	create_jetpack	Create Jetpack	4.4.2	FORGE	TRIVIAL	22	9	0	0	0	false	false	1	224	create_jetpack-forge-4.4.2.jar
+source	create_new_age	Create: New Age	1.1.4	FORGE	HARD	122	35	0	1	1	false	false	0	589	create-new-age-forge-1.20.1-1.1.4.jar
+source	createaddition	Create Crafts & Additions	1.20.1-1.3.2	FORGE	HARD	186	72	0	1	3	false	false	0	1546	createaddition-1.20.1-1.3.2.jar
+source	createoreexcavation	Create Ore Excavation	1.6.4	FORGE	TRIVIAL	131	30	0	0	0	false	false	0	422	createoreexcavation-1.20-1.6.4.jar
+source	creeperoverhaul	Creeper Overhaul	3.0.2	FORGE	HARD	49	4	0	1	1	true	false	0	1422	creeperoverhaul-3.0.2-forge.jar
+source	cristellib	Cristel Lib	1.1.6	FORGE	HARD	29	4	0	2	2	true	false	0	421	cristellib-1.1.6-forge.jar
+source	croptopia	Croptopia	3.0.4	FORGE	HARD	70	16	0	1	6	true	false	0	2050	Croptopia-1.20.1-FORGE-3.0.4.jar
+source	crystalix	Crystalix	1.3.5	FORGE	TRIVIAL	43	20	0	0	0	false	false	0	1034	crystalix-1.3.5_forge_1.20.1.jar
+source	ctov	ChoiceTheorem's Overhauled Village	3.4.14	FORGE	TRIVIAL	3	1	0	2	0	false	false	0	6614	[forge]ctov-3.4.14.jar
+source	cucumber	Cucumber Library	7.0.15	FORGE	HARD	129	57	0	1	1	true	false	0	263	Cucumber-1.20.1-7.0.15.jar
+source	cupboard	Cupboard utilities	1.20.1-2.7	FORGE	HARD	16	5	0	1	5	true	false	0	25	cupboard-1.20.1-2.7.jar
+source	curios	Curios API	5.14.1+1.20.1	FORGE	HARD	143	85	0	1	15	true	false	0	388	curios-forge-5.14.1+1.20.1.jar
+source	cyclopscore	Cyclops Core	1.21.1	FORGE	MODERATE	589	200	0	0	0	true	false	0	890	CyclopsCore-1.20.1-1.21.1.jar
+source	dankstorage	Dank Storage	15	FORGE	HARD	110	17	0	2	6	true	false	0	238	dankstorage-forge-1.20.1-15.jar
+source	darkmodeeverywhere	DarkModeEverywhere	1.20.1-1.2.4	FORGE	HARD	13	6	0	1	3	false	false	0	30	DarkModeEverywhere-1.20.1-1.2.4.jar
+source	darkpaintings	DarkPaintings	17.0.5	FORGE	TRIVIAL	3	1	0	0	0	false	false	0	51	DarkPaintings-Forge-1.20.1-17.0.5.jar
+source	darkutils	DarkUtilities	17.0.5	FORGE	HARD	26	2	0	1	2	false	false	0	171	DarkUtilities-Forge-1.20.1-17.0.5.jar
+source	deeperdarker	Deeper and Darker	1.3.3	FORGE	HARD	180	99	0	2	8	true	false	0	17426	deeperdarker-forge-1.20.1-1.3.3.jar
+source	deepresonance	DeepResonance	1.20-5.0.4	FORGE	TRIVIAL	127	72	0	0	0	false	false	0	795	deepresonance-1.20-5.0.4.jar
+source	defaultsettings	DefaultSettings	4.0.7	FORGE	TRIVIAL	27	5	0	0	0	true	false	0	93	DefaultSettings-1.20.x-4.0.7-Forge.jar
+source	delightful	Delightful	3.7.6	FORGE	MODERATE	192	68	0	0	0	true	false	0	1479	Delightful-1.20.1-3.7.6.jar
+source	despawntimers	Mob Despawn Timers	3.0.1	FORGE	NIGHTMARE	2	2	0	1	0	true	true	0	5	MobDespawnTimers-1.20.1-3.0.1.jar
+source	dimstorage	DimStorage	8.0.1	FORGE	TRIVIAL	70	52	0	0	0	true	false	0	169	DimStorage-1.20.1-8.0.1.jar
+source	ding	Ding	1.4.1	FORGE	HARD	8	3	0	1	1	false	false	0	18	Ding-1.20.1-Forge-1.4.1.jar
+source	domum_ornamentum	Domum Ornamentum	1.20.1-1.0.291-snapshot	FORGE	MODERATE	285	97	0	0	0	true	false	0	1114	domum_ornamentum-1.20.1-1.0.291-snapshot-universal.jar
+source	draconicevolution	Draconic Evolution	3.1.2.621	FORGE	HARD	648	287	0	2	6	true	false	0	5795	Draconic-Evolution-1.20.1-3.1.2.621-universal.jar
+source	dungeoncrawl	Dungeon Crawl	2.3.15	FORGE	MODERATE	163	24	0	0	0	true	false	0	740	Dungeon Crawl-1.20.1-2.3.15.jar
+source	dungeons_arise	When Dungeons Arise	2.1.58-1.20.x	FORGE	TRIVIAL	6	3	0	0	0	false	false	0	8556	DungeonsArise-1.20.x-2.1.58-release.jar
+source	durabilitytooltip	Durability Tooltip	1.1.6	FORGE	TRIVIAL	7	2	0	0	0	false	false	0	21	durabilitytooltip-1.1.6-forge-mc1.20.jar
+source	dyenamics	Dyenamics	1.20.1-3.2.0	FORGE	TRIVIAL	67	49	0	0	0	true	false	0	1135	dyenamics-1.20.1-3.2.0.jar
+source	dyenamicsandfriends	Dyenamics and Friends	1.20.1-1.9.3	FORGE	TRIVIAL	71	43	0	0	0	true	false	0	5681	dyenamicsandfriends-1.20.1-1.9.3.jar
+source	easy_villagers	Easy Villagers	1.20.1-1.1.35	FORGE	MODERATE	191	95	0	0	0	true	false	0	404	easy-villagers-forge-1.20.1-1.1.35.jar
+source	eccentrictome	Eccentric Tome	1.20.1-1.10.3	FORGE	TRIVIAL	17	12	0	0	0	false	false	0	41	eccentrictome-1.20.1-1.10.3.jar
+source	edivadlib	EdivadLib	2.0.1	FORGE	TRIVIAL	7	4	0	0	0	false	false	0	14	EdivadLib-1.20.1-2.0.1.jar
+source	eidolon	Eidolon:Repraised	0.3.9.1-alpha	FORGE	HARD	577	291	0	1	11	true	false	0	3860	eidolon_repraised-1.20.1-0.3.9.1-alpha.jar
+source	elevatorid	Elevator Mod	1.20.1-1.9.1-forge	FORGE	TRIVIAL	25	19	0	0	0	true	false	0	183	elevatorid-1.20.1-1.9.1-forge.jar
+source	elytraslot	Elytra Slot	6.4.4+1.20.1	FORGE	HARD	36	10	0	2	6	false	false	1	98	elytraslot-forge-6.4.4+1.20.1.jar
+source	embeddium	Embeddium	0.3.31+mc1.20.1	FORGE	NIGHTMARE	602	57	0	1	103	true	false	1	1289	embeddium-0.3.31+mc1.20.1.jar
+source	enderchests	EnderChests	1.20.1-1.4	FORGE	TRIVIAL	65	43	0	0	0	false	false	0	257	enderchests-forge-1.20.1-1.4.jar
+source	enderio	Ender IO	6.2.15-beta	FORGE	HARD	1147	490	0	4	6	true	false	8	7897	EnderIO-1.20.1-6.2.15-beta-all.jar
+source	endermanoverhaul	Enderman Overhaul	1.0.4	FORGE	HARD	115	7	0	2	8	false	false	0	1179	endermanoverhaul-forge-1.20.1-1.0.4.jar
+source	endersdelight	Ender's Delight	1.1.3	FORGE	TRIVIAL	41	22	0	0	0	false	false	0	175	endersdelight-forge-1.20.1-1.1.3.jar
+source	endertanks	EnderTanks	1.20.1-1.5	FORGE	HARD	90	49	0	2	6	false	false	0	269	endertanks-forge-1.20.1-1.5.jar
+source	ends_delight	End's Delight	2.5.1+forge.1.20.1	FORGE	TRIVIAL	44	34	0	0	0	false	false	0	272	ends_delight-2.5.1+forge.1.20.1.jar
+source	energymeter	Energy Meter	1.20.1-1.0.0	FORGE	TRIVIAL	65	21	0	0	0	false	false	0	124	energymeter-forge-1.20.1-1.0.0.jar
+source	ensorcellation	Ensorcellation	5.0.2	FORGE	HARD	44	18	0	2	2	true	false	0	110	ensorcellation-1.20.1-5.0.2.24.jar
+source	entangled	Entangled	1.3.20	FORGE	TRIVIAL	20	7	0	0	0	true	false	0	119	entangled-1.3.20-forge-mc1.20.4.jar
+source	entityculling	EntityCulling	1.9.0	FORGE	HARD	27	1	0	2	7	false	false	0	464	entityculling-forge-1.9.0-mc1.20.1.jar
+source	epherolib	BOZOID	0.1.2	FORGE	MODERATE	441	3	0	2	0	true	false	0	739	EpheroLib-1.20.1-FORGE-1.2.0.jar
+source	euphoria_patcher	EuphoriaPatcher	1.7.2-r5.6.1-forge	FORGE	MODERATE	563	2	0	0	0	false	false	0	3134	EuphoriaPatcher-1.7.2-r5.6.1-forge.jar
+source	everythingcopper	Everything is Copper	1.20.1-2.3.4	FORGE	TRIVIAL	87	34	0	0	0	true	false	0	717	everythingcopper-1.20.1-2.3.4.jar
+source	evilcraft	EvilCraft	1.2.58	FORGE	MODERATE	785	315	0	0	0	true	false	0	2676	EvilCraft-1.20.1-1.2.58.jar
+source	exchangers	Exchangers	1.20.1-3.5.1	FORGE	TRIVIAL	123	110	0	0	0	false	false	0	434	Exchangers-1.20.1-3.5.1.jar
+source	expatternprovider	ExtendedAE	1.20-1.4.7-forge	FORGE	HARD	346	53	0	2	11	false	false	0	2604	ExtendedAE-1.20-1.4.7-forge.jar
+source	extradisks	Extra Disks	1.20.1-3.0.3	FORGE	TRIVIAL	38	26	0	0	0	true	false	0	234	ExtraDisks-1.20.1-3.0.3.jar
+source	extrastorage	ExtraStorage	4.0.7	FORGE	TRIVIAL	77	42	0	0	0	true	false	0	361	ExtraStorage-1.20.1-4.0.7.jar
+source	extremesoundmuffler	Extreme Sound Muffler	3.48	FORGE	HARD	22	3	0	1	3	false	false	0	261	ExtremeSoundMuffler-3.49.1-forge-1.20.1.jar
+source	farmersdelight	Farmer's Delight	1.20.1-1.2.9	FORGE	HARD	252	156	0	1	10	true	false	0	2908	FarmersDelight-1.20.1-1.2.9.jar
+source	farmingforblockheads	Farming for Blockheads	14.0.4	FORGE	HARD	98	2	0	1	1	false	false	0	556	farmingforblockheads-forge-1.20.1-14.0.4.jar
+source	farsight_view	Farsight mod	1.20.1-4.5	FORGE	HARD	11	2	0	1	4	true	false	1	431	farsight-1.20.1-4.5.jar
+source	fastbench	Fast Workbench	8.0.4	FORGE	NIGHTMARE	15	6	0	1	4	true	true	0	27	FastWorkbench-1.20.1-8.0.4.jar
+source	fastfurnace	FastFurnace	8.0.2	FORGE	NIGHTMARE	2	1	0	1	1	false	true	0	6	FastFurnace-1.20.1-8.0.2.jar
+source	fastleafdecay	Fast Leaf Decay	32	FORGE	TRIVIAL	4	3	0	0	0	false	false	0	9	FastLeafDecay-32.jar
+source	fastsuite	Fast Suite	5.1.0	FORGE	NIGHTMARE	12	4	0	1	3	true	true	0	24	FastSuite-1.20.1-5.1.0.jar
+source	ferritecore	Ferrite Core	6.0.1	FORGE	NIGHTMARE	81	4	0	0	35	false	false	0	120	ferritecore-6.0.1-forge.jar
+source	findme	FindMe	3.2.3	FORGE	HARD	22	3	0	1	2	true	false	0	37	findme-3.2.3-forge.jar
+source	flib	flib	0.0.15	FORGE	TRIVIAL	139	61	0	0	0	true	false	0	285	flib-1.20.1-0.0.15.jar
+source	flickerfix	FlickerFix	4.0.1	FORGE	HARD	2	1	0	1	1	false	false	0	5	flickerfix-1.20.1-4.0.1.jar
+source	fluxnetworks	Flux Networks	7.2.1.15	FORGE	MODERATE	217	74	0	0	0	false	false	0	503	FluxNetworks-1.20.1-7.2.1.15.jar
+source	forbidden_arcanus	Forbidden & Arcanus	1.20.1-2.2.6	FORGE	HARD	416	139	0	1	14	true	false	0	2718	forbidden_arcanus-1.20.1-2.2.6.jar
+source	framedblocks	FramedBlocks	9.4.2	FORGE	HARD	1298	348	0	0	5	true	false	2	4151	FramedBlocks-9.4.2.jar
+source	ftbchunks	FTB Chunks	2001.3.6	FORGE	HARD	200	5	0	1	8	true	false	0	1131	ftb-chunks-forge-2001.3.6.jar
+source	ftbessentials	FTB Essentials	2001.2.3	FORGE	HARD	64	2	0	1	1	true	false	0	152	ftb-essentials-forge-2001.2.3.jar
+source	ftblibrary	FTB Library	2001.2.10	FORGE	HARD	318	33	0	1	5	false	false	0	773	ftb-library-forge-2001.2.10.jar
+source	ftbquests	FTB Quests	2001.4.14	FORGE	MODERATE	380	57	0	0	0	false	false	0	1194	ftb-quests-forge-2001.4.14.jar
+source	ftbranks	FTB Ranks	2001.1.7	FORGE	HARD	52	1	0	1	1	false	false	0	85	ftb-ranks-forge-2001.1.7.jar
+source	ftbteams	FTB Teams	2001.3.1	FORGE	TRIVIAL	122	1	0	0	0	false	false	0	242	ftb-teams-forge-2001.3.1.jar
+source	ftbultimine	FTB Ultimine	2001.1.7	FORGE	HARD	62	4	0	1	2	true	false	0	112	ftb-ultimine-forge-2001.1.7.jar
+source	ftbxmodcompat	FTB XMod Compat	2.1.3	FORGE	TRIVIAL	83	2	0	0	0	true	false	0	126	ftb-xmod-compat-forge-2.1.3.jar
+source	fuelgoeshere	Fuel Goes Here	1.20.0-1.0.1	FORGE	HARD	3	1	0	0	1	true	false	0	9	fuelgoeshere-1.20.0-1.0.1.jar
+source	functionalstorage	Functional Storage	1.20.1-1.2.13	FORGE	TRIVIAL	142	91	0	0	0	true	false	0	666	functionalstorage-1.20.1-1.2.13.jar
+source	fusion	Fusion	1.2.11+a	FORGE	NIGHTMARE	264	26	0	2	32	true	false	0	531	fusion-1.2.11a-forge-mc1.20.1.jar
+source	gateways	Gateways To Eternity	4.2.6	FORGE	NIGHTMARE	88	21	0	1	1	true	true	0	618	GatewaysToEternity-1.20.1-4.2.6.jar
+source	geckolib	GeckoLib 4	4.8.2	FORGE	HARD	261	69	0	1	3	true	false	1	1014	geckolib-forge-1.20.1-4.8.2.jar
+source	generatorgalore	Generator Galore	1.20.1-1.2.4	FORGE	TRIVIAL	52	38	0	0	0	true	false	0	251	generatorgalore-1.20.1-1.2.4.jar
+source	getittogetherdrops	Get It Together, Drops!	1.3	FORGE	HARD	3	2	0	1	1	true	false	0	7	getittogetherdrops-forge-1.20-1.3.jar
+source	glassential	Glassential Renewed	2.4.5	FORGE	TRIVIAL	19	15	0	1	0	false	false	0	334	glassential-renewed-forge-1.20.1-2.4.5.jar
+source	glitchcore	GlitchCore	0.0.1.1	FORGE	HARD	76	22	0	2	12	true	false	0	85	GlitchCore-forge-1.20.1-0.0.1.1.jar
+source	glodium	Glodium	1.20-1.5-forge	FORGE	TRIVIAL	36	6	0	0	0	false	false	0	59	Glodium-1.20-1.5-forge.jar
+source	gravitationalmodulatingunittweaks	Gravitational Modulating Additional Unit	3.5	FORGE	HARD	20	13	0	0	1	false	false	0	39	GravitationalModulatingAdditionalUnit-1.20.1-3.5.jar
+source	gtceu	GregTech	7.2.0	FORGE	NIGHTMARE	2117	704	0	1	73	true	false	4	17548	gtceu-1.20.1-7.2.0.jar
+source	guideme	GuideME	20.1.13	FORGE	MODERATE	5130	24	0	0	0	true	false	0	9192	guideme-20.1.13.jar
+source	gunpowderlib	GunpowderLib	1.20.2-2.2.2	FORGE	TRIVIAL	11	8	0	0	0	false	false	0	19	GunpowderLib-1.20.2-2.2.2.jar
+source	handcrafted	Handcrafted	3.0.6	FORGE	HARD	84	3	0	2	1	false	false	0	6944	handcrafted-forge-1.20.1-3.0.6.jar
+source	harvestwithease	Harvest with ease	8.0.1.0	FORGE	TRIVIAL	14	9	0	0	0	false	false	0	467	harvestwithease-1.20.1-8.0.1.0-forge.jar
+source	hostilenetworks	Hostile Neural Networks	5.3.3	FORGE	NIGHTMARE	60	35	0	1	1	true	true	0	267	HostileNeuralNetworks-1.20.1-5.3.3.jar
+source	hyperbox	Hyperbox	4.0.2.0	FORGE	HARD	36	18	0	1	3	true	false	1	259	hyperbox-1.20.1-4.0.2.0.jar
+source	immersiveengineering	Immersive Engineering	1.20.1-10.2.0-183	FORGE	NIGHTMARE	1768	819	0	1	41	false	false	0	11845	ImmersiveEngineering-1.20.1-10.2.0-183.jar
+source	industrialforegoing	Industrial Foregoing	3.5.21	FORGE	MODERATE	592	284	0	0	0	true	false	0	4422	industrial-foregoing-1.20.1-3.5.21.jar
+source	industrialforegoingsouls	Industrial Foregoing Souls	1.20.1-1.0.9	FORGE	TRIVIAL	29	11	0	0	0	false	false	0	126	industrial-foregoing-souls-1.20.1-1.0.9.jar
+source	integratedcrafting	IntegratedCrafting	1.3.0	FORGE	TRIVIAL	83	31	0	0	0	true	false	0	305	IntegratedCrafting-1.20.1-1.3.0.jar
+source	integrateddynamics	IntegratedDynamics	1.28.1	FORGE	HARD	1649	418	0	2	1	true	false	0	4051	IntegratedDynamics-1.20.1-1.28.1.jar
+source	integratedterminals	IntegratedTerminals	1.6.10	FORGE	MODERATE	226	90	0	0	0	true	false	0	572	IntegratedTerminals-1.20.1-1.6.10.jar
+source	integratedtunnels	IntegratedTunnels	1.9.0	FORGE	MODERATE	186	87	0	0	0	true	false	0	607	IntegratedTunnels-1.20.1-1.9.0.jar
+source	inventoryessentials	Inventory Essentials	8.2.12	FORGE	HARD	27	2	0	1	4	false	false	0	150	inventoryessentials-forge-1.20.1-8.2.12.jar
+source	invtweaks	Inventory Tweaks Refoxed	1.2.2	FORGE	TRIVIAL	19	14	0	0	0	true	false	0	73	invtweaks-1.20.1-1.2.2.jar
+source	ironfurnaces	Iron Furnaces	4.1.6	FORGE	MODERATE	182	116	0	0	0	false	false	0	594	ironfurnaces-1.20.1-4.1.6.jar
+source	ironjetpacks	Iron Jetpacks	7.0.9	FORGE	TRIVIAL	49	37	0	0	0	true	false	0	155	IronJetpacks-1.20.1-7.0.9.jar
+source	irons_spellbooks	Iron's Spells 'n Spellbooks	1.20.1-3.4.0.11	FORGE	HARD	886	453	0	1	22	true	false	0	8578	irons_spellbooks-1.20.1-3.4.0.11.jar
+source	itemcollectors	Item Collectors	1.1.11	FORGE	TRIVIAL	31	7	0	0	0	false	false	0	101	itemcollectors-1.1.11-forge-mc1.20.2.jar
+source	itemfilters	Item Filters	2001.1.0-build.59	FORGE	HARD	57	10	0	1	1	false	false	0	107	item-filters-forge-2001.1.0-build.59.jar
+source	jade	Jade	11.13.2+forge	FORGE	HARD	242	9	0	1	2	true	false	0	539	Jade-1.20.1-Forge-11.13.2.jar
+source	jadeaddons	Jade Addons	5.5.0+forge	FORGE	HARD	35	14	0	1	3	false	false	0	89	JadeAddons-1.20.1-Forge-5.5.0.jar
+source	jearchaeology	Just Enough Archaeology	1.20.1-1.0.4	FORGE	TRIVIAL	25	12	0	0	0	true	false	0	42	jearchaeology-1.20.1-1.0.4.jar
+source	jei	Just Enough Items	15.20.0.116	FORGE	MODERATE	880	34	0	0	0	true	false	0	1354	jei-1.20.1-forge-15.20.0.116.jar
+source	jei_mekanism_multiblocks	Just Enough Mekanism Multiblocks	4.14	FORGE	HARD	65	11	0	0	4	false	false	0	158	JustEnoughMekanismMultiblocks-1.20.1-4.14.jar
+source	jeresources	Just Enough Resources	1.4.0.247	FORGE	TRIVIAL	143	8	0	0	0	true	false	0	269	JustEnoughResources-1.20.1-1.4.0.247.jar
+source	jmi	JourneyMap Integration	1.20.1-0.14-48	FORGE	HARD	32	4	0	1	1	false	false	0	67	jmi-forge-1.20.1-0.14-48.jar
+source	journeymap	Journeymap	5.10.3	FORGE	NIGHTMARE	2382	33	0	1	3	true	true	0	6992	journeymap-1.20.1-5.10.3-forge.jar
+source	jumpboat	Jumpy Boats	1.20.0-1.0.5	FORGE	HARD	4	4	0	0	1	false	false	0	7	jumpboat-1.20.0-1.0.5.jar
+source	justenoughprofessions	Just Enough Professions (JEP)	3.0.1	FORGE	TRIVIAL	11	3	0	0	0	false	false	0	24	JustEnoughProfessions-forge-1.20.1-3.0.1.jar
+source	justzoom	Just Zoom	2.1.1	FORGE	HARD	24	2	0	2	6	true	false	1	199	justzoom_forge_2.1.1_MC_1.20.1.jar
+source	konkrete	Konkrete	1.8.0	FORGE	HARD	399	19	0	0	5	true	false	0	610	konkrete_forge_1.8.0_MC_1.20-1.20.1.jar
+source	kubejs	KubeJS	2001.6.5-build.16	FORGE	NIGHTMARE	829	33	0	2	64	true	false	0	1615	kubejs-forge-2001.6.5-build.16.jar
+source	laserio	LaserIO	1.6.8	FORGE	MODERATE	191	113	0	0	0	false	false	0	1216	laserio-1.6.8.jar
+source	ldlib	LowDragLib	1.0.45	FORGE	NIGHTMARE	912	165	0	2	37	true	false	0	3016	ldlib-forge-1.20.1-1.0.45.jar
+source	libx	LibX	1.20.1-5.0.14	FORGE	NIGHTMARE	662	161	0	0	0	true	true	0	1228	LibX-1.20.1-5.0.14.jar
+source	lionfishapi	LionfishAPI	2.4-Fix	FORGE	HARD	77	39	0	1	5	true	false	0	158	lionfishapi-2.4-Fix.jar
+source	lithostitched	Lithostitched	1.4.11	FORGE	HARD	163	13	0	2	20	true	false	0	465	lithostitched-forge-1.20.1-1.4.11.jar
+source	littlelogistics	Little Logistics	1.20.1.2	FORGE	MODERATE	243	112	0	0	0	true	false	0	815	littlelogistics-mc1.20.1-v1.20.1.2.jar
+source	logprot	Logprot	1.4	FORGE	HARD	9	4	0	1	1	true	false	0	13	logprot-1.20.1-3.5.jar
+source	lootr	Lootr	0.7.35.92	FORGE	HARD	99	60	0	1	7	true	false	0	450	lootr-forge-1.20-0.7.35.93.jar
+source	lost_aether_content	Aether: Lost Content	1.2.3	FORGE	HARD	129	77	0	1	14	true	false	0	19789	lost_aether_content-1.20.1-1.2.3.jar
+source	lostcities	LostCities	1.20-7.4.5	FORGE	MODERATE	259	46	0	0	0	true	false	0	1218	lostcities-1.20-7.4.5.jar
+source	mahoutsukai	Mahou Tsukai	1.20.1-v1.34.78	FORGE	HARD	714	341	0	1	2	true	false	0	4317	mahoutsukai-1.20.1-v1.34.78.jar
+source	maidensmerrymaking	Maiden's MerryMaking	1.0.0	FORGE	MODERATE	358	121	0	0	0	true	false	0	39414	maidensmerrymaking-1-20.1-7.jar
+source	mantle	Mantle	1.11.79	FORGE	MODERATE	719	187	0	0	0	true	false	0	1445	Mantle-1.20.1-1.11.79.jar
+source	matc	Mystical Agriculture Tiered Crystals	1.6.0	FORGE	TRIVIAL	9	9	0	0	0	false	false	0	29	matc-1.6.0.jar
+source	mcjtylib	McJtyLib	1.20-8.0.7	FORGE	MODERATE	424	110	0	0	0	true	false	0	697	mcjtylib-1.20-8.0.7.jar
+source	mcwbiomesoplenty	Macaw's Biomes O' Plenty	1.20.1-1.2.1	FORGE	TRIVIAL	3	3	0	0	0	false	false	0	6742	mcwbiomesoplenty-1.20.1-1.2.1.jar
+source	mcwbridges	Macaw's Bridges	3.1.0	FORGE	TRIVIAL	31	15	0	0	0	false	false	0	668	mcw-bridges-3.1.0-mc1.20.1forge.jar
+source	mcwdoors	Macaw's Doors	1.1.2	FORGE	TRIVIAL	14	10	0	0	0	false	false	0	1220	mcw-doors-1.1.2-mc1.20.1forge.jar
+source	mcwfences	Macaw's Fences and Walls	1.2.0	FORGE	TRIVIAL	19	7	0	0	0	false	false	0	679	mcw-fences-1.2.0-1.20.1forge.jar
+source	mcwfurnitures	Macaw's Furniture	3.3.0	FORGE	TRIVIAL	46	11	0	0	0	false	false	0	1838	mcw-furniture-3.3.0-mc1.20.1forge.jar
+source	mcwlights	Macaw's Lights and Lamps	1.1.2	FORGE	TRIVIAL	40	18	0	0	0	false	false	0	526	mcw-lights-1.1.2-mc1.20.1forge.jar
+source	mcwpaintings	Macaw's Paintings	1.0.5	FORGE	TRIVIAL	2	2	0	0	0	false	false	0	70	mcw-paintings-1.0.5-1.20.1forge.jar
+source	mcwpaths	Macaw's Paths and Pavings	1.1.1	FORGE	TRIVIAL	11	7	0	0	0	false	false	0	793	mcw-mcwpaths-1.1.1-mc1.20.1forge.jar
+source	mcwroofs	Macaw's Roofs	2.3.2	FORGE	TRIVIAL	24	13	0	0	0	false	false	0	1820	mcw-roofs-2.3.2-mc1.20.1forge.jar
+source	mcwtrpdoors	Macaw's Trapdoors	1.1.4	FORGE	TRIVIAL	6	6	0	0	0	false	false	0	579	mcw-trapdoors-1.1.4-mc1.20.1forge.jar
+source	mcwwindows	Macaw's Windows	2.4.1	FORGE	TRIVIAL	39	14	0	0	0	false	false	0	1289	mcw-mcwwindows-2.4.1-mc1.20.1forge.jar
+source	measurements	Measurements	2.0.1	FORGE	TRIVIAL	26	9	0	0	0	false	false	0	42	Measurements-forge-1.20.1-2.0.1.jar
+source	megacells	MEGA Cells	2.4.6-1.20.1	FORGE	HARD	77	8	0	2	3	false	false	0	378	megacells-forge-2.4.6-1.20.1.jar
+source	mekanism	Mekanism	10.4.15	FORGE	MODERATE	3140	792	0	0	0	true	false	0	12259	Mekanism-1.20.1-10.4.15.75.jar
+source	mekanismgenerators	Mekanism: Generators	10.4.15	FORGE	MODERATE	160	40	0	0	0	false	false	0	1029	MekanismGenerators-1.20.1-10.4.15.75.jar
+source	mekanismtools	Mekanism: Tools	10.4.15	FORGE	TRIVIAL	65	17	0	0	0	false	false	0	505	MekanismTools-1.20.1-10.4.15.75.jar
+source	memorysettings	memorysettings mod	1.20.1-5.9	FORGE	HARD	10	4	0	1	1	true	false	0	22	memorysettings-1.20.1-5.9.jar
+source	merequester	ME Requester	1.20.1-1.1.5	FORGE	HARD	79	14	0	1	16	false	false	0	167	merequester-forge-1.20.1-1.1.5.jar
+source	minecolonies	MineColonies	1.20.1-1.1.1065-snapshot	FORGE	MODERATE	2478	807	0	0	0	true	false	0	70944	minecolonies-1.20.1-1.1.1065-snapshot.jar
+source	mininggadgets	Mining Gadgets	1.15.6	FORGE	TRIVIAL	122	79	0	0	0	false	false	0	627	mininggadgets-1.15.6.jar
+source	mob_grinding_utils	Mob Grinding Utils	1.20.1-1.1.0	FORGE	MODERATE	177	138	0	0	0	false	false	0	1325	mob_grinding_utils-1.20.1-1.1.0.jar
+source	modelfix	Model Gap Fix	1.15	FORGE	HARD	15	6	0	1	2	true	false	0	44	modelfix-1.15.jar
+source	modernfix	ModernFix	5.24.4+mc1.20.1	FORGE	NIGHTMARE	351	53	0	2	171	true	false	0	859	modernfix-forge-5.24.4+mc1.20.1.jar
+source	modonomicon	Modonomicon	1.79.2	FORGE	MODERATE	348	24	0	2	0	true	false	3	2187	modonomicon-1.20.1-forge-1.79.2.jar
+source	modularrouters	Modular Routers	12.1.1+mc1.20.1	FORGE	MODERATE	361	172	0	0	0	false	false	0	1136	modular-routers-12.1.1+mc1.20.1.jar
+source	moonlight	Moonlight Library	1.20-2.16.14	FORGE	NIGHTMARE	492	80	0	2	52	true	false	0	1302	moonlight-1.20-2.16.14-forge.jar
+source	moredragoneggs	More Dragon Eggs	4.0	FORGE	HARD	3	2	0	2	1	false	false	0	6	moredragoneggs-4.0.jar
+source	morejs	MoreJS	0.10.1	FORGE	NIGHTMARE	115	7	0	2	35	true	false	0	169	morejs-forge-1.20.1-0.10.1.jar
+source	moreoverlays	More Overlays Updated	1.24.1	FORGE	HARD	42	22	0	0	1	false	false	0	111	moreoverlays-1.24.1-mc1.20.1-forge.jar
+source	morered	More Red	4.0.0.4	FORGE	HARD	115	57	0	1	2	true	false	2	739	morered-1.20.1-4.0.0.4.jar
+source	mousetweaks	Mouse Tweaks	2.25.1	FORGE	HARD	23	2	0	3	1	false	false	0	74	MouseTweaks-forge-mc1.20.1-2.25.1.jar
+source	multipiston	Multi-Piston	1.20-1.2.43-RELEASE	FORGE	TRIVIAL	14	9	0	0	0	false	false	0	37	multipiston-1.20-1.2.43-RELEASE.jar
+source	mysterious_mountain_lib	Mysterious Mountain Lib	1.5.26-1.20.1	FORGE	HARD	94	32	0	2	4	true	false	0	312	mysterious_mountain_lib-1.5.26-1.20.1.jar
+source	mysticalagradditions	Mystical Agradditions	7.0.11	FORGE	TRIVIAL	37	27	0	0	0	true	false	0	327	MysticalAgradditions-1.20.1-7.0.11.jar
+source	mysticalagriculture	Mystical Agriculture	7.0.23	FORGE	MODERATE	291	183	0	0	0	true	false	0	2325	MysticalAgriculture-1.20.1-7.0.23.jar
+source	mysticalcustomization	Mystical Customization	5.0.3	FORGE	TRIVIAL	18	10	0	0	0	false	false	0	46	MysticalCustomization-1.20.1-5.0.3.jar
+source	mythicbotany	MythicBotany	1.20.1-4.0.4	FORGE	NIGHTMARE	206	60	0	0	0	true	true	0	2181	MythicBotany-1.20.1-4.0.4.jar
+source	naturalist	Naturalist	4.0.3	FORGE	HARD	217	68	0	2	9	false	false	0	3264	naturalist-forge-4.0.3-1.20.1.jar
+source	naturesaura	NaturesAura	39.4	FORGE	MODERATE	312	190	0	0	0	false	false	0	1401	NaturesAura-39.4.jar
+source	naturescompass	Nature's Compass	1.20.1-1.11.2-forge	FORGE	TRIVIAL	32	25	0	0	0	false	false	0	210	NaturesCompass-1.20.1-1.11.2-forge.jar
+source	netherportalfix	NetherPortalFix	13.0.1	FORGE	HARD	8	2	0	1	4	false	false	0	212	netherportalfix-forge-1.20-13.0.1.jar
+source	nethersdelight	Nether's Delight	1.20.1-4.0	FORGE	HARD	66	52	0	1	4	true	false	0	357	nethersdelight-1.20.1-4.0.jar
+source	nochatreports	No Chat Reports	1.20.1-v2.2.2	FORGE	NIGHTMARE	88	2	0	2	33	true	false	0	266	NoChatReports-FORGE-1.20.1-v2.2.2.jar
+source	noflyzone	No-fly Zone	1.20.1-1.1.0	FORGE	TRIVIAL	16	7	0	0	0	false	false	0	32	noflyzone-1.20.1-1.1.0.jar
+source	notrample	No Trample	1.20.1-1.0.1	FORGE	HARD	3	2	0	0	1	false	false	0	8	notrample-1.20.1-1.0.1.jar
+source	novillagerdm	No Villager Death Messages	5.0.0	FORGE	TRIVIAL	3	1	0	0	0	false	false	0	5	novillagerdm-1.20.1-5.0.0.jar
+source	observable	Observable	4.4.2	FORGE	HARD	237	3	0	0	2	false	false	0	459	observable-4.4.2.jar
+source	occultism	Occultism	1.152.1	FORGE	MODERATE	634	304	0	0	0	true	false	0	3866	occultism-1.20.1-1.152.1.jar
+source	oceansdelight	Ocean's Delight	1.0.2-1.20	FORGE	TRIVIAL	10	9	0	0	0	false	false	0	88	oceansdelight-1.0.2-1.20.jar
+source	oculus	Mekalus (Oculus)	1.8.0.1	FORGE	NIGHTMARE	1587	25	0	12	188	true	false	0	2785	mekalus-mc1.20.1-1.8.0.1.jar
+source	oculus	Oculus	1.8.0	FORGE	NIGHTMARE	1587	25	0	12	188	true	false	0	2784	oculus-mc1.20.1-1.8.0.jar
+source	packetfixer	PacketFixer	3.3.0	NEOFORGE	NIGHTMARE	180	6	2	10	176	false	false	0	185	packetfixer-3.3.0-1.18-1.20.4-merged.jar
+source	packingtape	Packing Tape	0.14.4	FORGE	TRIVIAL	13	9	0	0	0	false	false	0	81	PackingTape-1.20.1-0.14.4.jar
+source	packmenu	PackMenu	6.1.2	FORGE	NIGHTMARE	17	6	0	1	1	true	true	0	530	PackMenu-1.20.1-6.1.2.jar
+source	paraglider	Paraglider	20.1.3	FORGE	HARD	222	45	0	1	4	true	false	0	575	Paraglider-forge-20.1.3.jar
+source	patchouli	Patchouli	1.20.1-84.1-FORGE	FORGE	HARD	196	12	0	1	10	false	false	0	627	Patchouli-1.20.1-84.1-FORGE.jar
+source	pigpen	PigPen	15.0.2	FORGE	TRIVIAL	2	1	0	0	0	false	false	0	5	PigPen-Forge-1.20.1-15.0.2.jar
+source	pipez	Pipez	1.20.1-1.2.26	FORGE	MODERATE	203	97	0	0	0	false	false	0	421	pipez-forge-1.20.1-1.2.26.jar
+source	placebo	Placebo	8.6.3	FORGE	NIGHTMARE	153	50	0	1	6	true	true	0	275	Placebo-1.20.1-8.6.3.jar
+source	platforms	Platforms	1.20.1-1.2	FORGE	TRIVIAL	106	50	0	0	0	false	false	0	799	platforms-forge-1.20.1-1.2.jar
+source	playeranimator	Player Animator	1.0.2-rc1+1.20	FORGE	HARD	115	4	0	1	15	true	false	0	177	player-animation-lib-forge-1.0.2-rc1+1.20.jar
+source	pneumaticcraft	PneumaticCraft: Repressurized	6.0.21+mc1.20.1	FORGE	HARD	2180	1031	0	2	19	false	false	0	10537	pneumaticcraft-repressurized-6.0.21+mc1.20.1.jar
+source	polyeng	Polymorphic Energistics	0.1.1-1.20.1	FORGE	HARD	8	1	0	1	4	false	false	0	15	polyeng-forge-0.1.1-1.20.1.jar
+source	polymorph	Polymorph	0.49.10+1.20.1	FORGE	HARD	91	14	0	2	12	false	false	1	292	polymorph-forge-0.49.10+1.20.1.jar
+source	ponderjs	PonderJS	2.0.6	FORGE	HARD	59	3	0	1	15	false	false	3	2221	ponderjs-1.20.1-2.0.6.jar
+source	potionblender	Potion-Blender	3.1.2	FORGE	HARD	42	6	0	1	8	false	false	0	144	Potion-Blender-1.20.1-FORGE-3.1.2.jar
+source	potionsmaster	PotionsMaster	0.6.0	FORGE	TRIVIAL	92	42	0	0	0	true	false	0	287	potionsmaster-1.20.1-47.1.70-0.6.0.jar
+source	powah	Powah	5.0.11	FORGE	MODERATE	370	26	0	0	0	true	false	0	2337	Powah-5.0.11.jar
+source	productivebees	Productive Bees	1.20.1-12.6.0	FORGE	MODERATE	527	243	0	0	0	true	false	1	4840	productivebees-1.20.1-12.6.0.jar
+source	productivetrees	Productive Trees	1.20.1-0.2.6	FORGE	MODERATE	156	81	0	0	0	true	false	1	14352	productivetrees-1.20.1-0.2.6.jar
+source	psi	Psi	2.0.0	FORGE	HARD	486	175	0	1	3	true	false	0	2166	Psi-1.20.1-102.jar
+source	pylons	Pylons	4.2.1	FORGE	TRIVIAL	74	40	0	0	0	false	false	0	139	pylons-1.20.1-4.2.1.jar
+source	quark	Quark	4.0-462	FORGE	NIGHTMARE	936	131	0	3	117	true	false	0	14585	Quark-4.0-462.jar
+source	quarryplus	QuarryPlus	1201.1.136	FORGE	MODERATE	364	134	0	0	0	false	false	0	1027	AdditionalEnchantedMiner-1.20.1-1201.1.136.jar
+source	railcraft	Railcraft Reborn	1.1.10	FORGE	HARD	1191	446	0	1	10	true	false	0	5125	railcraft-reborn-1.20.1-1.1.10.jar
+source	railways	Create: Steam 'n' Rails	1.6.13-alpha+forge-mc1.20.1	FORGE	NIGHTMARE	856	126	0	2	177	true	false	0	9800	Steam_Rails-1.6.13-alpha+forge-mc1.20.1.jar
+source	rangedpumps	Ranged Pumps	1.1.0	FORGE	TRIVIAL	7	5	0	0	0	false	false	0	26	rangedpumps-1.1.0.jar
+source	rebornstorage	RebornStorage	5.0.7	FORGE	TRIVIAL	65	29	0	0	0	false	false	0	267	rebornstorage-1.20.1-5.0.7.jar
+source	rechiseled	Rechiseled	1.1.6	FORGE	TRIVIAL	71	21	0	0	0	false	false	0	3516	rechiseled-1.1.6-forge-mc1.20.jar
+source	rechiseledcreate	Rechiseled: Create	1.0.2+b	FORGE	TRIVIAL	16	3	0	0	0	false	false	0	658	rechiseledcreate-1.0.2b-forge-mc1.20.jar
+source	redstone_arsenal	Redstone Arsenal	8.0.1	FORGE	TRIVIAL	66	51	0	0	0	true	false	0	478	redstone_arsenal-1.20.1-8.0.1.24.jar
+source	refinedpolymorph	Refined Polymorphism	0.1.1-1.20.1	FORGE	HARD	13	4	0	1	7	false	false	0	24	refinedpolymorph-0.1.1-1.20.1.jar
+source	refinedstorage	Refined Storage	1.12.4	FORGE	MODERATE	783	393	0	0	0	true	false	0	3222	refinedstorage-1.12.4.jar
+source	refinedstorageaddons	Refined Storage Addons	0.10.0	FORGE	TRIVIAL	14	8	0	0	0	false	false	0	32	refinedstorageaddons-0.10.0.jar
+source	reliquary	Reliquary	2.0.54.1304	FORGE	MODERATE	476	285	0	0	0	true	false	0	2152	reliquary-1.20.1-2.0.54.1304.jar
+source	repurposed_structures	Repurposed Structures	7.1.19+1.20.1-forge	FORGE	NIGHTMARE	240	17	0	2	30	true	false	1	8036	repurposed_structures-7.1.19+1.20.1-forge.jar
+source	resourcefulconfig	Resourcefulconfig	2.1.3	FORGE	TRIVIAL	80	3	0	0	0	false	false	0	133	resourcefulconfig-forge-1.20.1-2.1.3.jar
+source	resourcefullib	Resourceful Lib	2.1.29	FORGE	MODERATE	188	20	0	0	0	false	false	0	422	resourcefullib-forge-1.20.1-2.1.29.jar
+source	rftoolsbase	RFToolsBase	1.20-5.0.6	FORGE	MODERATE	162	46	0	0	0	true	false	0	409	rftoolsbase-1.20-5.0.6.jar
+source	rftoolsbuilder	RFToolsBuilder	1.20-6.0.8	FORGE	MODERATE	189	59	0	0	0	true	false	0	877	rftoolsbuilder-1.20-6.0.8.jar
+source	rftoolscontrol	RFToolsControl	1.20-7.0.3	FORGE	MODERATE	151	52	0	0	0	true	false	0	580	rftoolscontrol-1.20-7.0.3.jar
+source	rftoolspower	RFToolsPower	1.20-6.0.2	FORGE	TRIVIAL	96	42	0	0	0	true	false	0	544	rftoolspower-1.20-6.0.2.jar
+source	rftoolsstorage	RFToolsStorage	1.20-5.0.3	FORGE	TRIVIAL	131	50	0	0	0	true	false	0	363	rftoolsstorage-1.20-5.0.3.jar
+source	rftoolsutility	RFToolsUtility	1.20-6.0.6	FORGE	MODERATE	308	112	0	0	0	true	false	0	1336	rftoolsutility-1.20-6.0.6.jar
+source	rhino	Rhino	2001.2.3-build.10	FORGE	HARD	446	2	0	1	8	true	false	0	1756	rhino-forge-2001.2.3-build.10.jar
+source	rsinfinitybooster	RSInfinityBooster	1.20.1-1.0+39	FORGE	HARD	15	8	0	1	4	false	false	0	29	RSInfinityBooster-1.20.1-1.0+39.jar
+source	rsinsertexportupgrade	RS Insert Export Upgrade	1.20.1-1.4.0	FORGE	HARD	29	20	0	1	5	true	false	0	65	rsinsertexportupgrade-1.20.1-1.4.0.jar
+source	rsrequestify	RSRequestify	2.3.3	FORGE	TRIVIAL	15	12	0	0	0	false	false	0	61	rsrequestify-1.20.1-2.3.3.jar
+source	runelic	Runelic	18.0.2	FORGE	TRIVIAL	5	1	0	0	0	false	false	0	61	Runelic-Forge-1.20.1-18.0.2.jar
+source	searchables	Searchables	1.0.3	FORGE	HARD	41	1	0	2	2	false	false	0	75	Searchables-forge-1.20.1-1.0.3.jar
+source	securitycraft	SecurityCraft	1.10.0.1	FORGE	HARD	710	378	0	1	23	true	false	0	4539	[1.20.1] SecurityCraft v1.10.0.1.jar
+source	sfm	Super Factory Manager (SFM)	4.26.0	FORGE	HARD	737	145	0	1	1	true	false	0	1391	Super Factory Manager (SFM)-MC1.20.1-4.26.0.jar
+source	sgjourney	Stargate Journey	0.6.42	FORGE	MODERATE	792	352	0	0	0	true	false	0	6238	Stargate Journey-1.20.1-0.6.42.jar
+source	shetiphiancore	ShetiPhian-Core	1.20.1-1.5	FORGE	HARD	166	72	0	2	10	false	false	0	351	shetiphiancore-forge-1.20.1-1.5.jar
+source	shrink	Shrink	1.4.5	FORGE	HARD	45	38	0	1	1	true	false	0	86	Shrink-1.20.1-1.4.5.jar
+source	silentgear	Silent Gear	3.6.7	FORGE	HARD	535	215	0	1	3	true	false	0	2683	silent-gear-1.20.1-3.6.7.jar
+source	silentlib	Silent Lib	8.0.0	FORGE	TRIVIAL	143	39	0	0	0	true	false	0	220	silent-lib-1.20.1-8.0.0.jar
+source	simplebackups	Simple Backups	1.20.1-3.1.17	FORGE	TRIVIAL	20	10	0	0	0	true	false	0	45	SimpleBackups-1.20.1-3.1.17.jar
+source	simplemagnets	Simple Magnets	1.1.12	FORGE	TRIVIAL	58	14	0	0	0	true	false	0	137	simplemagnets-1.1.12-forge-mc1.20.1.jar
+source	simplylight	Simply Light	1.20.1-1.4.6-build.50	FORGE	TRIVIAL	30	15	0	0	0	false	false	0	542	simplylight-1.20.1-1.4.6-build.50.jar
+source	sliceanddice	Create Slice & Dice	3.5.2	FORGE	HARD	60	29	0	1	6	false	false	1	573	sliceanddice-forge-3.5.2.jar
+source	smartbrainlib	SmartBrainLib	1.15	FORGE	TRIVIAL	119	5	0	0	0	true	false	0	353	SmartBrainLib-forge-1.20.1-1.15.jar
+source	sodiumdynamiclights	Sodium Dynamic Lights	1.0.9	NEOFORGE	HARD	44	14	0	1	22	true	false	0	499	sodiumdynamiclights-forge-1.0.10-1.20.1.jar
+source	sodiumoptionsapi	Sodium Options API	1.0.10	NEOFORGE	HARD	25	5	0	1	7	true	false	0	433	sodiumoptionsapi-forge-1.0.10-1.20.1.jar
+source	solcarrot	Spice of Life: Carrot Edition	1.15.1	FORGE	TRIVIAL	54	25	0	0	0	false	false	0	101	solcarrot-1.20.1-1.15.1.jar
+source	sophisticatedbackpacks	Sophisticated Backpacks	3.24.9.1391	FORGE	MODERATE	303	141	0	0	0	true	false	0	948	sophisticatedbackpacks-1.20.1-3.24.9.1391.jar
+source	sophisticatedcore	Sophisticated Core	1.2.105.1230	FORGE	MODERATE	660	200	0	0	0	true	false	0	1405	sophisticatedcore-1.20.1-1.2.105.1230.jar
+source	sophisticatedstorage	Sophisticated Storage	1.4.11.1344	FORGE	MODERATE	347	156	0	0	0	true	false	0	1632	sophisticatedstorage-1.20.1-1.4.11.1344.jar
+source	spark	spark	1.10.53	FORGE	MODERATE	1298	8	0	0	0	true	false	0	3041	spark-1.10.53-forge.jar
+source	sparsestructuresreforged	SparseStructuresReforged	1.20.1-1.0.0	FORGE	HARD	3	2	0	1	1	false	false	0	6	sparsestructuresreforged-1.20.1-1.0.0.jar
+source	structory	Structory	1.3.5	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	1256	Structory_1.20.x_v1.3.5.jar
+source	structure_gel	Structure Gel API	2.16.2	FORGE	NIGHTMARE	325	91	0	1	29	true	true	0	943	structure_gel-1.20.1-2.16.2.jar
+source	structurecompass	Structure Compass Mod	2.2.0	FORGE	TRIVIAL	31	20	0	0	0	true	false	0	68	StructureCompass-1.20.1-2.2.0.jar
+source	structurize	Structurize	1.20.1-1.0.784-snapshot	FORGE	MODERATE	290	103	0	0	0	true	false	0	1051	structurize-1.20.1-1.0.784-snapshot.jar
+source	stylecolonies	stylecolonies mod	1.20.1-1.15.39	FORGE	TRIVIAL	1	1	0	0	0	true	false	0	26092	stylecolonies-1.20.1-1.15.39.jar
+source	supermartijn642configlib	SuperMartijn642's Config Library	1.1.8	FORGE	TRIVIAL	44	3	0	0	0	false	false	0	201	supermartijn642configlib-1.1.8-forge-mc1.20.jar
+source	supermartijn642corelib	SuperMartijn642's Core Lib	1.1.18	FORGE	HARD	181	57	0	2	9	true	false	0	503	supermartijn642corelib-1.1.18-forge-mc1.20.1.jar
+source	supplementaries	Supplementaries	1.20-3.1.40	FORGE	NIGHTMARE	1097	69	0	2	111	true	false	0	13329	supplementaries-1.20-3.1.40.jar
+source	sushigocrafting	Sushi Go Crafting	0.5.3	FORGE	TRIVIAL	122	63	0	0	0	true	false	0	690	sushigocrafting-1.20.1-0.5.3.jar
+source	t_and_t	Towns and Towers	1.10.2	FORGE	TRIVIAL	1	1	0	0	0	false	false	0	2797	Towns-and-Towers-1.12-Fabric+Forge.jar
+source	tconstruct	Tinkers' Construct	3.10.2.92	FORGE	MODERATE	2155	726	0	0	0	true	false	0	19328	TConstruct-1.20.1-3.10.2.92.jar
+source	tempad	Tempad	2.3.4	FORGE	HARD	83	10	0	2	2	false	false	0	189	tempad-forge-1.20.1-2.3.4.jar
+source	terrablender	TerraBlender	3.0.1.10	FORGE	HARD	53	2	0	2	7	true	false	0	105	TerraBlender-forge-1.20.1-3.0.1.10.jar
+source	terralith	Terralith	2.5.4	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	3082	Terralith_1.20.x_v2.5.4.jar
+source	thermal_cultivation	Thermal Cultivation	11.0.1	FORGE	TRIVIAL	39	22	0	0	0	true	false	0	607	thermal_cultivation-1.20.1-11.0.1.24.jar
+source	thermal_dynamics	Thermal Dynamics	11.0.1	FORGE	MODERATE	285	66	0	0	0	true	false	0	608	thermal_dynamics-1.20.1-11.0.1.23.jar
+source	thermal_expansion	Thermal Expansion	11.0.1	FORGE	TRIVIAL	111	72	0	0	0	true	false	0	560	thermal_expansion-1.20.1-11.0.1.29.jar
+source	thermal_extra	Thermal Extra	3.2.7-1.20.1	FORGE	TRIVIAL	117	73	0	0	0	false	false	0	1352	ThermalExtra-3.2.7-1.20.1.jar
+source	thermal_foundation	Thermal Foundation	11.0.6	FORGE	TRIVIAL	27	16	0	0	0	true	false	1	4442	thermal_foundation-1.20.1-11.0.6.70.jar
+source	thermal_innovation	Thermal Innovation	11.0.1	FORGE	TRIVIAL	28	23	0	0	0	true	false	0	220	thermal_innovation-1.20.1-11.0.1.23.jar
+source	thermal_integration	Thermal Integration	11.0.1	FORGE	TRIVIAL	14	9	0	0	0	true	false	0	325	thermal_integration-1.20.1-11.0.1.27.jar
+source	thermal_locomotion	Thermal Locomotion	11.0.1	FORGE	TRIVIAL	38	18	0	0	0	true	false	0	230	thermal_locomotion-1.20.1-11.0.1.19.jar
+source	theurgy	Theurgy	1.25.0	FORGE	MODERATE	456	293	0	0	0	true	false	0	3510	theurgy-1.20.1-1.25.0.jar
+source	tiab	Time In A Bottle	4.0.4-mc1.20.1	FORGE	TRIVIAL	37	16	0	0	0	false	false	0	54	time-in-a-bottle-4.0.4-mc1.20.1.jar
+source	tinyredstone	Tiny Redstone	1.20-5.0.3	FORGE	TRIVIAL	110	48	0	0	0	false	false	0	369	tinyredstone-1.20-5.0.3.jar
+source	titanium	Titanium	3.8.32	FORGE	MODERATE	329	109	0	0	0	true	false	0	607	titanium-1.20.1-3.8.32.jar
+source	toastcontrol	Toast Control	8.0.3	FORGE	NIGHTMARE	6	6	0	1	0	true	true	0	26	ToastControl-1.20.1-8.0.3.jar
+source	tombstone	Corail Tombstone	9.0.9	FORGE	NIGHTMARE	647	301	0	2	28	true	false	0	2280	tombstone-1.20.1-9.0.9.jar
+source	toolbelt	Tool Belt	1.20.02	FORGE	TRIVIAL	106	63	0	0	0	true	false	0	247	ToolBelt-1.20.1-1.20.02.jar
+source	torchmaster	Torchmaster	20.1.9	FORGE	TRIVIAL	41	27	0	0	0	false	false	0	116	torchmaster-20.1.9.jar
+source	totw_modded	Towers of the Wild Modded	1.0.6	FORGE	TRIVIAL	1	1	0	0	0	false	false	0	279	totw_modded-forge-1.20.1-1.0.6.jar
+source	towntalk	TownTalk	1.1.0	FORGE	TRIVIAL	3	1	0	0	0	false	false	0	48041	towntalk-1.20.1-1.1.0.jar
+source	trashcans	Trash Cans	1.0.18b	FORGE	TRIVIAL	59	25	0	0	0	false	false	0	154	trashcans-1.0.18b-forge-mc1.20.jar
+source	trashslot	TrashSlot	15.1.2	FORGE	TRIVIAL	40	1	0	1	0	false	false	0	115	trashslot-forge-1.20-15.1.2.jar
+source	twigs	Twigs	1.20.1-3.1.1	FORGE	HARD	74	30	0	1	5	true	false	0	2701	Twigs-1.20.1-3.1.0.jar
+source	twilightdelight	Twilight's Flavor & Delight	2.0.17	FORGE	HARD	103	41	0	1	12	true	false	4	1399	twilightdelight-2.0.17.jar
+source	twilightforest	The Twilight Forest	4.3.2508	FORGE	NIGHTMARE	1570	795	0	0	0	true	true	0	22785	twilightforest-1.20.1-4.3.2508-universal.jar
+source	undergarden	The Undergarden	0.8.14	FORGE	HARD	391	207	0	1	7	true	false	0	44027	The_Undergarden-1.20.1-0.8.14.jar
+source	universalgrid	Universal Grid	1.20.1-1.1	FORGE	HARD	18	14	0	1	1	false	false	0	42	universalgrid-1.20.1-1.1.jar
+source	utilitarian	Utilitarian	1.20.1-0.9.1	FORGE	HARD	37	30	0	0	2	true	false	0	287	utilitarian-1.20.1-0.9.1.jar
+source	utilitix	UtilitiX	1.20.1-0.8.25	FORGE	NIGHTMARE	202	75	0	1	9	true	true	0	584	UtilitiX-1.20.1-0.8.25.jar
+source	valhelsia_core	Valhelsia Core	1.1.2	FORGE	HARD	122	28	0	2	4	true	false	0	198	valhelsia_core-forge-1.20.1-1.1.2.jar
+source	villagertools	villagertools	1.0.3	FORGE	TRIVIAL	10	6	0	0	0	true	false	0	54	villagertools-1.20.1-1.0.3.jar
+source	voidscape	Voidscape	1.20.1-1.5.389	FORGE	NIGHTMARE	279	139	0	0	0	true	true	0	1801	Voidscape-1.20.1-1.5.389.jar
+source	voidtotem	Void Totem	3.0.1	FORGE	HARD	30	18	0	1	2	true	false	0	68	voidtotem-forge-1.20-3.0.1.jar
+source	waystones	Waystones	14.1.17	FORGE	HARD	182	3	0	1	3	false	false	0	506	waystones-forge-1.20.1-14.1.17.jar
+source	wirelesschargers	Wireless Chargers	1.0.10	FORGE	TRIVIAL	26	9	0	0	0	false	false	0	311	wirelesschargers-1.0.10-forge-mc1.20.4.jar
+source	wstweaks	Wither Skeleton Tweaks	9.1.0	FORGE	NIGHTMARE	5	3	0	1	0	true	true	0	28	WitherSkeletonTweaks-1.20.1-9.1.0.jar
+source	xnet	XNet	1.20-6.1.6	FORGE	MODERATE	178	42	0	0	0	true	false	0	561	xnet-1.20-6.1.6.jar
+source	xnetgases	XNet Gases	5.1.4	FORGE	TRIVIAL	29	12	0	0	0	false	false	0	219	xnetgases-1.20.1-5.1.4.jar
+source	yeetusexperimentus	Yeetus Experimentus	2.3.1-build.6+mc1.20.1	FORGE	HARD	4	1	0	1	2	false	false	0	554	YeetusExperimentus-Forge-2.3.1-build.6+mc1.20.1.jar
+source	yungsapi	YUNG's API	1.20-Forge-4.0.6	FORGE	HARD	167	23	0	2	12	false	false	0	361	YungsApi-1.20-Forge-4.0.6.jar
+source	yungsextras	YUNG's Extras	1.20-Forge-4.0.3	FORGE	TRIVIAL	29	2	0	2	0	false	false	0	195	YungsExtras-1.20-Forge-4.0.3.jar
+source	zerocore	Zero CORE 2	1.20.1-2.1.47	FORGE	MODERATE	771	258	0	0	0	true	false	0	1308	ZeroCore2-1.20.1-2.1.47.jar
+source	zeta	Zeta	1.0-30	FORGE	NIGHTMARE	696	210	0	3	26	true	false	1	982	Zeta-1.0-30.jar
+source	~unknown:JCPlugin-1.17.x-1.20.x-4.0.4-Forge			UNKNOWN	NIGHTMARE	16	0	0	0	0	true	true	0	33	JCPlugin-1.17.x-1.20.x-4.0.4-Forge.jar
+source	~unknown:ScalableCatsForce-3.3.1-build-0-with-library			UNKNOWN	MODERATE	6405	3	0	0	0	false	false	0	15481	ScalableCatsForce-3.3.1-build-0-with-library.jar
+source	~unknown:kotlinforforge-4.11.0-all			UNKNOWN	MODERATE	4186	0	0	0	0	false	false	3	7025	kotlinforforge-4.11.0-all.jar
+source	~unknown:travelersbackpack-forge-1.20.1-9.1.44	Traveler's Backpack	9.1.44	FORGE	HARD	290	195	0	2	1	true	false	0	1246	travelersbackpack-forge-1.20.1-9.1.44.jar
+target	accelerateddecay	Accelerated Decay	21.0.0	NEOFORGE	TRIVIAL	4	0	1	2	0	true	false	0	10	accelerated-decay-neoforge-21.0.0.jar
+target	actuallyadditions	Actually Additions	1.3.26	NEOFORGE	HARD	548	0	218	1	3	true	false	0	3141	actuallyadditions-1.3.26+mc1.21.1.jar
+target	additional_lights	Additional Lights	2.1.10	NEOFORGE	TRIVIAL	33	0	4	0	0	false	false	0	502	additional_lights-neoforge-1.21-2.1.10.jar
+target	advanced_ae	Advanced AE	1.6.11-1.21.1	NEOFORGE	HARD	291	0	69	1	17	true	false	2	4684	AdvancedAE-1.6.11-1.21.1.jar
+target	advancedperipherals	Advanced Peripherals	0.7.62b	NEOFORGE	MODERATE	257	0	144	0	0	true	false	0	914	AdvancedPeripherals-1.21.1-0.7.62b.jar
+target	ae2	Applied Energistics 2	19.2.17	NEOFORGE	HARD	1824	0	305	1	17	true	false	0	8037	appliedenergistics2-19.2.17.jar
+target	ae2ct	AE2:Crafting Tree	1.21.1-1.1.1	NEOFORGE	HARD	21	0	10	1	2	false	false	0	427	ae2ct-1.21.1-1.1.1.jar
+target	ae2importexportcard	AE2 Import Export Card	1.21.1-1.5.0	NEOFORGE	HARD	28	0	10	1	3	true	false	1	410	ae2importexportcard-1.21.1-1.5.0.jar
+target	ae2jeiintegration	AE2 JEI Integration	1.2.1	NEOFORGE	TRIVIAL	52	0	4	0	0	false	false	0	89	ae2jeiintegration-1.2.1.jar
+target	ae2netanalyser	AE2NetworkAnalyzer	1.21-2.1.5-neoforge	NEOFORGE	HARD	57	0	13	1	1	false	false	0	1646	AE2NetworkAnalyzer-1.21-2.1.5-neoforge.jar
+target	ae2wtlib	AE2WTLib	19.5.1	NEOFORGE	HARD	85	0	10	1	6	true	false	1	246	ae2wtlib-19.5.1.jar
+target	aeinfinitybooster	AEInfinityBooster	1.21.1-1.0.0.58	NEOFORGE	HARD	15	0	11	1	6	false	false	0	29	aeinfinitybooster-neoforge-1.21.1-1.0.0.58.jar
+target	aether	The Aether	1.5.10	NEOFORGE	NIGHTMARE	935	0	456	1	62	true	false	3	39281	aether-1.21.1-1.5.10-neoforge.jar
+target	aiimprovements	AI-Improvements	0.5.3	NEOFORGE	TRIVIAL	20	0	8	0	0	true	false	0	28	AI-Improvements-1.21-0.5.3.jar
+target	akashictome	Akashic Tome	1.8-30	NEOFORGE	TRIVIAL	17	0	13	0	0	false	false	0	49	AkashicTome-1.8-30.jar
+target	allthearcanistgear	All The Arcanist Gear	1.21.1-21.3.2	NEOFORGE	HARD	49	0	31	1	4	false	false	1	367	allthearcanistgear-1.21.1-21.3.2.jar
+target	allthecompressed	AllTheCompressed	4.4.0	NEOFORGE	TRIVIAL	27	0	15	0	0	false	false	0	5763	allthecompressed-1.21.1-4.4.0.jar
+target	alltheleaks	All The Leaks	1.1.11+1.21.1-neoforge	NEOFORGE	NIGHTMARE	302	0	110	1	135	true	false	1	527	alltheleaks-1.1.11+1.21.1-neoforge.jar
+target	allthemodium	Allthemodium	3.0.1	NEOFORGE	HARD	166	0	77	1	3	true	false	0	1920	allthemodium-3.0.1_mc_1.21.1.jar
+target	alltheores	AllTheOres	3.2.0	NEOFORGE	TRIVIAL	67	0	39	0	0	true	false	0	1606	alltheores-3.2.0_neoforge_1.21.1.jar
+target	allthetweaks	AllTheTweaks	2.9.4	NEOFORGE	HARD	93	0	21	1	12	true	false	1	4803	allthetweaks-1.21.1-2.9.4.jar
+target	allthewizardgear	All the Wizard Gear	1.21.1-1.1.12	NEOFORGE	TRIVIAL	17	0	13	1	0	true	false	0	109	allthewizardgear-1.21.1-1.1.12.jar
+target	almostunified	AlmostUnified	1.21.1-1.4.2	NEOFORGE	HARD	165	0	8	2	17	false	false	0	288	almostunified-neoforge-1.21.1-1.4.2.jar
+target	amendments	Amendments	1.21-2.1.7	NEOFORGE	NIGHTMARE	257	0	3	2	56	true	false	0	1127	amendments-neoforge-1.21-2.1.7.jar
+target	apotheosis	Apotheosis	8.6.1	NEOFORGE	NIGHTMARE	537	0	159	1	22	true	true	0	6960	Apotheosis-1.21.1-8.6.1.jar
+target	apothic_attributes	Apothic Attributes	2.10.1	NEOFORGE	NIGHTMARE	124	0	29	1	8	true	true	0	315	ApothicAttributes-1.21.1-2.10.1.jar
+target	apothic_enchanting	Apothic Enchanting	1.6.0	NEOFORGE	NIGHTMARE	155	0	51	1	20	true	true	0	5293	ApothicEnchanting-1.21.1-1.6.0.jar
+target	apothic_spawners	Apothic Spawners	1.4.0	NEOFORGE	NIGHTMARE	33	0	6	1	2	true	true	0	126	ApothicSpawners-1.21.1-1.4.0.jar
+target	appflux	AppliedFlux	1.21-2.1.5-neoforge	NEOFORGE	HARD	73	0	28	1	9	false	false	0	337	AppliedFlux-1.21-2.1.5-neoforge.jar
+target	appleskin	AppleSkin	3.0.9+mc1.21	NEOFORGE	TRIVIAL	36	0	19	0	0	false	false	0	74	appleskin-neoforge-mc1.21-3.0.9.jar
+target	appmek	Applied Mekanistics	1.6.3	NEOFORGE	HARD	49	0	23	1	2	false	false	0	146	Applied-Mekanistics-1.6.3.jar
+target	aquaculture	Aquaculture 2	2.7.21	NEOFORGE	TRIVIAL	118	0	73	0	0	true	false	0	591	Aquaculture-1.21.1-2.7.21.jar
+target	architectury	Architectury	13.0.11	NEOFORGE	HARD	382	0	122	2	20	true	false	0	571	architectury-13.0.11-neoforge.jar
+target	ars_additions	Ars Additions	1.21.1-21.3.0	NEOFORGE	HARD	199	0	104	1	12	false	false	0	1424	ars_additions-1.21.1-21.3.0.jar
+target	ars_controle	Ars Controle	1.21.1-1.6.15	NEOFORGE	HARD	97	0	44	1	8	false	false	0	308	ars_controle-1.21.1-1.6.15.jar
+target	ars_creo	Ars Creo	5.4.0	NEOFORGE	HARD	47	0	18	1	2	false	false	0	93	ars_creo-1.21.1-5.4.0.jar
+target	ars_elemancy	Ars Elemancy	1.18.3	NEOFORGE	HARD	67	0	33	1	1	true	false	1	773	ars_elemancy-1.21.1-1.18.3.jar
+target	ars_elemental	Ars Elemental	0.7.10.1	NEOFORGE	HARD	353	0	207	1	16	true	false	1	2207	ars_elemental-1.21.1-0.7.10.1.jar
+target	ars_nouveau	Ars Nouveau	5.13.0	NEOFORGE	NIGHTMARE	5976	0	620	1	42	true	false	3	19625	ars_nouveau-1.21.1-5.13.0.jar
+target	ars_ocultas	Ars Ocultas	2.5.0	NEOFORGE	TRIVIAL	42	0	23	0	0	true	false	0	77	ars_ocultas-1.21.1-2.5.0.jar
+target	ars_polymorphia	Ars Polymorphia	1.0.3	NEOFORGE	HARD	11	0	6	1	5	false	false	0	19	ars_polymorphia-1.0.3.jar
+target	ars_technica	Ars Technica	2.7.6	NEOFORGE	HARD	206	0	84	1	24	false	false	1	3604	ars_technica-1.21.1-2.7.6.jar
+target	ars_unification	Ars Unification	1.2.19	NEOFORGE	HARD	49	0	21	1	5	false	false	0	103	ars_unification-1.2.19.jar
+target	arseng	Ars Énergistique	2.1.1-beta	NEOFORGE	HARD	40	0	22	1	3	false	false	0	120	arseng-2.1.1-beta.jar
+target	artifacts	Artifacts	13.2.1	NEOFORGE	NIGHTMARE	278	0	33	2	41	false	false	0	1006	artifacts-neoforge-13.2.1.jar
+target	athena	Athena	4.0.6	NEOFORGE	HARD	57	0	8	2	3	false	false	0	97	athena-neoforge-1.21.1-4.0.6.jar
+target	atlas_api	Atlas API	1.21.1-1.2.0	NEOFORGE	TRIVIAL	16	0	8	0	0	true	false	0	27	atlas_api-1.21.1-1.2.0.jar
+target	attributefix	AttributeFix	21.1.3	NEOFORGE	HARD	5	0	1	2	1	false	false	0	19	attributefix-neoforge-1.21.1-21.1.3.jar
+target	auroras	Auroras	1.6.2	NEOFORGE	HARD	24	0	9	1	4	false	false	0	2066	Auroras-1.21-1.6.2.jar
+target	balm	Balm	21.0.64	NEOFORGE	HARD	578	0	85	2	20	false	false	1	765	balm-neoforge-1.21.1-21.0.64.jar
+target	bcc	Better Compatibility Checker	21.1.8	NEOFORGE	HARD	16	0	4	1	5	false	false	0	24	better-compatability-checker-neoforge-21.1.8.jar
+target	bellsandwhistles	Create: Bells & Whistles	0.4.7-1.21.1	NEOFORGE	TRIVIAL	19	0	7	0	0	false	false	0	189	bellsandwhistles-0.4.7-1.21.1.jar
+target	betteradvancements	Better Advancements	0.4.3.21	NEOFORGE	TRIVIAL	36	0	8	0	0	true	false	0	96	BetterAdvancements-NeoForge-1.21.1-0.4.3.21.jar
+target	betterdeserttemples	YUNG's Better Desert Temples	1.21.1-NeoForge-4.1.5	NEOFORGE	HARD	62	0	5	1	11	false	false	0	884	YungsBetterDesertTemples-1.21.1-NeoForge-4.1.5.jar
+target	betterdungeons	YUNG's Better Dungeons	1.21.1-NeoForge-5.1.4	NEOFORGE	HARD	64	0	8	1	3	false	false	0	763	YungsBetterDungeons-1.21.1-NeoForge-5.1.4.jar
+target	betterendisland	YUNG's Better End Island	1.21.1-NeoForge-3.1.2	NEOFORGE	HARD	45	0	4	1	10	false	false	0	388	YungsBetterEndIsland-1.21.1-NeoForge-3.1.2.jar
+target	betterfortresses	YUNG's Better Nether Fortresses	1.21.1-NeoForge-3.1.5	NEOFORGE	HARD	26	0	5	1	3	false	false	0	595	YungsBetterNetherFortresses-1.21.1-NeoForge-3.1.5.jar
+target	betterjungletemples	YUNG's Better Jungle Temples	1.21.1-NeoForge-3.1.2	NEOFORGE	HARD	32	0	5	1	3	false	false	0	777	YungsBetterJungleTemples-1.21.1-NeoForge-3.1.2.jar
+target	bettermineshafts	YUNG's Better Mineshafts	1.21.1-NeoForge-5.1.1	NEOFORGE	HARD	51	0	6	1	5	false	false	0	482	YungsBetterMineshafts-1.21.1-NeoForge-5.1.1.jar
+target	betteroceanmonuments	YUNG's Better Ocean Monuments	1.21.1-NeoForge-4.1.2	NEOFORGE	HARD	28	0	5	1	4	false	false	0	1001	YungsBetterOceanMonuments-1.21.1-NeoForge-4.1.2.jar
+target	betterstrongholds	YUNG's Better Strongholds	1.21.1-NeoForge-5.1.3	NEOFORGE	HARD	32	0	5	1	2	false	false	0	450	YungsBetterStrongholds-1.21.1-NeoForge-5.1.3.jar
+target	betterwitchhuts	YUNG's Better Witch Huts	1.21.1-NeoForge-4.1.1	NEOFORGE	HARD	20	0	5	1	2	false	false	0	170	YungsBetterWitchHuts-1.21.1-NeoForge-4.1.1.jar
+target	bhc	Baubley Heart Canisters	1.21.1-1.4.1	NEOFORGE	TRIVIAL	47	0	32	0	0	false	false	0	168	baubley-heart-canisters-1.21.1-1.4.1.jar
+target	bibliobiomes	Bibliobiomes Legacy	1.6.1	NEOFORGE	TRIVIAL	9	0	9	0	0	false	false	0	19708	bibliobiomes-1.21.1-1.6.1.jar
+target	bibliocraft	Bibliocraft Legacy	1.6.5	NEOFORGE	MODERATE	300	0	99	0	0	true	false	0	5342	bibliocraft-1.21.1-1.6.5.jar
+target	bibliowoods	Bibliowoods Legacy	1.6.2	NEOFORGE	TRIVIAL	34	0	34	0	0	false	false	0	22689	bibliowoods-1.21.1-1.6.2.jar
+target	bigreactors	Extreme Reactors	1.21.1-2.4.28	NEOFORGE	MODERATE	490	0	129	0	0	true	false	0	2494	ExtremeReactors2-1.21.1-2.4.28.jar
+target	biomeswevegone	Oh The Biomes We've Gone	2.6.0	NEOFORGE	HARD	277	0	9	1	4	true	false	0	20004	Oh-The-Biomes-Weve-Gone-NeoForge-2.6.0.jar
+target	blockui	UI Library Mod	1.0.211-1.21.1-snapshot	NEOFORGE	MODERATE	166	0	35	0	0	true	false	0	457	blockui-1.0.211-1.21.1-snapshot.jar
+target	blueflame	Blue Flame Burning	1.21.1-1.1.1	NEOFORGE	HARD	11	0	3	0	6	false	false	0	17	blueflame-1.21.1-1.1.1.jar
+target	bookshelf	Bookshelf	21.1.81	NEOFORGE	NIGHTMARE	173	0	7	2	35	false	false	0	321	bookshelf-neoforge-1.21.1-21.1.81.jar
+target	botanypots	BotanyPots	21.1.44	NEOFORGE	HARD	105	0	1	2	3	false	false	0	1043	botanypots-neoforge-1.21.1-21.1.44.jar
+target	botanypotsmystical	BotanyPots-Mystical	21.1.12	NEOFORGE	TRIVIAL	9	0	1	2	0	false	false	0	87	botanypotsmystical-neoforge-1.21.1-21.1.12.jar
+target	botanytrees	BotanyTrees	21.1.7	NEOFORGE	TRIVIAL	2	0	1	2	0	false	false	0	333	botanytrees-neoforge-1.21.1-21.1.7.jar
+target	brandonscore	Brandon's Core	3.2.1.309	NEOFORGE	HARD	314	0	67	1	5	true	false	0	1352	BrandonsCore-1.21.1-3.2.1.309.jar
+target	bridgingmod	Bridging Mod	2.6.2+1.21.1	NEOFORGE	HARD	50	0	1	1	4	false	false	0	5785	BridgingMod-2.6.2+1.21.1.neoforge-release.jar
+target	buildinggadgets2	Building Gadgets 2	1.3.9	NEOFORGE	MODERATE	166	0	80	0	0	true	false	0	3768	buildinggadgets2-1.3.9.jar
+target	bwncr	Bad Wither No Cookie Reloaded	3.20.4	NEOFORGE	TRIVIAL	9	0	4	0	0	false	false	0	27	bwncr-neoforge-1.21.1-3.20.4.jar
+target	byzantine	Byzantine	51	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	15700	Byzantine-1.21.1-51.jar
+target	cabletiers	Cable Tiers	1.21.1-0.6.13	NEOFORGE	HARD	253	0	36	1	19	false	false	0	1478	cabletiers-neoforge-1.21.1-0.6.13.jar
+target	caelus	Caelus API	7.0.1+1.21.1	NEOFORGE	HARD	24	0	7	1	6	false	false	0	49	caelus-neoforge-7.0.1+1.21.1.jar
+target	camol	Camol	1.21.1-0.3.1	NEOFORGE	HARD	28	0	19	0	2	true	false	0	60	camol-1.21.1-0.3.1.jar
+target	cataclysm	L_Ender's Cataclysm 1.21.1	3.32	NEOFORGE	HARD	1310	0	536	1	23	true	false	0	71643	L_Ender's Cataclysm 1.21.1-3.32.jar
+target	catjammies	CatJammies	1.21-1.7.1	NEOFORGE	HARD	3	0	1	1	1	false	false	0	8	catjammies-1.21-1.7.1.jar
+target	charginggadgets	Charging Gadgets	1.14.1	NEOFORGE	TRIVIAL	25	0	20	0	0	false	false	0	65	charginggadgets-1.14.1.jar
+target	chipped	Chipped	4.0.2	NEOFORGE	HARD	62	0	3	1	2	false	false	0	14668	chipped-neoforge-1.21.1-4.0.2.jar
+target	chisel	Chisel Reborn	2.0.1+mc1.21.1	NEOFORGE	HARD	32	0	2	2	3	false	false	0	8074	chisel-neoforge-2.0.1+mc1.21.1.jar
+target	chromacarvings	Chroma Carvings	1.21.1-0.2.0	NEOFORGE	TRIVIAL	23	0	14	0	0	true	false	0	262	chromacarvings-1.21.1-0.2.0.jar
+target	cleanswing	Clean Swing	1.9	NEOFORGE	TRIVIAL	1	0	1	0	0	true	false	0	8	cleanswing-1.9.jar
+target	cloth_config	Cloth Config v15 API	15.0.140	NEOFORGE	MODERATE	633	0	91	0	0	true	false	0	1136	cloth-config-15.0.140-neoforge.jar
+target	cloudglass	Cloud Glass	1.0.2	NEOFORGE	TRIVIAL	10	0	8	0	0	false	false	0	79	CloudGlass-1.21.1-1.0.2.jar
+target	clumps	Clumps	19.0.0.1	NEOFORGE	HARD	15	0	4	1	2	false	false	0	17	Clumps-neoforge-1.21.1-19.0.0.1.jar
+target	cobblegengalore	Cobblegen Galore	1.21.1-0.2.9	NEOFORGE	TRIVIAL	12	0	10	0	0	true	false	0	86	cobblegengalore-1.21.1-0.2.9.jar
+target	cobweb	Cobweb	1.4.0	NEOFORGE	TRIVIAL	36	0	10	2	0	true	false	0	401	cobweb-neoforge-1.21-1.4.0.jar
+target	codechickenlib	CodeChicken Lib	4.6.1.529	NEOFORGE	HARD	522	0	68	1	8	true	false	1	1502	CodeChickenLib-1.21.1-4.6.1.529.jar
+target	colorfulhearts	Colorful Hearts	10.5.9	NEOFORGE	HARD	53	0	11	2	3	true	false	0	152	colorfulhearts-neoforge-1.21.1-10.5.9.jar
+target	colorwheel	Colorwheel	1.2.9+mc1.21.1	NEOFORGE	NIGHTMARE	182	0	8	2	32	false	false	0	388	colorwheel-neoforge-1.2.9+mc1.21.1.jar
+target	colorwheel_patcher	Colorwheel Patcher	1.0.5+mc1.21.1	NEOFORGE	TRIVIAL	10	0	1	1	0	false	false	0	205	colorwheel_patcher-neoforge-1.0.5+mc1.21.1.jar
+target	comforts	Comforts	9.0.5+1.21.1	NEOFORGE	HARD	64	0	16	1	3	false	false	1	412	comforts-neoforge-9.0.5+1.21.1.jar
+target	commoncapabilities	CommonCapabilities	2.11.5	NEOFORGE	MODERATE	158	0	99	0	0	true	false	0	277	commoncapabilities-1.21.1-neoforge-2.11.5-363.jar
+target	compactmachines	Compact Machines	7.0.81	NEOFORGE	HARD	181	0	87	1	2	true	false	8	668	compactmachines-neoforge-7.0.81.jar
+target	computercraft	CC: Tweaked	1.113.1	NEOFORGE	HARD	1193	0	42	3	5	true	false	2	3022	cc-tweaked-1.21.1-forge-1.113.1.jar
+target	computercraft	CC: Tweaked	1.120.0	NEOFORGE	HARD	1190	0	40	3	6	true	false	2	3053	cc-tweaked-1.21.1-forge-1.120.0.jar
+target	connectedglass	Connected Glass	1.1.14	NEOFORGE	TRIVIAL	21	0	4	1	0	true	false	0	800	connectedglass-1.1.14-neoforge-mc1.21.jar
+target	connectivity	Connectivity Mod	7.6	NEOFORGE	NIGHTMARE	72	0	4	1	30	true	false	0	111	connectivity-1.21.1-7.6.jar
+target	constructionstick	Construction Sticks	1.4.1	NEOFORGE	TRIVIAL	94	0	39	0	0	false	false	0	258	ConstructionSticks-1.21.1-1.4.1.jar
+target	controlling	Controlling	19.0.5	NEOFORGE	HARD	42	0	8	2	5	true	false	0	75	Controlling-neoforge-1.21.1-19.0.5.jar
+target	cookingforblockheads	Cooking for Blockheads	21.1.24	NEOFORGE	MODERATE	229	0	7	2	0	false	false	0	1236	cookingforblockheads-neoforge-1.21.1-21.1.24.jar
+target	corgilib	CorgiLib	5.0.0.9	NEOFORGE	HARD	148	0	4	1	8	true	false	0	302	Corgilib-NeoForge-1.21.1-5.0.0.9.jar
+target	cosmeticarmorreworked	CosmeticArmorReworked	1.21.1-v1-neoforge	NEOFORGE	TRIVIAL	39	0	18	0	0	false	false	0	90	cosmeticarmorreworked-1.21.1-v1-neoforge.jar
+target	crafting_on_a_stick	Crafting On A Stick	1.21.0.6	NEOFORGE	TRIVIAL	42	0	20	0	0	false	false	0	76	crafting_on_a_stick-1.21.0.6.jar
+target	craftingtweaks	Crafting Tweaks	21.1.10	NEOFORGE	TRIVIAL	101	0	3	2	0	false	false	0	250	craftingtweaks-neoforge-1.21.1-21.1.10.jar
+target	crash_assistant	Crash Assistant	1.11.11	NEOFORGE	NIGHTMARE	644	1	1	0	0	false	true	2	3112	CrashAssistant-neoforge-1.20.6-1.21.4-1.11.11.jar
+target	crashutilities	Crash Utilities	9.0.4	NEOFORGE	TRIVIAL	92	0	25	0	0	true	false	0	220	crashutilities-9.0.4.jar
+target	create	Create	6.0.10	NEOFORGE	NIGHTMARE	2692	0	792	1	65	true	false	3	18675	create-1.21.1-6.0.10.jar
+target	create_aquatic_ambitions	Create Aquatic Ambitions	2.0.4	NEOFORGE	TRIVIAL	81	0	29	0	0	false	false	0	1048	create_aquatic_ambitions-1.21.1-2.0.4.jar
+target	create_dragons_plus	Create: Dragons Plus	1.11.3	NEOFORGE	NIGHTMARE	360	0	149	5	47	true	false	1	1003	CreateDragonsPlus-1.11.3.jar
+target	create_enchantment_industry	Create: Enchantment Industry	2.5.0	NEOFORGE	NIGHTMARE	458	0	173	5	29	true	false	1	1536	create-enchantment-industry-2.5.0.jar
+target	create_hypertube	Create Hypertube	0.6.0	NEOFORGE	HARD	141	0	58	3	14	false	false	0	533	create_hypertube-0.6.0-NEOFORGE.jar
+target	createaddition	Create Crafts & Additions	1.6.0	NEOFORGE	HARD	245	0	99	1	7	false	false	1	1622	createaddition-1.6.0.jar
+target	creeperoverhaul	Creeper Overhaul	4.0.6	NEOFORGE	HARD	83	0	5	1	4	false	false	0	1157	CreeperOverhaul-neoforge-1.21.1-4.0.6.jar
+target	cristellib	Cristel Lib	3.1.7	NEOFORGE	HARD	95	0	5	2	2	false	false	0	569	cristellib-neoforge-1.21.1-3.1.7.jar
+target	cryonicconfig	Cryonic Config	1.0.0+mc1.21.11	NEOFORGE	HARD	9	0	1	1	4	false	false	0	130	cryonicconfig-neoforge-1.0.0+mc1.21.11.jar
+target	crystalix	Crystalix	3.0.0	NEOFORGE	TRIVIAL	72	0	33	0	0	false	false	0	797	crystalix-3.0.0.jar
+target	ctm	ConnectedTexturesMod	1.21-1.2.1+3	NEOFORGE	HARD	145	0	13	1	1	true	false	0	235	CTM-1.21-1.2.1+3.jar
+target	ctov	ChoiceTheorem's Overhauled Village	3.6.3	NEOFORGE	TRIVIAL	12	0	5	2	0	false	false	0	6972	[Neoforge]ctov-3.6.3.jar
+target	cucumber	Cucumber Library	8.0.16	NEOFORGE	HARD	138	0	49	1	4	true	false	0	269	Cucumber-1.21.1-8.0.16.jar
+target	cupboard	Cupboard mod	3.9	NEOFORGE	HARD	18	0	6	1	5	true	false	0	28	cupboard-1.21.1-3.9.jar
+target	curios	Curios API	9.5.1+1.21.1	NEOFORGE	HARD	152	0	57	2	15	true	false	0	401	curios-neoforge-9.5.1+1.21.1.jar
+target	cyclopscore	Cyclops Core	1.29.2	NEOFORGE	HARD	757	0	165	1	4	true	false	0	1134	cyclopscore-1.21.1-neoforge-1.29.2.jar
+target	darkmodeeverywhere	Dark Mode Everywhere	1.21.1-1.4.0	NEOFORGE	HARD	18	0	2	1	3	false	false	0	38	darkmodeeverywhere-neoforge-1.21.1-1.4.0.jar
+target	deeperdarker	Deeper and Darker	1.4.1	NEOFORGE	HARD	207	0	115	1	9	true	false	0	3814	deeperdarker-neoforge-1.21.1-1.4.1.jar
+target	deimos	Deimos	2.7	NEOFORGE	HARD	21	0	3	2	1	false	false	0	48	deimos-1.21.1-neoforge-2.7.jar
+target	dimstorage	DimStorage	9.1.1	NEOFORGE	TRIVIAL	95	0	47	0	0	true	false	0	175	DimStorage-1.21.1-9.1.1.jar
+target	disenchanting_table	Dis-Enchanting Table	5.0.2	NEOFORGE	HARD	162	10	9	7	7	true	false	0	299	disenchanting_table-merged-1.21.1-5.0.2.jar
+target	domum_ornamentum	Domum Ornamentum	1.0.234-snapshot	NEOFORGE	MODERATE	275	0	93	0	0	true	false	0	1124	domum-ornamentum-1.0.234-snapshot-main.jar
+target	draconicevolution	Draconic Evolution	3.1.4.632	NEOFORGE	HARD	682	0	267	1	5	true	false	0	5904	Draconic-Evolution-1.21.1-3.1.4.632.jar
+target	drippyloadingscreen	Drippy Loading Screen	3.1.5	NEOFORGE	HARD	66	0	4	2	20	true	false	0	164	drippyloadingscreen_neoforge_3.1.5_MC_1.21.1.jar
+target	dummmmmmy	MmmMmmMmmMmm	1.21-2.1.0	NEOFORGE	HARD	45	0	1	2	6	true	false	0	209	dummmmmmy-neoforge-1.21-2.1.0.jar
+target	dungeoncrawl	Dungeon Crawl	2.3.17	NEOFORGE	MODERATE	154	0	29	0	0	true	false	0	721	DungeonCrawl-NeoForge-1.21-2.3.17.jar
+target	dungeons_arise	When Dungeons Arise	2.1.68	NEOFORGE	TRIVIAL	6	0	3	0	0	false	false	0	11565	DungeonsArise-1.21.1-2.1.68-release.jar
+target	dyenamics	Dyenamics	1.21.1-3.4.2	NEOFORGE	HARD	58	0	38	0	5	true	false	0	1170	dyenamics-1.21.1-3.4.2.jar
+target	dyenamicsandfriends	Dyenamics and Friends	1.21.1-2.2.2	NEOFORGE	TRIVIAL	70	0	42	0	0	true	false	0	8165	dyenamicsandfriends-1.21.1-2.2.2.jar
+target	dysoncubeproject	Dyson Cube Project	1.0.5	NEOFORGE	TRIVIAL	42	0	23	1	0	true	false	0	526	dysoncubeproject-1.0.5.jar
+target	easy_villagers	Easy Villagers	1.21.1-1.1.42	NEOFORGE	MODERATE	209	0	98	0	0	true	false	0	445	easy-villagers-neoforge-1.21.1-1.1.42.jar
+target	edivadlib	EdivadLib	3.0.0	NEOFORGE	TRIVIAL	7	0	4	0	0	false	false	0	13	EdivadLib-1.21-3.0.0.jar
+target	elevatorid	ElevatorMod	1.21.1-1.11.4	NEOFORGE	TRIVIAL	26	0	12	1	0	true	false	0	186	elevatorid-neoforge-1.21.1-1.11.4.jar
+target	enchdesc	EnchantmentDescriptions	21.1.10	NEOFORGE	HARD	7	0	1	2	2	false	false	0	80	enchdesc-neoforge-1.21.1-21.1.10.jar
+target	enderdrives	EnderDrives	1.4.4	NEOFORGE	HARD	64	0	29	2	4	false	false	0	309	enderdrives-neoforge-1.21.1-1.4.4.jar
+target	enderio	Ender IO	8.2.11-beta	NEOFORGE	HARD	1196	0	501	1	6	true	false	3	6438	enderio-8.2.11-beta.jar
+target	endermanoverhaul	Enderman Overhaul	2.0.3	NEOFORGE	HARD	120	0	20	1	3	false	false	0	1299	endermanoverhaul-neoforge-1.21.1-2.0.3.jar
+target	enderstorage	EnderStorage	2.13.0.191	NEOFORGE	TRIVIAL	74	0	32	0	0	true	false	0	257	EnderStorage-1.21.1-2.13.0.191.jar
+target	energymeter	Energy Meter	1.21.1-0.5.0	NEOFORGE	HARD	130	0	31	1	2	false	false	0	391	energymeter-neoforge-1.21.1-0.5.0.jar
+target	entangled	Entangled	1.3.21	NEOFORGE	HARD	28	0	11	1	3	true	false	0	127	entangled-1.3.21-neoforge-mc1.21.jar
+target	eternal_starlight	Eternal Starlight	0.8.1+1.21.1+neoforge	NEOFORGE	NIGHTMARE	1384	0	60	2	69	true	false	0	56005	eternalstarlight-0.8.1+1.21.1+neoforge.jar
+target	euphoria_patcher	Euphoria Patcher	1.9.3-r5.8.1-neoforge	NEOFORGE	HARD	1420	0	2	1	12	false	false	0	4112	EuphoriaPatcher-1.9.3-r5.8.1-neoforge.jar
+target	everythingcopper	Everything is Copper	1.21.1-2.4.5	NEOFORGE	TRIVIAL	67	0	36	0	0	true	false	0	605	everythingcopper-1.21.1-2.4.5.jar
+target	evilcraft	EvilCraft	1.2.91	NEOFORGE	MODERATE	819	0	425	0	0	true	false	0	2770	evilcraft-1.21.1-neoforge-1.2.91-1002.jar
+target	expandedae	Expanded AE	2.1.1	NEOFORGE	NIGHTMARE	120	0	25	1	30	false	false	1	485	expandedae-2.1.1.jar
+target	experiencelib	ExperienceLib	1.2.1	NEOFORGE	TRIVIAL	87	0	8	0	0	true	false	0	165	experiencelib-1.21.1-1.2.1.jar
+target	explorerscompass	Explorer's Compass	1.21.1-3.4.0-neoforge	NEOFORGE	TRIVIAL	36	0	28	0	0	false	false	0	170	ExplorersCompass-1.21.1-3.4.0-neoforge.jar
+target	explorify	Explorify	1.6.5	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	749	Explorify v1.6.5.mod.jar
+target	extended_industrialization	Extended Industrialization	1.15.45-1.21.1	NEOFORGE	HARD	352	0	119	1	12	false	false	0	2050	extended-industrialization-1.15.45-1.21.1.jar
+target	extendedae	ExtendedAE	1.21-2.2.35-neoforge	NEOFORGE	HARD	426	0	59	1	11	true	false	1	5447	ExtendedAE-1.21-2.2.35-neoforge.jar
+target	extradisks	Extra Disks	1.21.1-4.0.15	NEOFORGE	TRIVIAL	40	0	29	0	0	true	false	0	335	ExtraDisks-1.21.1-4.0.15.jar
+target	extrastorage	ExtraStorage	5.0.10	NEOFORGE	TRIVIAL	107	0	43	0	0	true	false	0	399	ExtraStorage-1.21.1-5.0.10.jar
+target	extremesoundmuffler	Extreme Sound Muffler	3.56	NEOFORGE	HARD	22	0	3	1	3	false	false	0	263	ExtremeSoundMuffler-3.56_NeoForge-1.21.jar
+target	factory_blocks	Factory Blocks	1.4.0+mc1.21.1	NEOFORGE	TRIVIAL	13	0	1	0	0	false	false	0	790	factory_blocks-neoforge-1.4.0+mc1.21.1.jar
+target	fancymenu	FancyMenu	3.9.9	NEOFORGE	NIGHTMARE	2382	0	10	2	111	true	false	2	25298	fancymenu_neoforge_3.9.9_MC_1.21.1.jar
+target	farmersdelight	Farmer's Delight	1.3.2	NEOFORGE	HARD	292	0	117	1	14	true	false	0	3088	FarmersDelight-1.21.1-1.3.2.jar
+target	farmingforblockheads	Farming for Blockheads	21.1.13	NEOFORGE	HARD	81	0	2	2	1	false	false	0	811	farmingforblockheads-neoforge-1.21.1-21.1.13.jar
+target	fastbench	Fast Workbench	9.1.3	NEOFORGE	NIGHTMARE	16	0	6	1	5	true	true	0	27	FastWorkbench-1.21.1-9.1.3.jar
+target	fastfurnace	FastFurnace	9.0.1	NEOFORGE	NIGHTMARE	2	0	1	1	1	false	true	0	4	FastFurnace-1.21.1-9.0.1.jar
+target	fastsuite	Fast Suite	6.0.7	NEOFORGE	NIGHTMARE	14	0	2	1	5	true	true	0	27	FastSuite-1.21.1-6.0.7.jar
+target	ferritecore	Ferrite Core	7.0.3	NEOFORGE	NIGHTMARE	77	0	3	0	37	false	false	0	118	ferritecore-7.0.3-neoforge.jar
+target	fireproofboats	Fireproof Boats	1.21.1-1.0.4	NEOFORGE	HARD	8	0	7	0	3	true	false	0	38	fireproofboats-1.21.1-1.0.4.jar
+target	flickerfix	FlickerFix	6.1.0	NEOFORGE	HARD	2	0	1	1	1	false	false	0	4	flickerfix-1.21.1-6.1.0.jar
+target	fluxnetworks	Flux Networks	8.0.0	NEOFORGE	MODERATE	222	0	71	0	0	false	false	0	523	FluxNetworks-1.21.1-8.0.0.jar
+target	forbidden_arcanus	Forbidden Arcanus	2.6.1	NEOFORGE	HARD	480	0	93	1	13	true	false	0	3322	forbidden_arcanus-2.6.1.jar
+target	formations	Formations	1.0.4	NEOFORGE	HARD	71	0	21	1	12	true	false	0	280	formations-1.0.4-neoforge-mc1.21.jar
+target	formationsnether	Formations Nether	1.0.5+a	NEOFORGE	TRIVIAL	23	0	0	1	0	false	false	0	919	formationsnether-1.0.5a-mc1.21+.jar
+target	formationsoverworld	Formations Overworld	1.0.5+a	NEOFORGE	TRIVIAL	32	0	0	1	0	false	false	0	852	formationsoverworld-1.0.5a-mc1.21+.jar
+target	framedblocks	FramedBlocks	10.6.1	NEOFORGE	HARD	1743	0	232	0	12	true	false	0	4205	FramedBlocks-10.6.1.jar
+target	framework	Framework	0.13.11	NEOFORGE	MODERATE	219	0	15	0	0	true	false	0	378	framework-neoforge-1.21.1-0.13.11.jar
+target	ftbchunks	FTB Chunks	2101.1.21	NEOFORGE	HARD	238	0	7	1	12	true	false	0	640	ftb-chunks-neoforge-2101.1.21.jar
+target	ftbessentials	FTB Essentials	2101.1.10	NEOFORGE	HARD	92	0	5	1	1	true	false	0	212	ftb-essentials-neoforge-2101.1.10.jar
+target	ftbfiltersystem	FTB Filter System	21.1.4	NEOFORGE	TRIVIAL	99	0	2	1	0	true	false	0	206	ftb-filter-system-neoforge-21.1.4.jar
+target	ftbjeiextras	FTB Jei Extras	21.1.7	NEOFORGE	TRIVIAL	42	0	22	0	0	false	false	0	68	ftb-jei-extras-21.1.7.jar
+target	ftblibrary	FTB Library	2101.1.34	NEOFORGE	HARD	403	0	33	1	5	true	false	0	1405	ftb-library-neoforge-2101.1.34.jar
+target	ftbquests	FTB Quests	2101.1.29	NEOFORGE	HARD	472	0	60	1	1	false	false	0	1558	ftb-quests-neoforge-2101.1.29.jar
+target	ftbquestslangsplitter	FTB Quests Lang Splitter	1.0.6	NEOFORGE	HARD	10	0	5	1	4	false	false	0	196	ftbquestslangsplitter-1.0.6.jar
+target	ftbranks	FTB Ranks	2101.1.4	NEOFORGE	HARD	53	0	1	1	1	false	false	0	86	ftb-ranks-neoforge-2101.1.4.jar
+target	ftbteams	FTB Teams	2101.1.10	NEOFORGE	TRIVIAL	131	0	2	0	0	false	false	0	295	ftb-teams-neoforge-2101.1.10.jar
+target	ftbultimine	FTB Ultimine	2101.1.15	NEOFORGE	HARD	96	0	5	1	1	true	false	0	172	ftb-ultimine-neoforge-2101.1.15.jar
+target	ftbxmodcompat	FTB XMod Compat	21.1.10	NEOFORGE	HARD	101	0	3	1	2	false	false	0	148	ftb-xmod-compat-neoforge-21.1.10.jar
+target	fuelgoeshere	Fuel Goes Here	1.21.1-1.2.0	NEOFORGE	HARD	4	0	1	0	2	true	false	0	7	fuelgoeshere-1.21.1-1.2.0.jar
+target	functionalstorage	Functional Storage	1.21.1-1.5.8	NEOFORGE	MODERATE	179	0	105	0	0	true	false	0	791	functionalstorage-1.21.1-1.5.8.jar
+target	fusion	Fusion	1.3.12	NEOFORGE	NIGHTMARE	464	0	48	1	39	true	false	0	901	fusion-1.3.12-neoforge-mc1.21.1.jar
+target	fzzy_config	Fzzy Config	0.7.6+1.21+neoforge	NEOFORGE	MODERATE	755	0	19	0	0	false	false	0	2314	fzzy_config-0.7.6+1.21+neoforge.jar
+target	gateways	Gateways To Eternity	5.1.0	NEOFORGE	NIGHTMARE	84	0	10	1	1	true	true	0	631	GatewaysToEternity-1.21.1-5.1.0.jar
+target	geckolib	GeckoLib 4	4.9.2	NEOFORGE	HARD	262	0	17	1	7	true	false	0	615	geckolib-neoforge-1.21.1-4.9.2.jar
+target	generatorgalore	Generator Galore	1.21.1-1.6.3	NEOFORGE	TRIVIAL	62	0	39	0	0	true	false	0	388	generatorgalore-1.21.1-1.6.3.jar
+target	getittogetherdrops	Get It Together, Drops!	1.4	NEOFORGE	HARD	4	0	3	1	1	true	false	0	8	getittogetherdrops-neoforge-1.21.5-1.4.jar
+target	glassential	Glassential-renewed	3.4.5	NEOFORGE	HARD	77	0	26	1	2	false	false	0	685	Glassential-renewed-1.21.1-3.4.5.jar
+target	glodium	Glodium	1.21-2.2-neoforge	NEOFORGE	TRIVIAL	31	0	12	0	0	true	false	0	59	Glodium-1.21-2.2-neoforge.jar
+target	gmut	Gravitational Modulating Additional Unit	6.4	NEOFORGE	HARD	20	0	13	0	1	false	false	0	39	GravitationalModulatingAdditionalUnit-1.21.1-6.4.jar
+target	guideme	GuideME	21.1.17	NEOFORGE	HARD	5102	0	26	1	1	true	false	0	9091	guideme-21.1.17.jar
+target	handcrafted	Handcrafted	4.0.3	NEOFORGE	HARD	81	0	3	1	1	false	false	0	6965	handcrafted-neoforge-1.21.1-4.0.3.jar
+target	hardenedarmadillos	Hardened Armadillos	1.21.1-0.2.0	NEOFORGE	HARD	4	0	2	0	1	false	false	0	10	hardenedarmadillos-1.21.1-0.2.0.jar
+target	hellish_trials	Hellish Trials	1.0.5	NEOFORGE	TRIVIAL	3	0	1	1	0	false	false	0	568	HellishTrials-neoforge-1.0.5.jar
+target	herbsandharvest	Mama's Herbs and Harvest	1.21.1-17	NEOFORGE	MODERATE	205	0	95	0	0	true	false	0	17352	herbsandharvest-1.21.1-17.jar
+target	heyberryshutup	Hey Berry! SHUT UP	1.21.0-2.0.4	NEOFORGE	TRIVIAL	4	0	4	0	0	false	false	0	6	heyberryshutup-1.21.0-2.0.4.jar
+target	hostilenetworks	Hostile Neural Networks	6.5.1	NEOFORGE	NIGHTMARE	112	0	34	1	1	true	true	0	479	HostileNeuralNetworks-1.21.1-6.5.1.jar
+target	iceandfire	Ice And Fire Community Edition	2.0-beta.17	NEOFORGE	HARD	717	0	236	1	9	true	false	1	20360	iceandfire-2.0-beta.17.jar
+target	iceberg	Iceberg	1.3.2	NEOFORGE	HARD	126	0	16	2	24	true	false	0	208	Iceberg-1.21.1-neoforge-1.3.2.jar
+target	illagerwarship	Illager-Warship	1.0.1	NEOFORGE	TRIVIAL	2	0	2	0	0	false	false	0	69	illagerwarship-1.0.1-neoforge-1.21.1.jar
+target	imfast	I'm Fast	1.0.2	NEOFORGE	HARD	1	0	0	1	1	false	false	0	4	imfast-NEOFORGE-1.0.2.jar
+target	immediatelyfast	ImmediatelyFast	1.6.11+1.21.1	NEOFORGE	NIGHTMARE	75	0	5	2	37	true	false	0	353	ImmediatelyFast-NeoForge-1.6.11+1.21.1.jar
+target	immeng	Immersive Energistics	1.1.0-beta	NEOFORGE	TRIVIAL	11	0	8	0	0	false	false	0	39	Immersive-Energistics-1.1.0-beta.jar
+target	immersiveengineering	Immersive Engineering	12.4.2-194	NEOFORGE	NIGHTMARE	1841	0	720	1	50	false	false	2	13898	ImmersiveEngineering-1.21.1-12.4.2-194.jar
+target	incontrol	InControl	1.21-10.2.6	NEOFORGE	TRIVIAL	144	0	42	0	0	false	false	0	339	incontrol-1.21-10.2.6.jar
+target	industrialforegoing	Industrial Foregoing	1.21-3.6.39	NEOFORGE	HARD	659	0	281	1	3	true	false	0	4606	industrialforegoing-1.21-3.6.39.jar
+target	industrialforegoingsouls	Industrial Foregoing Souls	1.10.7	NEOFORGE	TRIVIAL	34	0	13	0	0	false	false	0	133	industrial-foregoing-souls-1.21.1-1.10.7.jar
+target	industrialization_overdrive	Industrialization Overdrive	1.12.1+1.21.1	NEOFORGE	TRIVIAL	45	0	15	0	0	false	false	0	127	industrialization_overdrive-1.12.1+1.21.1.jar
+target	integratedcrafting	IntegratedCrafting	1.4.6	NEOFORGE	TRIVIAL	88	0	26	0	0	true	false	0	368	integratedcrafting-1.21.1-neoforge-1.4.6-605.jar
+target	integrateddynamics	IntegratedDynamics	1.33.4	NEOFORGE	HARD	1690	0	448	1	1	true	false	0	4259	integrateddynamics-1.21.1-neoforge-1.33.4-1907.jar
+target	integratedscripting	IntegratedScripting	1.0.24	NEOFORGE	TRIVIAL	106	0	28	0	0	false	false	0	27238	integratedscripting-1.21.1-neoforge-1.0.24-416.jar
+target	integratedterminals	IntegratedTerminals	1.7.0	NEOFORGE	MODERATE	232	0	81	0	0	true	false	0	647	integratedterminals-1.21.1-neoforge-1.7.0-800.jar
+target	integratedtunnels	IntegratedTunnels	1.9.4	NEOFORGE	MODERATE	192	0	80	0	0	true	false	0	666	integratedtunnels-1.21.1-neoforge-1.9.4-652.jar
+target	interdimensionalwirelesstransmitter	Interdimensional Wireless Transmitter	1.21.1-0.1.5	NEOFORGE	TRIVIAL	48	0	15	0	0	false	false	0	138	interdimensionalwirelesstransmitter-neoforge-1.21.1-0.1.5.jar
+target	invasiveopts	Invasive Optimizations	1.0.22	NEOFORGE	NIGHTMARE	105	0	17	1	43	false	false	2	257	invasiveopts-1.0.22.jar
+target	invtweaks	Inventory Tweaks Refoxed	1.21.1-1.3.2	NEOFORGE	TRIVIAL	22	0	12	0	0	true	false	0	75	invtweaks-1.21.1-1.3.2.jar
+target	iris	Iris	1.8.14-beta.1+mc1.21.1	NEOFORGE	NIGHTMARE	948	0	4	11	170	true	false	6	2481	iris-neoforge-1.8.14-beta.1+mc1.21.1.jar
+target	iris_search	IrisSearch	1.5.1-neoforge	NEOFORGE	HARD	37	0	2	1	8	false	false	0	194	IrisSearch-1.5.1-neoforge.jar
+target	ironfurnaces	Iron Furnaces	4.3.2	NEOFORGE	MODERATE	165	0	73	0	0	false	false	0	563	ironfurnaces-neoforge-1.21.1-4.3.2.jar
+target	ironjetpacks	Iron Jetpacks	8.0.11	NEOFORGE	TRIVIAL	50	0	40	0	0	true	false	0	151	IronJetpacks-1.21.1-8.0.11.jar
+target	irons_jewelry	Iron's Gems 'n Jewelry	1.21.1-2.0.2	NEOFORGE	HARD	152	0	62	1	4	true	false	0	714	irons_jewelry-1.21.1-2.0.2.jar
+target	irons_lib	Iron's Lib	1.21.1-2.1.0	NEOFORGE	HARD	109	0	42	1	9	false	false	0	396	irons_lib-1.21.1-2.1.0.jar
+target	irons_spellbooks	Iron's Spells 'n Spellbooks	1.21.1-3.16.2	NEOFORGE	NIGHTMARE	1186	0	583	1	36	true	false	0	13548	irons_spellbooks-1.21.1-3.16.2.jar
+target	itemcollectors	Item Collectors	1.1.10	NEOFORGE	TRIVIAL	31	0	4	1	0	true	false	0	98	itemcollectors-1.1.10-neoforge-mc1.21.jar
+target	jade	Jade	15.10.5+neoforge	NEOFORGE	HARD	301	0	5	1	6	true	false	0	708	Jade-1.21.1-NeoForge-15.10.5.jar
+target	jearchaeology	Just Enough Archaeology	1.21.1-1.2.0	NEOFORGE	TRIVIAL	27	0	9	0	0	true	false	0	52	jearchaeology-1.21.1-1.2.0.jar
+target	jei	Just Enough Items	19.43.0.392	NEOFORGE	MODERATE	993	0	35	0	0	true	false	0	1645	jei-1.21.1-neoforge-19.43.0.392.jar
+target	jei_mekanism_multiblocks	Just Enough Mekanism Multiblocks	7.16	NEOFORGE	HARD	70	0	12	0	4	false	false	0	181	JustEnoughMekanismMultiblocks-1.21.1-7.16.jar
+target	journeymap	Journeymap	1.21.1-6.0.2	NEOFORGE	NIGHTMARE	864	0	21	2	26	true	false	3	4058	journeymap-neoforge-1.21.1-6.0.2.jar
+target	jumpboat	Jumpy Boats	1.21.0-1.0.5	NEOFORGE	HARD	4	0	4	0	1	false	false	0	5	jumpboat-1.21.0-1.0.5.jar
+target	jupiter	Jupiter	2.3.7	NEOFORGE	HARD	155	0	8	1	2	false	false	0	272	jupiter-2.3.7-1.21.1-neoforge.jar
+target	justdirethings	Just Dire Things	1.5.7	NEOFORGE	HARD	619	0	346	1	3	true	false	0	2786	justdirethings-1.5.7.jar
+target	justenoughbreeding	Just Enough Breeding	3.2.1	NEOFORGE	TRIVIAL	78	0	13	0	0	false	false	0	579	justenoughbreeding-neoforge-1.21.1-3.2.1.jar
+target	justenoughprofessions	Just Enough Professions (JEP)	4.0.5	NEOFORGE	TRIVIAL	12	0	1	0	0	false	false	0	24	JustEnoughProfessions-neoforge-1.21.1-4.0.5.jar
+target	justzoom	Just Zoom	2.1.0	NEOFORGE	HARD	24	0	2	2	6	true	false	0	42	justzoom_neoforge_2.1.0_MC_1.21.1.jar
+target	keybindbundles	KeyBind Bundles	1.4.0	NEOFORGE	HARD	44	0	10	1	8	true	false	0	87	keybindbundles-1.4.0.jar
+target	keybindspurger	KeybindsPurger	1.4.0	NEOFORGE	HARD	8	0	2	1	4	true	false	0	38	KeybindsPurger-1.4.0-neoforge-1.21.1.jar
+target	konkrete	Konkrete	1.9.9	NEOFORGE	HARD	411	0	3	2	13	true	false	0	604	konkrete_neoforge_1.9.9_MC_1.21.jar
+target	kubejs	KubeJS	2101.7.2-build.368	NEOFORGE	NIGHTMARE	1085	0	211	1	88	true	false	3	2228	kubejs-neoforge-2101.7.2-build.368.jar
+target	kubejstweaks	KubeJS Tweaks	1.0.6	NEOFORGE	NIGHTMARE	117	0	33	3	84	true	false	1	411	kubejstweaks-1.0.6.jar
+target	laserbridges	Laser Bridges & Doors	5.3	NEOFORGE	HARD	18	0	3	2	1	false	false	0	195	laserbridges-1.21.1-neoforge-5.3.jar
+target	laserio	LaserIO	1.9.11	NEOFORGE	MODERATE	211	0	129	0	0	false	false	0	1274	laserio-1.9.11.jar
+target	lionfishapi	lionfishapi	3.1	NEOFORGE	HARD	51	0	34	1	2	true	false	0	89	lionfishapi-3.1.jar
+target	lithostitched	Lithostitched	1.7.13	NEOFORGE	NIGHTMARE	339	0	16	3	56	true	false	0	832	lithostitched-1.7.13-neoforge-21.1.jar
+target	little_big_redstone	Little Big Redstone	1.9.8-1.21.1	NEOFORGE	HARD	389	0	96	1	2	false	false	0	1382	little-big-redstone-1.9.8-1.21.1.jar
+target	livingthings	Living Things	1.21.1-2.3.0	NEOFORGE	HARD	165	0	7	1	8	false	false	0	940	livingthings-neoforge-1.21.1-2.3.0.jar
+target	lmft	Load My F***ing Tags	1.1.1+1.21.9	NEOFORGE	HARD	13	0	1	2	3	false	false	0	76	lmft-1.1.1+1.21.9-neoforge.jar
+target	lootr	Lootr	1.21.1-1.11.37.122	NEOFORGE	NIGHTMARE	316	0	66	3	35	true	false	0	969	lootr-neoforge-1.21.1-1.11.37.122.jar
+target	luminax	Luminax	1.3.1	NEOFORGE	TRIVIAL	14	0	13	0	0	false	false	0	688	luminax-1.3.1_neoforge_1.21.1.jar
+target	mahoutsukai	Mahou Tsukai	1.21.1-v1.36.27	NEOFORGE	HARD	796	0	342	1	10	true	false	0	4926	mahoutsukai-1.21.1-v1.36.27.jar
+target	mcjtylib	McJtyLib	1.21-9.0.21	NEOFORGE	MODERATE	388	0	111	0	0	true	false	0	683	mcjtylib-1.21-9.0.21.jar
+target	mcwbridges	Macaw's Bridges	3.1.2	NEOFORGE	TRIVIAL	29	0	13	0	0	false	false	0	645	mcw-bridges-3.1.2-mc1.21.1neoforge.jar
+target	mcwdoors	Macaw's Doors	1.1.5	NEOFORGE	TRIVIAL	15	0	10	0	0	false	false	0	1162	mcw-doors-1.1.5-mc1.21.1neoforge.jar
+target	mcwfences	Macaw's Fences and Walls	1.2.1	NEOFORGE	TRIVIAL	19	0	5	0	0	false	false	0	658	mcw-mcwfences-1.2.1-mc1.21.1neoforge.jar
+target	mcwfurnitures	Macaw's Furniture	3.4.1	NEOFORGE	TRIVIAL	56	0	15	0	0	false	false	0	2031	mcw-furniture-3.4.1-mc1.21.1neoforge.jar
+target	mcwholidays	Macaw's Holidays	1.1.2	NEOFORGE	TRIVIAL	107	0	11	0	0	false	false	0	989	mcw-holidays-1.1.2-mc1.21.1neoforge.jar
+target	mcwlights	Macaw's Lights and Lamps	1.1.5	NEOFORGE	TRIVIAL	40	0	8	0	0	false	false	0	513	mcw-lights-1.1.5-mc1.21.1neoforge.jar
+target	mcwpaths	Macaw's Paths and Pavings	1.1.1	NEOFORGE	TRIVIAL	11	0	6	0	0	false	false	0	759	mcw-mcwpaths-1.1.1-mc1.21.1neoforge.jar
+target	mcwroofs	Macaw's Roofs	2.3.2	NEOFORGE	TRIVIAL	23	0	12	0	0	false	false	0	1742	mcw-roofs-2.3.2-mc1.21.1neoforge.jar
+target	mcwstairs	Macaw's Stairs and Balconies	1.0.2	NEOFORGE	TRIVIAL	27	0	10	0	0	false	false	0	516	mcw-mcwstairs-1.0.2-mc1.21.1neoforge.jar
+target	mcwtrpdoors	Macaw's Trapdoors	1.1.5	NEOFORGE	TRIVIAL	7	0	5	0	0	false	false	0	559	mcw-trapdoors-1.1.5-mc1.21.1neoforge.jar
+target	mcwwindows	Macaw's Windows	2.4.2	NEOFORGE	TRIVIAL	39	0	13	0	0	false	false	0	1231	mcw-mcwwindows-2.4.2-mc1.21.1neoforge.jar
+target	measurements	Measurements	3.0.3	NEOFORGE	TRIVIAL	28	0	11	0	0	false	false	0	46	Measurements-neoforge-1.21.1-3.0.3.jar
+target	megacells	MEGA Cells	4.11.0	NEOFORGE	HARD	86	0	18	1	8	false	false	0	1110	megacells-4.11.0.jar
+target	mekanism	Mekanism	10.7.19	NEOFORGE	MODERATE	2975	0	742	0	0	true	false	0	11695	Mekanism-1.21.1-10.7.19.85.jar
+target	mekanismcovers	Mekanism Covers	1.3-BETA+1.21	NEOFORGE	HARD	27	0	14	1	12	false	false	0	133	mekanismcovers-1.3-BETA+1.21.jar
+target	mekanismgenerators	Mekanism: Generators	10.7.19	NEOFORGE	MODERATE	170	0	37	0	0	false	false	0	1088	MekanismGenerators-1.21.1-10.7.19.85.jar
+target	mekanismtools	Mekanism: Tools	10.7.19	NEOFORGE	TRIVIAL	69	0	21	0	0	false	false	0	514	MekanismTools-1.21.1-10.7.19.85.jar
+target	mekanisticrouters	Mekanistic Routers	1.2.0	NEOFORGE	HARD	23	0	16	1	1	false	false	0	242	mekanisticrouters-1.2.0.jar
+target	mekmm	Mekanism: MoreMachine	1.3.3	NEOFORGE	HARD	483	0	131	1	19	true	false	0	2913	mekmm-1.21.1-1.3.3.jar
+target	melody	Melody	1.0.10	NEOFORGE	HARD	22	0	2	2	4	false	false	0	35	melody_neoforge_1.0.10_MC_1.21.jar
+target	memorysettings	memorysettings mod	6.0	NEOFORGE	HARD	10	0	3	1	1	true	false	0	21	memorysettings-1.21-6.0.jar
+target	merequester	ME Requester	1.21.1-1.4.3	NEOFORGE	HARD	75	0	27	1	4	false	false	0	180	merequester-neoforge-1.21.1-1.4.3.jar
+target	merrymaking	Mama's MerryMaking	1.21.1-16	NEOFORGE	TRIVIAL	148	0	62	0	0	false	false	0	21446	merrymaking-1.21.1-16.jar
+target	mffs	Modular Force Field System	5.4.44	NEOFORGE	HARD	245	0	112	1	4	true	false	1	3250	mffs-5.4.44.jar
+target	mifa	More Industrial Foregoing Addons	2.1.0	NEOFORGE	TRIVIAL	31	0	25	0	0	false	false	0	119	mifa-neoforge-1.21.x-2.1.0.jar
+target	minecolonies	MineColonies	1.1.1367-1.21.1-snapshot	NEOFORGE	MODERATE	2503	0	746	0	0	true	false	0	76118	minecolonies-1.1.1367-1.21.1-snapshot.jar
+target	mininggadgets	Mining Gadgets	1.18.7	NEOFORGE	TRIVIAL	126	0	78	0	0	false	false	0	648	mininggadgets-1.18.7.jar
+target	mob_grinding_utils	Mob Grinding Utils	1.1.10+mc1.21.1	NEOFORGE	HARD	174	0	129	1	1	true	false	0	1337	mob_grinding_utils-1.1.10+mc1.21.1.jar
+target	modelfix	Model Gap Fix	1.21-1.10	NEOFORGE	HARD	18	0	7	1	2	true	false	0	45	modelfix-1.21-1.10.jar
+target	modern_industrialization	Modern Industrialization	2.5.5	NEOFORGE	HARD	1111	0	224	1	2	true	false	1	6959	Modern-Industrialization-2.5.5.jar
+target	moderndynamics	Modern Dynamics	0.9.6	NEOFORGE	HARD	248	0	71	1	1	true	false	0	691	Modern-Dynamics-0.9.6.jar
+target	modernfix	ModernFix	5.27.20+mc1.21.1	NEOFORGE	NIGHTMARE	311	1	26	1	161	true	false	0	585	modernfix-neoforge-5.27.20+mc1.21.1.jar
+target	modonomicon	Modonomicon	1.120.4	NEOFORGE	MODERATE	411	0	25	1	0	true	false	3	2343	modonomicon-1.21.1-neoforge-1.120.4.jar
+target	modularbees	ModularBees	1.21.1-3.3-neoforge	NEOFORGE	HARD	216	0	86	1	6	true	false	0	547	ModularBees-1.21.1-3.3-neoforge.jar
+target	modularrouters	Modular Routers	13.2.7	NEOFORGE	HARD	376	0	184	1	1	true	false	0	1255	modular-routers-13.2.7+mc1.21.1.jar
+target	monolib	MonoLib	4.1.0	NEOFORGE	HARD	105	0	10	2	5	false	false	0	186	monolib-neoforge-1.21.1-4.1.0.jar
+target	moogs_structures	Moog's Structure Lib	3.0.3	NEOFORGE	HARD	129	0	8	2	16	true	false	0	328	moogs_structures-neoforge-1.21.1-3.0.3.jar
+target	moonlight	Moonlight Lib	1.21.1-3.3.0	NEOFORGE	NIGHTMARE	815	0	93	2	66	true	false	1	2085	moonlight-neoforge-1.21.1-3.3.0.jar
+target	moredragoneggs	More Dragon Eggs	5.0	NEOFORGE	HARD	3	0	2	1	1	false	false	0	6	moredragoneggs-5.0.jar
+target	moreoverlays	More Overlays Updated	1.24.2	NEOFORGE	HARD	42	0	22	0	1	false	false	0	110	moreoverlays-1.24.2-mc1.21.1-neoforge.jar
+target	morered	More Red	6.0.0.3	NEOFORGE	HARD	106	0	57	1	2	true	false	0	523	morered-1.21.1-6.0.0.3.jar
+target	moreredxcctcompat	More Red x CC:Tweaked Compat	1.21.1-1.3.0	NEOFORGE	TRIVIAL	4	0	2	0	0	false	false	0	7	MoreRed-CCT-Compat-1.21.1-1.3.0.jar
+target	mostructures	Mo' Structures	1.6.0+1.21.1	NEOFORGE	HARD	15	0	1	1	3	false	false	0	761	mostructures-neoforge-1.6.0+1.21.1.jar
+target	mousetweaks	Mouse Tweaks	2.26.1	NEOFORGE	HARD	22	0	2	2	1	false	false	0	72	MouseTweaks-neoforge-mc1.21-2.26.1.jar
+target	multipiston	Multi-Piston	1.2.58-1.21.1	NEOFORGE	TRIVIAL	10	0	6	0	0	true	false	0	33	multipiston-1.2.58-1.21.1.jar
+target	mysticalagradditions	Mystical Agradditions	8.0.14	NEOFORGE	TRIVIAL	35	0	23	0	0	true	false	0	310	MysticalAgradditions-1.21.1-8.0.14.jar
+target	mysticalagriculture	Mystical Agriculture	8.0.27	NEOFORGE	MODERATE	295	0	173	0	0	true	false	0	2270	MysticalAgriculture-1.21.1-8.0.27.jar
+target	mysticalcustomization	Mystical Customization	6.0.2	NEOFORGE	TRIVIAL	18	0	10	0	0	false	false	0	48	MysticalCustomization-1.21.1-6.0.2.jar
+target	naturesaura	NaturesAura	41.9	NEOFORGE	MODERATE	315	0	166	0	0	false	false	0	1409	NaturesAura-41.9.jar
+target	naturescompass	Nature's Compass	1.21.1-3.4.0-neoforge	NEOFORGE	TRIVIAL	33	0	26	0	0	false	false	0	219	NaturesCompass-1.21.1-3.4.0-neoforge.jar
+target	neo_auth	NeoAuth	1.0.1	NEOFORGE	HARD	20	0	5	1	7	true	false	0	59	NeoAuth-1.21.1-1.0.1.jar
+target	netherportalfix	NetherPortalFix	21.1.1	NEOFORGE	HARD	6	0	1	2	2	false	false	0	207	netherportalfix-neoforge-1.21.1-21.1.1.jar
+target	nochatreports	No Chat Reports	1.21.1-v2.9.1	NEOFORGE	NIGHTMARE	88	0	2	2	33	true	false	0	299	NoChatReports-NEOFORGE-1.21.1-v2.9.1.jar
+target	not_enough_glyphs	Not Enough Glyphs	4.6.1	NEOFORGE	HARD	129	0	47	1	3	true	false	1	616	not_enough_glyphs-1.21.1-4.6.1.jar
+target	notenoughanimations	NotEnoughAnimations	1.12.4	NEOFORGE	HARD	74	0	1	1	13	false	false	0	1894	notenoughanimations-neoforge-1.12.4-mc1.21.1.jar
+target	novillagerdm	No Villager Death Messages	6.0.0	NEOFORGE	TRIVIAL	3	0	1	0	0	false	false	0	4	novillagerdm-1.21.1-6.0.0.jar
+target	nullscape	Nullscape	1.2.14	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	347	Nullscape_1.21.x_v1.2.14.jar
+target	observable	Observable	5.4.4	NEOFORGE	HARD	193	0	2	0	2	false	false	0	379	observable-5.4.4.jar
+target	occultism	Occultism	1.224.1	NEOFORGE	MODERATE	950	0	487	0	0	true	false	0	6788	occultism-1.21.1-neoforge-1.224.1.jar
+target	occultism_kubejs	Occultism KubeJS	1.11.0	NEOFORGE	TRIVIAL	17	0	4	0	0	false	false	0	424	occultism_kubejs-1.21.1-neoforge-1.11.0.jar
+target	octolib	OctoLib	0.6.2	NEOFORGE	HARD	156	0	9	1	11	false	false	0	531	OctoLib-NEOFORGE-0.6.2+1.21.jar
+target	ohthetreesyoullgrow	Oh The Trees You'll Grow	5.3.2	NEOFORGE	HARD	36	0	2	1	5	true	false	0	163	Oh-The-Trees-Youll-Grow-neoforge-1.21.1-5.3.2.jar
+target	omegaconfig	Omega Config Architectury	1.5.1	NEOFORGE	HARD	10	0	2	1	1	false	false	0	20	omegaconfig-neoforge-1.5.1.jar
+target	openloader	OpenLoader	21.1.5	NEOFORGE	TRIVIAL	11	0	2	2	0	false	false	0	34	OpenLoader-neoforge-1.21.1-21.1.5.jar
+target	oracle_index	Oracle Index	1.3.1	NEOFORGE	HARD	65	0	2	1	2	false	false	0	28907	oracle_index-neoforge-1.3.1.jar
+target	oritech	Oritech	1.2.10	NEOFORGE	HARD	704	0	120	2	5	true	false	1	10732	oritech-neoforge-1.21.1-1.2.10.jar
+target	overloadedarmorbar	OverloadedArmorBar	2	NEOFORGE	TRIVIAL	15	0	5	0	0	true	false	0	21	overloadedarmorbar-neoforge-1.21-2.jar
+target	owo	oωo	0.12.15.5-beta.1+1.21	NEOFORGE	NIGHTMARE	492	0	42	1	87	false	false	0	1192	owo-lib-neoforge-0.12.15.5-beta.1+1.21.jar
+target	pamhc2crops	Pam's HarvestCraft - Crops	1.0.9	NEOFORGE	TRIVIAL	25	0	18	0	0	false	false	0	1500	pamhc2crops-NEOFORGE-1.21.1-1.0.9.jar
+target	pamhc2foodcore	Pam's HarvestCraft - Food Core	1.0.4	NEOFORGE	TRIVIAL	6	0	4	0	0	false	false	0	1659	pamhc2foodcore-NEOFORGE-1.21.1-1.0.4.jar
+target	pamhc2foodextended	Pam's HarvestCraft - Food Extended	1.0.0	NEOFORGE	TRIVIAL	6	0	5	0	0	false	false	0	1937	pamhc2foodextended-NEOFORGE-1.21.1-1.0.0.jar
+target	pamhc2trees	Pam's HarvestCraft - Trees	1.0.9	NEOFORGE	TRIVIAL	75	0	68	0	0	false	false	0	1366	pamhc2trees-NEOFORGE-1.21.1-1.0.9.jar
+target	patchouli	Patchouli	1.21.1-93-NEOFORGE	NEOFORGE	HARD	198	0	11	1	10	false	false	0	631	Patchouli-1.21.1-93-NEOFORGE.jar
+target	pipez	Pipez	1.21.1-1.2.31	NEOFORGE	MODERATE	212	0	80	0	0	false	false	0	445	pipez-neoforge-1.21.1-1.2.31.jar
+target	placebo	Placebo	9.9.2	NEOFORGE	NIGHTMARE	164	0	41	1	6	true	true	0	316	Placebo-1.21.1-9.9.2.jar
+target	playeranimator	Player Animator	2.0.4+1.21.1	NEOFORGE	HARD	127	0	4	1	18	true	false	0	198	player-animation-lib-forge-2.0.4+1.21.1.jar
+target	pneumaticcraft	PneumaticCraft: Repressurized	8.2.23	NEOFORGE	HARD	2182	0	870	1	19	false	false	0	11606	pneumaticcraft-repressurized-8.2.23+mc1.21.1.jar
+target	pocketstorage	Pocket Storage	1.2.5	NEOFORGE	TRIVIAL	32	0	24	0	0	true	false	0	258	pocketstorage-1.2.5+1.21.1-b3.jar
+target	polyeng	Polymorphic Energistics	0.4.1	NEOFORGE	HARD	10	0	2	1	5	false	false	0	19	polyeng-0.4.1.jar
+target	polylib	PolyLib	2100.1.0-build.183	NEOFORGE	HARD	560	0	19	2	3	true	false	0	1269	polylib-2100.1.0-build.183-neoforge.jar
+target	polymorph	Polymorph	1.1.0+1.21.1	NEOFORGE	HARD	98	0	10	3	22	false	false	0	170	polymorph-neoforge-1.1.0+1.21.1.jar
+target	ponderjs	PonderJS	1.21.1-2.4.0	NEOFORGE	HARD	57	0	1	1	15	false	false	2	1535	ponderjs-neoforge-1.21.1-2.4.0.jar
+target	potionsmaster	PotionsMaster	1.0.1	NEOFORGE	TRIVIAL	75	0	21	0	0	true	false	0	211	potionsmaster-21.1.113-1.0.1.jar
+target	powah	Powah	6.2.10	NEOFORGE	MODERATE	351	0	91	0	0	true	false	0	2673	Powah-6.2.10.jar
+target	prickle	PrickleMC	21.1.11	NEOFORGE	TRIVIAL	47	0	2	2	0	false	false	0	82	prickle-neoforge-1.21.1-21.1.11.jar
+target	prism	Prism	1.0.11	NEOFORGE	HARD	25	0	1	1	2	true	false	0	60	Prism-1.21.1-neoforge-1.0.11.jar
+target	productivebees	Productive Bees	1.21.1-13.13.5	NEOFORGE	HARD	524	0	222	0	2	true	false	1	5094	productivebees-1.21.1-13.13.5.jar
+target	productivemetalworks	Productive Metalworks	1.21.1-1.15.0	NEOFORGE	TRIVIAL	123	0	89	0	0	true	false	3	2970	productivemetalworks-1.21.1-1.15.0.jar
+target	productivetrees	Productive Trees	1.21.1-1.0.0	NEOFORGE	MODERATE	185	0	98	0	0	true	false	1	13588	productivetrees-1.21.1-1.0.0.jar
+target	pylons	Pylons	5.4.2	NEOFORGE	TRIVIAL	106	0	50	0	0	true	false	0	212	pylons-1.21.1-5.4.2.jar
+target	quarryplus	QuarryPlus	21.1.157	NEOFORGE	MODERATE	233	0	19	0	0	false	false	0	678	AdditionalEnchantedMiner-1.21.1-neoforge-21.1.157.jar
+target	railcraft	Railcraft Reborn	1.2.10	NEOFORGE	HARD	1204	0	469	1	10	true	false	0	5166	railcraft-reborn-1.21.1-1.2.10.jar
+target	rainbows	Rainbows	1.5	NEOFORGE	TRIVIAL	19	0	7	1	0	false	false	0	2253	Rainbows-1.21-1.5.jar
+target	rangedpumps	Ranged Pumps	1.3.0	NEOFORGE	TRIVIAL	6	0	5	0	0	false	false	0	24	rangedpumps-1.3.0.jar
+target	reap	Reap Mod	1.21.1-1.1.2	NEOFORGE	TRIVIAL	91	0	27	0	0	false	false	0	137	reap-neoforge-1.21.1-1.1.2.jar
+target	rebind_narrator	Rebind Narrator	2025.12.23	NEOFORGE	HARD	7	0	2	1	1	false	false	1	208	rebind_narrator-1.21.1-neoforge-2025.12.23.jar
+target	rechiseled	Rechiseled	1.2.5	NEOFORGE	HARD	123	0	16	1	9	true	false	0	11229	rechiseled-1.2.5-neoforge-mc1.21.jar
+target	rechiseled_chipped	Rechiseled: Chipped	1.3	NEOFORGE	HARD	5	0	1	1	2	false	false	0	173	rechiseled_chipped-2.0-1.21.1.jar
+target	rechiseledcreate	Rechiseled: Create	1.1.1	NEOFORGE	TRIVIAL	19	0	5	1	0	true	false	0	960	rechiseledcreate-1.1.1-neoforge-mc1.21.jar
+target	redstonepen	Redstone Pen	1.11.42	NEOFORGE	MODERATE	153	0	40	1	0	false	false	0	501	redstonepen-1.21-neoforge-1.11.42.jar
+target	refinedstorage	Refined Storage	2.0.9	NEOFORGE	HARD	1508	0	100	1	4	true	false	0	4258	refinedstorage-neoforge-2.0.9.jar
+target	refinedstorage_curios_integration	Refined Storage - Curios Integration	1.0.0	NEOFORGE	TRIVIAL	5	0	1	0	0	false	false	0	10	refinedstorage-curios-integration-1.0.0.jar
+target	refinedstorage_jei_integration	Refined Storage - JEI Integration	1.0.0	NEOFORGE	TRIVIAL	33	0	2	0	0	false	false	0	56	refinedstorage-jei-integration-neoforge-1.0.0.jar
+target	refinedstorage_mekanism_integration	Refined Storage - Mekanism Integration	1.1.1	NEOFORGE	TRIVIAL	55	0	20	0	0	false	false	0	156	refinedstorage-mekanism-integration-1.1.1.jar
+target	refinedstorage_quartz_arsenal	Refined Storage - Quartz Arsenal	1.0.8	NEOFORGE	TRIVIAL	33	0	6	0	0	false	false	0	65	refinedstorage-quartz-arsenal-neoforge-1.0.8.jar
+target	refinedtypes	Refined Types	1.21.1-0.3.2	NEOFORGE	HARD	164	0	36	1	2	false	false	1	738	refined-types-1.21.1-0.3.2.jar
+target	refurbished_furniture	MrCrayfish's Furniture Mod: Refurbished	1.0.22	NEOFORGE	HARD	575	0	20	1	12	true	false	0	6966	refurbished_furniture-neoforge-1.21.1-1.0.22.jar
+target	regions_unexplored	Regions Unexplored	0.5.9	NEOFORGE	HARD	345	0	35	2	11	true	false	0	5239	regions_unexplored-neoforge-1.21.1-0.5.9.jar
+target	relics	Relics	0.12.8	NEOFORGE	NIGHTMARE	702	0	222	1	30	true	false	0	4890	relics-1.21.1-0.12.8.jar
+target	reliquary	Reliquary Reincarnations	2.0.77	NEOFORGE	MODERATE	456	0	198	0	0	true	false	0	2186	reliquary-1.21.1-2.0.77.1537.jar
+target	reliquified_artifacts	reliquified_artifacts	1.0.7	NEOFORGE	HARD	146	0	105	1	16	true	false	0	682	reliquified_artifacts-1.21.1-1.0.7.jar
+target	repeatable_trial_vaults	Repeatable Trial Vaults	1.0.3	NEOFORGE	HARD	5	0	1	2	1	true	false	0	12	repeatable_trial_vaults-neoforge-1.21-1.0.3.jar
+target	repurposed_structures	Repurposed Structures	7.5.21+1.21.1-neoforge	NEOFORGE	NIGHTMARE	248	0	16	2	31	true	false	0	8052	repurposed_structures-7.5.21+1.21.1-neoforge.jar
+target	resourcefulconfig	Resourcefulconfig	3.0.11	NEOFORGE	HARD	186	0	3	1	4	false	false	0	333	resourcefulconfig-neoforge-1.21-3.0.11.jar
+target	resourcefullib	Resourceful Lib	3.0.12	NEOFORGE	HARD	222	0	19	1	1	false	false	0	472	resourcefullib-neoforge-1.21-3.0.12.jar
+target	restrictions	Restrictions	1.21-7.0.3	NEOFORGE	TRIVIAL	13	0	7	0	0	true	false	0	43	restrictions-1.21-7.0.3.jar
+target	rftoolsbase	RFToolsBase	1.21-6.0.11	NEOFORGE	MODERATE	182	0	59	0	0	true	false	0	453	rftoolsbase-1.21-6.0.11.jar
+target	rftoolsbuilder	RFToolsBuilder	1.21-7.0.5	NEOFORGE	MODERATE	222	0	92	0	0	true	false	0	1030	rftoolsbuilder-1.21-7.0.5.jar
+target	rftoolspower	RFToolsPower	1.21-7.0.6	NEOFORGE	TRIVIAL	104	0	63	0	0	true	false	0	566	rftoolspower-1.21-7.0.6.jar
+target	rftoolsstorage	RFToolsStorage	1.21-6.0.5	NEOFORGE	TRIVIAL	131	0	62	0	0	true	false	0	389	rftoolsstorage-1.21-6.0.5.jar
+target	rftoolsutility	RFToolsUtility	1.21-7.0.12	NEOFORGE	MODERATE	308	0	155	0	0	true	false	0	1401	rftoolsutility-1.21-7.0.12.jar
+target	rhino	Rhino	2101.2.7-build.81	NEOFORGE	MODERATE	346	0	0	0	0	false	false	0	861	rhino-2101.2.7-build.81.jar
+target	rootsclassic	Roots Classic	1.21.1-1.5.7	NEOFORGE	MODERATE	198	0	96	0	0	true	false	0	620	RootsClassic-1.21.1-1.5.7.jar
+target	sawmill	Universal Sawmill	1.21-1.7.7	NEOFORGE	HARD	40	0	1	2	2	true	false	0	439	sawmill-neoforge-1.21-1.7.7.jar
+target	searchables	Searchables	1.0.2	NEOFORGE	HARD	41	0	1	2	2	false	false	0	75	Searchables-neoforge-1.21.1-1.0.2.jar
+target	securitycraft	SecurityCraft	1.10.2.1	NEOFORGE	HARD	759	0	389	1	24	true	false	0	5071	[1.21.1] SecurityCraft v1.10.2.1.jar
+target	sfm	Super Factory Manager (SFM)	4.34.0	NEOFORGE	HARD	821	0	145	1	1	true	false	0	1560	Super Factory Manager (SFM)-MC1.21.1-4.34.0.jar
+target	sgearmetalworks	Silent Gear Metalworks	1.21.1-1.5.0	NEOFORGE	TRIVIAL	41	0	29	0	0	true	false	0	623	sgearmetalworks-1.21.1-1.5.0.jar
+target	shiny	Shiny!	1.21.1-1.3.0	NEOFORGE	MODERATE	188	0	33	0	0	false	false	0	948	shiny-1.21.1-1.3.0.jar
+target	shrink	Shrink	2.0.1.47	NEOFORGE	TRIVIAL	22	0	4	1	0	false	false	0	44	shrink-2.0.1.47-neoforge.jar
+target	silentgear	Silent Gear	4.2.1.1	NEOFORGE	HARD	636	0	267	1	2	true	false	0	3073	silent-gear-1.21.1-neoforge-4.2.1.1.jar
+target	silentgems	Silent's Gems	5.1.3	NEOFORGE	TRIVIAL	71	0	34	0	0	true	false	0	1423	silentgems-1.21.1-neoforge-5.1.3.jar
+target	silentlib	Silent Lib	10.6.0	NEOFORGE	TRIVIAL	87	0	19	0	0	true	false	0	262	silent-lib-1.21.1-neoforge-10.6.0.jar
+target	simple_weather	Simple Weather	1.0.13-hotfix	NEOFORGE	HARD	13	0	9	1	1	false	false	0	80	simple_weather-1.0.13-hotfix.jar
+target	simplebackups	Simple Backups	1.21-4.0.30	NEOFORGE	TRIVIAL	27	0	12	0	0	true	false	0	68	SimpleBackups-1.21-4.0.30.jar
+target	simplemagnets	Simple Magnets	1.1.12+c	NEOFORGE	TRIVIAL	61	0	8	1	0	true	false	0	142	simplemagnets-1.1.12c-neoforge-mc1.21.jar
+target	simplylight	Simply Light	1.5.3	NEOFORGE	TRIVIAL	42	0	20	0	0	false	false	0	1077	simplylight-1.5.3+1.21.1-b4.jar
+target	smartbrainlib	SmartBrainLib	1.16.11	NEOFORGE	TRIVIAL	130	0	6	0	0	true	false	0	381	SmartBrainLib-neoforge-1.21.1-1.16.11.jar
+target	smithingtemplateviewer	SmithingTemplateViewer	1.0.4	NEOFORGE	TRIVIAL	10	0	6	1	0	true	false	0	38	smithingtemplateviewer-1.0.4.jar
+target	sodium	Sodium	0.8.13-beta.1+mc1.21.1	NEOFORGE	NIGHTMARE	72	0	2	0	0	false	true	5	1261	sodium-neoforge-0.8.13-beta.1+mc1.21.1.jar
+target	sodium_extra	Sodium Extra	0.9.3+mc1.21.1	NEOFORGE	NIGHTMARE	88	0	2	1	39	true	false	1	454	sodium-extra-neoforge-0.9.3+mc1.21.1.jar
+target	solcarrot	Spice of Life: Carrot Edition	1.16.6	NEOFORGE	TRIVIAL	54	0	21	0	0	false	false	0	102	solcarrot-1.21.1-1.16.6.jar
+target	sophisticatedbackpacks	Sophisticated Backpacks	3.25.73	NEOFORGE	HARD	362	0	135	1	2	true	false	0	1117	sophisticatedbackpacks-1.21.1-3.25.73.2020.jar
+target	sophisticatedbackpackscreateintegration	Sophisticated Backpacks Create Integration	0.1.8	NEOFORGE	TRIVIAL	36	0	11	0	0	false	false	0	80	sophisticatedbackpackscreateintegration-1.21.1-0.1.8.134.jar
+target	sophisticatedcore	Sophisticated Core	1.4.80	NEOFORGE	HARD	777	0	228	2	6	true	false	0	1634	sophisticatedcore-1.21.1-1.4.80.2194.jar
+target	sophisticatedstorage	Sophisticated Storage	1.5.83	NEOFORGE	MODERATE	390	0	146	0	0	true	false	0	1785	sophisticatedstorage-1.21.1-1.5.83.2017.jar
+target	sophisticatedstoragecreateintegration	Sophisticated Storage Create Integration	0.1.21	NEOFORGE	TRIVIAL	49	0	12	0	0	false	false	0	131	sophisticatedstoragecreateintegration-1.21.1-0.1.21.209.jar
+target	sophisticatedstorageinmotion	Sophisticated Storage In Motion	0.10.33	NEOFORGE	HARD	108	0	35	1	6	true	false	0	399	sophisticatedstorageinmotion-1.21.1-0.10.33.324.jar
+target	soulplied_energistics	Soulplied Energistics	1.0.3	NEOFORGE	TRIVIAL	13	0	4	1	0	false	false	0	25	soulplied_energistics-1.0.3.jar
+target	spark	spark	1.10.124	NEOFORGE	MODERATE	1625	0	13	0	0	true	false	0	3557	spark-1.10.124-neoforge.jar
+target	starbunclemania	Starbunclemania	1.5.7	NEOFORGE	HARD	142	0	90	1	6	false	false	1	708	starbunclemania-1.21.1-1.5.7.jar
+target	stevescarts	StevesCarts2	1.2.18	NEOFORGE	MODERATE	517	0	143	0	0	true	false	0	2083	stevescarts-1.21-1.2.18-neoforge.jar
+target	storagedelight	Storage Delight	26.07.01a-1.21-neoforge	NEOFORGE	TRIVIAL	34	0	7	0	0	false	false	0	821	storagedelight-26.07.01a-1.21-neoforge.jar
+target	structory	Structory	1.3.17	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	1231	Structory_26.2_v1.3.7.jar
+target	structory_towers	Structory: Towers	1.0.16	NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	480	Structory_Towers_26.1_v1.0.16.jar
+target	structurize	Structurize	1.0.832-1.21.1-snapshot	NEOFORGE	MODERATE	268	0	105	0	0	true	false	0	1038	structurize-1.0.832-1.21.1-snapshot.jar
+target	stylecolonies	Stylecolonies	1.15.56-1.21.1	NEOFORGE	TRIVIAL	1	0	1	0	0	true	false	0	30506	stylecolonies-1.15.56-1.21.1.jar
+target	supermartijn642configlib	SuperMartijn642's Config Library	1.1.8	NEOFORGE	TRIVIAL	44	0	3	0	0	false	false	0	202	supermartijn642configlib-1.1.8-neoforge-mc1.21.jar
+target	supermartijn642corelib	SuperMartijn642's Core Lib	1.1.22	NEOFORGE	HARD	204	0	53	1	15	true	false	0	545	supermartijn642corelib-1.1.22-neoforge-mc1.21.jar
+target	supplementaries	Supplementaries	1.21.1-3.8.5	NEOFORGE	NIGHTMARE	1218	0	45	2	117	true	false	2	13153	supplementaries-neoforge-1.21.1-3.8.5.jar
+target	sushigocrafting	Sushi Go Crafting	0.6.5	NEOFORGE	TRIVIAL	124	0	61	0	0	true	false	0	708	sushigocrafting-1.21-0.6.5.jar
+target	sussysniffers	Sussy Sniffers	1.21.1-0.1.3	NEOFORGE	HARD	9	0	7	1	3	true	false	0	93	sussysniffers-1.21.1-0.1.3.jar
+target	t_and_t	Towns and Towers	1.13.9	NEOFORGE	TRIVIAL	3	0	1	0	0	false	false	0	3513	t_and_t-neoforge-fabric-1.13.9+1.21.1.jar
+target	tempad	Tempad	3.0.4	NEOFORGE	HARD	519	0	108	1	1	false	false	3	1656	tempad-1.21.1-3.0.4-all.jar
+target	terrablender	TerraBlender	4.1.0.8	NEOFORGE	HARD	63	0	2	2	11	true	false	0	117	TerraBlender-neoforge-1.21.1-4.1.0.8.jar
+target	tesseract_api	Tesseract API	1.12.13-1.21.1	NEOFORGE	NIGHTMARE	408	0	82	2	29	false	false	1	727	tesseract-api-neoforge-1.12.13-1.21.1.jar
+target	the_bumblezone	The Bumblezone	7.15.3+1.21.1-neoforge	NEOFORGE	NIGHTMARE	948	0	48	2	118	true	false	2	68039	the_bumblezone-7.15.3+1.21.1-neoforge.jar
+target	theurgy	Theurgy	1.76.0	NEOFORGE	MODERATE	637	0	359	0	0	true	false	0	5199	theurgy-1.21.1-neoforge-1.76.0.jar
+target	theurgy_kubejs	Theurgy KubeJS	1.5.1	NEOFORGE	TRIVIAL	10	0	8	0	0	true	false	0	24	theurgy_kubejs-1.21.1-neoforge-1.5.1.jar
+target	tiab	Time In A Bottle	6.5.4	NEOFORGE	TRIVIAL	38	0	4	0	0	false	false	0	75	tiab-neoforge-6.5.4.jar
+target	titanium	Titanium	4.0.45	NEOFORGE	MODERATE	315	0	84	0	0	true	false	0	592	titanium-1.21-4.0.45.jar
+target	toastcontrol	Toast Control	9.0.1	NEOFORGE	NIGHTMARE	6	0	6	1	0	true	true	0	20	ToastControl-1.21.1-9.0.1.jar
+target	tombstone	Corail Tombstone	9.5.3	NEOFORGE	HARD	601	0	238	1	25	true	false	0	2476	tombstone-neoforge-1.21.1-9.5.3.jar
+target	toolbelt	Tool Belt	2.2.10	NEOFORGE	TRIVIAL	76	0	39	0	0	true	false	0	211	ToolBelt-1.21.1-2.2.10.jar
+target	torchmaster	Torchmaster	21.1.9	NEOFORGE	HARD	57	0	10	2	2	false	false	0	127	torchmaster-neoforge-1.21.1-21.1.9.jar
+target	towntalk	Towntalk	1.2.0	NEOFORGE	TRIVIAL	3	0	1	0	0	false	false	0	51076	towntalk-1.2.0.jar
+target	transfer_labels	Transfer Labels	0.1.8	NEOFORGE	TRIVIAL	50	0	21	1	0	false	false	0	151	transfer_labels-0.1.8.jar
+target	trashcans	Trash Cans	1.0.18+c	NEOFORGE	TRIVIAL	60	0	13	1	0	true	false	0	156	trashcans-1.0.18c-neoforge-mc1.21.jar
+target	trashslot	TrashSlot	21.1.11	NEOFORGE	TRIVIAL	47	0	3	2	0	false	false	0	75	trashslot-neoforge-1.21.1-21.1.11.jar
+target	treetap	Tree Tap	1.21.1-0.4.6	NEOFORGE	TRIVIAL	29	0	17	0	0	true	false	0	81	treetap-1.21.1-0.4.6.jar
+target	trophymanager	Jonn's Trophies	1.21.1-2.5.0	NEOFORGE	TRIVIAL	30	0	23	0	0	true	false	0	82	trophymanager-1.21.1-2.5.0.jar
+target	twilightforest	The Twilight Forest	4.8.3345	NEOFORGE	MODERATE	1943	0	923	0	0	true	false	1	26517	twilightforest-1.21.1-4.8.3345-universal.jar
+target	undergarden	The Undergarden	0.9.6	NEOFORGE	HARD	427	0	220	1	3	true	false	0	44233	The_Undergarden-1.21.1-0.9.6.jar
+target	underground_villages	Underground Villages Mod	4.0.3	NEOFORGE	TRIVIAL	27	0	11	0	0	false	false	0	275	UndergroundVillages-neoforge-1.21.1-4.0.3.jar
+target	universalgrid	Universal Grid	1.21.1-0.3.2	NEOFORGE	HARD	62	0	5	1	11	false	false	0	89	universalgrid-neoforge-1.21.1-0.3.2.jar
+target	uranus	Uranus	2.4.1	NEOFORGE	HARD	168	0	33	2	14	true	false	0	827	uranus-2.4.1-1.21.1-neoforge.jar
+target	utilitarian	Utilitarian	1.21.1-0.19.2	NEOFORGE	HARD	70	0	56	0	6	true	false	0	608	utilitarian-1.21.1-0.19.2.jar
+target	utilityvest	Utility vest	1.3.0	NEOFORGE	HARD	59	0	30	1	1	false	false	0	218	utilityvest-1.3.0.jar
+target	valhelsia_core	Valhelsia Core	1.1.5	NEOFORGE	HARD	115	0	25	2	4	true	false	0	177	valhelsia_core-neoforge-1.21.1-1.1.5.jar
+target	variantsandventures	Variants&Ventures	1.0.26	NEOFORGE	HARD	97	0	3	2	21	true	false	0	1057	variantsandventures-neoforge-1.0.26+mc1.21.1.jar
+target	villagesandpillages	Villages & Pillages	1.0.3	NEOFORGE	HARD	19	0	3	1	3	true	false	0	235	villagesandpillages-neoforge-mc1.21.1-1.0.3.jar
+target	waystones	Waystones	21.1.39	NEOFORGE	HARD	379	0	4	2	8	false	false	0	1181	waystones-neoforge-1.21.1-21.1.39.jar
+target	wirelesschargers	Wireless Chargers	1.0.9+a	NEOFORGE	TRIVIAL	27	0	9	1	0	true	false	0	308	wirelesschargers-1.0.9a-neoforge-mc1.21.jar
+target	wits	Wits	1.3.1	NEOFORGE	TRIVIAL	3	0	1	0	0	false	false	0	10	wits-neoforge-1.3.1.jar
+target	wstweaks	Wither Skeleton Tweaks	10.1.1	NEOFORGE	NIGHTMARE	6	0	4	1	0	true	true	0	21	WitherSkeletonTweaks-1.21.1-10.1.1.jar
+target	xnet	XNet	1.21-7.0.7	NEOFORGE	MODERATE	186	0	61	0	0	true	false	0	597	xnet-1.21-7.0.7.jar
+target	xtonesreworked	XTones Reworked	1.1.1-1.21.1	NEOFORGE	TRIVIAL	42	0	38	0	0	false	false	0	1246	xtonesreworked-1.1.1-1.21.1.jar
+target	xycraft_core	XyCraft Core	0.7.53	NEOFORGE	HARD	517	0	204	1	8	false	false	2	2273	xycraft_core-0.7.53-all.jar
+target	xycraft_machines	XyCraft Machines	0.7.53	NEOFORGE	HARD	505	0	326	1	6	true	false	0	2984	xycraft_machines-0.7.53.jar
+target	xycraft_override	XyCraft Override	0.7.53	NEOFORGE	TRIVIAL	19	0	11	0	0	false	false	0	883	xycraft_override-0.7.53.jar
+target	xycraft_world	XyCraft World	0.7.53	NEOFORGE	TRIVIAL	50	0	33	0	0	false	false	0	1195	xycraft_world-0.7.53.jar
+target	yeetusexperimentus	Yeetus Experimentus	87.0.0	NEOFORGE	HARD	6	0	1	2	3	false	false	0	556	yeetusexperimentus-neoforge-87.0.0.jar
+target	yet_another_config_lib_v3	YetAnotherConfigLib	3.8.2+1.21.1-neoforge	NEOFORGE	HARD	355	0	3	2	7	true	false	8	1092	yet_another_config_lib_v3-3.8.2+1.21.1-neoforge.jar
+target	yungsapi	YUNG's API	1.21.1-NeoForge-5.1.6	NEOFORGE	HARD	179	0	24	2	16	false	false	0	379	YungsApi-1.21.1-NeoForge-5.1.6.jar
+target	yungsextras	YUNG's Extras	1.21.1-NeoForge-5.1.1	NEOFORGE	TRIVIAL	29	0	2	0	0	false	false	0	193	YungsExtras-1.21.1-NeoForge-5.1.1.jar
+target	zerocore	Zero CORE 2	1.21.1-2.4.21	NEOFORGE	HARD	794	0	154	1	3	false	false	0	1514	ZeroCore2-1.21.1-2.4.21.jar
+target	~unknown:MoogsEndStructures-1.21-2.0.3			NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	1181	MoogsEndStructures-1.21-2.0.3.jar
+target	~unknown:MoogsNetherStructures-1.21-3.0.0			NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	3705	MoogsNetherStructures-1.21-3.0.0.jar
+target	~unknown:MoogsSoaringStructures-1.21-2.1.2			NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	3536	MoogsSoaringStructures-1.21-2.1.2.jar
+target	~unknown:MoogsVoyagerStructures-1.21-5.0.14			NEOFORGE	TRIVIAL	0	0	0	0	0	false	false	0	1754	MoogsVoyagerStructures-1.21-5.0.14.jar
+target	~unknown:ScalableCatsForce-NeoForge-3.7.1-build-11-with-library			UNKNOWN	NIGHTMARE	6506	0	4	0	0	false	true	0	16476	ScalableCatsForce-NeoForge-3.7.1-build-11-with-library.jar
+target	~unknown:kotlinforforge-5.12.0-all			UNKNOWN	TRIVIAL	0	0	0	0	0	false	false	11	7108	kotlinforforge-5.12.0-all.jar

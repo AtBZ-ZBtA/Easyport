@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+# Third-party mod corpus. ~2.8 GB of other people's mods, under their own
+# licenses. Never commit this: redistributing it would violate most of them.
+# Obtain it locally by installing the modpacks (see README).
+# ---------------------------------------------------------------------------
+scrapyard/
+
+# ---------------------------------------------------------------------------
+# Development environments. Third-party MDKs (NeoForge, Forge) and downloaded
+# dependency jars, plus their build output. All fetched on demand, none ours.
+# ---------------------------------------------------------------------------
+devenv/neoforge-1.21.1/
+devenv/forge-1.20.1/
+devenv/spi/
+devenv/**/out/
+devenv/**/build/
+devenv/**/*.jar
+devenv/**/*.zip
+
+# ---------------------------------------------------------------------------
+# Generated analysis output. Regenerate with tools/CorpusAnalyzer + RuleMiner.
+# The full candidate-rules.tsv is ~13 MB of mostly low-score noise; the
+# high-confidence subset is committed instead.
+# ---------------------------------------------------------------------------
+rule-report/candidate-rules.tsv
+rule-report/lost-symbols.tsv
+rule-report/gained-symbols.tsv
+
+# Build output
+build/
+out/
+*.class
+
+# Gradle
+.gradle/
+gradle-app.setting
+
+# Editors / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

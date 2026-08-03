@@ -1,0 +1,343 @@
+side	modId	displayName	tier	classes	file
+source-only	absentbydesign	Absent By Design Mod	TRIVIAL	10	absentbydesign-1.20.1-1.9.0.jar
+source-only	ad_astra	Ad Astra	NIGHTMARE	556	ad_astra-forge-1.20.1-1.15.20.jar
+source-only	ad_astra_giselle_addon	Ad Astra: Giselle Addon	HARD	267	Ad-Astra-Giselle-Addon-forge-1.20.1-6.20.jar
+source-only	additionallanterns	Additional Lanterns	TRIVIAL	16	additionallanterns-1.1.2-forge-mc1.20.2.jar
+source-only	addonslib	Addons Lib	TRIVIAL	37	addonslib-1.20.1-1.5.jar
+source-only	advgenerators	Advanced Generators	MODERATE	251	advgenerators-1.6.0.6-mc1.20.1.jar
+source-only	ae2additions	AE Additions	HARD	185	AEAdditions-1.20.1-5.1.0.jar
+source-only	ae2insertexportcard	AE2 Insert Export Card	HARD	20	ae2insertexportcard-1.20.1-1.3.0.jar
+source-only	ae2things	AE2 Things	HARD	13	AE2-Things-1.2.1.jar
+source-only	aiotbotania	AIOT Botania	TRIVIAL	67	aiotbotania-1.20.1-4.0.6.jar
+source-only	alchemistry	Alchemistry	MODERATE	201	alchemistry-1.20.1-2.3.4.jar
+source-only	alchemylib	AlchemyLib	TRIVIAL	69	alchemylib-1.20.1-1.0.30.jar
+source-only	angelring	Angel Ring 2	TRIVIAL	35	angelring-1.20.1-2.3.1.jar
+source-only	appbot	Applied Botanics	HARD	57	applied-botanics-forge-1.5.1.jar
+source-only	attributeslib	Apothic Attributes	NIGHTMARE	112	ApothicAttributes-1.20.1-1.3.7.jar
+source-only	bambooeverything	Bamboo Everything	TRIVIAL	14	BambooEverything-forge-3.0.3+mc1.20.1.jar
+source-only	bdlib	BdLib	HARD	579	bdlib-1.27.0.8-mc1.20.1.jar
+source-only	betterf3	BetterF3	HARD	52	BetterF3-7.0.2-Forge-1.20.1.jar
+source-only	betterp2p	Better P2P	HARD	124	betterp2p-1.5.0-forge.jar
+source-only	biomesoplenty	Biomes O' Plenty	HARD	325	BiomesOPlenty-forge-1.20.1-19.0.0.96.jar
+source-only	bloodmagic	Blood Magic	MODERATE	829	bloodmagic-1.20.1-3.3.3-45.jar
+source-only	blue_skies	Blue Skies	NIGHTMARE	1040	blue_skies-1.20.1-1.3.31.jar
+source-only	botania	Botania	NIGHTMARE	1367	Botania-1.20.1-450-FORGE.jar
+source-only	botarium	Botarium	TRIVIAL	90	botarium-forge-1.20.1-2.3.4.jar
+source-only	caupona	Caupona	HARD	312	caupona-1.20.1-0.4.13.jar
+source-only	cfm	MrCrayfish's Furniture Mod	HARD	148	cfm-forge-1.20.1-7.0.0-pre36.jar
+source-only	charmofundying	Charm of Undying	HARD	23	charmofundying-forge-6.5.0+1.20.1.jar
+source-only	chemlib	ChemLib	TRIVIAL	59	chemlib-1.20.1-2.0.19.jar
+source-only	chimes	Chimes	TRIVIAL	39	Chimes-v2.0.1-1.20.1.jar
+source-only	clickadv	clickadv mod	HARD	9	clickadv-1.20.1-3.8.jar
+source-only	cofh_core	CoFH Core	HARD	625	cofh_core-1.20.1-11.0.2.56.jar
+source-only	configuration	Configuration	HARD	216	configuration-forge-1.20.1-3.1.0.jar
+source-only	constructionwand	Construction Wand	TRIVIAL	72	constructionwand-1.20.1-2.11.jar
+source-only	corail_woodcutter	Corail Woodcutter	TRIVIAL	47	corail_woodcutter-1.20.1-3.0.6.jar
+source-only	corn_delight	Corn Delight	TRIVIAL	21	corn_delight-1.1.9-1.20.1.jar
+source-only	create_jetpack	Create Jetpack	TRIVIAL	22	create_jetpack-forge-4.4.2.jar
+source-only	create_new_age	Create: New Age	HARD	122	create-new-age-forge-1.20.1-1.1.4.jar
+source-only	createoreexcavation	Create Ore Excavation	TRIVIAL	131	createoreexcavation-1.20-1.6.4.jar
+source-only	croptopia	Croptopia	HARD	70	Croptopia-1.20.1-FORGE-3.0.4.jar
+source-only	dankstorage	Dank Storage	HARD	110	dankstorage-forge-1.20.1-15.jar
+source-only	darkpaintings	DarkPaintings	TRIVIAL	3	DarkPaintings-Forge-1.20.1-17.0.5.jar
+source-only	darkutils	DarkUtilities	HARD	26	DarkUtilities-Forge-1.20.1-17.0.5.jar
+source-only	deepresonance	DeepResonance	TRIVIAL	127	deepresonance-1.20-5.0.4.jar
+source-only	defaultsettings	DefaultSettings	TRIVIAL	27	DefaultSettings-1.20.x-4.0.7-Forge.jar
+source-only	delightful	Delightful	MODERATE	192	Delightful-1.20.1-3.7.6.jar
+source-only	despawntimers	Mob Despawn Timers	NIGHTMARE	2	MobDespawnTimers-1.20.1-3.0.1.jar
+source-only	ding	Ding	HARD	8	Ding-1.20.1-Forge-1.4.1.jar
+source-only	durabilitytooltip	Durability Tooltip	TRIVIAL	7	durabilitytooltip-1.1.6-forge-mc1.20.jar
+source-only	eccentrictome	Eccentric Tome	TRIVIAL	17	eccentrictome-1.20.1-1.10.3.jar
+source-only	eidolon	Eidolon:Repraised	HARD	577	eidolon_repraised-1.20.1-0.3.9.1-alpha.jar
+source-only	elytraslot	Elytra Slot	HARD	36	elytraslot-forge-6.4.4+1.20.1.jar
+source-only	embeddium	Embeddium	NIGHTMARE	602	embeddium-0.3.31+mc1.20.1.jar
+source-only	enderchests	EnderChests	TRIVIAL	65	enderchests-forge-1.20.1-1.4.jar
+source-only	endersdelight	Ender's Delight	TRIVIAL	41	endersdelight-forge-1.20.1-1.1.3.jar
+source-only	endertanks	EnderTanks	HARD	90	endertanks-forge-1.20.1-1.5.jar
+source-only	ends_delight	End's Delight	TRIVIAL	44	ends_delight-2.5.1+forge.1.20.1.jar
+source-only	ensorcellation	Ensorcellation	HARD	44	ensorcellation-1.20.1-5.0.2.24.jar
+source-only	entityculling	EntityCulling	HARD	27	entityculling-forge-1.9.0-mc1.20.1.jar
+source-only	epherolib	BOZOID	MODERATE	441	EpheroLib-1.20.1-FORGE-1.2.0.jar
+source-only	exchangers	Exchangers	TRIVIAL	123	Exchangers-1.20.1-3.5.1.jar
+source-only	expatternprovider	ExtendedAE	HARD	346	ExtendedAE-1.20-1.4.7-forge.jar
+source-only	farsight_view	Farsight mod	HARD	11	farsight-1.20.1-4.5.jar
+source-only	fastleafdecay	Fast Leaf Decay	TRIVIAL	4	FastLeafDecay-32.jar
+source-only	findme	FindMe	HARD	22	findme-3.2.3-forge.jar
+source-only	flib	flib	TRIVIAL	139	flib-1.20.1-0.0.15.jar
+source-only	glitchcore	GlitchCore	HARD	76	GlitchCore-forge-1.20.1-0.0.1.1.jar
+source-only	gravitationalmodulatingunittweaks	Gravitational Modulating Additional Unit	HARD	20	GravitationalModulatingAdditionalUnit-1.20.1-3.5.jar
+source-only	gtceu	GregTech	NIGHTMARE	2117	gtceu-1.20.1-7.2.0.jar
+source-only	gunpowderlib	GunpowderLib	TRIVIAL	11	GunpowderLib-1.20.2-2.2.2.jar
+source-only	harvestwithease	Harvest with ease	TRIVIAL	14	harvestwithease-1.20.1-8.0.1.0-forge.jar
+source-only	hyperbox	Hyperbox	HARD	36	hyperbox-1.20.1-4.0.2.0.jar
+source-only	inventoryessentials	Inventory Essentials	HARD	27	inventoryessentials-forge-1.20.1-8.2.12.jar
+source-only	itemfilters	Item Filters	HARD	57	item-filters-forge-2001.1.0-build.59.jar
+source-only	jadeaddons	Jade Addons	HARD	35	JadeAddons-1.20.1-Forge-5.5.0.jar
+source-only	jeresources	Just Enough Resources	TRIVIAL	143	JustEnoughResources-1.20.1-1.4.0.247.jar
+source-only	jmi	JourneyMap Integration	HARD	32	jmi-forge-1.20.1-0.14-48.jar
+source-only	ldlib	LowDragLib	NIGHTMARE	912	ldlib-forge-1.20.1-1.0.45.jar
+source-only	libx	LibX	NIGHTMARE	662	LibX-1.20.1-5.0.14.jar
+source-only	littlelogistics	Little Logistics	MODERATE	243	littlelogistics-mc1.20.1-v1.20.1.2.jar
+source-only	logprot	Logprot	HARD	9	logprot-1.20.1-3.5.jar
+source-only	lost_aether_content	Aether: Lost Content	HARD	129	lost_aether_content-1.20.1-1.2.3.jar
+source-only	lostcities	LostCities	MODERATE	259	lostcities-1.20-7.4.5.jar
+source-only	maidensmerrymaking	Maiden's MerryMaking	MODERATE	358	maidensmerrymaking-1-20.1-7.jar
+source-only	mantle	Mantle	MODERATE	719	Mantle-1.20.1-1.11.79.jar
+source-only	matc	Mystical Agriculture Tiered Crystals	TRIVIAL	9	matc-1.6.0.jar
+source-only	mcwbiomesoplenty	Macaw's Biomes O' Plenty	TRIVIAL	3	mcwbiomesoplenty-1.20.1-1.2.1.jar
+source-only	mcwpaintings	Macaw's Paintings	TRIVIAL	2	mcw-paintings-1.0.5-1.20.1forge.jar
+source-only	morejs	MoreJS	NIGHTMARE	115	morejs-forge-1.20.1-0.10.1.jar
+source-only	mysterious_mountain_lib	Mysterious Mountain Lib	HARD	94	mysterious_mountain_lib-1.5.26-1.20.1.jar
+source-only	mythicbotany	MythicBotany	NIGHTMARE	206	MythicBotany-1.20.1-4.0.4.jar
+source-only	naturalist	Naturalist	HARD	217	naturalist-forge-4.0.3-1.20.1.jar
+source-only	nethersdelight	Nether's Delight	HARD	66	nethersdelight-1.20.1-4.0.jar
+source-only	noflyzone	No-fly Zone	TRIVIAL	16	noflyzone-1.20.1-1.1.0.jar
+source-only	notrample	No Trample	HARD	3	notrample-1.20.1-1.0.1.jar
+source-only	oceansdelight	Ocean's Delight	TRIVIAL	10	oceansdelight-1.0.2-1.20.jar
+source-only	oculus	Mekalus (Oculus)	NIGHTMARE	1587	mekalus-mc1.20.1-1.8.0.1.jar
+source-only	packetfixer	PacketFixer	NIGHTMARE	180	packetfixer-3.3.0-1.18-1.20.4-merged.jar
+source-only	packingtape	Packing Tape	TRIVIAL	13	PackingTape-1.20.1-0.14.4.jar
+source-only	packmenu	PackMenu	NIGHTMARE	17	PackMenu-1.20.1-6.1.2.jar
+source-only	paraglider	Paraglider	HARD	222	Paraglider-forge-20.1.3.jar
+source-only	pigpen	PigPen	TRIVIAL	2	PigPen-Forge-1.20.1-15.0.2.jar
+source-only	platforms	Platforms	TRIVIAL	106	platforms-forge-1.20.1-1.2.jar
+source-only	potionblender	Potion-Blender	HARD	42	Potion-Blender-1.20.1-FORGE-3.1.2.jar
+source-only	psi	Psi	HARD	486	Psi-1.20.1-102.jar
+source-only	quark	Quark	NIGHTMARE	936	Quark-4.0-462.jar
+source-only	railways	Create: Steam 'n' Rails	NIGHTMARE	856	Steam_Rails-1.6.13-alpha+forge-mc1.20.1.jar
+source-only	rebornstorage	RebornStorage	TRIVIAL	65	rebornstorage-1.20.1-5.0.7.jar
+source-only	redstone_arsenal	Redstone Arsenal	TRIVIAL	66	redstone_arsenal-1.20.1-8.0.1.24.jar
+source-only	refinedpolymorph	Refined Polymorphism	HARD	13	refinedpolymorph-0.1.1-1.20.1.jar
+source-only	refinedstorageaddons	Refined Storage Addons	TRIVIAL	14	refinedstorageaddons-0.10.0.jar
+source-only	rftoolscontrol	RFToolsControl	MODERATE	151	rftoolscontrol-1.20-7.0.3.jar
+source-only	rsinfinitybooster	RSInfinityBooster	HARD	15	RSInfinityBooster-1.20.1-1.0+39.jar
+source-only	rsinsertexportupgrade	RS Insert Export Upgrade	HARD	29	rsinsertexportupgrade-1.20.1-1.4.0.jar
+source-only	rsrequestify	RSRequestify	TRIVIAL	15	rsrequestify-1.20.1-2.3.3.jar
+source-only	embeddium	Embeddium	NIGHTMARE	602	embeddium-0.3.31+mc1.20.1.jar
+source-only	runelic	Runelic	TRIVIAL	5	Runelic-Forge-1.20.1-18.0.2.jar
+source-only	sgjourney	Stargate Journey	MODERATE	792	Stargate Journey-1.20.1-0.6.42.jar
+source-only	shetiphiancore	ShetiPhian-Core	HARD	166	shetiphiancore-forge-1.20.1-1.5.jar
+source-only	sliceanddice	Create Slice & Dice	HARD	60	sliceanddice-forge-3.5.2.jar
+source-only	sodiumdynamiclights	Sodium Dynamic Lights	HARD	44	sodiumdynamiclights-forge-1.0.10-1.20.1.jar
+source-only	sodiumoptionsapi	Sodium Options API	HARD	25	sodiumoptionsapi-forge-1.0.10-1.20.1.jar
+source-only	sparsestructuresreforged	SparseStructuresReforged	HARD	3	sparsestructuresreforged-1.20.1-1.0.0.jar
+source-only	structure_gel	Structure Gel API	NIGHTMARE	325	structure_gel-1.20.1-2.16.2.jar
+source-only	structurecompass	Structure Compass Mod	TRIVIAL	31	StructureCompass-1.20.1-2.2.0.jar
+source-only	tconstruct	Tinkers' Construct	MODERATE	2155	TConstruct-1.20.1-3.10.2.92.jar
+source-only	terralith	Terralith	TRIVIAL	0	Terralith_1.20.x_v2.5.4.jar
+source-only	thermal_cultivation	Thermal Cultivation	TRIVIAL	39	thermal_cultivation-1.20.1-11.0.1.24.jar
+source-only	thermal_dynamics	Thermal Dynamics	MODERATE	285	thermal_dynamics-1.20.1-11.0.1.23.jar
+source-only	thermal_expansion	Thermal Expansion	TRIVIAL	111	thermal_expansion-1.20.1-11.0.1.29.jar
+source-only	thermal_extra	Thermal Extra	TRIVIAL	117	ThermalExtra-3.2.7-1.20.1.jar
+source-only	thermal_foundation	Thermal Foundation	TRIVIAL	27	thermal_foundation-1.20.1-11.0.6.70.jar
+source-only	thermal_innovation	Thermal Innovation	TRIVIAL	28	thermal_innovation-1.20.1-11.0.1.23.jar
+source-only	thermal_integration	Thermal Integration	TRIVIAL	14	thermal_integration-1.20.1-11.0.1.27.jar
+source-only	thermal_locomotion	Thermal Locomotion	TRIVIAL	38	thermal_locomotion-1.20.1-11.0.1.19.jar
+source-only	tinyredstone	Tiny Redstone	TRIVIAL	110	tinyredstone-1.20-5.0.3.jar
+source-only	totw_modded	Towers of the Wild Modded	TRIVIAL	1	totw_modded-forge-1.20.1-1.0.6.jar
+source-only	twigs	Twigs	HARD	74	Twigs-1.20.1-3.1.0.jar
+source-only	twilightdelight	Twilight's Flavor & Delight	HARD	103	twilightdelight-2.0.17.jar
+source-only	utilitix	UtilitiX	NIGHTMARE	202	UtilitiX-1.20.1-0.8.25.jar
+source-only	villagertools	villagertools	TRIVIAL	10	villagertools-1.20.1-1.0.3.jar
+source-only	voidscape	Voidscape	NIGHTMARE	279	Voidscape-1.20.1-1.5.389.jar
+source-only	voidtotem	Void Totem	HARD	30	voidtotem-forge-1.20-3.0.1.jar
+source-only	xnetgases	XNet Gases	TRIVIAL	29	xnetgases-1.20.1-5.1.4.jar
+source-only	zeta	Zeta	NIGHTMARE	696	Zeta-1.0-30.jar
+source-only	~unknown:JCPlugin-1.17.x-1.20.x-4.0.4-Forge		NIGHTMARE	16	JCPlugin-1.17.x-1.20.x-4.0.4-Forge.jar
+source-only	~unknown:ScalableCatsForce-3.3.1-build-0-with-library		MODERATE	6405	ScalableCatsForce-3.3.1-build-0-with-library.jar
+source-only	~unknown:kotlinforforge-4.11.0-all		MODERATE	4186	kotlinforforge-4.11.0-all.jar
+source-only	~unknown:travelersbackpack-forge-1.20.1-9.1.44	Traveler's Backpack	HARD	290	travelersbackpack-forge-1.20.1-9.1.44.jar
+target-only	accelerateddecay	Accelerated Decay	TRIVIAL	4	accelerated-decay-neoforge-21.0.0.jar
+target-only	actuallyadditions	Actually Additions	HARD	548	actuallyadditions-1.3.26+mc1.21.1.jar
+target-only	ae2ct	AE2:Crafting Tree	HARD	21	ae2ct-1.21.1-1.1.1.jar
+target-only	ae2importexportcard	AE2 Import Export Card	HARD	28	ae2importexportcard-1.21.1-1.5.0.jar
+target-only	ae2jeiintegration	AE2 JEI Integration	TRIVIAL	52	ae2jeiintegration-1.2.1.jar
+target-only	ae2netanalyser	AE2NetworkAnalyzer	HARD	57	AE2NetworkAnalyzer-1.21-2.1.5-neoforge.jar
+target-only	akashictome	Akashic Tome	TRIVIAL	17	AkashicTome-1.8-30.jar
+target-only	apothic_attributes	Apothic Attributes	NIGHTMARE	124	ApothicAttributes-1.21.1-2.10.1.jar
+target-only	apothic_enchanting	Apothic Enchanting	NIGHTMARE	155	ApothicEnchanting-1.21.1-1.6.0.jar
+target-only	apothic_spawners	Apothic Spawners	NIGHTMARE	33	ApothicSpawners-1.21.1-1.4.0.jar
+target-only	ars_additions	Ars Additions	HARD	199	ars_additions-1.21.1-21.3.0.jar
+target-only	ars_controle	Ars Controle	HARD	97	ars_controle-1.21.1-1.6.15.jar
+target-only	ars_elemancy	Ars Elemancy	HARD	67	ars_elemancy-1.21.1-1.18.3.jar
+target-only	ars_polymorphia	Ars Polymorphia	HARD	11	ars_polymorphia-1.0.3.jar
+target-only	ars_technica	Ars Technica	HARD	206	ars_technica-1.21.1-2.7.6.jar
+target-only	ars_unification	Ars Unification	HARD	49	ars_unification-1.2.19.jar
+target-only	atlas_api	Atlas API	TRIVIAL	16	atlas_api-1.21.1-1.2.0.jar
+target-only	auroras	Auroras	HARD	24	Auroras-1.21-1.6.2.jar
+target-only	bellsandwhistles	Create: Bells & Whistles	TRIVIAL	19	bellsandwhistles-0.4.7-1.21.1.jar
+target-only	bibliobiomes	Bibliobiomes Legacy	TRIVIAL	9	bibliobiomes-1.21.1-1.6.1.jar
+target-only	bibliocraft	Bibliocraft Legacy	MODERATE	300	bibliocraft-1.21.1-1.6.5.jar
+target-only	bibliowoods	Bibliowoods Legacy	TRIVIAL	34	bibliowoods-1.21.1-1.6.2.jar
+target-only	biomeswevegone	Oh The Biomes We've Gone	HARD	277	Oh-The-Biomes-Weve-Gone-NeoForge-2.6.0.jar
+target-only	botanypotsmystical	BotanyPots-Mystical	TRIVIAL	9	botanypotsmystical-neoforge-1.21.1-21.1.12.jar
+target-only	bridgingmod	Bridging Mod	HARD	50	BridgingMod-2.6.2+1.21.1.neoforge-release.jar
+target-only	byzantine	Byzantine	TRIVIAL	0	Byzantine-1.21.1-51.jar
+target-only	camol	Camol	HARD	28	camol-1.21.1-0.3.1.jar
+target-only	catjammies	CatJammies	HARD	3	catjammies-1.21-1.7.1.jar
+target-only	chisel	Chisel Reborn	HARD	32	chisel-neoforge-2.0.1+mc1.21.1.jar
+target-only	chromacarvings	Chroma Carvings	TRIVIAL	23	chromacarvings-1.21.1-0.2.0.jar
+target-only	cloudglass	Cloud Glass	TRIVIAL	10	CloudGlass-1.21.1-1.0.2.jar
+target-only	cobblegengalore	Cobblegen Galore	TRIVIAL	12	cobblegengalore-1.21.1-0.2.9.jar
+target-only	cobweb	Cobweb	TRIVIAL	36	cobweb-neoforge-1.21-1.4.0.jar
+target-only	colorwheel_patcher	Colorwheel Patcher	TRIVIAL	10	colorwheel_patcher-neoforge-1.0.5+mc1.21.1.jar
+target-only	compactmachines	Compact Machines	HARD	181	compactmachines-neoforge-7.0.81.jar
+target-only	constructionstick	Construction Sticks	TRIVIAL	94	ConstructionSticks-1.21.1-1.4.1.jar
+target-only	create_aquatic_ambitions	Create Aquatic Ambitions	TRIVIAL	81	create_aquatic_ambitions-1.21.1-2.0.4.jar
+target-only	create_dragons_plus	Create: Dragons Plus	NIGHTMARE	360	CreateDragonsPlus-1.11.3.jar
+target-only	create_hypertube	Create Hypertube	HARD	141	create_hypertube-0.6.0-NEOFORGE.jar
+target-only	cryonicconfig	Cryonic Config	HARD	9	cryonicconfig-neoforge-1.0.0+mc1.21.11.jar
+target-only	ctm	ConnectedTexturesMod	HARD	145	CTM-1.21-1.2.1+3.jar
+target-only	deimos	Deimos	HARD	21	deimos-1.21.1-neoforge-2.7.jar
+target-only	disenchanting_table	Dis-Enchanting Table	HARD	162	disenchanting_table-merged-1.21.1-5.0.2.jar
+target-only	drippyloadingscreen	Drippy Loading Screen	HARD	66	drippyloadingscreen_neoforge_3.1.5_MC_1.21.1.jar
+target-only	dummmmmmy	MmmMmmMmmMmm	HARD	45	dummmmmmy-neoforge-1.21-2.1.0.jar
+target-only	dysoncubeproject	Dyson Cube Project	TRIVIAL	42	dysoncubeproject-1.0.5.jar
+target-only	enchdesc	EnchantmentDescriptions	HARD	7	enchdesc-neoforge-1.21.1-21.1.10.jar
+target-only	enderdrives	EnderDrives	HARD	64	enderdrives-neoforge-1.21.1-1.4.4.jar
+target-only	enderstorage	EnderStorage	TRIVIAL	74	EnderStorage-1.21.1-2.13.0.191.jar
+target-only	eternal_starlight	Eternal Starlight	NIGHTMARE	1384	eternalstarlight-0.8.1+1.21.1+neoforge.jar
+target-only	expandedae	Expanded AE	NIGHTMARE	120	expandedae-2.1.1.jar
+target-only	experiencelib	ExperienceLib	TRIVIAL	87	experiencelib-1.21.1-1.2.1.jar
+target-only	explorerscompass	Explorer's Compass	TRIVIAL	36	ExplorersCompass-1.21.1-3.4.0-neoforge.jar
+target-only	explorify	Explorify	TRIVIAL	0	Explorify v1.6.5.mod.jar
+target-only	extended_industrialization	Extended Industrialization	HARD	352	extended-industrialization-1.15.45-1.21.1.jar
+target-only	extendedae	ExtendedAE	HARD	426	ExtendedAE-1.21-2.2.35-neoforge.jar
+target-only	factory_blocks	Factory Blocks	TRIVIAL	13	factory_blocks-neoforge-1.4.0+mc1.21.1.jar
+target-only	fancymenu	FancyMenu	NIGHTMARE	2382	fancymenu_neoforge_3.9.9_MC_1.21.1.jar
+target-only	fireproofboats	Fireproof Boats	HARD	8	fireproofboats-1.21.1-1.0.4.jar
+target-only	formations	Formations	HARD	71	formations-1.0.4-neoforge-mc1.21.jar
+target-only	formationsnether	Formations Nether	TRIVIAL	23	formationsnether-1.0.5a-mc1.21+.jar
+target-only	formationsoverworld	Formations Overworld	TRIVIAL	32	formationsoverworld-1.0.5a-mc1.21+.jar
+target-only	framework	Framework	MODERATE	219	framework-neoforge-1.21.1-0.13.11.jar
+target-only	ftbfiltersystem	FTB Filter System	TRIVIAL	99	ftb-filter-system-neoforge-21.1.4.jar
+target-only	ftbjeiextras	FTB Jei Extras	TRIVIAL	42	ftb-jei-extras-21.1.7.jar
+target-only	ftbquestslangsplitter	FTB Quests Lang Splitter	HARD	10	ftbquestslangsplitter-1.0.6.jar
+target-only	fzzy_config	Fzzy Config	MODERATE	755	fzzy_config-0.7.6+1.21+neoforge.jar
+target-only	gmut	Gravitational Modulating Additional Unit	HARD	20	GravitationalModulatingAdditionalUnit-1.21.1-6.4.jar
+target-only	hardenedarmadillos	Hardened Armadillos	HARD	4	hardenedarmadillos-1.21.1-0.2.0.jar
+target-only	hellish_trials	Hellish Trials	TRIVIAL	3	HellishTrials-neoforge-1.0.5.jar
+target-only	herbsandharvest	Mama's Herbs and Harvest	MODERATE	205	herbsandharvest-1.21.1-17.jar
+target-only	heyberryshutup	Hey Berry! SHUT UP	TRIVIAL	4	heyberryshutup-1.21.0-2.0.4.jar
+target-only	iceandfire	Ice And Fire Community Edition	HARD	717	iceandfire-2.0-beta.17.jar
+target-only	iceberg	Iceberg	HARD	126	Iceberg-1.21.1-neoforge-1.3.2.jar
+target-only	illagerwarship	Illager-Warship	TRIVIAL	2	illagerwarship-1.0.1-neoforge-1.21.1.jar
+target-only	imfast	I'm Fast	HARD	1	imfast-NEOFORGE-1.0.2.jar
+target-only	immediatelyfast	ImmediatelyFast	NIGHTMARE	75	ImmediatelyFast-NeoForge-1.6.11+1.21.1.jar
+target-only	immeng	Immersive Energistics	TRIVIAL	11	Immersive-Energistics-1.1.0-beta.jar
+target-only	incontrol	InControl	TRIVIAL	144	incontrol-1.21-10.2.6.jar
+target-only	industrialization_overdrive	Industrialization Overdrive	TRIVIAL	45	industrialization_overdrive-1.12.1+1.21.1.jar
+target-only	integratedscripting	IntegratedScripting	TRIVIAL	106	integratedscripting-1.21.1-neoforge-1.0.24-416.jar
+target-only	interdimensionalwirelesstransmitter	Interdimensional Wireless Transmitter	TRIVIAL	48	interdimensionalwirelesstransmitter-neoforge-1.21.1-0.1.5.jar
+target-only	invasiveopts	Invasive Optimizations	NIGHTMARE	105	invasiveopts-1.0.22.jar
+target-only	iris	Iris	NIGHTMARE	948	iris-neoforge-1.8.14-beta.1+mc1.21.1.jar
+target-only	iris_search	IrisSearch	HARD	37	IrisSearch-1.5.1-neoforge.jar
+target-only	irons_jewelry	Iron's Gems 'n Jewelry	HARD	152	irons_jewelry-1.21.1-2.0.2.jar
+target-only	irons_lib	Iron's Lib	HARD	109	irons_lib-1.21.1-2.1.0.jar
+target-only	jupiter	Jupiter	HARD	155	jupiter-2.3.7-1.21.1-neoforge.jar
+target-only	justdirethings	Just Dire Things	HARD	619	justdirethings-1.5.7.jar
+target-only	justenoughbreeding	Just Enough Breeding	TRIVIAL	78	justenoughbreeding-neoforge-1.21.1-3.2.1.jar
+target-only	keybindbundles	KeyBind Bundles	HARD	44	keybindbundles-1.4.0.jar
+target-only	keybindspurger	KeybindsPurger	HARD	8	KeybindsPurger-1.4.0-neoforge-1.21.1.jar
+target-only	kubejstweaks	KubeJS Tweaks	NIGHTMARE	117	kubejstweaks-1.0.6.jar
+target-only	laserbridges	Laser Bridges & Doors	HARD	18	laserbridges-1.21.1-neoforge-5.3.jar
+target-only	little_big_redstone	Little Big Redstone	HARD	389	little-big-redstone-1.9.8-1.21.1.jar
+target-only	livingthings	Living Things	HARD	165	livingthings-neoforge-1.21.1-2.3.0.jar
+target-only	lmft	Load My F***ing Tags	HARD	13	lmft-1.1.1+1.21.9-neoforge.jar
+target-only	luminax	Luminax	TRIVIAL	14	luminax-1.3.1_neoforge_1.21.1.jar
+target-only	mcwholidays	Macaw's Holidays	TRIVIAL	107	mcw-holidays-1.1.2-mc1.21.1neoforge.jar
+target-only	mcwstairs	Macaw's Stairs and Balconies	TRIVIAL	27	mcw-mcwstairs-1.0.2-mc1.21.1neoforge.jar
+target-only	mekanismcovers	Mekanism Covers	HARD	27	mekanismcovers-1.3-BETA+1.21.jar
+target-only	mekanisticrouters	Mekanistic Routers	HARD	23	mekanisticrouters-1.2.0.jar
+target-only	mekmm	Mekanism: MoreMachine	HARD	483	mekmm-1.21.1-1.3.3.jar
+target-only	melody	Melody	HARD	22	melody_neoforge_1.0.10_MC_1.21.jar
+target-only	merrymaking	Mama's MerryMaking	TRIVIAL	148	merrymaking-1.21.1-16.jar
+target-only	mffs	Modular Force Field System	HARD	245	mffs-5.4.44.jar
+target-only	mifa	More Industrial Foregoing Addons	TRIVIAL	31	mifa-neoforge-1.21.x-2.1.0.jar
+target-only	modern_industrialization	Modern Industrialization	HARD	1111	Modern-Industrialization-2.5.5.jar
+target-only	moderndynamics	Modern Dynamics	HARD	248	Modern-Dynamics-0.9.6.jar
+target-only	modularbees	ModularBees	HARD	216	ModularBees-1.21.1-3.3-neoforge.jar
+target-only	monolib	MonoLib	HARD	105	monolib-neoforge-1.21.1-4.1.0.jar
+target-only	moogs_structures	Moog's Structure Lib	HARD	129	moogs_structures-neoforge-1.21.1-3.0.3.jar
+target-only	moreredxcctcompat	More Red x CC:Tweaked Compat	TRIVIAL	4	MoreRed-CCT-Compat-1.21.1-1.3.0.jar
+target-only	mostructures	Mo' Structures	HARD	15	mostructures-neoforge-1.6.0+1.21.1.jar
+target-only	neo_auth	NeoAuth	HARD	20	NeoAuth-1.21.1-1.0.1.jar
+target-only	not_enough_glyphs	Not Enough Glyphs	HARD	129	not_enough_glyphs-1.21.1-4.6.1.jar
+target-only	notenoughanimations	NotEnoughAnimations	HARD	74	notenoughanimations-neoforge-1.12.4-mc1.21.1.jar
+target-only	nullscape	Nullscape	TRIVIAL	0	Nullscape_1.21.x_v1.2.14.jar
+target-only	occultism_kubejs	Occultism KubeJS	TRIVIAL	17	occultism_kubejs-1.21.1-neoforge-1.11.0.jar
+target-only	octolib	OctoLib	HARD	156	OctoLib-NEOFORGE-0.6.2+1.21.jar
+target-only	ohthetreesyoullgrow	Oh The Trees You'll Grow	HARD	36	Oh-The-Trees-Youll-Grow-neoforge-1.21.1-5.3.2.jar
+target-only	omegaconfig	Omega Config Architectury	HARD	10	omegaconfig-neoforge-1.5.1.jar
+target-only	openloader	OpenLoader	TRIVIAL	11	OpenLoader-neoforge-1.21.1-21.1.5.jar
+target-only	oracle_index	Oracle Index	HARD	65	oracle_index-neoforge-1.3.1.jar
+target-only	oritech	Oritech	HARD	704	oritech-neoforge-1.21.1-1.2.10.jar
+target-only	overloadedarmorbar	OverloadedArmorBar	TRIVIAL	15	overloadedarmorbar-neoforge-1.21-2.jar
+target-only	owo	oωo	NIGHTMARE	492	owo-lib-neoforge-0.12.15.5-beta.1+1.21.jar
+target-only	pamhc2crops	Pam's HarvestCraft - Crops	TRIVIAL	25	pamhc2crops-NEOFORGE-1.21.1-1.0.9.jar
+target-only	pamhc2foodcore	Pam's HarvestCraft - Food Core	TRIVIAL	6	pamhc2foodcore-NEOFORGE-1.21.1-1.0.4.jar
+target-only	pamhc2foodextended	Pam's HarvestCraft - Food Extended	TRIVIAL	6	pamhc2foodextended-NEOFORGE-1.21.1-1.0.0.jar
+target-only	pamhc2trees	Pam's HarvestCraft - Trees	TRIVIAL	75	pamhc2trees-NEOFORGE-1.21.1-1.0.9.jar
+target-only	pocketstorage	Pocket Storage	TRIVIAL	32	pocketstorage-1.2.5+1.21.1-b3.jar
+target-only	polylib	PolyLib	HARD	560	polylib-2100.1.0-build.183-neoforge.jar
+target-only	prickle	PrickleMC	TRIVIAL	47	prickle-neoforge-1.21.1-21.1.11.jar
+target-only	prism	Prism	HARD	25	Prism-1.21.1-neoforge-1.0.11.jar
+target-only	productivemetalworks	Productive Metalworks	TRIVIAL	123	productivemetalworks-1.21.1-1.15.0.jar
+target-only	rainbows	Rainbows	TRIVIAL	19	Rainbows-1.21-1.5.jar
+target-only	reap	Reap Mod	TRIVIAL	91	reap-neoforge-1.21.1-1.1.2.jar
+target-only	rebind_narrator	Rebind Narrator	HARD	7	rebind_narrator-1.21.1-neoforge-2025.12.23.jar
+target-only	rechiseled_chipped	Rechiseled: Chipped	HARD	5	rechiseled_chipped-2.0-1.21.1.jar
+target-only	redstonepen	Redstone Pen	MODERATE	153	redstonepen-1.21-neoforge-1.11.42.jar
+target-only	refinedstorage_curios_integration	Refined Storage - Curios Integration	TRIVIAL	5	refinedstorage-curios-integration-1.0.0.jar
+target-only	refinedstorage_jei_integration	Refined Storage - JEI Integration	TRIVIAL	33	refinedstorage-jei-integration-neoforge-1.0.0.jar
+target-only	refinedstorage_mekanism_integration	Refined Storage - Mekanism Integration	TRIVIAL	55	refinedstorage-mekanism-integration-1.1.1.jar
+target-only	refinedstorage_quartz_arsenal	Refined Storage - Quartz Arsenal	TRIVIAL	33	refinedstorage-quartz-arsenal-neoforge-1.0.8.jar
+target-only	refinedtypes	Refined Types	HARD	164	refined-types-1.21.1-0.3.2.jar
+target-only	refurbished_furniture	MrCrayfish's Furniture Mod: Refurbished	HARD	575	refurbished_furniture-neoforge-1.21.1-1.0.22.jar
+target-only	regions_unexplored	Regions Unexplored	HARD	345	regions_unexplored-neoforge-1.21.1-0.5.9.jar
+target-only	relics	Relics	NIGHTMARE	702	relics-1.21.1-0.12.8.jar
+target-only	reliquified_artifacts	reliquified_artifacts	HARD	146	reliquified_artifacts-1.21.1-1.0.7.jar
+target-only	repeatable_trial_vaults	Repeatable Trial Vaults	HARD	5	repeatable_trial_vaults-neoforge-1.21-1.0.3.jar
+target-only	restrictions	Restrictions	TRIVIAL	13	restrictions-1.21-7.0.3.jar
+target-only	rootsclassic	Roots Classic	MODERATE	198	RootsClassic-1.21.1-1.5.7.jar
+target-only	sawmill	Universal Sawmill	HARD	40	sawmill-neoforge-1.21-1.7.7.jar
+target-only	sgearmetalworks	Silent Gear Metalworks	TRIVIAL	41	sgearmetalworks-1.21.1-1.5.0.jar
+target-only	shiny	Shiny!	MODERATE	188	shiny-1.21.1-1.3.0.jar
+target-only	silentgems	Silent's Gems	TRIVIAL	71	silentgems-1.21.1-neoforge-5.1.3.jar
+target-only	simple_weather	Simple Weather	HARD	13	simple_weather-1.0.13-hotfix.jar
+target-only	smithingtemplateviewer	SmithingTemplateViewer	TRIVIAL	10	smithingtemplateviewer-1.0.4.jar
+target-only	sodium	Sodium	NIGHTMARE	72	sodium-neoforge-0.8.13-beta.1+mc1.21.1.jar
+target-only	sodium_extra	Sodium Extra	NIGHTMARE	88	sodium-extra-neoforge-0.9.3+mc1.21.1.jar
+target-only	sophisticatedbackpackscreateintegration	Sophisticated Backpacks Create Integration	TRIVIAL	36	sophisticatedbackpackscreateintegration-1.21.1-0.1.8.134.jar
+target-only	sophisticatedstoragecreateintegration	Sophisticated Storage Create Integration	TRIVIAL	49	sophisticatedstoragecreateintegration-1.21.1-0.1.21.209.jar
+target-only	sophisticatedstorageinmotion	Sophisticated Storage In Motion	HARD	108	sophisticatedstorageinmotion-1.21.1-0.10.33.324.jar
+target-only	soulplied_energistics	Soulplied Energistics	TRIVIAL	13	soulplied_energistics-1.0.3.jar
+target-only	starbunclemania	Starbunclemania	HARD	142	starbunclemania-1.21.1-1.5.7.jar
+target-only	stevescarts	StevesCarts2	MODERATE	517	stevescarts-1.21-1.2.18-neoforge.jar
+target-only	storagedelight	Storage Delight	TRIVIAL	34	storagedelight-26.07.01a-1.21-neoforge.jar
+target-only	structory_towers	Structory: Towers	TRIVIAL	0	Structory_Towers_26.1_v1.0.16.jar
+target-only	sussysniffers	Sussy Sniffers	HARD	9	sussysniffers-1.21.1-0.1.3.jar
+target-only	tesseract_api	Tesseract API	NIGHTMARE	408	tesseract-api-neoforge-1.12.13-1.21.1.jar
+target-only	the_bumblezone	The Bumblezone	NIGHTMARE	948	the_bumblezone-7.15.3+1.21.1-neoforge.jar
+target-only	theurgy_kubejs	Theurgy KubeJS	TRIVIAL	10	theurgy_kubejs-1.21.1-neoforge-1.5.1.jar
+target-only	transfer_labels	Transfer Labels	TRIVIAL	50	transfer_labels-0.1.8.jar
+target-only	treetap	Tree Tap	TRIVIAL	29	treetap-1.21.1-0.4.6.jar
+target-only	trophymanager	Jonn's Trophies	TRIVIAL	30	trophymanager-1.21.1-2.5.0.jar
+target-only	underground_villages	Underground Villages Mod	TRIVIAL	27	UndergroundVillages-neoforge-1.21.1-4.0.3.jar
+target-only	uranus	Uranus	HARD	168	uranus-2.4.1-1.21.1-neoforge.jar
+target-only	utilityvest	Utility vest	HARD	59	utilityvest-1.3.0.jar
+target-only	variantsandventures	Variants&Ventures	HARD	97	variantsandventures-neoforge-1.0.26+mc1.21.1.jar
+target-only	villagesandpillages	Villages & Pillages	HARD	19	villagesandpillages-neoforge-mc1.21.1-1.0.3.jar
+target-only	wits	Wits	TRIVIAL	3	wits-neoforge-1.3.1.jar
+target-only	xtonesreworked	XTones Reworked	TRIVIAL	42	xtonesreworked-1.1.1-1.21.1.jar
+target-only	xycraft_core	XyCraft Core	HARD	517	xycraft_core-0.7.53-all.jar
+target-only	xycraft_machines	XyCraft Machines	HARD	505	xycraft_machines-0.7.53.jar
+target-only	xycraft_override	XyCraft Override	TRIVIAL	19	xycraft_override-0.7.53.jar
+target-only	xycraft_world	XyCraft World	TRIVIAL	50	xycraft_world-0.7.53.jar
+target-only	yet_another_config_lib_v3	YetAnotherConfigLib	HARD	355	yet_another_config_lib_v3-3.8.2+1.21.1-neoforge.jar
+target-only	~unknown:MoogsEndStructures-1.21-2.0.3		TRIVIAL	0	MoogsEndStructures-1.21-2.0.3.jar
+target-only	~unknown:MoogsNetherStructures-1.21-3.0.0		TRIVIAL	0	MoogsNetherStructures-1.21-3.0.0.jar
+target-only	~unknown:MoogsSoaringStructures-1.21-2.1.2		TRIVIAL	0	MoogsSoaringStructures-1.21-2.1.2.jar
+target-only	~unknown:MoogsVoyagerStructures-1.21-5.0.14		TRIVIAL	0	MoogsVoyagerStructures-1.21-5.0.14.jar
+target-only	~unknown:ScalableCatsForce-NeoForge-3.7.1-build-11-with-library		NIGHTMARE	6506	ScalableCatsForce-NeoForge-3.7.1-build-11-with-library.jar
+target-only	~unknown:kotlinforforge-5.12.0-all		TRIVIAL	0	kotlinforforge-5.12.0-all.jar
