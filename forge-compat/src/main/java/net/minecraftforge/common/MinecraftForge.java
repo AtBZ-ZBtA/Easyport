@@ -1,6 +1,6 @@
 package net.minecraftforge.common;
 
-import net.neoforged.bus.api.IEventBus;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForge;
 
 /**
@@ -14,8 +14,8 @@ import net.neoforged.neoforge.common.NeoForge;
  */
 public class MinecraftForge {
 
-    /** Aliases {@link NeoForge#EVENT_BUS}; same {@link IEventBus} instance, not a copy. */
-    public static final IEventBus EVENT_BUS = NeoForge.EVENT_BUS;
+    /** Wraps {@link NeoForge#EVENT_BUS}. Same bus underneath; not identical by reference. */
+    public static final IEventBus EVENT_BUS = IEventBus.of(NeoForge.EVENT_BUS);
 
     private MinecraftForge() {}
 }

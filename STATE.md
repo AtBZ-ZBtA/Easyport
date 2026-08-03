@@ -118,6 +118,59 @@ Everything below is measured, not estimated.
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
 
+### Phase 2 — COMPLETE, and first real mod translated end to end
+
+`tools/Translate.java` + `rules/forward.rules.tsv`. **A real corpus mod now translates to
+100% registry and 100% resource coverage against its author's own port.**
+
+```
+additional_lights (Forge 1.20.1 -> NeoForge 1.21.1)
+  registry  326/326 = 100%   (173 blocks, 147 items, 1 tab, 5 sounds; 0 missing, 0 extra)
+  resource  900/900 = 100%
+  day zero:   0% / 83.6%
+```
+
+Five rule kinds implemented: `TYPE_RENAME`, `RENAME_METHOD`, `CTOR_TO_STATIC`,
+`CTOR_SWAP2`, `REMOVED`. SRG→official remapping runs first, before any rule matches.
+
+**Correction to a Phase 0 conclusion.** Phase 0 recorded `FMLJavaModLoadingContext` (241 mods,
+top of the work list) as `STRUCTURAL` — requiring a constructor-signature rewrite because
+NeoForge injects the bus. Half right: the injection is real, but NeoForge *kept*
+`ModLoadingContext.get()` and exposes the bus via `getActiveContainer().getEventBus()`, so it
+is a plain delegating shim. The largest item on the work list is cheap, not expensive.
+
+**The shim-first boundary, learned by hitting it.** Anything the *loader* looks up or
+dispatches by name must be rewritten; anything a mod merely *calls* can be shimmed:
+
+| Category | Why | Handling |
+|---|---|---|
+| `@Mod`, `@SubscribeEvent`, `@EventBusSubscriber` | FML scans for the exact descriptor | `TYPE_RENAME` |
+| Lifecycle + bus event classes | Dispatched by exact class identity | `TYPE_RENAME` |
+| `IEventBus` | Appears in mod descriptors | Shim **extending** NeoForge's, so it is valid on both sides |
+| Everything else Forge | Only called by mods | Plain shim |
+
+Getting this wrong is silent. A shimmed `@Mod` means FML never finds the mod: it loads,
+registers nothing, and reports no error at all.
+
+**A false positive worth remembering.** The Phase 0 shim spike compiled *against* the shims
+and linked cleanly, which looked like proof and was not — it never tested descriptor
+compatibility, because it had been compiled against the very types under test. Real Forge mods
+are compiled against real Forge, and only they exercise that. Test shims with a real mod.
+
+**Forge and NeoForge differ in strictness, and the shim must preserve Forge's.** NeoForge
+throws when `EVENT_BUS.register()` gets an object with no `@SubscribeEvent` methods; Forge
+accepted it silently. That is a hard load failure on real corpus mods, so `ForgeEventBus`
+makes it a no-op.
+
+### Phase 3 — forge-compat, IN PROGRESS
+
+18 classes covering the head of the work list: `MinecraftForge`, `IEventBus`/`ForgeEventBus`,
+`FMLJavaModLoadingContext`, `ModLoadingContext`, `ModConfig`, `ModList`, `ForgeConfigSpec`,
+`DeferredRegister`, `RegistryObject`, `IForgeRegistry`, `ForgeRegistries`, `ForgeSoundType`.
+
+Expansion is a tight loop: translate a mod, run it, add whatever class the error names, repeat.
+Each iteration is about a minute. Missing classes fail loudly with the exact name needed.
+
 ### Phase 1 — COMPLETE
 
 `tools/VerifyHarness.java` + `testkit/inspector/`. Measures whether a translated mod actually

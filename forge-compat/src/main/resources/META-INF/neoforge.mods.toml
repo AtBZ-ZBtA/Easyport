@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="CC0-1.0"
+
+[[mods]]
+modId="forge_compat"
+version="0.1.0"
+displayName="Easyport Forge Compat"
+description="Implements the net.minecraftforge.* API on top of NeoForge so translated mods link against it unchanged."
+
+[[dependencies.forge_compat]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1,)"
+    ordering="NONE"
+    side="BOTH"

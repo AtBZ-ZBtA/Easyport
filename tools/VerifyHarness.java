@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * ten seconds, and no EULA (only a dedicated server needs one).
  *
  * Run:
- *   java tools/VerifyHarness.java <runtimeDir> <inspectorJar> <candidateJar> [referenceJar] [outDir]
+ *   java tools/VerifyHarness.java <runtimeDir> <supportJars,comma-separated> <candidateJar> [referenceJar] [outDir]
  */
 public class VerifyHarness {
 
@@ -74,14 +74,15 @@ public class VerifyHarness {
             System.exit(2);
         }
         Path runtime   = Paths.get(args[0]).toAbsolutePath();
-        Path inspector = Paths.get(args[1]).toAbsolutePath();
+        List<Path> support = new ArrayList<>();
+        for (String s : args[1].split(",")) support.add(Paths.get(s).toAbsolutePath());
         Path candidate = Paths.get(args[2]).toAbsolutePath();
         Path reference = args.length > 3 && !args[3].equals("-") ? Paths.get(args[3]).toAbsolutePath() : null;
         Path out       = Paths.get(args.length > 4 ? args[4] : "verify-report").toAbsolutePath();
         Files.createDirectories(out);
 
         System.out.println("Baseline (inspector only) ...");
-        Run baseline = launch(runtime, inspector, null);
+        Run baseline = launch(runtime, support, null);
         if (!baseline.harnessRan()) {
             System.out.println("  BASELINE FAILED: " + baseline.failure());
             System.out.println("  The harness itself cannot boot; nothing below would be meaningful.");
@@ -90,14 +91,14 @@ public class VerifyHarness {
         System.out.printf("  baseline: %d entries%n", baseline.entryCount());
 
         System.out.println("\nCandidate: " + candidate.getFileName());
-        Run candRun = launch(runtime, inspector, candidate);
+        Run candRun = launch(runtime, support, candidate);
         Map<String, Set<String>> candDelta = subtract(candRun.registries(), baseline.registries());
         boolean candLoaded = report("candidate", candRun, candDelta, candidate);
 
         Map<String, Set<String>> refDelta = null;
         if (reference != null) {
             System.out.println("\nReference: " + reference.getFileName());
-            Run refRun = launch(runtime, inspector, reference);
+            Run refRun = launch(runtime, support, reference);
             refDelta = subtract(refRun.registries(), baseline.registries());
             report("reference", refRun, refDelta, reference);
         }
@@ -114,13 +115,15 @@ public class VerifyHarness {
     // ---- launching ---------------------------------------------------------------------
 
     /** Stages the mods folder, runs datagen, and reads back what the game registered. */
-    private static Run launch(Path runtime, Path inspector, Path candidate) throws Exception {
+    private static Run launch(Path runtime, List<Path> support, Path candidate) throws Exception {
         Path modsDir = runtime.resolve("run/mods");
         Files.createDirectories(modsDir);
         try (DirectoryStream<Path> s = Files.newDirectoryStream(modsDir, "*.jar")) {
             for (Path p : s) Files.delete(p);
         }
-        Files.copy(inspector, modsDir.resolve(inspector.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+        // Support jars (inspector, forge-compat) go into every run including the baseline, so
+        // whatever they register subtracts out and the delta stays purely the jar under test.
+        for (Path s : support) Files.copy(s, modsDir.resolve(s.getFileName()), StandardCopyOption.REPLACE_EXISTING);
         if (candidate != null) {
             Files.copy(candidate, modsDir.resolve(candidate.getFileName()), StandardCopyOption.REPLACE_EXISTING);
         }

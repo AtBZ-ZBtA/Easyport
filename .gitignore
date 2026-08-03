@@ -66,3 +66,5 @@ verify-report*/
 
 # Translator output
 translated/
+forge-compat/out/
+forge-compat/*.jar

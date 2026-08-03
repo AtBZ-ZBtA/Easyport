@@ -39,6 +39,27 @@ TYPE_RENAME	net/minecraftforge/eventbus/api/SubscribeEvent	net/neoforged/bus/api
 TYPE_RENAME	net/minecraftforge/api/distmarker/Dist	net/neoforged/api/distmarker/Dist
 TYPE_RENAME	net/minecraftforge/api/distmarker/OnlyIn	net/neoforged/api/distmarker/OnlyIn
 
+# --- Event types: dispatched by identity, so also unshimmable ---------------------------
+#
+# The event bus resolves a listener's target from the declared parameter type and dispatches
+# by exact class. A shimmed FMLCommonSetupEvent would be a distinct class from the one the bus
+# actually posts, so the listener would register successfully and then simply never fire --
+# again silent, again the worst kind of failure.
+#
+# Same rule as the annotations above: the loader dispatches these, so they must be rewritten.
+# A mod only *calls* ForgeConfigSpec, so that one can stay shimmed.
+TYPE_RENAME	net/minecraftforge/eventbus/api/Event	net/neoforged/bus/api/Event
+TYPE_RENAME	net/minecraftforge/eventbus/api/EventPriority	net/neoforged/bus/api/EventPriority
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent	net/neoforged/fml/event/lifecycle/FMLCommonSetupEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent	net/neoforged/fml/event/lifecycle/FMLClientSetupEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/FMLDedicatedServerSetupEvent	net/neoforged/fml/event/lifecycle/FMLDedicatedServerSetupEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/FMLLoadCompleteEvent	net/neoforged/fml/event/lifecycle/FMLLoadCompleteEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/FMLConstructModEvent	net/neoforged/fml/event/lifecycle/FMLConstructModEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/InterModEnqueueEvent	net/neoforged/fml/event/lifecycle/InterModEnqueueEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/InterModProcessEvent	net/neoforged/fml/event/lifecycle/InterModProcessEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/ModLifecycleEvent	net/neoforged/fml/event/lifecycle/ModLifecycleEvent
+TYPE_RENAME	net/minecraftforge/fml/event/lifecycle/ParallelDispatchEvent	net/neoforged/fml/event/lifecycle/ParallelDispatchEvent
+
 # --- ResourceLocation: constructor privatised in 1.21 -------------------------------------
 # The single largest vanilla dependency in the corpus: 237 + 188 mods.
 CTOR_TO_STATIC	net/minecraft/resources/ResourceLocation	(Ljava/lang/String;Ljava/lang/String;)V	fromNamespaceAndPath	(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;
@@ -59,3 +80,22 @@ REMOVED	net/minecraft/world/item/ItemStack#hasTag()Z
 # call to rewrite. STRUCTURAL work in Phase 3; reported here so nothing is silently wrong.
 REMOVED	net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;
 REMOVED	net/minecraftforge/fml/ModLoadingContext#get()Lnet/minecraftforge/fml/ModLoadingContext;
+
+# --- Vanilla constructors whose arguments were reordered ---------------------------------
+#
+# CTOR_SWAP2  owner <TAB> oldDesc <TAB> newDesc <TAB> [narrowTopTo]
+#
+# TorchBlock went from (Properties, ParticleOptions) to (SimpleParticleType, Properties) in
+# 1.21 -- reordered and narrowed at once. The narrowing needs a CHECKCAST emitted before the
+# swap, while the value is still reachable on top of the stack.
+CTOR_SWAP2	net/minecraft/world/level/block/TorchBlock	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/core/particles/ParticleOptions;)V	(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V	net/minecraft/core/particles/SimpleParticleType
+CTOR_SWAP2	net/minecraft/world/level/block/WallTorchBlock	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/core/particles/ParticleOptions;)V	(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V	net/minecraft/core/particles/SimpleParticleType
+
+# --- Plain method renames ------------------------------------------------------------------
+#
+# RENAME_METHOD  owner <TAB> name <TAB> desc <TAB> newOwner <TAB> newName <TAB> newDesc
+#
+# The kind a rename table handles well -- and the kind corpus mining scored 13 out of 13 on in
+# the hand-port. Kept explicit rather than auto-imported from candidate-rules-strong.tsv so
+# every entry has been checked; the mining is a source of leads, not of truth.
+RENAME_METHOD	net/minecraft/world/item/Item$Properties	defaultDurability	(I)Lnet/minecraft/world/item/Item$Properties;	net/minecraft/world/item/Item$Properties	durability	(I)Lnet/minecraft/world/item/Item$Properties;

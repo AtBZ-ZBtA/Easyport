@@ -70,8 +70,17 @@ public class Translate {
 
     record CtorRule(String owner, String ctorDesc, String factoryName, String factoryDesc) {}
 
+    /** A constructor whose two arguments were reordered, optionally narrowing the new first one. */
+    record SwapRule(String owner, String oldDesc, String newDesc, String castTop) {}
+
+    /** A method that kept its shape but changed owner or name. The plain call-site rewrite. */
+    record RenameRule(String owner, String name, String desc,
+                      String newOwner, String newName, String newDesc) {}
+
     private final Map<String, String> srgToOfficial = new HashMap<>();
     private final List<CtorRule> ctorRules = new ArrayList<>();
+    private final List<SwapRule> swapRules = new ArrayList<>();
+    private final List<RenameRule> renameRules = new ArrayList<>();
     private final Set<String> removed = new LinkedHashSet<>();
     private final Map<String, String> typeRenames = new LinkedHashMap<>();
 
@@ -164,7 +173,9 @@ public class Translate {
         // Pass 2: structural rules.
         for (MethodNode m : node.methods) {
             if (m.instructions == null) continue;
+            applyRenameRules(m.instructions);
             applyCtorRules(m.instructions);
+            applySwapRules(m.instructions);
             recordRemoved(m.instructions);
         }
 
@@ -210,6 +221,76 @@ public class Translate {
             min.itf = false;
             count(appliedCounts, "CTOR_TO_STATIC " + rule.owner() + "#" + rule.factoryName());
         }
+    }
+
+    /**
+     * Rewrites calls to methods that kept their shape but changed owner or name.
+     *
+     * The simplest rule kind, and the one a rename table handles well — which is exactly the
+     * 13-of-13 the corpus mining got right in the hand-port scoring. Runs before the
+     * structural rules so those match against already-corrected owners.
+     */
+    private void applyRenameRules(InsnList insns) {
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof MethodInsnNode min)) continue;
+            for (RenameRule r : renameRules) {
+                if (!r.owner().equals(min.owner) || !r.name().equals(min.name)
+                        || !r.desc().equals(min.desc)) continue;
+                min.owner = r.newOwner();
+                min.name = r.newName();
+                min.desc = r.newDesc();
+                count(appliedCounts, "RENAME_METHOD " + r.owner() + "#" + r.name()
+                                     + " -> " + r.newName());
+                break;
+            }
+        }
+    }
+
+    /**
+     * Reorders the two arguments of a constructor whose signature was rearranged upstream.
+     *
+     * Example: {@code TorchBlock(Properties, ParticleOptions)} became
+     * {@code TorchBlock(SimpleParticleType, Properties)} in 1.21 — reordered *and* narrowed.
+     *
+     * Both arguments are already on the operand stack in source order when INVOKESPECIAL is
+     * reached, so a single SWAP reorders them. Where the new signature also narrows a type, a
+     * CHECKCAST must be emitted *before* the swap, while the value being narrowed is still on
+     * top — after the swap it is buried and no longer reachable without more shuffling.
+     *
+     * Only valid for two category-1 arguments. A long or double occupies two stack slots and
+     * SWAP would corrupt it, so those are refused and reported rather than mangled.
+     */
+    private void applySwapRules(InsnList insns) {
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof MethodInsnNode min)) continue;
+            if (min.getOpcode() != Opcodes.INVOKESPECIAL || !min.name.equals("<init>")) continue;
+
+            for (SwapRule r : swapRules) {
+                if (!r.owner().equals(min.owner) || !r.oldDesc().equals(min.desc)) continue;
+
+                if (hasWideArgument(r.oldDesc())) {
+                    count(unresolved, "SWAP2 refused (wide argument) " + r.owner() + r.oldDesc());
+                    break;
+                }
+                if (r.castTop() != null && !r.castTop().isEmpty()) {
+                    insns.insertBefore(min, new TypeInsnNode(Opcodes.CHECKCAST, r.castTop()));
+                }
+                insns.insertBefore(min, new org.objectweb.asm.tree.InsnNode(Opcodes.SWAP));
+                min.desc = r.newDesc();
+                count(appliedCounts, "CTOR_SWAP2 " + r.owner());
+                break;
+            }
+        }
+    }
+
+    /** True if any argument is a long or double, which occupy two stack slots. */
+    private static boolean hasWideArgument(String desc) {
+        for (org.objectweb.asm.Type t : org.objectweb.asm.Type.getArgumentTypes(desc)) {
+            if (t.getSort() == org.objectweb.asm.Type.LONG || t.getSort() == org.objectweb.asm.Type.DOUBLE) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Walks back to the NEW that allocated the object this constructor initialises. */
@@ -368,6 +449,13 @@ public class Translate {
             switch (c[0]) {
                 case "CTOR_TO_STATIC" -> {
                     if (c.length >= 5) ctorRules.add(new CtorRule(c[1], c[2], c[3], c[4]));
+                }
+                case "RENAME_METHOD" -> {
+                    if (c.length >= 7) renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                }
+                case "CTOR_SWAP2" -> {
+                    if (c.length >= 4) swapRules.add(new SwapRule(c[1], c[2], c[3],
+                                                                  c.length > 4 ? c[4] : null));
                 }
                 case "TYPE_RENAME" -> {
                     if (c.length >= 3) typeRenames.put(c[1], c[2]);
