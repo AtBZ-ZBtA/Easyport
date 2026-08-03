@@ -19,7 +19,7 @@ import net.neoforged.neoforge.common.ModConfigSpec;
  * work list. Coverage below is deliberately limited to the methods the corpus shows mods
  * actually calling; the rest arrives in Phase 3.
  */
-public class ForgeConfigSpec {
+public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpec {
 
     private final ModConfigSpec delegate;
 
@@ -139,5 +139,32 @@ public class ForgeConfigSpec {
         BooleanValue(ModConfigSpec.ConfigValue<Boolean> delegate) {
             super(delegate);
         }
+    }
+
+    // ---- IConfigSpec, delegated ---------------------------------------------------------
+    //
+    // Forge declares registerConfig against IConfigSpec rather than the concrete spec type, so
+    // a mod's bytecode names that interface in the call descriptor even when the mod itself
+    // only ever touches ForgeConfigSpec. This type therefore has to satisfy it. Since it wraps
+    // ModConfigSpec rather than extending it, each method forwards.
+
+    @Override public boolean isEmpty() {
+        return delegate.isEmpty();
+    }
+
+    @Override public void validateSpec(net.neoforged.fml.config.ModConfig config) {
+        delegate.validateSpec(config);
+    }
+
+    @Override public boolean isCorrect(com.electronwill.nightconfig.core.UnmodifiableCommentedConfig config) {
+        return delegate.isCorrect(config);
+    }
+
+    @Override public void correct(com.electronwill.nightconfig.core.CommentedConfig config) {
+        delegate.correct(config);
+    }
+
+    @Override public void acceptConfig(net.neoforged.fml.config.IConfigSpec.ILoadedConfig config) {
+        delegate.acceptConfig(config);
     }
 }

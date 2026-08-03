@@ -1,0 +1,20 @@
+Baseline (cached): 57 entries
+
+Candidate: ars_creo.jar
+  candidate: LAUNCH FAILED: [14:45:37] [main/FATAL] [ne.ne.fm.ModLoader/CORE]: Error during pre-loading phase: Mod ars_creo requires create 6 or above  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+Reference: ars_creo-1.21.1-5.4.0.jar
+  reference: LAUNCH FAILED: [14:45:48] [main/FATAL] [ne.ne.fm.ModLoader/CORE]: Error during pre-loading phase: Mod ars_creo requires create 6.0.9 or above  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+======================================================================
+COVERAGE
+======================================================================
+  0% - candidate did not load
+
+======================================================================
+RESOURCE COVERAGE  (datapack + assets, no launch required)
+======================================================================
+  10/14 reference resources present = 71.4%
+  4 missing, 2 extra
+
+Wrote C:\Claude code\version translation layer\batch-report

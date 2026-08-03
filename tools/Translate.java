@@ -83,6 +83,7 @@ public class Translate {
     private final List<RenameRule> renameRules = new ArrayList<>();
     private final Set<String> removed = new LinkedHashSet<>();
     private final Map<String, String> typeRenames = new LinkedHashMap<>();
+    private final Map<String, String> prefixRenames = new LinkedHashMap<>();
 
     private final Map<String, Integer> appliedCounts = new TreeMap<>();
     private final Map<String, Integer> unresolved = new TreeMap<>();
@@ -165,6 +166,16 @@ public class Translate {
                 if (renamed != null) {
                     count(appliedCounts, "TYPE_RENAME " + internalName);
                     return renamed;
+                }
+                // Scoped prefix renames, for packages that are wholly event classes. Events are
+                // dispatched by exact class identity, so every one of them must be rewritten --
+                // enumerating several hundred individually would be noise, and any that is
+                // missed fails silently by never firing.
+                for (var e : prefixRenames.entrySet()) {
+                    if (internalName.startsWith(e.getKey())) {
+                        count(appliedCounts, "TYPE_PREFIX " + e.getKey());
+                        return e.getValue() + internalName.substring(e.getKey().length());
+                    }
                 }
                 return internalName;
             }
@@ -456,6 +467,9 @@ public class Translate {
                 case "CTOR_SWAP2" -> {
                     if (c.length >= 4) swapRules.add(new SwapRule(c[1], c[2], c[3],
                                                                   c.length > 4 ? c[4] : null));
+                }
+                case "TYPE_PREFIX_RENAME" -> {
+                    if (c.length >= 3) prefixRenames.put(c[1], c[2]);
                 }
                 case "TYPE_RENAME" -> {
                     if (c.length >= 3) typeRenames.put(c[1], c[2]);

@@ -1,0 +1,19 @@
+Loaded 64225 SRG mappings, 17 type renames, 2 ctor rules, 6 removed-API entries
+
+Rewrote 31 classes, moved 5 resources
+
+Applied:
+     2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     2  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     7  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     8  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     7  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  REMOVED net/minecraftforge/fml/ModLoadingContext#get()Lnet/minecraftforge/fml/ModLoadingContext;
+     1  REMOVED net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;
+
+Wrote translated\ars_ocultas.jar
+      translated\ars_ocultas.report.tsv

@@ -1,0 +1,21 @@
+Loaded 64225 SRG mappings, 17 type renames, 2 ctor rules, 6 removed-API entries
+
+Rewrote 29 classes, moved 1 resources
+
+Applied:
+     4  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     1  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     5  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     3  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
+    14  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+     7  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     1  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  REMOVED net/minecraftforge/fml/ModLoadingContext#get()Lnet/minecraftforge/fml/ModLoadingContext;
+     3  REMOVED net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;
+
+Wrote translated\appleskin.jar
+      translated\appleskin.report.tsv

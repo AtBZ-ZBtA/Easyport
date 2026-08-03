@@ -81,14 +81,29 @@ public class VerifyHarness {
         Path out       = Paths.get(args.length > 4 ? args[4] : "verify-report").toAbsolutePath();
         Files.createDirectories(out);
 
-        System.out.println("Baseline (inspector only) ...");
-        Run baseline = launch(runtime, support, null);
+        // The baseline depends only on the support jars, so batch runs would otherwise pay a
+        // full launch per mod to recompute an identical result. Cached beside the report and
+        // reused; delete the file to force a rebuild after changing forge-compat.
+        Path baselineCache = out.resolve("baseline.json");
+        Run baseline;
+        if (Files.exists(baselineCache)) {
+            String body = Files.readString(baselineCache, StandardCharsets.UTF_8);
+            baseline = new Run(parse(body), parseLoadedMods(body), true, null);
+            System.out.printf("Baseline (cached): %d entries%n", baseline.entryCount());
+        } else {
+            System.out.println("Baseline (support jars only) ...");
+            baseline = launch(runtime, support, null);
+            if (baseline.harnessRan()) {
+                Files.copy(runtime.resolve("run").resolve(INSPECTION), baselineCache,
+                           StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
         if (!baseline.harnessRan()) {
             System.out.println("  BASELINE FAILED: " + baseline.failure());
             System.out.println("  The harness itself cannot boot; nothing below would be meaningful.");
             System.exit(1);
         }
-        System.out.printf("  baseline: %d entries%n", baseline.entryCount());
+        if (!Files.exists(baselineCache)) System.out.printf("  baseline: %d entries%n", baseline.entryCount());
 
         System.out.println("\nCandidate: " + candidate.getFileName());
         Run candRun = launch(runtime, support, candidate);

@@ -1,0 +1,20 @@
+Baseline (cached): 57 entries
+
+Candidate: betteradvancements.jar
+  candidate: LAUNCH FAILED: Caused by: java.lang.ClassNotFoundException: net.minecraftforge.fml.config.IConfigSpec  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+Reference: BetterAdvancements-NeoForge-1.21.1-0.4.3.21.jar
+  reference: loaded, contributed 0 entries across 0 registries
+
+======================================================================
+COVERAGE
+======================================================================
+  0% - candidate did not load
+
+======================================================================
+RESOURCE COVERAGE  (datapack + assets, no launch required)
+======================================================================
+  5/6 reference resources present = 83.3%
+  1 missing, 0 extra
+
+Wrote C:\Claude code\version translation layer\batch-report

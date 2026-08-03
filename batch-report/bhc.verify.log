@@ -1,0 +1,20 @@
+Baseline (cached): 57 entries
+
+Candidate: bhc.jar
+  candidate: LAUNCH FAILED: Caused by: java.lang.ClassNotFoundException: net.minecraftforge.fml.config.IConfigSpec  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+Reference: baubley-heart-canisters-1.21.1-1.4.1.jar
+  reference: LAUNCH FAILED: [14:47:03] [main/FATAL] [ne.ne.fm.ModLoader/CORE]: Error during pre-loading phase: Mod bhc requires curios 9.2.0 or above  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+======================================================================
+COVERAGE
+======================================================================
+  0% - candidate did not load
+
+======================================================================
+RESOURCE COVERAGE  (datapack + assets, no launch required)
+======================================================================
+  86/175 reference resources present = 49.1%
+  89 missing, 15 extra
+
+Wrote C:\Claude code\version translation layer\batch-report

@@ -1,0 +1,20 @@
+Baseline (cached): 57 entries
+
+Candidate: ars_ocultas.jar
+  candidate: LAUNCH FAILED: [14:46:01] [main/FATAL] [ne.ne.fm.ModLoader/CORE]: Error during pre-loading phase: Mod ars_ocultas requires curios 1.18.1-5.0.3.0 or above  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+Reference: ars_ocultas-1.21.1-2.5.0.jar
+  reference: LAUNCH FAILED: [14:46:13] [main/FATAL] [ne.ne.fm.ModLoader/CORE]: Error during pre-loading phase: Mod ars_ocultas requires occultism 1.220.4 or above  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+======================================================================
+COVERAGE
+======================================================================
+  0% - candidate did not load
+
+======================================================================
+RESOURCE COVERAGE  (datapack + assets, no launch required)
+======================================================================
+  10/28 reference resources present = 35.7%
+  18 missing, 3 extra
+
+Wrote C:\Claude code\version translation layer\batch-report

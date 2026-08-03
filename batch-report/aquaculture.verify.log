@@ -1,0 +1,33 @@
+Baseline (cached): 57 entries
+
+Candidate: aquaculture.jar
+  candidate: LAUNCH FAILED: Caused by: java.lang.ClassNotFoundException: net.minecraftforge.fml.config.IConfigSpec  [full log: C:\Claude code\version translation layer\devenv\neoforge-1.21.1\run\last-failed-launch.log]
+
+Reference: Aquaculture-1.21.1-2.7.21.jar
+  reference: loaded, contributed 202 entries across 13 registries
+    minecraft:armor_material                   1
+    minecraft:block                            5
+    minecraft:block_entity_type                2
+    minecraft:creative_mode_tab                1
+    minecraft:data_component_type              5
+    minecraft:entity_type                      41
+    minecraft:item                             123
+    minecraft:loot_condition_type              1
+    minecraft:menu                             1
+    minecraft:recipe_serializer                1
+    minecraft:sound_event                      17
+    neoforge:biome_modifier_serializers        2
+    neoforge:condition_codecs                  2
+
+======================================================================
+COVERAGE
+======================================================================
+  0% - candidate did not load
+
+======================================================================
+RESOURCE COVERAGE  (datapack + assets, no launch required)
+======================================================================
+  577/692 reference resources present = 83.4%
+  115 missing, 61 extra
+
+Wrote C:\Claude code\version translation layer\batch-report

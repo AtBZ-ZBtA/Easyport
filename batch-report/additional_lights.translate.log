@@ -1,0 +1,17 @@
+Loaded 64225 SRG mappings, 17 type renames, 2 ctor rules, 6 removed-API entries
+
+Rewrote 33 classes, moved 149 resources
+
+Applied:
+     1  CTOR_SWAP2 net/minecraft/world/level/block/TorchBlock
+     1  CTOR_SWAP2 net/minecraft/world/level/block/WallTorchBlock
+     5  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     1  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
+     1  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  REMOVED net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;
+
+Wrote translated\additional_lights.jar
+      translated\additional_lights.report.tsv

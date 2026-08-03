@@ -181,6 +181,84 @@ catch that class of change.
 
 ---
 
+## Translate
+
+The transformer. Rewrites a Forge 1.20.1 jar toward NeoForge 1.21.1.
+
+```bash
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar" \
+    tools/Translate.java <inputJar> <outputJar> mappings/srg2official.tsv rules/forward.rules.tsv
+```
+
+**Dependencies:** ASM 9.7 core + tree + commons. **All three must be the same version** —
+mixing a cached `asm-tree` with a different `asm` core produces `NoSuchMethodError` deep
+inside `ClassReader`, far from the actual cause.
+
+### What it does, and deliberately doesn't
+
+Three passes: SRG→official member names, then rules, then resources. The SRG pass must run
+first because every rule is written against official names.
+
+It rewrites as little as possible. Under shim-first, most `net.minecraftforge.*` references
+need no rewriting — they resolve against `forge-compat` unchanged. Rewriting is reserved for
+cases where a shim is impossible.
+
+**The boundary:** anything the *loader* looks up or dispatches by name must be rewritten;
+anything a mod merely *calls* can be shimmed. Annotations (`@Mod`, `@SubscribeEvent`) and
+event classes fall on the rewrite side — FML scans for exact descriptors and the bus
+dispatches by exact class, so a shimmed copy is simply a different type that never matches.
+
+Type renames are therefore an explicit allowlist in the rule file, **not** a blanket
+`net.minecraftforge` → `net.neoforged` rename, which would defeat the shim layer entirely.
+
+### Rule kinds
+
+| Kind | Fields | Use |
+|---|---|---|
+| `TYPE_RENAME` | from, to | Loader-scanned annotations and dispatched event classes |
+| `RENAME_METHOD` | owner, name, desc, newOwner, newName, newDesc | Same shape, different owner or name |
+| `CTOR_TO_STATIC` | owner, ctorDesc, factoryName, factoryDesc | Constructor became a static factory |
+| `CTOR_SWAP2` | owner, oldDesc, newDesc, [narrowTopTo] | Two constructor arguments reordered |
+| `REMOVED` | symbol | No replacement — reported, never rewritten |
+
+`CTOR_TO_STATIC` removes the `NEW`/`DUP` pair and switches `INVOKESPECIAL` to `INVOKESTATIC`.
+`CTOR_SWAP2` inserts a `SWAP` (and a `CHECKCAST` first, if the new signature also narrows a
+type — after the swap that value is buried). It refuses wide arguments, since `long` and
+`double` occupy two stack slots and `SWAP` would corrupt them.
+
+`REMOVED` exists so the transformer can be honest. Inventing a plausible target for an API
+that no longer exists is the measured failure mode from `handport/` — 5 false positives out
+of 26 symbols — and a jar that loads while quietly doing the wrong thing is worse than one
+that refuses.
+
+### The report
+
+Every run writes `<output>.report.tsv` listing what was applied and what was left
+unresolved. Unresolved entries are the point: they name exactly what to add next.
+
+---
+
+## batch-verify.sh
+
+Translates and verifies a list of ground-truth pairs, appending results as they land.
+
+```bash
+awk -F'\t' 'NR>1 && $2=="TRIVIAL" {print $1"\t"$9"\t"$10}' \
+    corpus-report/ground-truth-pairs.tsv | head -20 > batch-report/sample.tsv
+bash tools/batch-verify.sh < batch-report/sample.tsv
+```
+
+Input is `modId<TAB>sourceJar<TAB>targetJar`. Output accumulates in
+`batch-report/batch-results.tsv`, and already-completed mods are skipped, so a long run can
+be interrupted and resumed. Per-mod translate and verify logs land beside it — those logs are
+the work queue for expanding `forge-compat`, since each failure names the missing class.
+
+The baseline is computed once and cached in the report directory, so each mod costs two
+launches rather than three. **Delete `batch-report/baseline.json` after changing
+forge-compat**, or the cached baseline will no longer match what the runs actually load.
+
+---
+
 ## VerifyHarness
 
 Measures whether a translated mod actually works, by running it.

@@ -99,3 +99,18 @@ CTOR_SWAP2	net/minecraft/world/level/block/WallTorchBlock	(Lnet/minecraft/world/
 # the hand-port. Kept explicit rather than auto-imported from candidate-rules-strong.tsv so
 # every entry has been checked; the mining is a source of leads, not of truth.
 RENAME_METHOD	net/minecraft/world/item/Item$Properties	defaultDurability	(I)Lnet/minecraft/world/item/Item$Properties;	net/minecraft/world/item/Item$Properties	durability	(I)Lnet/minecraft/world/item/Item$Properties;
+
+# --- Event packages: scoped prefix renames ------------------------------------------------
+#
+# TYPE_PREFIX_RENAME  fromPrefix <TAB> toPrefix
+#
+# A prefix rename is normally the wrong tool -- a blanket net.minecraftforge -> net.neoforged
+# rename would defeat the shim layer entirely. It is correct here precisely because these
+# packages contain nothing but event classes, and events are dispatched by exact class
+# identity, so every one of them must be rewritten. Enumerating several hundred individually
+# would be noise, and any that got missed would fail silently by simply never firing.
+#
+# Exact TYPE_RENAME entries above still win: they are checked first.
+TYPE_PREFIX_RENAME	net/minecraftforge/event/	net/neoforged/neoforge/event/
+TYPE_PREFIX_RENAME	net/minecraftforge/client/event/	net/neoforged/neoforge/client/event/
+TYPE_PREFIX_RENAME	net/minecraftforge/data/event/	net/neoforged/neoforge/data/event/
