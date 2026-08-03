@@ -239,4 +239,28 @@ public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpe
     @Override public void acceptConfig(net.neoforged.fml.config.IConfigSpec.ILoadedConfig config) {
         delegate.acceptConfig(config);
     }
+
+    /**
+     * Forge's raw config setter, adapted to NeoForge's wrapped form.
+     *
+     * Forge handed the spec a {@code CommentedConfig} directly; NeoForge expects an
+     * {@code ILoadedConfig}, which is that config plus a {@code save()} callback. Mods that
+     * drive their own config loading call this — appleskin does — rather than leaving it to
+     * FML.
+     *
+     * {@code save()} is a no-op here. Forge's setConfig carried no save capability at all, so
+     * there is nothing to forward to; inventing one would write files the mod never asked to
+     * write. A config attached this way is read-only in practice, which matches how it behaved
+     * on Forge.
+     */
+    public void setConfig(com.electronwill.nightconfig.core.CommentedConfig config) {
+        delegate.acceptConfig(new net.neoforged.fml.config.IConfigSpec.ILoadedConfig() {
+            @Override public com.electronwill.nightconfig.core.CommentedConfig config() {
+                return config;
+            }
+            @Override public void save() {
+                // Forge's setConfig had no save path; see above.
+            }
+        });
+    }
 }

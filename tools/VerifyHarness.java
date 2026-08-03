@@ -165,14 +165,22 @@ public class VerifyHarness {
             // Named after the jar under test, not a single shared file. A batch run overwrote
             // that shared file on every mod, so by the time results were read the diagnostics
             // for all but the last failure were gone.
-            String tag = candidate == null ? "baseline"
-                       : candidate.getFileName().toString().replaceAll("\\.jar$", "");
-            Path logFile = runtime.resolve("run").resolve("failed-" + tag + ".log");
+            Path logFile = runtime.resolve("run").resolve("failed-" + logTag(candidate) + ".log");
             try { Files.writeString(logFile, log, StandardCharsets.UTF_8); } catch (IOException ignored) {}
             return new Run(Map.of(), Set.of(), false, firstFailure(log) + "  [full log: " + logFile + "]");
         }
         String body = Files.readString(inspection, StandardCharsets.UTF_8);
+        // Clear any failure log from an earlier run of this same jar. Without this a mod that
+        // has since been fixed keeps a stale log on disk, and reading it later reports a
+        // problem that no longer exists -- which is worse than having no log at all.
+        Files.deleteIfExists(runtime.resolve("run").resolve("failed-" + logTag(candidate) + ".log"));
         return new Run(parse(body), parseLoadedMods(body), true, null);
+    }
+
+    /** Names the failure log after the jar under test, so a batch does not clobber its own. */
+    private static String logTag(Path candidate) {
+        return candidate == null ? "baseline"
+             : candidate.getFileName().toString().replaceAll("\\.jar$", "");
     }
 
     /** Pulls the most informative line out of a failed launch, for the report. */
