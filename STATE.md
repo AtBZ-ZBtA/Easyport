@@ -327,6 +327,19 @@ public download.
     locator look identical to one that never ran — an expensive thing to debug. A locally
     obtained slf4j logger reaches the console fine.
 
+12. **Build forge-compat with `tools/build-forge-compat.sh`, never inline.** A compile error
+    scrolled past inside a backgrounded build-and-batch command; `javac` left an almost-empty
+    output directory, `jar` packaged it without complaint, and ten minutes of verification ran
+    against a forge-compat containing **one class** — reporting every mod broken including one
+    that had been at 100%. The script fails loudly, refuses to package an obviously incomplete
+    build, and clears the cached baseline. **Never chain a build and a long test run into one
+    backgrounded command and then read only the tail.**
+
+13. **A sealed interface cannot be implemented, not even by a named class.**
+    `IConfigSpec.ILoadedConfig` permits only `net.neoforged.fml.config.LoadedConfig`, so the
+    obvious wrapper for `ForgeConfigSpec.setConfig` is impossible. Check `PermittedSubclasses`
+    with `javap -v` before designing a shim around implementing a NeoForge interface.
+
 11. **`runData` is the cheap live-launch harness.** Datagen exercises the full FML boot,
     including `ModDirTransformerDiscoverer` scanning `run/mods/`, runs headless, and exits on
     its own in ~10s. **No EULA required** — only the dedicated server needs one. Use this for

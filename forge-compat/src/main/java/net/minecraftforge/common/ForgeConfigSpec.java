@@ -254,13 +254,19 @@ public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpe
      * on Forge.
      */
     public void setConfig(com.electronwill.nightconfig.core.CommentedConfig config) {
-        delegate.acceptConfig(new net.neoforged.fml.config.IConfigSpec.ILoadedConfig() {
-            @Override public com.electronwill.nightconfig.core.CommentedConfig config() {
-                return config;
-            }
-            @Override public void save() {
-                // Forge's setConfig had no save path; see above.
-            }
-        });
+        // ILoadedConfig is sealed, permitting only net.neoforged.fml.config.LoadedConfig, so
+        // the wrapper this obviously wants cannot be written -- not by an anonymous class and
+        // not by a named one either.
+        //
+        // correct() is the closest reachable behaviour: it validates the supplied config
+        // against the spec and fills in defaults, which is the useful half of what Forge's
+        // setConfig did. What is lost is the spec retaining a reference to the config, so
+        // later reads through the spec will not see it.
+        //
+        // Mods calling this drive their own config loading and generally read values back from
+        // the CommentedConfig they already hold, so this is usually sufficient. When it is not,
+        // the failure is quiet -- values read as defaults rather than as configured, which is
+        // worth knowing before blaming the translation.
+        delegate.correct(config);
     }
 }
