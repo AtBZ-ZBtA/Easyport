@@ -164,12 +164,53 @@ makes it a no-op.
 
 ### Phase 3 — forge-compat, IN PROGRESS
 
-18 classes covering the head of the work list: `MinecraftForge`, `IEventBus`/`ForgeEventBus`,
-`FMLJavaModLoadingContext`, `ModLoadingContext`, `ModConfig`, `ModList`, `ForgeConfigSpec`,
-`DeferredRegister`, `RegistryObject`, `IForgeRegistry`, `ForgeRegistries`, `ForgeSoundType`.
+21 classes covering the head of the work list: `MinecraftForge`, `IEventBus`/`ForgeEventBus`,
+`FMLJavaModLoadingContext`, `ModLoadingContext`, `ModConfig`, `IConfigSpec`, `ModList`,
+`ForgeConfigSpec`, `DistExecutor`, `DeferredRegister`, `RegistryObject`, `IForgeRegistry`,
+`ForgeRegistries`, `ForgeSoundType`.
 
-Expansion is a tight loop: translate a mod, run it, add whatever class the error names, repeat.
-Each iteration is about a minute. Missing classes fail loudly with the exact name needed.
+Expansion is a tight loop, and `tools/batch-verify.sh` drives it: translate a sample, run each,
+collect the missing class names from the logs, add them, repeat. Missing classes fail loudly
+with the exact name needed, so the logs *are* the work queue.
+
+**First batch over 14 paired mods gave a much better queue than the failure count suggested:
+13 failures but only 5 distinct missing symbols.** The distribution is heavily headed — the
+same few classes block most mods, so each expansion round unblocks many at once.
+
+**Count `DEPS_MISSING` separately or the translator looks far worse than it is.** 5 of those 13
+failures were mods needing *other* mods (`ars_nouveau`, `mekanism`, `create`, `curios`,
+`bookshelf`) that the harness does not load. That is a harness limitation, not a translation
+failure, and lumping it in with real failures would misdirect all the work that follows.
+`batch-verify.sh` now classifies it.
+
+**Two dependencies live in surprising places**, both found by searching jars rather than
+guessing: `com.electronwill.nightconfig.core` (needed by the `IConfigSpec` shim) and
+`net.neoforged.api.distmarker.Dist`, which ships inside `mergetool-2.0.0-api.jar`.
+
+#### Removed vanilla types — constraint proven, and the way around it
+
+A mod jar **cannot** supply a class in a vanilla package. Tested directly
+(`testkit/vanilla-package-probe`):
+
+```
+java.lang.module.ResolutionException: Modules vanillapkgprobe and minecraft
+export package net.minecraft.world.level.storage.loot to module easyport_inspector
+```
+
+That matters because 1.21 deleted vanilla types some mods *implement* —
+`net.minecraft.world.level.storage.loot.Serializer` is a real case (aquaculture), removed when
+loot serialization moved to codecs, with no replacement to rename to. Supplying the missing
+class is the obvious fix and it is impossible.
+
+**The workaround is to rename rather than supply.** We control the mod's bytecode, so a
+removed vanilla type can be `TYPE_RENAME`d to a shim living *outside* `net.minecraft` —
+forge-compat owns its own package space and triggers no split. So the category needs no
+structural surgery after all: it is ordinary shim work plus a rename, with the shim simply not
+allowed to sit where the original did.
+
+Worth having tested rather than assumed. The inference chain (no `module-info`, so an automatic
+module, so it owns the package) was right, but it decided a large amount of downstream work and
+would have been expensive to get wrong in either direction.
 
 ### Phase 1 — COMPLETE
 

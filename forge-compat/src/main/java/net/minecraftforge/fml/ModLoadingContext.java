@@ -44,6 +44,22 @@ public class ModLoadingContext {
         return (spec instanceof ForgeConfigSpec forge) ? forge.unwrap() : spec;
     }
 
+    /**
+     * Accepted and ignored.
+     *
+     * The only extension point in wide use was {@code DisplayTest}, which NeoForge removed —
+     * server-list compatibility is declared in the descriptor now, not registered at runtime.
+     * There is nothing to forward to, so this exists to make the call link.
+     *
+     * Silently dropping a registration is normally the wrong thing, but the alternatives are
+     * worse: throwing would break mods over a cosmetic feature, and forwarding to NeoForge's
+     * {@code registerExtensionPoint} would hand it a Forge type it cannot use.
+     */
+    public <T extends IExtensionPoint> void registerExtensionPoint(Class<T> point,
+                                                                   java.util.function.Supplier<T> supplier) {
+        // no-op by design; see above
+    }
+
     /** Some mods reach the container directly; hand back NeoForge's rather than wrapping it. */
     public net.neoforged.fml.ModContainer getActiveContainer() {
         return net.neoforged.fml.ModLoadingContext.get().getActiveContainer();

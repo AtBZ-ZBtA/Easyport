@@ -162,7 +162,12 @@ public class VerifyHarness {
         if (!Files.exists(inspection)) {
             // Keep the whole log: a launch failure is exactly when the detail is needed, and
             // re-running to reproduce it costs another full boot.
-            Path logFile = runtime.resolve("run").resolve("last-failed-launch.log");
+            // Named after the jar under test, not a single shared file. A batch run overwrote
+            // that shared file on every mod, so by the time results were read the diagnostics
+            // for all but the last failure were gone.
+            String tag = candidate == null ? "baseline"
+                       : candidate.getFileName().toString().replaceAll("\\.jar$", "");
+            Path logFile = runtime.resolve("run").resolve("failed-" + tag + ".log");
             try { Files.writeString(logFile, log, StandardCharsets.UTF_8); } catch (IOException ignored) {}
             return new Run(Map.of(), Set.of(), false, firstFailure(log) + "  [full log: " + logFile + "]");
         }

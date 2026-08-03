@@ -45,10 +45,26 @@ while IFS=$'\t' read -r modId src tgt; do
 
   reg=$(grep -oE "reproduced = [0-9.]+%" "$OUT/$modId.verify.log" | grep -oE "[0-9.]+" | head -1)
   res=$(grep -oE "resources present = [0-9.]+%" "$OUT/$modId.verify.log" | grep -oE "[0-9.]+" | head -1)
-  if   grep -q "NOT LOADED"    "$OUT/$modId.verify.log"; then st=NOT_LOADED
+  # A ClassNotFoundException naming a class outside net.minecraftforge/net.minecraft belongs
+  # to another mod, so it is a missing dependency rather than a missing shim. Counting those
+  # against the translator would send the work queue chasing classes we are not responsible
+  # for -- allthecompressed fails on tv.soaryn.xycraft.*, which is simply not installed.
+  foreign=$(grep -oE "ClassNotFoundException: [a-zA-Z0-9_.$]+" "$OUT/$modId.verify.log" 2>/dev/null \
+            | sed 's/.*: //' | grep -vE '^(net\.minecraftforge\.|net\.minecraft\.)' | head -1)
+  if   grep -qE "requires [a-z_]+ [0-9]" "$OUT/$modId.verify.log"; then st=DEPS_MISSING
+  elif [ -n "$foreign" ]; then st=DEPS_MISSING
+  elif grep -q "NOT LOADED"    "$OUT/$modId.verify.log"; then st=NOT_LOADED
   elif grep -q "LAUNCH FAILED" "$OUT/$modId.verify.log"; then st=LAUNCH_FAILED
   else st=OK; fi
 
   printf '%s\t%s\t%s\t%s\n' "$modId" "${reg:-0}" "${res:-0}" "$st" >> "$RESULTS"
   echo "  registry=${reg:-0}%  resource=${res:-0}%  $st"
 done
+
+# Status meanings:
+#   OK             translated and loaded; registry/resource percentages are meaningful
+#   DEPS_MISSING   the mod needs *other* mods that this harness does not load. A harness
+#                  limitation, not a translation failure -- must not be counted against
+#                  coverage or the translator looks far worse than it is
+#   NOT_LOADED     loaded nothing; the jar was rejected
+#   LAUNCH_FAILED  the run died; see the per-mod log for the missing class

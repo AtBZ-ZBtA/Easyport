@@ -316,11 +316,25 @@ as the game would treat it.
 Extra entries are reported but not counted as failures — they are usually the author adding
 features between versions, which is drift rather than a translation bug.
 
-### Not yet covered
+### What the coverage metric cannot measure
 
-A world-gen smoke test would catch runtime crashes during actual play, which neither metric
-sees. It needs a server launch (EULA) or a client (display), so it is deferred rather than
-dropped.
+**Mods that register nothing.** Behaviour-only mods — AI tweaks, performance patches, UI
+changes — have an empty registry delta on *both* sides, so registry coverage is undefined
+rather than zero. `AI Improvements` is one: its author's own NeoForge port also contributes 0
+entries. For these, "loaded successfully" is the only available signal, and treating their 0%
+as a translation failure would understate coverage badly.
+
+Since roughly half the corpus is Hard/Nightmare tier and much of that is behaviour mods, this
+is not a rare edge case. A separate signal — behavioural smoke tests, or at minimum a
+loaded-vs-crashed count — is needed before a corpus-wide coverage number means anything.
+
+**Mods needing other mods.** A mod whose dependencies are absent fails to load for reasons
+unrelated to translation. `batch-verify.sh` classifies these `DEPS_MISSING` and they must be
+excluded from the denominator; 5 of the first 14 sampled mods fell here.
+
+**Runtime behaviour.** A world-gen smoke test would catch crashes during actual play, which
+neither metric sees. It needs a server launch (EULA) or a client (display), so it is deferred
+rather than dropped.
 
 ---
 

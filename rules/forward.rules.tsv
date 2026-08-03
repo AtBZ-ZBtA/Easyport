@@ -75,11 +75,15 @@ REMOVED	net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTa
 REMOVED	net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
 REMOVED	net/minecraft/world/item/ItemStack#hasTag()Z
 
-# --- Loader API with no shim target -------------------------------------------------------
-# The bus and ModContainer are injected into the mod constructor in NeoForge, so there is no
-# call to rewrite. STRUCTURAL work in Phase 3; reported here so nothing is silently wrong.
-REMOVED	net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;
-REMOVED	net/minecraftforge/fml/ModLoadingContext#get()Lnet/minecraftforge/fml/ModLoadingContext;
+# --- Formerly listed as removed; both are now shimmed ------------------------------------
+# FMLJavaModLoadingContext#get and ModLoadingContext#get were recorded here as having no
+# replacement, on the reasoning that NeoForge injects the bus into the mod constructor. That
+# was wrong: NeoForge kept ModLoadingContext.get() and exposes the bus through
+# getActiveContainer().getEventBus(), so both are plain delegating shims in forge-compat.
+#
+# Left as a note rather than deleted, because a stale REMOVED entry is actively harmful --
+# every translation report flagged a resolved symbol as unresolvable, which sends whoever
+# reads the report chasing work that is already done.
 
 # --- Vanilla constructors whose arguments were reordered ---------------------------------
 #
