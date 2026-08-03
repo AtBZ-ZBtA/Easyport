@@ -311,8 +311,8 @@ This table exists to bootstrap. `rule-report/` is the authority.
 | `ForgeCapabilities#ITEM_HANDLER` | `Capabilities$ItemHandler` | **[mined]** 97→94 | see below |
 | `LazyOptional` + `ICapabilityProvider` | `RegisterCapabilitiesEvent` + `BlockCapability` / `ItemCapability` / `EntityCapability` / `BlockCapabilityCache` | **[mined]** types confirmed present | **hard — different lifecycle model** |
 | `SimpleChannel` | `network.registration.PayloadRegistrar` (`playToServer`, `playToClient`, `playBidirectional`, `configurationToClient`, `versioned`, `optional`, `executesOn`) + `network.handling.IPayloadContext` | **[mined]** FQNs confirmed | **hard — must synthesize `StreamCodec`s** |
-| `@Cancelable` annotation | `ICancellableEvent` interface | (verify) | shim |
-| `net.minecraftforge.eventbus.api.Event` | `net.neoforged.bus.api.Event` | (verify) | trivial |
+| `@Cancelable` annotation | `ICancellableEvent` interface | **[confirmed]** present in bus 8.0.5 | shim |
+| `net.minecraftforge.eventbus.api.Event` | `net.neoforged.bus.api.Event` | **[confirmed]** present in bus 8.0.5 | trivial |
 | `FMLJavaModLoadingContext` | `IEventBus` passed to mod constructor | (verify) — 241 mods use it, top of the shim list | moderate |
 | `META-INF/mods.toml` | `META-INF/neoforge.mods.toml` + field changes | (verify) | trivial |
 | Forge extension interfaces (`IForgeBlockState` etc.) | NeoForge equivalents, not 1:1 | (verify) | moderate |
@@ -379,7 +379,8 @@ transformer.** Under-building it is the single decision that would blow up the s
 - [x] Feature-drift methodology settled (corroboration threshold + member-level matching)
 - [x] **Mod-discovery SPI go/no-go: GREEN** — same-launch injection from the mods folder,
       verified in FML 4.0.43 source and tested against a real service jar
-- [ ] Prove `addPath` injection end to end in a live launch (needs EULA or a display)
+- [ ] Live-launch check: `addPath` injection **and** shim runtime linkage under the real
+      module layers (needs EULA acceptance or a display — owner decision)
 - [ ] Confirm every **(verify)** item in §4 against real sources
 - [ ] Hand-port one trivial mod both directions; record every change as ground truth
 - [x] **Rule mining works** — all 288 pairs mined, 231 rules scoring ≥ 1.0
@@ -387,7 +388,9 @@ transformer.** Under-building it is the single decision that would blow up the s
 - [x] `forge-compat` build order derived from corpus dependency counts
 - [ ] **Pick the remapping toolchain — now the critical path** (§7). 74.8% of the rule
       surface is unmineable until SRG → Mojang remapping exists
-- [ ] Prove a trivial `net.minecraftforge.*` shim class loads under NeoForge
+- [x] **Shim-first architecture validated** — `forge-compat/` compiles three real shims
+      against NeoForge 21.1.248 covering all three shim shapes; `net/minecraftforge/**`
+      confirmed collision-free. Runtime linkage still needs the live-launch check above.
 
 **Deliverable:** rule-DSL specification + measured corpus difficulty breakdown.
 

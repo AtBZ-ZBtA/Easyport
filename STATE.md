@@ -39,7 +39,7 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
 
 ## Where things stand
 
-**Phase 0: complete.** Everything below is measured, not estimated.
+**Phase 0: ~70% done.** Everything below is measured, not estimated.
 
 - **Both dev environments build.** NeoForge 21.1.248 (2m10s) and Forge 1.20.1-47.4.22 (40s),
   both producing real mod jars. ForgeGradle 6 works on JDK 21.
@@ -52,8 +52,29 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
   190 mods. Found a class move (`ModLoadingContext#registerConfig` → `ModContainer#registerConfig`)
   that hand-written analysis had missed.
 
-**Next: the remapper.** It is the critical path — see gotcha #1. Everything it needs
-(Mojang official mappings, SRG, Parchment) is a public download. Nothing blocks it.
+- **Shim-first architecture validated.** `forge-compat/` compiles three real shims against
+  NeoForge 21.1.248, covering the three shapes every later shim will take: static field alias
+  (`MinecraftForge.EVENT_BUS`, 199 mods), static-method delegation (`ModList`, 146 mods), and
+  instance delegation with self-return (`ForgeConfigSpec$Builder`, 137 mods). Bytecode
+  verified: the alias is the same instance, and builder methods return the *shim* type so
+  chaining survives.
+
+### Phase 0 remaining — 3 actionable, 1 blocked
+
+| Item | Blocked on |
+|---|---|
+| **Pick the remapping toolchain** — the critical path, see gotcha #1 | nothing |
+| Hand-port one trivial mod both directions as ground truth | nothing |
+| Confirm remaining **(verify)** rows in ROADMAP §4 | nothing |
+| Prove `addPath` injection **and** shim runtime linkage in a live launch | **owner** — needs EULA acceptance or a display |
+
+The live-launch check is not urgent: both questions it would settle are already answered
+statically (SPI from FML source, shim linkage from compilation plus the empty-package
+finding), and Phase 1 has to launch the game anyway. **What compilation cannot prove is
+runtime linkage under the real module layers** — that stays open until then.
+
+**Next: the remapper.** Everything it needs (Mojang official mappings, SRG, Parchment) is a
+public download.
 
 ---
 
@@ -87,6 +108,17 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
 
 7. **NeoForge MDK has no `1.21.1` branch.** Use `archive/1.21-mdg` — it is already configured
    for `minecraft_version=1.21.1`, just pin `neo_version` yourself.
+
+8. **NeoForge rejects any jar containing `META-INF/mods.toml`.** `IncompatibleModReason`
+   flags it as `MINECRAFT_FORGE`. The resource migrator **must** rename it to
+   `META-INF/neoforge.mods.toml` and leave no `mods.toml` behind, or the translated jar is
+   refused outright. Note the detection is on the *descriptor file*, not on
+   `net/minecraftforge/**` classes — shipping those is fine, and the check only fires for
+   jars no reader could handle.
+
+9. **`net/minecraftforge/**` is free real estate.** NeoForge 21.1.248 and FML 4.0.43 ship
+   *zero* classes in that package, so `forge-compat` owns it outright with no split-package
+   conflict. This is what makes the shim-first architecture viable.
 
 ---
 

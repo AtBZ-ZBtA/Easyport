@@ -30,6 +30,7 @@ rule-report/gained-symbols.tsv
 build/
 out/
 *.class
+forge-compat/out/
 
 # Gradle
 .gradle/
