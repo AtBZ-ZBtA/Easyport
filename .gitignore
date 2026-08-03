@@ -52,3 +52,9 @@ devenv/spi/mcp/
 devenv/spi/*.txt
 devenv/spi/*.json
 devenv/spi/*.pom
+
+# Hand-port build outputs; sources live in devenv MDKs, expected-rules.tsv is committed
+handport/src/
+handport/tgt/
+handport/out/
+handport/out-nomap/

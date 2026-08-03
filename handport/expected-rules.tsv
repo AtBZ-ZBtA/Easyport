@@ -1,0 +1,57 @@
+#
+# Hand-labelled ground truth for the zero-drift probe pair.
+#
+# Written by the person who wrote both sides of the port, so these are the *correct*
+# migrations rather than statistically plausible ones. This is the regression target the
+# corpus-mined rule set is scored against.
+#
+# gained = NONE       the symbol has no replacement; the capability was removed or absorbed
+#                     into a different mechanism entirely
+# gained = ARTIFACT   not a real migration. The symbol differs only because of how the port
+#                     was written (a factory method instead of a constructor), not because
+#                     anything changed in the API. Excluded from scoring.
+#
+# Where a single lost symbol legitimately has several valid targets, alternatives are
+# separated by '|' and a prediction matching any of them counts as correct.
+#
+lost	gained
+net/minecraftforge/common/MinecraftForge#EVENT_BUS:Lnet/minecraftforge/eventbus/api/IEventBus;	net/neoforged/neoforge/common/NeoForge#EVENT_BUS:Lnet/neoforged/bus/api/IEventBus;
+net/minecraftforge/eventbus/api/IEventBus#addListener(Ljava/util/function/Consumer;)V	net/neoforged/bus/api/IEventBus#addListener(Ljava/util/function/Consumer;)V
+net/minecraftforge/eventbus/api/IEventBus#register(Ljava/lang/Object;)V	net/neoforged/bus/api/IEventBus#register(Ljava/lang/Object;)V
+net/minecraftforge/fml/ModList#get()Lnet/minecraftforge/fml/ModList;	net/neoforged/fml/ModList#get()Lnet/neoforged/fml/ModList;
+net/minecraftforge/fml/ModList#isLoaded(Ljava/lang/String;)Z	net/neoforged/fml/ModList#isLoaded(Ljava/lang/String;)Z
+net/minecraftforge/fml/config/ModConfig$Type#COMMON:Lnet/minecraftforge/fml/config/ModConfig$Type;	net/neoforged/fml/config/ModConfig$Type#COMMON:Lnet/neoforged/fml/config/ModConfig$Type;
+net/minecraftforge/fml/ModLoadingContext#registerConfig(Lnet/minecraftforge/fml/config/ModConfig$Type;Lnet/minecraftforge/fml/config/IConfigSpec;)V	net/neoforged/fml/ModContainer#registerConfig(Lnet/neoforged/fml/config/ModConfig$Type;Lnet/neoforged/fml/config/IConfigSpec;)V
+net/minecraftforge/common/ForgeConfigSpec$Builder#<init>()V	net/neoforged/neoforge/common/ModConfigSpec$Builder#<init>()V
+net/minecraftforge/common/ForgeConfigSpec$Builder#comment(Ljava/lang/String;)Lnet/minecraftforge/common/ForgeConfigSpec$Builder;	net/neoforged/neoforge/common/ModConfigSpec$Builder#comment(Ljava/lang/String;)Lnet/neoforged/neoforge/common/ModConfigSpec$Builder;
+net/minecraftforge/common/ForgeConfigSpec$Builder#define(Ljava/lang/String;Z)Lnet/minecraftforge/common/ForgeConfigSpec$BooleanValue;	net/neoforged/neoforge/common/ModConfigSpec$Builder#define(Ljava/lang/String;Z)Lnet/neoforged/neoforge/common/ModConfigSpec$BooleanValue;
+net/minecraftforge/common/ForgeConfigSpec$Builder#build()Lnet/minecraftforge/common/ForgeConfigSpec;	net/neoforged/neoforge/common/ModConfigSpec$Builder#build()Lnet/neoforged/neoforge/common/ModConfigSpec;
+net/minecraftforge/common/ForgeConfigSpec$BooleanValue#get()Ljava/lang/Object;	net/neoforged/neoforge/common/ModConfigSpec$BooleanValue#get()Ljava/lang/Object;
+type net/minecraftforge/common/ForgeConfigSpec$Builder	type net/neoforged/neoforge/common/ModConfigSpec$Builder
+net/minecraftforge/registries/RegistryObject#get()Ljava/lang/Object;	net/neoforged/neoforge/registries/DeferredBlock#get()Ljava/lang/Object;|net/neoforged/neoforge/registries/DeferredItem#get()Ljava/lang/Object;
+net/minecraftforge/registries/DeferredRegister#create(Lnet/minecraftforge/registries/IForgeRegistry;Ljava/lang/String;)Lnet/minecraftforge/registries/DeferredRegister;	net/neoforged/neoforge/registries/DeferredRegister#createBlocks(Ljava/lang/String;)Lnet/neoforged/neoforge/registries/DeferredRegister$Blocks;|net/neoforged/neoforge/registries/DeferredRegister#createItems(Ljava/lang/String;)Lnet/neoforged/neoforge/registries/DeferredRegister$Items;
+net/minecraftforge/registries/DeferredRegister#register(Ljava/lang/String;Ljava/util/function/Supplier;)Lnet/minecraftforge/registries/RegistryObject;	net/neoforged/neoforge/registries/DeferredRegister$Blocks#registerBlock(Ljava/lang/String;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/neoforged/neoforge/registries/DeferredBlock;|net/neoforged/neoforge/registries/DeferredRegister$Items#registerSimpleItem(Ljava/lang/String;Lnet/minecraft/world/item/Item$Properties;)Lnet/neoforged/neoforge/registries/DeferredItem;
+net/minecraftforge/registries/DeferredRegister#register(Lnet/minecraftforge/eventbus/api/IEventBus;)V	net/neoforged/neoforge/registries/DeferredRegister$Blocks#register(Lnet/neoforged/bus/api/IEventBus;)V|net/neoforged/neoforge/registries/DeferredRegister$Items#register(Lnet/neoforged/bus/api/IEventBus;)V
+net/minecraft/resources/ResourceLocation#<init>(Ljava/lang/String;Ljava/lang/String;)V	net/minecraft/resources/ResourceLocation#fromNamespaceAndPath(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;
+net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V	net/minecraft/world/item/ItemStack#set(Lnet/minecraft/core/component/DataComponentType;Ljava/lang/Object;)Ljava/lang/Object;
+net/minecraft/world/item/ItemStack#hasTag()Z	net/minecraft/world/item/ItemStack#has(Lnet/minecraft/core/component/DataComponentType;)Z
+net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;	net/minecraft/world/item/component/CustomData#of(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/world/item/component/CustomData;
+#
+# --- removed outright: the capability moved to a different mechanism ---
+# The mod event bus and ModContainer are injected into the mod constructor in NeoForge, so
+# there is nothing to call. A transformer cannot rewrite these call sites; it has to rewrite
+# the constructor signature. This is precisely the class of migration a symbol-to-symbol rule
+# table cannot express, and it sits at the very top of the work list at 241 corpus mods.
+net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;	NONE
+net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#getModEventBus()Lnet/minecraftforge/eventbus/api/IEventBus;	NONE
+net/minecraftforge/fml/ModLoadingContext#get()Lnet/minecraftforge/fml/ModLoadingContext;	NONE
+# Subsumed: the registry key is now implied by createBlocks/createItems.
+net/minecraftforge/registries/ForgeRegistries#BLOCKS:Lnet/minecraftforge/registries/IForgeRegistry;	NONE
+net/minecraftforge/registries/ForgeRegistries#ITEMS:Lnet/minecraftforge/registries/IForgeRegistry;	NONE
+#
+# --- artifacts of how the port was written, not API changes ---
+type net/minecraft/world/item/Item	ARTIFACT
+type net/minecraft/world/level/block/Block	ARTIFACT
+type net/minecraft/resources/ResourceLocation	ARTIFACT
+net/minecraft/world/item/Item#<init>(Lnet/minecraft/world/item/Item$Properties;)V	ARTIFACT
+net/minecraft/world/level/block/Block#<init>(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V	ARTIFACT

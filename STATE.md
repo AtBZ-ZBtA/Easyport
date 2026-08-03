@@ -101,12 +101,27 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
   22 mods with zero counterparts in 1.20.1, confirming that migration from the corpus rather
   than from memory.
 
-### Phase 0 remaining — 2 items, none blocked
+- **Zero-drift ground truth built and the rule set scored against it.** `handport/` holds a
+  probe mod written for both loaders, functionally identical, so every difference between the
+  built jars is migration and nothing else. `handport/expected-rules.tsv` is the hand-labelled
+  correct answer. Scored: **61% precision on mappable symbols, 13 correct / 8 wrong / 5 false
+  positives.**
 
-| Item | Notes |
-|---|---|
-| Hand-port one trivial mod both directions | Ground truth for the transformer; the only *zero-drift* pair we would have |
-| Last 2 **(verify)** rows | `FMLJavaModLoadingContext`, Forge extension interfaces |
+  The failure pattern is structural, and it set the Phase 2 rule-DSL design (ROADMAP §5):
+  every 1:1 rename was correct, every non-1:1 migration was wrong, and symbols with **no**
+  replacement got a confident invented answer. **`FMLJavaModLoadingContext` — number one on
+  the work list at 241 mods — cannot be expressed as a symbol mapping at all**; the bus is
+  injected into the mod constructor, so the constructor signature must change rather than any
+  call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
+
+### Phase 0 — COMPLETE
+
+Deliverable was "rule-DSL specification + measured corpus difficulty breakdown". Both exist:
+the difficulty breakdown above, and the DSL requirements in ROADMAP §5 Phase 2, derived from
+measurement rather than taste.
+
+One loose end, deliberately left: two **(verify)** rows remain in ROADMAP §4 (Forge extension
+interfaces, `@Cancelable` semantics beyond the type's existence). Neither blocks Phase 1.
 
 Nothing requires the owner. The EULA question is moot — `runData` needs no EULA (gotcha #11).
 

@@ -1,0 +1,2 @@
+modId	tier	srcVer	tgtVer	srcCls	tgtCls	srcMix	tgtMix	sourceFile	targetFile
+probe	TRIVIAL	1.0.0	1.0.0	1	1	0	0	probe-forge.jar	probe-neoforge.jar

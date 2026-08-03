@@ -356,9 +356,12 @@ public class RuleMiner {
         List<Map.Entry<String, Integer>> sorted = new ArrayList<>(counts.entrySet());
         sorted.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
 
+        // Singletons are noise across a large corpus but are the entire signal in a small
+        // controlled run, where every difference is known to be a real migration.
+        int minMods = totalPairs >= 10 ? 2 : 1;
         StringBuilder sb = new StringBuilder("mods\tshareOfPairs\tsymbol\n");
         for (var e : sorted) {
-            if (e.getValue() < 2) break;
+            if (e.getValue() < minMods) break;
             sb.append(e.getValue()).append('\t')
               .append(String.format("%.3f", (double) e.getValue() / totalPairs)).append('\t')
               .append(e.getKey()).append('\n');

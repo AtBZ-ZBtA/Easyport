@@ -407,9 +407,42 @@ diffing, world-gen smoke test. Plus the coverage metric and per-jar translation 
 without it every subsequent phase is throttled by manual testing.
 
 ### Phase 2 — Transformer core · days · *gated by: corpus diffs*
-Bytecode engine, rule DSL, mapping pipeline, jar in / jar out. Rule-DSL shape is derived
-from real corpus pair diffs, not guessed.
+Bytecode engine, rule DSL, mapping pipeline, jar in / jar out.
 **Exit:** a trivial mod translates automatically and loads, both directions.
+
+#### Rule DSL requirements — derived from measurement, not design taste
+
+The zero-drift probe pair (`handport/`) was scored against the corpus-mined rules with a
+hand-labelled ground truth. Result: **61% precision on genuinely mappable symbols, and the
+failures are structural rather than statistical.**
+
+| Outcome | n | Character |
+|---|---|---|
+| Correct | 13 | **Every** pure 1:1 rename |
+| Wrong | 8 | **Every** migration that is not 1:1 |
+| False positive | 5 | Symbols with no replacement — a target was invented |
+
+So a symbol→symbol table is necessary and nowhere near sufficient. The DSL needs four rule
+kinds:
+
+1. **`RENAME`** — symbol → symbol. Mining already produces these at high confidence and they
+   cover the bulk of the loader API.
+2. **`REMOVED`** — the symbol has no replacement and the capability moved elsewhere. The
+   miner currently cannot represent this and therefore always predicts *something*; it needs a
+   null hypothesis, or it will emit five confident wrong answers per mod.
+3. **`CONTEXTUAL`** — one source symbol, several valid targets chosen by surrounding context.
+   `RegistryObject#get` becomes `DeferredBlock#get` or `DeferredItem#get` depending on which
+   registry the holder came from. Requires type inference at the call site, not a lookup.
+4. **`STRUCTURAL`** — not a call-site rewrite at all. **`FMLJavaModLoadingContext` is rule
+   kind 4 and it is number one on the work list at 241 mods.** The mod event bus and
+   `ModContainer` are injected into the mod constructor in NeoForge, so there is no call to
+   rewrite — the *constructor signature* has to change. The `ItemStack` NBT surface is the
+   same shape of problem: `getOrCreateTag`/`setTag`/`hasTag` become a `CustomData` idiom, not
+   a renamed method.
+
+**The single most-depended-on migration in the corpus cannot be expressed as a symbol
+mapping.** Designing the DSL around rename tables and bolting on the rest would have meant
+rewriting the engine once the top of the work list was reached.
 
 ### Phase 3 — `forge-compat` shims · 1–2 weeks · *gated by: verification throughput*
 **Build order is now data-derived**, ranked by how many of the 288 paired mods depend on
