@@ -68,3 +68,12 @@ verify-report*/
 translated/
 forge-compat/out/
 forge-compat/*.jar
+
+# Batch run artifacts. batch-results.tsv is the durable output and stays tracked;
+# per-mod logs and intermediate deltas churn on every run.
+batch-report/*.log
+batch-report/baseline.json
+batch-report/candidate-delta.json
+batch-report/reference-delta.json
+batch-report/coverage.tsv
+batch-report/resource-coverage.tsv
