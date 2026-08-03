@@ -181,6 +181,8 @@ public class Translate {
             }
         }), 0);
 
+        fixEventBusSubscriber(node);
+
         // Pass 2: structural rules.
         for (MethodNode m : node.methods) {
             if (m.instructions == null) continue;
@@ -231,6 +233,58 @@ public class Translate {
             min.desc = rule.factoryDesc();
             min.itf = false;
             count(appliedCounts, "CTOR_TO_STATIC " + rule.owner() + "#" + rule.factoryName());
+        }
+    }
+
+    private static final String EBS_DESC = "Lnet/neoforged/fml/common/EventBusSubscriber;";
+    private static final String EBS_BUS_DESC = "Lnet/neoforged/fml/common/EventBusSubscriber$Bus;";
+    private static final String SUBSCRIBE_DESC = "Lnet/neoforged/bus/api/SubscribeEvent;";
+
+    /**
+     * Repairs {@code @EventBusSubscriber} after the type rename, in two ways the remapper
+     * cannot handle on its own.
+     *
+     * **The enum constant.** Forge's bus enum is FORGE/MOD, NeoForge's is GAME/MOD. Renaming
+     * the *type* is not enough: ASM rewrites an annotation's enum descriptor but passes the
+     * constant *name* through untouched, so {@code bus = Bus.FORGE} survives as a reference to
+     * a constant that no longer exists. That fails at annotation resolution rather than at
+     * load, which makes it hard to trace back here.
+     *
+     * **Classes with no handlers.** FML registers annotated classes itself, and NeoForge throws
+     * when handed one with no {@code @SubscribeEvent} methods where Forge accepted it silently.
+     * The ForgeEventBus shim absorbs that for explicit {@code register()} calls, but cannot for
+     * these — FML does the registering, so the shim is never involved. The only fix available
+     * at translation time is to drop the annotation, which restores Forge's behaviour exactly:
+     * a class with no handlers subscribes to nothing either way.
+     */
+    private void fixEventBusSubscriber(ClassNode node) {
+        if (node.visibleAnnotations == null) return;
+
+        var subscriber = node.visibleAnnotations.stream()
+                .filter(a -> EBS_DESC.equals(a.desc)).findFirst().orElse(null);
+        if (subscriber == null) return;
+
+        boolean hasHandlers = node.methods.stream().anyMatch(m ->
+                m.visibleAnnotations != null &&
+                m.visibleAnnotations.stream().anyMatch(a -> SUBSCRIBE_DESC.equals(a.desc)));
+
+        if (!hasHandlers) {
+            node.visibleAnnotations.remove(subscriber);
+            count(appliedCounts, "EBS_STRIP (no @SubscribeEvent methods) " + node.name);
+            return;
+        }
+
+        if (subscriber.values == null) return;
+        // AnnotationNode stores values as alternating name/value; an enum value is a
+        // String[]{descriptor, constantName}.
+        for (int i = 1; i < subscriber.values.size(); i += 2) {
+            if (subscriber.values.get(i) instanceof String[] enumRef
+                    && enumRef.length == 2
+                    && EBS_BUS_DESC.equals(enumRef[0])
+                    && "FORGE".equals(enumRef[1])) {
+                enumRef[1] = "GAME";
+                count(appliedCounts, "EBS_BUS FORGE -> GAME");
+            }
         }
     }
 

@@ -429,9 +429,18 @@ pure mechanical rename.
 crashed — a crash-only check would have called it a pass, while the mod contributed nothing
 at all.
 
-### Phase 2 — Transformer core · days · *gated by: corpus diffs*
+### Phase 2 — Transformer core — **DONE**
 Bytecode engine, rule DSL, mapping pipeline, jar in / jar out.
-**Exit:** a trivial mod translates automatically and loads, both directions.
+**Exit criterion was "a trivial mod translates automatically and loads".** Exceeded: a real
+corpus mod (`additional_lights`) translates to **100% registry and 100% resource coverage**
+against its author's own port. Day zero was 0% / 83.6%.
+
+`tools/Translate.java` + `rules/forward.rules.tsv`. Rule kinds implemented: `TYPE_RENAME`,
+`TYPE_PREFIX_RENAME`, `RENAME_METHOD`, `CTOR_TO_STATIC`, `CTOR_SWAP2`, `REMOVED` — plus two
+`@EventBusSubscriber` repairs that no rule kind can express (see Phase 3).
+
+Backward direction (1.21.1 → 1.20.1) is **not** started; only `rules/forward.rules.tsv`
+exists.
 
 #### Rule DSL requirements — derived from measurement, not design taste
 
@@ -488,6 +497,28 @@ each API (`rule-report/lost-symbols.tsv`):
 The top four cover ~70–84% of paired mods each and are all mechanical renames or namespace
 moves. Networking (`NetworkEvent$Context`, 107 mods) stays last — it is the genuinely hard
 shim and depends on Phase 4.
+
+**Status: ranks 1–10 done.** 29 classes. Rank 11 (networking) is the remaining head item.
+
+Expansion runs as a measured loop rather than by working down the list blind:
+`tools/batch-verify.sh` translates a corpus sample, runs each mod, and the per-mod failure
+logs name exactly the missing class. Each round unblocks several mods at once because the
+failure distribution is heavily headed — the second batch showed 7 failures behind only 4
+distinct missing symbols.
+
+**Three things this phase established that the plan had wrong or missing:**
+
+1. **Rank 1 was mis-classified as `STRUCTURAL`.** `FMLJavaModLoadingContext` is a delegating
+   shim — NeoForge kept `ModLoadingContext.get()`. The largest item on the work list is cheap.
+2. **Shims must match descriptors real mods were compiled against**, not just link. A spike
+   compiled against the shims proved nothing; `IEventBus` had to become a sub-interface of
+   NeoForge's so a Forge-typed descriptor resolves while staying valid on the NeoForge side.
+   The same trick then solved `IConfigSpec`.
+3. **Forge and NeoForge differ in strictness, and the shim must preserve Forge's.** NeoForge
+   throws where Forge accepted silently. This bit twice by different routes — once through
+   explicit `EVENT_BUS.register()`, which the shim absorbs, and once through
+   `@EventBusSubscriber`, which it cannot, because FML does that registration itself and the
+   shim is never in the path. That one is fixed in the transformer instead.
 
 ### Phase 4 — `vanilla-bridge` + `runtime-shim` · 2–4 weeks · *gated by: subtlety*
 Data components, attributes, enchantment dispatch, recipes, potions, reflection

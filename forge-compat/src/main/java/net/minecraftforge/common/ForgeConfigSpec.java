@@ -85,8 +85,62 @@ public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpe
             return new ConfigValue<>(delegate.defineInRange(path, defaultValue, min, max, clazz));
         }
 
+        public <T> ConfigValue<T> define(String path, java.util.function.Supplier<T> defaultSupplier,
+                                         java.util.function.Predicate<Object> validator) {
+            return new ConfigValue<>(delegate.define(path, defaultSupplier, validator));
+        }
+
+        public <T> ConfigValue<T> defineInList(String path, T defaultValue,
+                                               java.util.Collection<? extends T> acceptableValues) {
+            return new ConfigValue<>(delegate.defineInList(path, defaultValue, acceptableValues));
+        }
+
+        public <T> ConfigValue<java.util.List<? extends T>> defineList(
+                String path, java.util.List<? extends T> defaultValue,
+                java.util.function.Predicate<Object> elementValidator) {
+            return new ConfigValue<>(delegate.defineList(path, defaultValue, elementValidator));
+        }
+
+        public <V extends Enum<V>> EnumValue<V> defineEnum(String path, V defaultValue) {
+            return new EnumValue<>(delegate.defineEnum(path, defaultValue));
+        }
+
+        public <V extends Enum<V>> EnumValue<V> defineEnum(String path, V defaultValue,
+                                                           java.util.Collection<V> acceptableValues) {
+            return new EnumValue<>(delegate.defineEnum(path, defaultValue, acceptableValues));
+        }
+
+        // Each numeric width is a distinct overload in Forge returning a distinct value type,
+        // and mods hold the result at that subtype -- so these cannot be collapsed into one
+        // generic method without breaking the descriptors mods were compiled against.
         public IntValue defineInRange(String path, int defaultValue, int min, int max) {
-            return new IntValue(delegate.defineInRange(path, defaultValue, min, max, Integer.class));
+            return new IntValue(delegate.defineInRange(path, defaultValue, min, max));
+        }
+
+        public LongValue defineInRange(String path, long defaultValue, long min, long max) {
+            return new LongValue(delegate.defineInRange(path, defaultValue, min, max));
+        }
+
+        public DoubleValue defineInRange(String path, double defaultValue, double min, double max) {
+            return new DoubleValue(delegate.defineInRange(path, defaultValue, min, max));
+        }
+
+        public Builder worldRestart() {
+            delegate.worldRestart();
+            return this;
+        }
+
+        /**
+         * Returns the spec paired with the config object, matching Forge.
+         *
+         * The delegate's Pair carries a NeoForge spec, so it is rebuilt around the shim type —
+         * handing back the raw pair would leak a NeoForge spec into a field typed as
+         * ForgeConfigSpec and fail on the very next use.
+         */
+        public <T> org.apache.commons.lang3.tuple.Pair<T, ForgeConfigSpec> configure(
+                java.util.function.Function<Builder, T> consumer) {
+            T result = consumer.apply(this);
+            return org.apache.commons.lang3.tuple.Pair.of(result, new ForgeConfigSpec(delegate.build()));
         }
 
         public ForgeConfigSpec build() {
@@ -137,6 +191,24 @@ public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpe
 
     public static class BooleanValue extends ConfigValue<Boolean> {
         BooleanValue(ModConfigSpec.ConfigValue<Boolean> delegate) {
+            super(delegate);
+        }
+    }
+
+    public static class LongValue extends ConfigValue<Long> {
+        LongValue(ModConfigSpec.ConfigValue<Long> delegate) {
+            super(delegate);
+        }
+    }
+
+    public static class DoubleValue extends ConfigValue<Double> {
+        DoubleValue(ModConfigSpec.ConfigValue<Double> delegate) {
+            super(delegate);
+        }
+    }
+
+    public static class EnumValue<T extends Enum<T>> extends ConfigValue<T> {
+        EnumValue(ModConfigSpec.ConfigValue<T> delegate) {
             super(delegate);
         }
     }
