@@ -118,3 +118,28 @@ RENAME_METHOD	net/minecraft/world/item/Item$Properties	defaultDurability	(I)Lnet
 TYPE_PREFIX_RENAME	net/minecraftforge/event/	net/neoforged/neoforge/event/
 TYPE_PREFIX_RENAME	net/minecraftforge/client/event/	net/neoforged/neoforge/client/event/
 TYPE_PREFIX_RENAME	net/minecraftforge/data/event/	net/neoforged/neoforge/data/event/
+
+# --- fml event packages (config + lifecycle) ---------------------------------------------
+# Supersedes the nine individual FML lifecycle TYPE_RENAME entries above: net/neoforged/fml/
+# event/ covers both the lifecycle and config trees, so one rule replaces them and there are
+# eight fewer places for the list to drift out of date. Also picks up ModConfigEvent, which
+# the hand-written list had simply missed.
+TYPE_PREFIX_RENAME	net/minecraftforge/fml/event/	net/neoforged/fml/event/
+
+# --- Removed vanilla types: relocate, then rename -----------------------------------------
+#
+# 1.21 deleted these outright. Supplying the class in its original package is impossible --
+# net.minecraft is owned by the game's module and a second jar exporting into it fails module
+# resolution (proven in testkit/vanilla-package-probe). So forge-compat carries a stand-in
+# under easyport.vanilla and references are rewritten to it.
+#
+# Restores loading, not behaviour: vanilla drives loot serialization through codecs now and
+# will never call the shim's methods, so custom loot conditions and functions stay inert. The
+# rest of the mod works. Generating a codec from the mod's serialize/deserialize pair is
+# Phase 4 vanilla-bridge work.
+TYPE_RENAME	net/minecraft/world/level/storage/loot/Serializer	easyport/vanilla/LootSerializer
+
+# --- More reordered vanilla constructors ---------------------------------------------------
+# Same shape as TorchBlock: 1.21 moved the Properties argument last. No narrowing needed here,
+# both arguments are already the right types.
+CTOR_SWAP2	net/minecraft/world/level/block/DropExperienceBlock	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/util/valueproviders/IntProvider;)V	(Lnet/minecraft/util/valueproviders/IntProvider;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V

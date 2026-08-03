@@ -500,6 +500,25 @@ shim and depends on Phase 4.
 
 **Status: ranks 1–10 done.** 29 classes. Rank 11 (networking) is the remaining head item.
 
+**Networking looks shimmable after all** — a correction to the §4 assessment, which called it
+"hard, must synthesize `StreamCodec`s". That framing assumed each Forge message had to become
+its own typed NeoForge payload, which would indeed require generating a codec per message
+class. It does not. One generic payload per *channel* is enough:
+
+- `SimpleChannel.registerMessage(...)` buffers the encoder, decoder and handler rather than
+  registering anything immediately. Forge mods call it from static init or the mod
+  constructor, long before NeoForge's `RegisterPayloadHandlersEvent` fires.
+- forge-compat listens for that event and replays the buffered registrations.
+- Each channel registers **one** payload type carrying `(discriminator, byte[])`. Its
+  `StreamCodec` only reads and writes the byte array — no per-message codec generation.
+- On receipt, the discriminator selects the buffered decoder, which reads the bytes exactly as
+  Forge's did, and the handler runs unchanged.
+
+The Forge encode/decode functions already produce a `FriendlyByteBuf`, so the wire format is
+carried across intact instead of being reinterpreted. Untested — the design follows from the
+API surface, and the surrounding phase has repeatedly shown that reasoning about someone
+else's loader is worth less than one run.
+
 Expansion runs as a measured loop rather than by working down the list blind:
 `tools/batch-verify.sh` translates a corpus sample, runs each mod, and the per-mod failure
 logs name exactly the missing class. Each round unblocks several mods at once because the

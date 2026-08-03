@@ -183,6 +183,21 @@ failures were mods needing *other* mods (`ars_nouveau`, `mekanism`, `create`, `c
 failure, and lumping it in with real failures would misdirect all the work that follows.
 `batch-verify.sh` now classifies it.
 
+#### The harness caps out at 44% of the corpus
+
+Measured across all 288 paired mods: **161 of them (56%) declare inter-mod dependencies.** The
+harness loads only the candidate plus support jars, so those can never load regardless of how
+good the translation is.
+
+**This is the binding constraint on measuring coverage, and it is a Phase 1 gap rather than a
+Phase 3 one.** No amount of forge-compat work moves it. Lifting it means the harness resolving
+a mod's dependency graph, translating each dependency too, and loading them together — which
+is also the first point at which the tool gets exercised the way a real user would use it, on
+a whole modpack rather than one jar.
+
+Until then any corpus-wide coverage number is drawn from a 44% sample, and skewed: mods with
+no dependencies are systematically simpler than mods with many.
+
 **Two dependencies live in surprising places**, both found by searching jars rather than
 guessing: `com.electronwill.nightconfig.core` (needed by the `IConfigSpec` shim) and
 `net.neoforged.api.distmarker.Dist`, which ships inside `mergetool-2.0.0-api.jar`.

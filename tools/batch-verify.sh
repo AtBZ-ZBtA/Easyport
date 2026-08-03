@@ -55,6 +55,11 @@ while IFS=$'\t' read -r modId src tgt; do
   elif [ -n "$foreign" ]; then st=DEPS_MISSING
   elif grep -q "NOT LOADED"    "$OUT/$modId.verify.log"; then st=NOT_LOADED
   elif grep -q "LAUNCH FAILED" "$OUT/$modId.verify.log"; then st=LAUNCH_FAILED
+  # A reference port that registers nothing means coverage is *undefined*, not zero. These are
+  # behaviour-only mods -- AI tweaks, UI changes, performance patches -- and scoring them 0%
+  # would drag a corpus average down for mods that translated perfectly.
+  elif grep -q "reference registered nothing" "$OUT/$modId.verify.log"; then st=NO_CONTENT
+  elif [ "${reg:-0}" = "0" ] && grep -q "reference: loaded, contributed 0 entries" "$OUT/$modId.verify.log"; then st=NO_CONTENT
   else st=OK; fi
 
   printf '%s\t%s\t%s\t%s\n' "$modId" "${reg:-0}" "${res:-0}" "$st" >> "$RESULTS"
