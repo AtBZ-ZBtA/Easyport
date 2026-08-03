@@ -39,11 +39,11 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
 
 ## Where things stand
 
-**Phase 0 is complete — see the sign-off at the end of this section.** Next is Phase 1, the
-verification harness. Everything below is measured, not estimated.
+Everything below is measured, not estimated.
 
-> Status lives *only* in the "Phase 0 — COMPLETE" block below. Do not restate progress here;
-> this file has already contradicted itself once by carrying a percentage in two places.
+> **Phase status lives only in the `### Phase N — COMPLETE` sign-off blocks below, and the
+> newest one is listed first.** Do not name a current or next phase here. This header has gone
+> stale three times — it is the one line nobody updates and everybody trusts.
 
 - **Both dev environments build.** NeoForge 21.1.248 (2m10s) and Forge 1.20.1-47.4.22 (40s),
   both producing real mod jars. ForgeGradle 6 works on JDK 21.
