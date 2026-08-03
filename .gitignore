@@ -46,3 +46,9 @@ Thumbs.db
 # Live-launch test fixtures (contain third-party mods)
 devenv/**/run/
 devenv/spi-test/parked/
+
+# Mapping inputs are large third-party downloads; the composed table is committed.
+devenv/spi/mcp/
+devenv/spi/*.txt
+devenv/spi/*.json
+devenv/spi/*.pom

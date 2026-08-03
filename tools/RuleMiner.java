@@ -54,13 +54,30 @@ public class RuleMiner {
     private static final java.util.regex.Pattern SRG =
         java.util.regex.Pattern.compile("[mfp]_\\d+_");
 
-    private static boolean isVanilla(String symbol) { return symbol.contains("net/minecraft/"); }
-    private static boolean isSrg(String symbol)     { return SRG.matcher(symbol).find(); }
+    /**
+     * The declaring type of a symbol, ignoring its descriptor.
+     *
+     * Classification has to key off the owner alone. Testing the whole symbol misfiles any
+     * loader member whose descriptor happens to mention a vanilla type — which is most of
+     * them, e.g. DeferredRegister#create(Lnet/minecraft/resources/ResourceKey;...).
+     */
+    private static String ownerOf(String symbol) {
+        int hash = symbol.indexOf('#');
+        if (hash >= 0) return symbol.substring(0, hash);
+        int space = symbol.indexOf(' ');           // "type X" / "extends X" / "implements X"
+        return space >= 0 ? symbol.substring(space + 1) : symbol;
+    }
+
+    private static boolean isVanilla(String symbol) {
+        return ownerOf(symbol).startsWith("net/minecraft/");
+    }
+
+    private static boolean isSrg(String symbol) { return SRG.matcher(symbol).find(); }
 
     public static void main(String[] args) throws IOException {
         if (args.length < 3) {
             System.err.println("usage: java -cp <asm.jar> tools/RuleMiner.java "
-                             + "<pairs.tsv> <sourceModsDir> <targetModsDir> [outDir]");
+                             + "<pairs.tsv> <sourceModsDir> <targetModsDir> [outDir] [srg2official.tsv]");
             System.exit(2);
         }
         Path pairsFile = Paths.get(args[0]);
@@ -68,6 +85,21 @@ public class RuleMiner {
         Path tgtDir    = Paths.get(args[2]);
         Path out       = Paths.get(args.length > 3 ? args[3] : "rule-report");
         Files.createDirectories(out);
+
+        // Without this table the vanilla side is pure mapping noise: Forge 1.20.1 runs SRG
+        // member names and NeoForge 1.21.1 runs official ones, so every vanilla member differs
+        // for reasons unrelated to the API. Build it with tools/SrgToOfficial.java.
+        Map<String, String> srgToOfficial = new HashMap<>();
+        if (args.length > 4) {
+            for (String line : Files.readAllLines(Paths.get(args[4]), StandardCharsets.UTF_8)) {
+                String[] c = line.split("\t");
+                if (c.length == 2 && !c[0].equals("srg")) srgToOfficial.put(c[0], c[1]);
+            }
+            System.out.printf("Loaded %d SRG -> official member mappings%n", srgToOfficial.size());
+        } else {
+            System.out.println("WARNING: no SRG mapping supplied; vanilla results will be "
+                             + "mapping-contaminated and effectively meaningless.");
+        }
 
         List<String[]> pairs = readPairs(pairsFile);
         System.out.printf("Mining %d ground-truth pairs%n%n", pairs.size());
@@ -87,8 +119,9 @@ public class RuleMiner {
             if (!Files.isRegularFile(src) || !Files.isRegularFile(tgt)) { failed++; continue; }
 
             try {
-                Set<String> srcSyms = extractApiRefs(src);
-                Set<String> tgtSyms = extractApiRefs(tgt);
+                // Only the source side is SRG-named; the target already runs official names.
+                Set<String> srcSyms = extractApiRefs(src, srgToOfficial);
+                Set<String> tgtSyms = extractApiRefs(tgt, Map.of());
 
                 Set<String> lost = new HashSet<>(srcSyms);
                 lost.removeAll(tgtSyms);
@@ -130,7 +163,8 @@ public class RuleMiner {
      * Symbols are recorded as owner#name:descriptor for members and as bare internal names
      * for supertypes, so a rule can be expressed against exactly what a transformer rewrites.
      */
-    private static Set<String> extractApiRefs(Path jar) throws IOException {
+    private static Set<String> extractApiRefs(Path jar, Map<String, String> srgToOfficial)
+            throws IOException {
         Set<String> symbols = new HashSet<>();
         try (ZipFile zip = new ZipFile(jar.toFile())) {
             Enumeration<? extends ZipEntry> entries = zip.entries();
@@ -139,7 +173,7 @@ public class RuleMiner {
                 if (!e.getName().endsWith(".class")) continue;
                 try (InputStream in = zip.getInputStream(e)) {
                     new ClassReader(in.readAllBytes()).accept(
-                        new RefCollector(symbols),
+                        new RefCollector(symbols, srgToOfficial),
                         ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
                 } catch (Exception ignored) {
                     // Malformed or future-version classes are common in shaded jars; one bad
@@ -158,10 +192,25 @@ public class RuleMiner {
 
     private static final class RefCollector extends ClassVisitor {
         private final Set<String> out;
+        private final Map<String, String> srgToOfficial;
 
-        RefCollector(Set<String> out) {
+        RefCollector(Set<String> out, Map<String, String> srgToOfficial) {
             super(Opcodes.ASM9);
             this.out = out;
+            this.srgToOfficial = srgToOfficial;
+        }
+
+        /**
+         * Normalises an SRG member name to its official counterpart.
+         *
+         * Only member names need this. Forge 1.20.1 bytecode already carries official *class*
+         * names, so descriptors are directly comparable between the two sides and are left
+         * alone. Names with no mapping pass through unchanged — they belong to the mod itself,
+         * not to Minecraft.
+         */
+        private String norm(String name) {
+            if (srgToOfficial.isEmpty()) return name;
+            return srgToOfficial.getOrDefault(name, name);
         }
 
         @Override
@@ -175,11 +224,11 @@ public class RuleMiner {
             return new MethodVisitor(Opcodes.ASM9) {
                 @Override
                 public void visitMethodInsn(int op, String owner, String name, String desc, boolean itf) {
-                    if (isApi(owner)) out.add(owner + "#" + name + desc);
+                    if (isApi(owner)) out.add(owner + "#" + norm(name) + desc);
                 }
                 @Override
                 public void visitFieldInsn(int op, String owner, String name, String desc) {
-                    if (isApi(owner)) out.add(owner + "#" + name + ":" + desc);
+                    if (isApi(owner)) out.add(owner + "#" + norm(name) + ":" + desc);
                 }
                 @Override
                 public void visitTypeInsn(int op, String type) {
@@ -338,15 +387,29 @@ public class RuleMiner {
         topN(loaderGained, 30).forEach(s ->
             System.out.printf("  %4d mods  %s%n", loaderGained.get(s), truncate(s, 62)));
 
+        // Residual SRG names are the honest signal of whether normalisation actually worked.
+        // Anything above a fraction of a percent means the mapping table is incomplete and the
+        // vanilla numbers below are measuring the mapping, not the API.
+        double srgShare = 100.0 * srgLost / Math.max(1, lost.size());
+        boolean normalized = srgShare < 1.0;
+
+        Map<String, Integer> vanillaLost = filter(lost, RuleMiner::isVanilla);
         System.out.println("\n" + "=".repeat(78));
-        System.out.println("VANILLA API                                  [MAPPING-CONTAMINATED]");
+        System.out.printf("VANILLA API - MOST-DEPENDED-ON LOST SYMBOLS  [%s]%n",
+                          normalized ? "TRUSTWORTHY" : "MAPPING-CONTAMINATED");
+        System.out.printf("  %d of %d lost symbols still carry SRG names (%.1f%%).%n",
+                          srgLost, lost.size(), srgShare);
         System.out.println("=".repeat(78));
-        System.out.printf("  %d of %d lost symbols carry SRG names (%.1f%%).%n",
-                          srgLost, lost.size(), 100.0 * srgLost / Math.max(1, lost.size()));
-        System.out.println("  Forge 1.20.1 runs SRG names; NeoForge 1.21.1 runs official Mojang names,");
-        System.out.println("  so vanilla members differ for mapping reasons, not API reasons. These");
-        System.out.println("  results only become meaningful once the source side is remapped.");
-        System.out.println("  -> Blocks on the remapper toolchain. Loader results above are unaffected.");
+
+        if (!normalized) {
+            System.out.println("  Forge 1.20.1 runs SRG names; NeoForge 1.21.1 runs official Mojang names,");
+            System.out.println("  so vanilla members differ for mapping reasons, not API reasons.");
+            System.out.println("  -> Supply srg2official.tsv (build it with tools/SrgToOfficial.java).");
+            return;
+        }
+        System.out.println("  This is the vanilla-bridge work list, in build order.");
+        topN(vanillaLost, 25).forEach(s ->
+            System.out.printf("  %4d mods  %s%n", vanillaLost.get(s), truncate(s, 62)));
     }
 
     private static Map<String, Integer> filter(Map<String, Integer> in,

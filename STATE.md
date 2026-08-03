@@ -79,16 +79,27 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
   land on the bus NeoForge actually dispatches from. No `NoClassDefFoundError`, no
   split-package rejection.
 
-### Phase 0 remaining — 3 items, none blocked
+- **Remapper built; vanilla mining unblocked.** `tools/SrgToOfficial.java` produces the
+  SRG→official table (64,225 members, 0 unmatched). SRG residue in mined symbols: 74.8% → **0.0%**.
+  The vanilla work list is now data-driven, and it confirms both predicted hard problems with
+  real numbers:
+
+  | Vanilla API | Mods | Why it matters |
+  |---|---|---|
+  | `ResourceLocation#<init>` | 237 + 188 | Constructor privatised in 1.21 → `fromNamespaceAndPath` / `parse`. **Largest single dependency in the corpus.** |
+  | `ItemStack#getTag` / `hasTag` / `getOrCreateTag` / `setTag` / `save` | 135 / 111 / 105 / 97 / 84 | The data-component rewrite — the hardest change, now quantified |
+  | `FriendlyByteBuf#writeInt` / `readItem` / `writeItem` / `writeNbt` | 114 / 88 / 84 / 69 | Network rewrite, `StreamCodec` migration |
+  | `BlockEntity#load` | 70 | 1.21 signature change |
+  | `MenuScreens#register` | 76 | GUI registration change |
+
+### Phase 0 remaining — 2 items, none blocked
 
 | Item | Notes |
 |---|---|
-| **Pick the remapping toolchain** | The critical path — see gotcha #1 |
 | Hand-port one trivial mod both directions | Ground truth for the transformer |
 | Confirm remaining **(verify)** rows in ROADMAP §4 | Several already retired by mining |
 
-Nothing now requires the owner. The EULA question is moot — `runData` needs no EULA
-(gotcha #11).
+Nothing requires the owner. The EULA question is moot — `runData` needs no EULA (gotcha #11).
 
 **Next: the remapper.** Everything it needs (Mojang official mappings, SRG, Parchment) is a
 public download.
@@ -97,11 +108,21 @@ public download.
 
 ## Hard-won gotchas — each of these cost real time
 
-1. **SRG contamination is the critical path.** 74.8% of lost symbols carry SRG names
-   (`m_61124_`). Forge 1.20.1 runs SRG at runtime; NeoForge 1.21.1 runs Mojang official. Every
-   vanilla member differs for mapping reasons alone. **Vanilla rule mining is meaningless until
-   the source side is remapped.** Loader-API results are unaffected — Forge's own API is not
-   obfuscated — which is why the 231 rules are loader-side and trustworthy.
+1. **SRG contamination — SOLVED, but never mine without the mapping.** Forge 1.20.1 runs SRG
+   member names (`m_61124_`); NeoForge 1.21.1 runs official Mojang names. Unmapped, 74.8% of
+   lost symbols were pure mapping noise and vanilla mining was meaningless.
+   `tools/SrgToOfficial.java` composes Mojang ProGuard mappings (official→obf) with MCPConfig
+   `joined.tsrg` (obf→SRG) into 64,225 SRG→official members. Residual contamination: **0.0%**.
+   **Always pass `mappings/srg2official.tsv` to RuleMiner** — without it the tool warns, and
+   the vanilla numbers measure the mapping rather than the API.
+
+   Two traps inside that composition, both of which produced silently wrong output:
+   - Forge bytecode uses **official class names with SRG member names**, so only members need
+     remapping; descriptors are already comparable.
+   - ProGuard writes class names dotted, TSRG writes them slashed. Fully obfuscated classes
+     (`dcv`) have no package so the forms coincide and it looks fine — until a class Mojang
+     leaves unobfuscated (`MinecraftServer`) fails to join and silently takes its entire
+     member set with it.
 
 2. **Feature drift poisons naive diffing.** Mod versions differ sharply between packs
    (`ae2` 15.4.9 → 19.2.17). Only 5 of 288 pairs share a version. A pair diff mixes genuine
