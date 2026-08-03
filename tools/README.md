@@ -105,7 +105,83 @@ reading. Tunables at the top of the file: `MIN_CORROBORATION` (default 5 mods),
 | `lost-symbols.tsv` | Source APIs ranked by how many mods use them — **the shim work list, in build order** |
 | `gained-symbols.tsv` | Target APIs ranked the same way |
 
-### Known limitation: vanilla results are mapping-contaminated
+### Required: the SRG mapping
+
+Pass `mappings/srg2official.tsv` as the fifth argument. Without it the tool warns loudly and
+the vanilla numbers measure the mapping rather than the API — see below.
+
+---
+
+## SrgToOfficial
+
+Builds the SRG → official member table that RuleMiner needs.
+
+```bash
+java tools/SrgToOfficial.java <mojang-client.txt> <joined.tsrg> mappings/srg2official.tsv
+```
+
+**Inputs** (both public downloads, ~14 MB total, not committed):
+
+- Mojang official mappings for 1.20.1 — ProGuard format, `official -> obfuscated`. Follow
+  `piston-meta` version manifest → `1.20.1` → `downloads.client_mappings`.
+- MCPConfig `config/joined.tsrg` — TSRG2, `obfuscated -> SRG`. From
+  `de.oceanlabs.mcp:mcp_config:1.20.1@zip`.
+
+No published mapping goes SRG → official directly, so the two are composed on the
+obfuscated middle and inverted. Output is committed (`mappings/srg2official.tsv`, 64,225
+members) so mining is reproducible without re-downloading.
+
+**Two traps, both of which produce silently wrong output rather than errors:**
+
+- Forge bytecode carries **official class names with SRG member names**, so only members need
+  remapping. Descriptors are already comparable.
+- ProGuard writes class names dotted, TSRG slashed. Fully obfuscated classes (`dcv`) have no
+  package so the forms coincide and it appears to work — until a class Mojang leaves
+  unobfuscated (`MinecraftServer`) fails to join and takes its whole member set with it.
+
+---
+
+## ResourceMiner
+
+The resource-layer counterpart to RuleMiner: mines migration rules from everything in a jar
+that isn't bytecode.
+
+```bash
+java tools/ResourceMiner.java <pairs.tsv> <sourceModsDir> <targetModsDir> [outputDir]
+```
+
+**Dependencies:** none.
+
+Mines three things, all ranked by how many independent mods agree:
+
+| Output | Contents |
+|---|---|
+| `directory-deltas.tsv` | Resource directory renames — 1.21 singularised the datapack tree |
+| `descriptor-deltas.tsv` | `mods.toml` → `neoforge.mods.toml` key changes |
+| `json-key-deltas.tsv` | JSON schema key changes per resource category |
+
+### Two things it gets right that a naive version wouldn't
+
+**Category canonicalisation.** 1.21 renamed `recipes` → `recipe`, `advancements` →
+`advancement`, and so on. Comparing raw directory names makes *every* 1.21.1 key look added
+and every 1.20.1 key removed — the tool silently measures the rename instead of the schema.
+Trailing `s` is stripped per segment, identically on both sides.
+
+**Share-based key filtering.** Most keys in a datapack file are author data, not schema —
+criterion names like `has_iron_ingot`. A raw count cannot separate them. Schema keys appear
+in a large share of mods on one side and collapse on the other, so a key is only reported
+when it crosses 25% on one side and falls below 5% on the other.
+
+### Known limitation: no nested context
+
+Key analysis is flat, so a change in *where* a key appears is invisible. If a recipe's
+`result.item` became `result.id` while `item` remained valid inside ingredients, this tool
+cannot see it — `item` is still common on both sides. Nested-path analysis would be needed to
+catch that class of change.
+
+---
+
+## RuleMiner: vanilla results without the mapping
 
 **74.8% of lost symbols carry SRG names** (`m_61124_`). Forge 1.20.1 runs SRG at runtime;
 NeoForge 1.21.1 runs official Mojang names. Every vanilla member therefore differs for

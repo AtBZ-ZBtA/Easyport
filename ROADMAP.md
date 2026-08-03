@@ -314,7 +314,7 @@ This table exists to bootstrap. `rule-report/` is the authority.
 | `@Cancelable` annotation | `ICancellableEvent` interface | **[confirmed]** present in bus 8.0.5 | shim |
 | `net.minecraftforge.eventbus.api.Event` | `net.neoforged.bus.api.Event` | **[confirmed]** present in bus 8.0.5 | trivial |
 | `FMLJavaModLoadingContext` | `IEventBus` passed to mod constructor | (verify) — 241 mods use it, top of the shim list | moderate |
-| `META-INF/mods.toml` | `META-INF/neoforge.mods.toml` + field changes | (verify) | trivial |
+| `META-INF/mods.toml` | `META-INF/neoforge.mods.toml` | **[mined]** essentially a *file rename* — the key set is unchanged apart from `enumExtensions` (13 mods). **Must not leave `mods.toml` behind** (STATE gotcha #8) | trivial |
 | Forge extension interfaces (`IForgeBlockState` etc.) | NeoForge equivalents, not 1:1 | (verify) | moderate |
 
 Capabilities and networking are the two hard shims. Networking especially: Forge's
@@ -332,8 +332,10 @@ Expect this to need runtime assistance, not pure AOT.
 | `ResourceLocation` ctor privatized → `fromNamespaceAndPath` / `parse` | 1.21 | Trivial, mechanical |
 | Network protocol rewrite, `CustomPacketPayload`, configuration phase | 1.20.2 | High — couples to the networking shim |
 | Registry / datapack loading changes | 1.20.2+ | Moderate |
-| Recipe + ingredient JSON changes | 1.20.5 / 1.21 **(verify exact 1.21.1 shape)** | Moderate, resource-side |
-| `pack.mcmeta` format bumps; resource/data formats diverged | throughout | Trivial once numbers confirmed **(verify)** |
+| Recipe JSON: `components` added (41 mods), `show_notification` removed (62→6) | 1.20.5 / 1.21 | **[mined]** Moderate, resource-side |
+| `pack.mcmeta` `pack_format` **15 → 34** (dominant values) | throughout | **[mined]** Trivial |
+| **Datapack directories singularised** — see Phase 6 | 1.21 | **[mined]** Trivial but pervasive |
+| Enchantment JSON schema (`anvil_cost`, `min_cost`, `max_cost`, `weight`, `slots`, `supported_items`, `effects`, …) | 1.21 | **[mined]** 22 mods ship these; 0 in 1.20.1 |
 | Potion / MobEffect changes | 1.21 | Moderate |
 | Rendering: RenderType / ShaderInstance changes | 1.21 | Moderate; concentrated in mixin-heavy mods |
 | **New vanilla content** (maces, trial chambers, blocks, tags) | 1.21 | **Backward direction only** — `content-backport` |
@@ -454,8 +456,27 @@ the top of the distribution (`oculus` 188, `railways` 177, `modernfix` 171) is l
 **Still the longest phase, because it resists batching.**
 
 ### Phase 6 — Resource/data migration · days
-mods.toml, pack.mcmeta, recipes, models, tags, advancements, loot tables. Independent of
-the bytecode work — pullable earlier as a self-contained slice.
+Independent of the bytecode work — pullable earlier as a self-contained slice. **Work list
+mined from the corpus** (`tools/ResourceMiner.java`, output in `resource-report/`):
+
+**Directory renames (1.21 singularised the datapack tree):**
+
+| 1.20.1 | 1.21.1 | Mods |
+|---|---|---|
+| `data/<ns>/recipes/` | `data/<ns>/recipe/` | 160 |
+| `data/<ns>/loot_tables/` | `data/<ns>/loot_table/` | 148 |
+| `data/<ns>/advancements/` | `data/<ns>/advancement/` | 55 |
+| `data/<ns>/tags/entity_types/` | `data/<ns>/tags/entity_type/` | 40 |
+| `data/<ns>/tags/fluids/` | `data/<ns>/tags/fluid/` | 23 → 27 |
+| `data/<ns>/structures/` | `data/<ns>/structure/` | 44 |
+
+**New 1.21.1-only trees** the backward direction must synthesise or drop:
+`data/<ns>/enchantment/` (22), `data/<ns>/data_maps/` (36), `data/<ns>/neoforge/` (42),
+`data/<ns>/jukebox_song/` (8), `data/<ns>/tags/data_component_type/` (5).
+
+**Other confirmed deltas:** `META-INF/mods.toml` → `META-INF/neoforge.mods.toml` (file rename,
+key set otherwise unchanged); `pack_format` 15 → 34; recipe `components` added and
+`show_notification` removed; loot table `include` / `predicates` added.
 
 ### Phase 7 — In-game service jar · days
 Wraps the CLI core. Cheap *if* Phase 0's SPI answer is clean.

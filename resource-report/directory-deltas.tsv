@@ -1,0 +1,13 @@
+side	mods	directory
+source-only	23	data/<ns>/tags/fluids
+target-only	160	data/<ns>/recipe
+target-only	148	data/<ns>/loot_table
+target-only	44	data/<ns>/structure
+target-only	42	data/<ns>/neoforge
+target-only	40	data/<ns>/tags/entity_type
+target-only	36	data/<ns>/data_maps
+target-only	27	data/<ns>/tags/fluid
+target-only	22	data/<ns>/enchantment
+target-only	8	data/<ns>/jukebox_song
+target-only	6	assets/<ns>/sidebar_buttons
+target-only	5	data/<ns>/tags/data_component_type

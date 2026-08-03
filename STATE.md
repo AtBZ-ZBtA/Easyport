@@ -92,12 +92,21 @@ the merits and the corpus proved it. **Do not re-propose narrowing scope.**
   | `BlockEntity#load` | 70 | 1.21 signature change |
   | `MenuScreens#register` | 76 | GUI registration change |
 
+- **Resource layer mined too.** `tools/ResourceMiner.java` retired most remaining
+  **(verify)** rows empirically. 1.21 **singularised the datapack tree** — `recipes` →
+  `recipe` (160 mods), `loot_tables` → `loot_table` (148), `advancements` → `advancement`
+  (55), `tags/fluids` → `tags/fluid`, `tags/entity_types` → `tags/entity_type`. `mods.toml` →
+  `neoforge.mods.toml` is essentially a **file rename** — the key set is unchanged apart from
+  `enumExtensions`. `pack_format` 15 → 34. The data-driven enchantment schema is visible in
+  22 mods with zero counterparts in 1.20.1, confirming that migration from the corpus rather
+  than from memory.
+
 ### Phase 0 remaining — 2 items, none blocked
 
 | Item | Notes |
 |---|---|
-| Hand-port one trivial mod both directions | Ground truth for the transformer |
-| Confirm remaining **(verify)** rows in ROADMAP §4 | Several already retired by mining |
+| Hand-port one trivial mod both directions | Ground truth for the transformer; the only *zero-drift* pair we would have |
+| Last 2 **(verify)** rows | `FMLJavaModLoadingContext`, Forge extension interfaces |
 
 Nothing requires the owner. The EULA question is moot — `runData` needs no EULA (gotcha #11).
 
