@@ -177,6 +177,26 @@ with the exact name needed, so the logs *are* the work queue.
 13 failures but only 5 distinct missing symbols.** The distribution is heavily headed — the
 same few classes block most mods, so each expansion round unblocks many at once.
 
+#### Current standing on the 14-mod sample, after seven rounds
+
+| Status | n | Meaning |
+|---|---|---|
+| `OK` | 1 | Loads and content verified — `additional_lights`, 100% registry / 100% resource |
+| `NO_CONTENT` | 3 | Loads; registers nothing on either side, so coverage is undefined |
+| `LAUNCH_FAILED` | 3 | Real remaining blockers |
+| `DEPS_MISSING` | 7 | Harness cannot load their dependencies — not translation failures |
+
+**Read it as 4 of 7 measurable mods loading, up from 1.** Seven of the fourteen are excluded
+by the harness ceiling, so the denominator is 7, not 14. Quoting "1 of 14 at 100%" would be
+wrong in both directions at once — it counts harness limitations as translation failures, and
+it treats behaviour-only mods as zero when they have nothing to score.
+
+The three real blockers are three *different* problems, not one recurring:
+`DropExperienceBlock`'s single-argument constructor (removed outright, needs a rule kind that
+inserts a defaulted argument), an `ArmorMaterial` interface change surfacing as
+`IncompatibleClassChangeError`, and `EventBusSubscriber$Bus.bus()` which no longer exists.
+The cheap head of the distribution is done; what is left is the tail.
+
 **Count `DEPS_MISSING` separately or the translator looks far worse than it is.** 5 of those 13
 failures were mods needing *other* mods (`ars_nouveau`, `mekanism`, `create`, `curios`,
 `bookshelf`) that the harness does not load. That is a harness limitation, not a translation
