@@ -63,3 +63,6 @@ handport/out-nomap/
 testkit/inspector/out/
 testkit/inspector/*.jar
 verify-report*/
+
+# Translator output
+translated/

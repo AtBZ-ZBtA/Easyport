@@ -1,0 +1,61 @@
+# Easyport translation rules — Forge 1.20.1 -> NeoForge 1.21.1
+#
+# Lines are  kind <TAB> from <TAB> to  (to omitted for REMOVED). Blank lines and # ignored.
+#
+# Deliberately small. Under shim-first, most loader-API references need no rewriting at all:
+# forge-compat ships a real net.minecraftforge.* tree, so a mod's existing references resolve
+# against it untouched. Rules are only needed where a shim is impossible — which in practice
+# means net.minecraft.*, since that package is owned by the game and cannot be shadowed.
+#
+# SRG -> official member renaming is not expressed here. It is 64,225 entries and lives in
+# mappings/srg2official.tsv, applied automatically before any rule below is matched. Rules
+# are therefore written against *official* names.
+#
+# Rule kinds
+#   CTOR_TO_STATIC   a constructor became a static factory. Rewrites NEW/DUP/INVOKESPECIAL
+#                    into a single INVOKESTATIC. Real bytecode surgery, not a rename.
+#   RENAME_METHOD    same shape, different owner or name. A plain call-site rewrite.
+#   REMOVED          no replacement exists. Reported, never silently rewritten -- inventing a
+#                    target here is exactly the failure mode measured in handport/ (5 false
+#                    positives out of 26 symbols).
+
+# --- Loader-scanned annotations: the hard exception to shim-first -------------------------
+#
+# These MUST be rewritten and cannot be shimmed. FML discovers mods by scanning class files
+# for the exact annotation descriptor `Lnet/neoforged/fml/common/Mod;`. A shimmed
+# net.minecraftforge.fml.common.Mod in forge-compat is a *different type* as far as that scan
+# is concerned, so the mod is never found and never constructed -- it loads, registers
+# nothing, and reports no error, which is the worst possible failure mode.
+#
+# Measured: additional_lights translated cleanly, loaded, and contributed 0 of 326 entries
+# purely because its @Mod annotation still said net.minecraftforge.
+#
+# The rule of thumb: anything the *loader itself* looks up by name must be rewritten.
+# Everything a mod merely calls can be shimmed.
+TYPE_RENAME	net/minecraftforge/fml/common/Mod	net/neoforged/fml/common/Mod
+TYPE_RENAME	net/minecraftforge/fml/common/Mod$EventBusSubscriber	net/neoforged/fml/common/EventBusSubscriber
+TYPE_RENAME	net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus	net/neoforged/fml/common/EventBusSubscriber$Bus
+TYPE_RENAME	net/minecraftforge/eventbus/api/SubscribeEvent	net/neoforged/bus/api/SubscribeEvent
+TYPE_RENAME	net/minecraftforge/api/distmarker/Dist	net/neoforged/api/distmarker/Dist
+TYPE_RENAME	net/minecraftforge/api/distmarker/OnlyIn	net/neoforged/api/distmarker/OnlyIn
+
+# --- ResourceLocation: constructor privatised in 1.21 -------------------------------------
+# The single largest vanilla dependency in the corpus: 237 + 188 mods.
+CTOR_TO_STATIC	net/minecraft/resources/ResourceLocation	(Ljava/lang/String;Ljava/lang/String;)V	fromNamespaceAndPath	(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;
+CTOR_TO_STATIC	net/minecraft/resources/ResourceLocation	(Ljava/lang/String;)V	parse	(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;
+
+# --- ItemStack NBT -> data components -----------------------------------------------------
+# 135 / 111 / 105 / 97 mods. These are NOT renames: the whole idiom changed, and a call-site
+# rewrite cannot express getOrCreateTag() returning a mutable tag backed by the stack.
+# Recorded as REMOVED so the transformer reports them instead of guessing. The vanilla bridge
+# (Phase 4) is what actually resolves these.
+REMOVED	net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
+REMOVED	net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
+REMOVED	net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
+REMOVED	net/minecraft/world/item/ItemStack#hasTag()Z
+
+# --- Loader API with no shim target -------------------------------------------------------
+# The bus and ModContainer are injected into the mod constructor in NeoForge, so there is no
+# call to rewrite. STRUCTURAL work in Phase 3; reported here so nothing is silently wrong.
+REMOVED	net/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext#get()Lnet/minecraftforge/fml/javafmlmod/FMLJavaModLoadingContext;
+REMOVED	net/minecraftforge/fml/ModLoadingContext#get()Lnet/minecraftforge/fml/ModLoadingContext;
