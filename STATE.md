@@ -4,7 +4,7 @@ Dense re-entry point. If you are picking this up cold (fresh context, new contri
 read this file and nothing else until you need depth. [ROADMAP.md](ROADMAP.md) has the full
 plan; this has where things actually stand.
 
-**Last updated:** 2026-08-02, end of Phase 0.
+**Last updated:** 2026-08-03, end of Phase 1.
 
 ---
 
@@ -117,6 +117,33 @@ verification harness. Everything below is measured, not estimated.
   the work list at 241 mods — cannot be expressed as a symbol mapping at all**; the bus is
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
+
+### Phase 1 — COMPLETE
+
+`tools/VerifyHarness.java` + `testkit/inspector/`. Measures whether a translated mod actually
+works, by running it and comparing what it registered against the author's own port.
+
+- **Engine:** `runData` — full FML boot, headless, ~10s, no EULA (gotcha #11).
+- **Differential:** a baseline launch with only the inspector is subtracted from each run, so
+  what remains is exactly what the jar under test contributed. No ignore lists to go stale.
+- **Two metrics:** registry coverage (needs a launch) and resource coverage (static, covers
+  recipes/tags/loot tables). Both validated at 100% on a self-comparison.
+- **Loaded vs. rejected** are distinguished. An empty delta means very different things
+  depending on whether the jar ran at all, and both need different fixes.
+
+**Day-zero baseline:** an untranslated Forge jar scores **0% registry / 83.6% resource**. The
+launch succeeded and nothing crashed — a crash-only check would have called that a pass while
+the mod contributed nothing. That is the entire reason this phase came before the transformer.
+
+The 83.6% is *entirely* the 1.21 singularisation (143 `recipes/`→`recipe/`, 5
+`tags/blocks/`→`tags/block/`), so that mod's resource layer is a pure mechanical rename.
+
+Deferred: world-gen smoke test — needs a server (EULA) or client (display). Would catch
+runtime crashes during play, which neither coverage metric sees.
+
+**Next: Phase 2, the transformer core.** Rule DSL needs four rule kinds (`RENAME`, `REMOVED`,
+`CONTEXTUAL`, `STRUCTURAL`) — see ROADMAP §5 Phase 2 for why a rename table alone fails on the
+most common migration in the corpus.
 
 ### Phase 0 — COMPLETE
 

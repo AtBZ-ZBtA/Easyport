@@ -58,3 +58,8 @@ handport/src/
 handport/tgt/
 handport/out/
 handport/out-nomap/
+
+# Harness build output and run artifacts
+testkit/inspector/out/
+testkit/inspector/*.jar
+verify-report*/

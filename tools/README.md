@@ -181,6 +181,92 @@ catch that class of change.
 
 ---
 
+## VerifyHarness
+
+Measures whether a translated mod actually works, by running it.
+
+```bash
+java tools/VerifyHarness.java <runtimeDir> <inspectorJar> <candidateJar> [referenceJar] [outDir]
+
+# example
+java tools/VerifyHarness.java devenv/neoforge-1.21.1 testkit/inspector/inspector.jar \
+    translated/foo.jar "<ATM10>/mods/foo.jar" verify-report
+```
+
+**Dependencies:** a built NeoForge MDK at `<runtimeDir>` and the inspector jar (below).
+
+### Why it measures registry content, not load success
+
+"The jar loaded without crashing" is the weak test, and it passes for mods that are badly
+broken — half their blocks missing, an entity type silently dropped. So the harness compares
+what the candidate *registered* against what the author's own port registered, entry by
+entry. That number is the coverage metric the project steers by.
+
+Verified against a real Forge 1.20.1 jar: the launch succeeded, nothing crashed, and the mod
+contributed **zero of 326** expected entries. A crash-only check would have called that a pass.
+
+### How it works
+
+1. **Baseline launch** with only the inspector, to capture what NeoForge and the harness
+   register on their own.
+2. **Candidate launch**, subtract the baseline. What remains is exactly what the jar under
+   test contributed — no hardcoded ignore lists to drift out of date.
+3. **Reference launch** with the author's port, same subtraction.
+4. Compare.
+
+Launches use `runData`: full FML boot including mods-folder discovery, headless, ~10s, and
+**no EULA** — only a dedicated server needs one.
+
+### Loaded vs. ran
+
+The harness distinguishes "the candidate loaded and registered nothing" from "the candidate
+was rejected and never ran at all". Both look like an empty delta but need completely
+different fixes. It compares the modId the jar declares against the loaded mod list the
+inspector dumps.
+
+### Two coverage numbers
+
+| Metric | Needs a launch | Covers |
+|---|---|---|
+| **Registry coverage** | yes | Blocks, items, entities, creative tabs, sounds — anything registered at runtime |
+| **Resource coverage** | no | Recipes, tags, loot tables, models — plain files in the jar |
+
+Resource coverage compares paths verbatim, deliberately: a translated jar that kept a
+`recipes/` directory instead of renaming to `recipe/` shows up as missing content, exactly
+as the game would treat it.
+
+Extra entries are reported but not counted as failures — they are usually the author adding
+features between versions, which is drift rather than a translation bug.
+
+### Not yet covered
+
+A world-gen smoke test would catch runtime crashes during actual play, which neither metric
+sees. It needs a server launch (EULA) or a client (display), so it is deferred rather than
+dropped.
+
+---
+
+## Inspector (`testkit/inspector`)
+
+The probe VerifyHarness relies on. A small NeoForge mod that dumps every registry's contents
+plus the loaded mod list to `easyport-inspection.json` in the game directory.
+
+Walks the registry-of-registries rather than a hardcoded list, so registries added or renamed
+between versions are picked up without editing it. Vanilla content is excluded by default;
+`-Deasyport.inspect.includeVanilla=true` keeps it.
+
+Rebuild after changes:
+
+```bash
+cd testkit/inspector && javac -cp "<neoforge>;<bus>;<loader>;<slf4j>;<modlauncher>;<asm>;<guava>;<dfu>" \
+    -d out src/easyport/inspector/*.java && cp -r src/META-INF out/ && jar cf inspector.jar -C out .
+```
+
+`dfu` is DataFixerUpper — needed because `BuiltInRegistries.REGISTRY` exposes
+`com.mojang.serialization.Keyable`.
+
+---
+
 ## RuleMiner: vanilla results without the mapping
 
 **74.8% of lost symbols carry SRG names** (`m_61124_`). Forge 1.20.1 runs SRG at runtime;

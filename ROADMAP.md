@@ -398,13 +398,36 @@ transformer.** Under-building it is the single decision that would blow up the s
 
 **Deliverable:** rule-DSL specification + measured corpus difficulty breakdown.
 
-### Phase 1 — Verification harness · days · *gated by: dev environments*
-Headless load test (does the translated jar load without crashing), registry diffing
-(does it register the same blocks/items/entities as the author's port), recipe and tag
-diffing, world-gen smoke test. Plus the coverage metric and per-jar translation reports.
-
+### Phase 1 — Verification harness — **DONE**
 **This is the multiplier on every later phase.** Built before the transformer, because
 without it every subsequent phase is throttled by manual testing.
+
+Delivered: `tools/VerifyHarness.java` + `testkit/inspector/`.
+
+- [x] Headless load test — `runData`, ~10s, no EULA
+- [x] **Loaded vs. rejected** distinguished — an empty delta means very different things
+      depending on whether the jar ran at all
+- [x] Registry coverage — differential against a baseline launch, so no ignore lists
+- [x] Resource coverage — recipes/tags/loot tables compared statically, no launch needed
+- [x] Coverage metric, validated at 100% on a self-comparison
+- [ ] World-gen smoke test — **deferred**, needs a server (EULA) or client (display). Would
+      catch runtime crashes during play, which neither coverage metric sees.
+
+**Day-zero baseline measured.** An untranslated Forge 1.20.1 jar
+(`additional_lights`) against its NeoForge port:
+
+| Metric | Result |
+|---|---|
+| Registry coverage | **0%** — 0 of 326 entries; jar rejected during discovery |
+| Resource coverage | **83.6%** — 148 missing, 148 extra |
+
+The resource delta is *entirely* the 1.21 singularisation: 143 `recipes/`→`recipe/` and 5
+`tags/blocks/`→`tags/block/`. Nothing else differs, so for this mod the resource layer is a
+pure mechanical rename.
+
+**The registry result is why this phase came first.** The launch succeeded and nothing
+crashed — a crash-only check would have called it a pass, while the mod contributed nothing
+at all.
 
 ### Phase 2 — Transformer core · days · *gated by: corpus diffs*
 Bytecode engine, rule DSL, mapping pipeline, jar in / jar out.
