@@ -1,4 +1,9 @@
-# Version Translation Layer — Roadmap
+# Easyport — Roadmap
+
+> **Picking this up cold? Read [STATE.md](STATE.md) first.** It is the dense re-entry point:
+> current status, locked decisions, and the gotchas that cost real time. This document is the
+> full plan and the reasoning behind it — depth, not orientation.
+
 
 **Goal:** Omnidirectional, complete translation of Minecraft mods between Forge 1.20.1 and
 NeoForge 1.21.1, via (a) a standalone CLI tool and (b) an in-game service jar that
@@ -283,25 +288,34 @@ Same core library as the CLI, different entry point. CLI first, wrap it second.
 
 ## 4. The API delta
 
-Items marked **(verify)** are from memory and must be confirmed against real sources in
-Phase 0 before any rule is written against them. Much of this table will be *replaced* by
-empirically derived rules once the corpus lands — it exists to bootstrap, not to be
-authoritative.
+Rows marked **[mined]** were confirmed empirically against the corpus and carry the number of
+mods that corroborate them. Rows marked **(verify)** are still from memory and unconfirmed —
+treat them as leads, not facts, and do not write a rule against one without checking it.
+
+This table exists to bootstrap. `rule-report/` is the authority.
 
 ### Loader: Forge 1.20.1 ⟷ NeoForge 1.21.1
 
-| Forge 1.20.1 | NeoForge 1.21.1 | Difficulty |
-|---|---|---|
-| `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` | trivial |
-| `net.minecraftforge.eventbus.api.Event` | `net.neoforged.bus.api.Event` | trivial |
-| `@Cancelable` annotation | `ICancellableEvent` interface | shim |
-| `RegistryObject<T>` | `DeferredHolder<R, T>` | shim |
-| `ForgeConfigSpec` | `ModConfigSpec` | shim |
-| `LazyOptional` + `ICapabilityProvider` | `RegisterCapabilitiesEvent` + `BlockCapability`/`ItemCapability`/`EntityCapability` | **hard — different lifecycle model** |
-| `SimpleChannel` | `PayloadRegistrar` via payload-registration event **(verify name)** | **hard — must synthesize `StreamCodec`s** |
-| `FMLJavaModLoadingContext` | `IEventBus` passed to mod constructor | moderate |
-| `META-INF/mods.toml` | `META-INF/neoforge.mods.toml` + field changes | trivial |
-| Forge extension interfaces (`IForgeBlockState` etc.) | NeoForge equivalents, not 1:1 | moderate |
+| Forge 1.20.1 | NeoForge 1.21.1 | Status | Difficulty |
+|---|---|---|---|
+| `MinecraftForge.EVENT_BUS` | `NeoForge.EVENT_BUS` | **[mined]** 199→189 | trivial |
+| `eventbus.api.IEventBus#addListener` | `bus.api.IEventBus#addListener` | **[mined]** n=190 | trivial |
+| `eventbus.api.IEventBus#register` | `bus.api.IEventBus#register` | **[mined]** n=101 | trivial |
+| `RegistryObject#get` | `DeferredHolder#get` | **[mined]** n=115 | shim |
+| `ForgeConfigSpec$Builder` | `ModConfigSpec$Builder` | **[mined]** n=132 | shim |
+| `ModLoadingContext#registerConfig` | **`ModContainer#registerConfig`** | **[mined]** n=101 | shim — *class move, not predicted* |
+| `fml.ModList` | `neoforged.fml.ModList` | **[mined]** n=136 | trivial |
+| `fml.config.ModConfig$Type` | `neoforged.fml.config.ModConfig$Type` | **[mined]** n=68 | trivial |
+| `forge.fluids.FluidStack` | `neoforge.fluids.FluidStack` | **[mined]** n=68 | trivial |
+| `data.event.GatherDataEvent` | `neoforge.data.event.GatherDataEvent` | **[mined]** n=68 | trivial |
+| `ForgeCapabilities#ITEM_HANDLER` | `Capabilities$ItemHandler` | **[mined]** 97→94 | see below |
+| `LazyOptional` + `ICapabilityProvider` | `RegisterCapabilitiesEvent` + `BlockCapability` / `ItemCapability` / `EntityCapability` / `BlockCapabilityCache` | **[mined]** types confirmed present | **hard — different lifecycle model** |
+| `SimpleChannel` | `network.registration.PayloadRegistrar` (`playToServer`, `playToClient`, `playBidirectional`, `configurationToClient`, `versioned`, `optional`, `executesOn`) + `network.handling.IPayloadContext` | **[mined]** FQNs confirmed | **hard — must synthesize `StreamCodec`s** |
+| `@Cancelable` annotation | `ICancellableEvent` interface | (verify) | shim |
+| `net.minecraftforge.eventbus.api.Event` | `net.neoforged.bus.api.Event` | (verify) | trivial |
+| `FMLJavaModLoadingContext` | `IEventBus` passed to mod constructor | (verify) — 241 mods use it, top of the shim list | moderate |
+| `META-INF/mods.toml` | `META-INF/neoforge.mods.toml` + field changes | (verify) | trivial |
+| Forge extension interfaces (`IForgeBlockState` etc.) | NeoForge equivalents, not 1:1 | (verify) | moderate |
 
 Capabilities and networking are the two hard shims. Networking especially: Forge's
 `SimpleChannel` registers encode/decode loosely, while NeoForge requires typed
