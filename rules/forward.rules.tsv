@@ -433,3 +433,125 @@ METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent	getConfig	()Lnet/
 METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent$Loading	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
 METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent$Reloading	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
 
+
+# --- Loader constants the target platform deleted --------------------------------------------
+#
+# FIELD_TO_STATIC  owner <TAB> name <TAB> desc <TAB> newOwner <TAB> newName <TAB> newDesc
+#
+# A GETSTATIC pushes one value and a no-arg INVOKESTATIC pushes one value, so swapping the
+# instruction is the whole rewrite -- the same shape as METHOD_TO_STATIC.
+#
+# cyclopscore reads IEnvironment.Keys.NAMING to detect a dev environment. modlauncher removed the
+# field, so the read throws NoSuchFieldError during mod construction and takes down a library ten
+# mods depend on. Not a Forge API, but the same class of problem.
+FIELD_TO_STATIC	cpw/mods/modlauncher/api/IEnvironment$Keys	NAMING	Ljava/util/function/Supplier;	easyport/bridge/EnvBridge	naming	()Ljava/util/function/Supplier;
+
+# --- Bulk package moves, generated from the gap report ----------------------------------------
+#
+# Every remaining unresolved type whose simple name matches exactly one platform class. These are
+# the tail of the same wholesale namespace reorganisation the prefix rules above cover -- classes
+# that sit outside any package that could be moved as a unit.
+#
+# Generated rather than hand-listed, then left to the two checks that follow: the target-existence
+# check in Translate refuses any that do not resolve, and the member check in RenameGaps reports
+# any whose shape does not match what the corpus calls. A generated rule that is wrong therefore
+# surfaces as a report line rather than as a silent mistranslation.
+TYPE_RENAME	net/minecraftforge/fml/InterModComms	net/neoforged/fml/InterModComms
+TYPE_RENAME	net/minecraftforge/client/ChunkRenderTypeSet	net/neoforged/neoforge/client/ChunkRenderTypeSet
+TYPE_RENAME	net/minecraftforge/common/SoundActions	net/neoforged/neoforge/common/SoundActions
+TYPE_RENAME	net/minecraftforge/registries/RegistryBuilder	net/neoforged/neoforge/registries/RegistryBuilder
+TYPE_RENAME	net/minecraftforge/fml/loading/LoadingModList	net/neoforged/fml/loading/LoadingModList
+TYPE_RENAME	net/minecraftforge/fml/InterModComms$IMCMessage	net/neoforged/fml/InterModComms$IMCMessage
+TYPE_RENAME	net/minecraftforge/common/brewing/BrewingRecipeRegistry	net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry
+TYPE_RENAME	net/minecraftforge/resource/PathPackResources	net/minecraft/server/packs/PathPackResources
+TYPE_RENAME	net/minecraftforge/entity/PartEntity	net/neoforged/neoforge/entity/PartEntity
+TYPE_RENAME	net/minecraftforge/common/world/BiomeGenerationSettingsBuilder	net/neoforged/neoforge/common/world/BiomeGenerationSettingsBuilder
+TYPE_RENAME	net/minecraftforge/registries/DataPackRegistryEvent$NewRegistry	net/neoforged/neoforge/registries/DataPackRegistryEvent$NewRegistry
+TYPE_RENAME	net/minecraftforge/client/RenderTypeGroup	net/neoforged/neoforge/client/RenderTypeGroup
+TYPE_RENAME	net/minecraftforge/common/brewing/BrewingRecipe	net/neoforged/neoforge/common/brewing/BrewingRecipe
+TYPE_RENAME	net/minecraftforge/fml/loading/moddiscovery/ModInfo	net/neoforged/fml/loading/moddiscovery/ModInfo
+TYPE_RENAME	net/minecraftforge/common/brewing/IBrewingRecipe	net/neoforged/neoforge/common/brewing/IBrewingRecipe
+TYPE_RENAME	net/minecraftforge/common/crafting/CompoundIngredient	net/neoforged/neoforge/common/crafting/CompoundIngredient
+TYPE_RENAME	net/minecraftforge/fml/javafmlmod/FMLModContainer	net/neoforged/fml/javafmlmod/FMLModContainer
+TYPE_RENAME	net/minecraftforge/registries/RegistryManager	net/neoforged/neoforge/registries/RegistryManager
+TYPE_RENAME	net/minecraftforge/client/gui/widget/ExtendedButton	net/neoforged/neoforge/client/gui/widget/ExtendedButton
+TYPE_RENAME	net/minecraftforge/common/UsernameCache	net/neoforged/neoforge/common/UsernameCache
+TYPE_RENAME	net/minecraftforge/common/world/MobSpawnSettingsBuilder	net/neoforged/neoforge/common/world/MobSpawnSettingsBuilder
+TYPE_RENAME	net/minecraftforge/fml/loading/moddiscovery/ModFileInfo	net/neoforged/fml/loading/moddiscovery/ModFileInfo
+TYPE_RENAME	net/minecraftforge/client/RenderTypeHelper	net/neoforged/neoforge/client/RenderTypeHelper
+TYPE_RENAME	net/minecraftforge/common/util/RecipeMatcher	net/neoforged/neoforge/common/util/RecipeMatcher
+TYPE_RENAME	net/minecraftforge/fml/VersionChecker$Status	net/neoforged/fml/VersionChecker$Status
+TYPE_RENAME	net/minecraftforge/fml/loading/targets/CommonLaunchHandler	net/neoforged/fml/loading/targets/CommonLaunchHandler
+TYPE_RENAME	net/minecraftforge/client/gui/widget/ScrollPanel	net/neoforged/neoforge/client/gui/widget/ScrollPanel
+TYPE_RENAME	net/minecraftforge/common/FarmlandWaterManager	net/neoforged/neoforge/common/FarmlandWaterManager
+TYPE_RENAME	net/minecraftforge/common/util/TriPredicate	net/neoforged/neoforge/common/util/TriPredicate
+TYPE_RENAME	net/minecraftforge/resource/ResourcePackLoader	net/neoforged/neoforge/resource/ResourcePackLoader
+TYPE_RENAME	net/minecraftforge/client/IItemDecorator	net/neoforged/neoforge/client/IItemDecorator
+TYPE_RENAME	net/minecraftforge/common/CreativeModeTabRegistry	net/neoforged/neoforge/common/CreativeModeTabRegistry
+TYPE_RENAME	net/minecraftforge/common/util/ConcatenatedListView	net/neoforged/neoforge/common/util/ConcatenatedListView
+TYPE_RENAME	net/minecraftforge/fml/VersionChecker$CheckResult	net/neoforged/fml/VersionChecker$CheckResult
+TYPE_RENAME	net/minecraftforge/fml/loading/FMLConfig	net/neoforged/fml/loading/FMLConfig
+TYPE_RENAME	net/minecraftforge/client/ItemDecoratorHandler	net/neoforged/neoforge/client/ItemDecoratorHandler
+TYPE_RENAME	net/minecraftforge/common/BasicItemListing	net/neoforged/neoforge/common/BasicItemListing
+TYPE_RENAME	net/minecraftforge/fml/VersionChecker	net/neoforged/fml/VersionChecker
+TYPE_RENAME	net/minecraftforge/fml/loading/moddiscovery/ModFile	net/neoforged/fml/loading/moddiscovery/ModFile
+TYPE_RENAME	net/minecraftforge/registries/holdersets/OrHolderSet	net/neoforged/neoforge/registries/holdersets/OrHolderSet
+TYPE_RENAME	net/minecraftforge/common/crafting/DifferenceIngredient	net/neoforged/neoforge/common/crafting/DifferenceIngredient
+TYPE_RENAME	net/minecraftforge/common/crafting/IntersectionIngredient	net/neoforged/neoforge/common/crafting/IntersectionIngredient
+TYPE_RENAME	net/minecraftforge/common/util/TransformationHelper	net/neoforged/neoforge/common/util/TransformationHelper
+TYPE_RENAME	net/minecraftforge/common/world/ClimateSettingsBuilder	net/neoforged/neoforge/common/world/ClimateSettingsBuilder
+TYPE_RENAME	net/minecraftforge/eventbus/EventBus	net/neoforged/bus/EventBus
+TYPE_RENAME	net/minecraftforge/fml/loading/FMLConfig$ConfigValue	net/neoforged/fml/loading/FMLConfig$ConfigValue
+TYPE_RENAME	net/minecraftforge/registries/DataPackRegistriesHooks	net/neoforged/neoforge/registries/DataPackRegistriesHooks
+TYPE_RENAME	net/minecraftforge/registries/holdersets/AndHolderSet	net/neoforged/neoforge/registries/holdersets/AndHolderSet
+TYPE_RENAME	net/minecraftforge/client/ClientCommandSourceStack	net/neoforged/neoforge/client/ClientCommandSourceStack
+TYPE_RENAME	net/minecraftforge/common/IMinecartCollisionHandler	net/neoforged/neoforge/common/IMinecartCollisionHandler
+TYPE_RENAME	net/minecraftforge/common/WorldWorkerManager	net/neoforged/neoforge/common/WorldWorkerManager
+TYPE_RENAME	net/minecraftforge/common/WorldWorkerManager$IWorker	net/neoforged/neoforge/common/WorldWorkerManager$IWorker
+TYPE_RENAME	net/minecraftforge/common/world/ModifiableStructureInfo$StructureInfo$Builder	net/neoforged/neoforge/common/world/ModifiableStructureInfo$StructureInfo$Builder
+TYPE_RENAME	net/minecraftforge/common/world/StructureModifier	net/neoforged/neoforge/common/world/StructureModifier
+TYPE_RENAME	net/minecraftforge/common/world/StructureModifier$Phase	net/neoforged/neoforge/common/world/StructureModifier$Phase
+TYPE_RENAME	net/minecraftforge/common/world/StructureSettingsBuilder	net/neoforged/neoforge/common/world/StructureSettingsBuilder
+TYPE_RENAME	net/minecraftforge/eventbus/ListenerList	net/neoforged/bus/ListenerList
+TYPE_RENAME	net/minecraftforge/fml/CrashReportCallables	net/neoforged/fml/CrashReportCallables
+TYPE_RENAME	net/minecraftforge/fml/Logging	net/neoforged/fml/Logging
+TYPE_RENAME	net/minecraftforge/fml/loading/ImmediateWindowHandler	net/neoforged/fml/loading/ImmediateWindowHandler
+TYPE_RENAME	net/minecraftforge/fml/loading/StringUtils	net/neoforged/fml/loading/StringUtils
+TYPE_RENAME	net/minecraftforge/fml/loading/VersionInfo	net/neoforged/fml/loading/VersionInfo
+TYPE_RENAME	net/minecraftforge/fml/loading/moddiscovery/ModAnnotation$EnumHolder	net/neoforged/fml/loading/modscan/ModAnnotation$EnumHolder
+TYPE_RENAME	net/minecraftforge/internal/BrandingControl	net/neoforged/neoforge/internal/BrandingControl
+TYPE_RENAME	net/minecraftforge/registries/holdersets/NotHolderSet	net/neoforged/neoforge/registries/holdersets/NotHolderSet
+TYPE_RENAME	net/minecraftforge/accesstransformer/Target	net/minecraft/world/level/pathfinder/Target
+TYPE_RENAME	net/minecraftforge/client/CreativeModeTabSearchRegistry	net/neoforged/neoforge/client/CreativeModeTabSearchRegistry
+TYPE_RENAME	net/minecraftforge/client/DimensionSpecialEffectsManager	net/neoforged/neoforge/client/DimensionSpecialEffectsManager
+TYPE_RENAME	net/minecraftforge/client/NamedRenderTypeManager	net/neoforged/neoforge/client/NamedRenderTypeManager
+TYPE_RENAME	net/minecraftforge/client/gui/ModListScreen	net/neoforged/neoforge/client/gui/ModListScreen
+TYPE_RENAME	net/minecraftforge/client/loading/ClientModLoader	net/neoforged/neoforge/client/loading/ClientModLoader
+TYPE_RENAME	net/minecraftforge/client/textures/UnitTextureAtlasSprite	net/neoforged/neoforge/client/textures/UnitTextureAtlasSprite
+TYPE_RENAME	net/minecraftforge/common/IExtensibleEnum	net/neoforged/fml/common/asm/enumextension/IExtensibleEnum
+TYPE_RENAME	net/minecraftforge/common/LenientUnboundedMapCodec	net/neoforged/neoforge/common/LenientUnboundedMapCodec
+TYPE_RENAME	net/minecraftforge/common/SoundAction	net/neoforged/neoforge/common/SoundAction
+TYPE_RENAME	net/minecraftforge/common/ticket/AABBTicket	net/neoforged/neoforge/common/ticket/AABBTicket
+TYPE_RENAME	net/minecraftforge/common/util/FakePlayer$FakePlayerNetHandler	net/neoforged/neoforge/common/util/FakePlayer$FakePlayerNetHandler
+TYPE_RENAME	net/minecraftforge/common/util/Size2i	net/neoforged/neoforge/common/util/Size2i
+TYPE_RENAME	net/minecraftforge/common/util/TablePrinter	net/neoforged/neoforge/common/util/TablePrinter
+TYPE_RENAME	net/minecraftforge/common/util/TransformationHelper$Deserializer	net/neoforged/neoforge/common/util/TransformationHelper$Deserializer
+TYPE_RENAME	net/minecraftforge/common/world/BiomeSpecialEffectsBuilder	net/neoforged/neoforge/common/world/BiomeSpecialEffectsBuilder
+TYPE_RENAME	net/minecraftforge/common/world/PieceBeardifierModifier	net/neoforged/neoforge/common/world/PieceBeardifierModifier
+TYPE_RENAME	net/minecraftforge/common/world/StructureSettingsBuilder$StructureSpawnOverrideBuilder	net/neoforged/neoforge/common/world/StructureSettingsBuilder$StructureSpawnOverrideBuilder
+TYPE_RENAME	net/minecraftforge/eventbus/BusBuilderImpl	net/neoforged/bus/BusBuilderImpl
+TYPE_RENAME	net/minecraftforge/eventbus/EventBusErrorMessage	net/neoforged/bus/EventBusErrorMessage
+TYPE_RENAME	net/minecraftforge/eventbus/api/BusBuilder	net/neoforged/bus/api/BusBuilder
+TYPE_RENAME	net/minecraftforge/fml/ISystemReportExtender	net/neoforged/fml/ISystemReportExtender
+TYPE_RENAME	net/minecraftforge/fml/ModLoadingException	net/neoforged/fml/ModLoadingException
+TYPE_RENAME	net/minecraftforge/fml/ModWorkManager	net/neoforged/fml/ModWorkManager
+TYPE_RENAME	net/minecraftforge/fml/config/ConfigTracker	net/neoforged/fml/config/ConfigTracker
+TYPE_RENAME	net/minecraftforge/fml/javafmlmod/AutomaticEventSubscriber	net/neoforged/fml/javafmlmod/AutomaticEventSubscriber
+TYPE_RENAME	net/minecraftforge/fml/loading/ImmediateWindowProvider	net/neoforged/neoforgespi/earlywindow/ImmediateWindowProvider
+TYPE_RENAME	net/minecraftforge/fml/loading/TracingPrintStream	net/neoforged/fml/loading/TracingPrintStream
+TYPE_RENAME	net/minecraftforge/fml/loading/moddiscovery/ModValidator	net/neoforged/fml/loading/moddiscovery/ModValidator
+TYPE_RENAME	net/minecraftforge/fml/loading/progress/ProgressMeter	net/neoforged/fml/loading/progress/ProgressMeter
+TYPE_RENAME	net/minecraftforge/registries/holdersets/AnyHolderSet	net/neoforged/neoforge/registries/holdersets/AnyHolderSet
+TYPE_RENAME	net/minecraftforge/registries/holdersets/CompositeHolderSet	net/neoforged/neoforge/registries/holdersets/CompositeHolderSet
+TYPE_RENAME	net/minecraftforge/registries/holdersets/HolderSetType	net/neoforged/neoforge/registries/holdersets/HolderSetType
+TYPE_RENAME	net/minecraftforge/registries/holdersets/ICustomHolderSet	net/neoforged/neoforge/registries/holdersets/ICustomHolderSet

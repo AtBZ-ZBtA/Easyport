@@ -83,6 +83,7 @@ public class Translate {
     private final List<RenameRule> renameRules = new ArrayList<>();
     private final List<RenameRule> methodToStaticRules = new ArrayList<>();
     private final Map<String, String> fieldRetypes = new LinkedHashMap<>();
+    private final List<RenameRule> fieldToStaticRules = new ArrayList<>();
     private final Set<String> removed = new LinkedHashSet<>();
     private final Map<String, String> typeRenames = new LinkedHashMap<>();
     private final Map<String, String> prefixRenames = new LinkedHashMap<>();
@@ -321,6 +322,7 @@ public class Translate {
             applyRenameRules(m.instructions);
             applyMethodToStaticRules(m.instructions);
             applyFieldRetypeRules(m.instructions);
+            applyFieldToStaticRules(m.instructions);
             applyCtorRules(m.instructions);
             applySwapRules(m.instructions);
             recordRemoved(m.instructions);
@@ -473,6 +475,35 @@ public class Translate {
             if (newDesc == null || newDesc.equals(fin.desc)) continue;
             fin.desc = newDesc;
             count(appliedCounts, "FIELD_RETYPE " + fin.owner + " -> " + newDesc);
+        }
+    }
+
+    /**
+     * Rewrites a static field read into a static method call.
+     *
+     * For constants the target platform deleted outright, where the value can still be computed.
+     * {@code IEnvironment.Keys.NAMING} is the case this exists for: cyclopscore reads it to decide
+     * whether it is running in a development environment, and modlauncher removed the field, so
+     * the read fails with NoSuchFieldError during mod construction.
+     *
+     * A GETSTATIC pushes exactly one value and an INVOKESTATIC with no arguments pushes exactly
+     * one value, so swapping the instruction is the whole transformation -- no stack adjustment,
+     * the same shape as METHOD_TO_STATIC. The descriptors must match, which the rule states
+     * explicitly rather than inferring.
+     */
+    private void applyFieldToStaticRules(InsnList insns) {
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof org.objectweb.asm.tree.FieldInsnNode fin)) continue;
+            if (fin.getOpcode() != Opcodes.GETSTATIC) continue;
+            for (RenameRule r : fieldToStaticRules) {
+                if (!r.owner().equals(fin.owner) || !r.name().equals(fin.name)
+                        || !r.desc().equals(fin.desc)) continue;
+                insns.set(fin, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                        r.newOwner(), r.newName(), r.newDesc(), false));
+                count(appliedCounts, "FIELD_TO_STATIC " + r.owner() + "#" + r.name()
+                                     + " -> " + r.newOwner() + "#" + r.newName());
+                break;
+            }
         }
     }
 
@@ -1191,6 +1222,9 @@ public class Translate {
                 }
                 case "RENAME_METHOD" -> {
                     if (c.length >= 7) renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                }
+                case "FIELD_TO_STATIC" -> {
+                    if (c.length >= 7) fieldToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
                 }
                 case "FIELD_RETYPE" -> {
                     if (c.length >= 3) fieldRetypes.put(c[1], c[2]);

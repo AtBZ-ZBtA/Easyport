@@ -1,9 +1,9 @@
 referenced Forge types: 792
   resolved by forge-compat: 71
-  resolved by a rule:       482
-  UNRESOLVED:               239
+  resolved by a rule:       581
+  UNRESOLVED:               140
 
-=== RENAME TARGET MISSING A CALLED MEMBER (410) ===
+=== RENAME TARGET MISSING A CALLED MEMBER (427) ===
 The rule resolves, but the target does not have what the corpus
 calls on it. Each is a NoSuchMethodError or AbstractMethodError
 waiting to happen -- convert the rule to a shim, or drop it.
@@ -51,8 +51,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/client/event/InputEvent$MouseScrollingEvent  has no  getScrollDelta ()D
    23  net/minecraftforge/fluids/FluidStack.hasTag
          -> net/neoforged/neoforge/fluids/FluidStack  has no  hasTag ()Z
-   23  net/minecraftforge/fluids/FluidType$Properties.sound
-         -> net/neoforged/neoforge/fluids/FluidType$Properties  has no  sound (Lnet/minecraftforge/common/SoundAction;Lnet/minecraft/sounds/SoundEvent;)Lnet/neoforged/neoforge/fluids/FluidType$Properties;
    21  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.accept
          -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  accept (Ljava/util/function/Supplier;)V
    21  net/minecraftforge/fluids/FluidUtil.getFluidHandler
@@ -75,6 +73,8 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post  has no  setAmount (F)V
    17  net/minecraftforge/event/entity/player/EntityItemPickupEvent.getItem
          -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  getItem ()Lnet/minecraft/world/entity/item/ItemEntity;
+   17  net/minecraftforge/registries/RegistryBuilder.disableSaving
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  disableSaving ()Lnet/neoforged/neoforge/registries/RegistryBuilder;
    16  net/minecraftforge/common/Tags$Blocks.STONE
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  STONE Lnet/minecraft/tags/TagKey;
    16  net/minecraftforge/event/level/BlockEvent$BlockToolModificationEvent.getToolAction
@@ -95,10 +95,10 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/common/Tags$Items  has no  STORAGE_BLOCKS_QUARTZ Lnet/minecraft/tags/TagKey;
    14  net/minecraftforge/common/crafting/CraftingHelper.getIngredient
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getIngredient (Lcom/google/gson/JsonElement;Z)Lnet/minecraft/world/item/crafting/Ingredient;
-   14  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getGenerationSettings
-         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getGenerationSettings ()Lnet/minecraftforge/common/world/BiomeGenerationSettingsBuilder;
    14  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.getEntries
          -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  getEntries ()Lnet/neoforged/neoforge/common/util/MutableHashedLinkedMap;
+   14  net/minecraftforge/registries/RegistryBuilder.setName
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  setName (Lnet/minecraft/resources/ResourceLocation;)Lnet/neoforged/neoforge/registries/RegistryBuilder;
    13  net/minecraftforge/common/Tags$Items.ARMORS_BOOTS
          -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_BOOTS Lnet/minecraft/tags/TagKey;
    13  net/minecraftforge/common/Tags$Items.ARMORS_HELMETS
@@ -129,8 +129,12 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent  has no  setCanceled (Z)V
    12  net/minecraftforge/fml/ModContainer.addConfig
          -> net/neoforged/fml/ModContainer  has no  addConfig (Lnet/minecraftforge/fml/config/ModConfig;)V
+   12  net/minecraftforge/registries/RegistryBuilder.disableSync
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  disableSync ()Lnet/neoforged/neoforge/registries/RegistryBuilder;
    11  net/minecraftforge/common/Tags$Items.SANDSTONE
          -> net/neoforged/neoforge/common/Tags$Items  has no  SANDSTONE Lnet/minecraft/tags/TagKey;
+   11  net/minecraftforge/registries/RegistryManager.ACTIVE
+         -> net/neoforged/neoforge/registries/RegistryManager  has no  ACTIVE Lnet/neoforged/neoforge/registries/RegistryManager;
    11  net/minecraftforge/common/crafting/CraftingHelper.processConditions
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  processConditions (Lcom/google/gson/JsonObject;Ljava/lang/String;Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;)Z
    11  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.setUseBlock
@@ -141,8 +145,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/fluids/FluidStack  has no  getOrCreateTag ()Lnet/minecraft/nbt/CompoundTag;
    11  net/minecraftforge/fluids/FluidUtil.getFluidHandler
          -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/minecraftforge/common/util/LazyOptional;
-   11  net/minecraftforge/fml/loading/FMLLoader.getLoadingModList
-         -> net/neoforged/fml/loading/FMLLoader  has no  getLoadingModList ()Lnet/minecraftforge/fml/loading/LoadingModList;
    11  net/minecraftforge/registries/RegisterEvent$RegisterHelper.register
          -> net/neoforged/neoforge/registries/RegisterEvent$RegisterHelper  has no  register (Ljava/lang/String;Ljava/lang/Object;)V
    10  net/minecraftforge/common/Tags$Items.GRAVEL
@@ -155,6 +157,8 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/entity/player/CriticalHitEvent  has no  getDamageModifier ()F
    10  net/minecraftforge/event/level/BlockEvent$BreakEvent.setExpToDrop
          -> net/neoforged/neoforge/event/level/BlockEvent$BreakEvent  has no  setExpToDrop (I)V
+   10  net/minecraftforge/fml/javafmlmod/FMLModContainer.getEventBus
+         -> net/neoforged/fml/javafmlmod/FMLModContainer  has no  getEventBus ()Lnet/minecraftforge/eventbus/api/IEventBus;
    10  net/minecraftforge/registries/RegisterEvent.getVanillaRegistry
          -> net/neoforged/neoforge/registries/RegisterEvent  has no  getVanillaRegistry ()Lnet/minecraft/core/Registry;
     9  net/minecraftforge/common/Tags$Items.HEADS
@@ -175,26 +179,24 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  getUseItem ()Lnet/minecraftforge/eventbus/api/Event$Result;
     8  net/minecraftforge/common/Tags$Blocks.SAND
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  SAND Lnet/minecraft/tags/TagKey;
-    8  net/minecraftforge/client/model/geometry/IGeometryBakingContext.getRenderType
-         -> net/neoforged/neoforge/client/model/geometry/IGeometryBakingContext  has no  getRenderType (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/client/RenderTypeGroup;
     8  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.endVertex
          -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  endVertex ()V
     8  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.uv
          -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  uv (FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
-    8  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getMobSpawnSettings
-         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getMobSpawnSettings ()Lnet/minecraftforge/common/world/MobSpawnSettingsBuilder;
     8  net/minecraftforge/event/entity/living/LivingDropsEvent.getLootingLevel
          -> net/neoforged/neoforge/event/entity/living/LivingDropsEvent  has no  getLootingLevel ()I
-    8  net/minecraftforge/fluids/FluidType.getSound
-         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
     8  net/minecraftforge/items/wrapper/SidedInvWrapper.create
          -> net/neoforged/neoforge/items/wrapper/SidedInvWrapper  has no  create (Lnet/minecraft/world/WorldlyContainer;[Lnet/minecraft/core/Direction;)[Lnet/minecraftforge/common/util/LazyOptional;
     8  net/minecraftforge/registries/NewRegistryEvent.create
-         -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/minecraftforge/registries/RegistryBuilder;)Ljava/util/function/Supplier;
+         -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/neoforged/neoforge/registries/RegistryBuilder;)Ljava/util/function/Supplier;
     7  net/minecraftforge/common/Tags$Blocks.COBBLESTONE
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  COBBLESTONE Lnet/minecraft/tags/TagKey;
     7  net/minecraftforge/common/Tags$Items.NETHERRACK
          -> net/neoforged/neoforge/common/Tags$Items  has no  NETHERRACK Lnet/minecraft/tags/TagKey;
+    7  net/minecraftforge/common/brewing/BrewingRecipeRegistry.addRecipe
+         -> net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry  has no  addRecipe (Lnet/neoforged/neoforge/common/brewing/IBrewingRecipe;)Z
+    7  net/minecraftforge/common/brewing/BrewingRecipeRegistry.getRecipes
+         -> net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry  has no  getRecipes ()Ljava/util/List;
     7  net/minecraftforge/event/entity/EntityAttributeModificationEvent.add
          -> net/neoforged/neoforge/event/entity/EntityAttributeModificationEvent  has no  add (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/ai/attributes/Attribute;)V
     7  net/minecraftforge/event/entity/player/CriticalHitEvent.setDamageModifier
@@ -205,10 +207,10 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/fluids/FluidStack  has no  equals (Ljava/lang/Object;)Z
     7  net/minecraftforge/fluids/FluidStack.getRawFluid
          -> net/neoforged/neoforge/fluids/FluidStack  has no  getRawFluid ()Lnet/minecraft/world/level/material/Fluid;
-    7  net/minecraftforge/fluids/FluidType.getSound
-         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
     7  net/minecraftforge/fml/loading/FMLLoader.getLaunchHandler
-         -> net/neoforged/fml/loading/FMLLoader  has no  getLaunchHandler ()Lnet/minecraftforge/fml/loading/targets/CommonLaunchHandler;
+         -> net/neoforged/fml/loading/FMLLoader  has no  getLaunchHandler ()Lnet/neoforged/fml/loading/targets/CommonLaunchHandler;
+    7  net/minecraftforge/registries/RegistryManager.getRegistry
+         -> net/neoforged/neoforge/registries/RegistryManager  has no  getRegistry (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/registries/ForgeRegistry;
     6  net/minecraftforge/common/Tags$Blocks.STAINED_GLASS
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  STAINED_GLASS Lnet/minecraft/tags/TagKey;
     6  net/minecraftforge/common/Tags$Items.STAINED_GLASS
@@ -219,12 +221,8 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/common/Tags$Items  has no  TOOLS_SHIELDS Lnet/minecraft/tags/TagKey;
     6  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$DebugText.getRight
          -> net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$DebugText  has no  getRight ()Ljava/util/ArrayList;
-    6  net/minecraftforge/client/event/RegisterItemDecorationsEvent.register
-         -> net/neoforged/neoforge/client/event/RegisterItemDecorationsEvent  has no  register (Lnet/minecraft/world/level/ItemLike;Lnet/minecraftforge/client/IItemDecorator;)V
     6  net/minecraftforge/client/event/ScreenEvent$MouseScrolled$Pre.getScrollDelta
          -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled$Pre  has no  getScrollDelta ()D
-    6  net/minecraftforge/client/model/IDynamicBakedModel.getRenderTypes
-         -> net/neoforged/neoforge/client/model/IDynamicBakedModel  has no  getRenderTypes (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;)Lnet/minecraftforge/client/ChunkRenderTypeSet;
     6  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.bakeElements
          -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  bakeElements (Ljava/util/List;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;)Ljava/util/List;
     6  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.color
@@ -237,6 +235,10 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent  has no  setCancellationResult (Lnet/minecraft/world/InteractionResult;)V
     6  net/minecraftforge/eventbus/api/Event.setCanceled
          -> net/neoforged/bus/api/Event  has no  setCanceled (Z)V
+    6  net/minecraftforge/registries/RegistryBuilder.hasTags
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  hasTags ()Lnet/neoforged/neoforge/registries/RegistryBuilder;
+    6  net/minecraftforge/registries/RegistryBuilder.setDefaultKey
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  setDefaultKey (Lnet/minecraft/resources/ResourceLocation;)Lnet/neoforged/neoforge/registries/RegistryBuilder;
     5  net/minecraftforge/common/Tags$Blocks.GLASS_COLORLESS
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_COLORLESS Lnet/minecraft/tags/TagKey;
     5  net/minecraftforge/common/Tags$Blocks.NETHERRACK
@@ -266,7 +268,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     5  net/minecraftforge/fluids/FluidType$Properties.pathType
          -> net/neoforged/neoforge/fluids/FluidType$Properties  has no  pathType (Lnet/minecraft/world/level/pathfinder/BlockPathTypes;)Lnet/neoforged/neoforge/fluids/FluidType$Properties;
     5  net/minecraftforge/registries/NewRegistryEvent.create
-         -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/minecraftforge/registries/RegistryBuilder;Ljava/util/function/Consumer;)Ljava/util/function/Supplier;
+         -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/neoforged/neoforge/registries/RegistryBuilder;Ljava/util/function/Consumer;)Ljava/util/function/Supplier;
     4  net/minecraftforge/common/Tags$Blocks.GRAVEL
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  GRAVEL Lnet/minecraft/tags/TagKey;
     4  net/minecraftforge/common/Tags$Blocks.STAINED_GLASS_PANES
@@ -277,10 +279,12 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/client/event/RenderGuiEvent$Post  has no  getPartialTick ()F
     4  net/minecraftforge/client/event/RenderNameTagEvent.getResult
          -> net/neoforged/neoforge/client/event/RenderNameTagEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
-    4  net/minecraftforge/client/model/CompositeModel$Baked$Builder.addQuads
-         -> net/neoforged/neoforge/client/model/CompositeModel$Baked$Builder  has no  addQuads (Lnet/minecraftforge/client/RenderTypeGroup;Ljava/util/Collection;)Lnet/neoforged/neoforge/client/model/CompositeModel$Baked$Builder;
+    4  net/minecraftforge/client/gui/widget/ScrollPanel.mouseScrolled
+         -> net/neoforged/neoforge/client/gui/widget/ScrollPanel  has no  mouseScrolled (DDD)Z
     4  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.createUnbakedItemElements
          -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemElements (ILnet/minecraft/client/renderer/texture/SpriteContents;)Ljava/util/List;
+    4  net/minecraftforge/common/brewing/BrewingRecipeRegistry.addRecipe
+         -> net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry  has no  addRecipe (Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/world/item/ItemStack;)Z
     4  net/minecraftforge/common/util/BlockSnapshot.restore
          -> net/neoforged/neoforge/common/util/BlockSnapshot  has no  restore (ZZ)Z
     4  net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn.getResult
@@ -295,28 +299,36 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/level/BlockGrowFeatureEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
     4  net/minecraftforge/eventbus/api/Event.isCancelable
          -> net/neoforged/bus/api/Event  has no  isCancelable ()Z
+    4  net/minecraftforge/fml/loading/LoadingModList.getErrors
+         -> net/neoforged/fml/loading/LoadingModList  has no  getErrors ()Ljava/util/List;
     4  net/minecraftforge/fml/util/ObfuscationReflectionHelper.remapName
          -> net/neoforged/fml/util/ObfuscationReflectionHelper  has no  remapName (Lcpw/mods/modlauncher/api/INameMappingService$Domain;Ljava/lang/String;)Ljava/lang/String;
+    4  net/minecraftforge/registries/RegistryBuilder.disableOverrides
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  disableOverrides ()Lnet/neoforged/neoforge/registries/RegistryBuilder;
+    4  net/minecraftforge/registries/RegistryManager.getRegistry
+         -> net/neoforged/neoforge/registries/RegistryManager  has no  getRegistry (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraftforge/registries/ForgeRegistry;
     3  net/minecraftforge/common/Tags$Blocks.GLASS_SILICA
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_SILICA Lnet/minecraft/tags/TagKey;
     3  net/minecraftforge/common/Tags$Items.INGOTS_NETHER_BRICK
          -> net/neoforged/neoforge/common/Tags$Items  has no  INGOTS_NETHER_BRICK Lnet/minecraft/tags/TagKey;
     3  net/minecraftforge/common/Tags$Items.SAND_COLORLESS
          -> net/neoforged/neoforge/common/Tags$Items  has no  SAND_COLORLESS Lnet/minecraft/tags/TagKey;
-    3  net/minecraftforge/client/model/BakedModelWrapper.getRenderTypes
-         -> net/neoforged/neoforge/client/model/BakedModelWrapper  has no  getRenderTypes (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;)Lnet/minecraftforge/client/ChunkRenderTypeSet;
     3  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.createUnbakedItemMaskElements
          -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemMaskElements (ILnet/minecraft/client/renderer/texture/SpriteContents;)Ljava/util/List;
     3  net/minecraftforge/client/settings/KeyModifier.ordinal
          -> net/neoforged/neoforge/client/settings/KeyModifier  has no  ordinal ()I
+    3  net/minecraftforge/common/brewing/BrewingRecipeRegistry.brewPotions
+         -> net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry  has no  brewPotions (Lnet/minecraft/core/NonNullList;Lnet/minecraft/world/item/ItemStack;[I)V
+    3  net/minecraftforge/common/brewing/BrewingRecipeRegistry.canBrew
+         -> net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry  has no  canBrew (Lnet/minecraft/core/NonNullList;Lnet/minecraft/world/item/ItemStack;[I)Z
     3  net/minecraftforge/common/crafting/CraftingHelper.processConditions
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  processConditions (Lcom/google/gson/JsonArray;Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;)Z
     3  net/minecraftforge/common/crafting/CraftingHelper.serialize
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize ([Lnet/neoforged/neoforge/common/conditions/ICondition;)Lcom/google/gson/JsonArray;
     3  net/minecraftforge/common/crafting/CraftingHelper.write
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  write (Lnet/minecraft/network/FriendlyByteBuf;Lnet/minecraft/world/item/crafting/Ingredient;)V
-    3  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getClimateSettings
-         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getClimateSettings ()Lnet/minecraftforge/common/world/ClimateSettingsBuilder;
+    3  net/minecraftforge/common/crafting/DifferenceIngredient.of
+         -> net/neoforged/neoforge/common/crafting/DifferenceIngredient  has no  of (Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/world/item/crafting/Ingredient;)Lnet/neoforged/neoforge/common/crafting/DifferenceIngredient;
     3  net/minecraftforge/energy/EnergyStorage.deserializeNBT
          -> net/neoforged/neoforge/energy/EnergyStorage  has no  deserializeNBT (Lnet/minecraft/nbt/Tag;)V
     3  net/minecraftforge/energy/EnergyStorage.serializeNBT
@@ -351,10 +363,14 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/fluids/FluidType$Properties  has no  adjacentPathType (Lnet/minecraft/world/level/pathfinder/BlockPathTypes;)Lnet/neoforged/neoforge/fluids/FluidType$Properties;
     3  net/minecraftforge/fluids/FluidType.getBlockPathType
          -> net/neoforged/neoforge/fluids/FluidType  has no  getBlockPathType (Lnet/minecraft/world/level/material/FluidState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Mob;Z)Lnet/minecraft/world/level/pathfinder/BlockPathTypes;
-    3  net/minecraftforge/fluids/FluidType.getSound
-         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
     3  net/minecraftforge/items/ItemHandlerHelper.canItemStacksStackRelaxed
          -> net/neoforged/neoforge/items/ItemHandlerHelper  has no  canItemStacksStackRelaxed (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
+    3  net/minecraftforge/registries/RegistryBuilder.allowModification
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  allowModification ()Lnet/neoforged/neoforge/registries/RegistryBuilder;
+    3  net/minecraftforge/registries/RegistryBuilder.setIDRange
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  setIDRange (II)Lnet/neoforged/neoforge/registries/RegistryBuilder;
+    3  net/minecraftforge/resource/ResourcePackLoader.createPackForMod
+         -> net/neoforged/neoforge/resource/ResourcePackLoader  has no  createPackForMod (Lnet/neoforged/neoforgespi/language/IModFileInfo;)Lnet/minecraft/server/packs/PathPackResources;
     2  net/minecraftforge/common/Tags$Blocks.GLASS_BLACK
          -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_BLACK Lnet/minecraft/tags/TagKey;
     2  net/minecraftforge/common/Tags$Blocks.GLASS_BLUE
@@ -439,14 +455,14 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  color (IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
     2  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.uv2
          -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  uv2 (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    2  net/minecraftforge/common/crafting/CompoundIngredient.getChildren
+         -> net/neoforged/neoforge/common/crafting/CompoundIngredient  has no  getChildren ()Ljava/util/Collection;
     2  net/minecraftforge/common/crafting/CraftingHelper.getIngredient
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getIngredient (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraft/world/item/crafting/Ingredient;
     2  net/minecraftforge/common/crafting/conditions/ICondition.shouldRegisterEntry
          -> net/neoforged/neoforge/common/conditions/ICondition  has no  shouldRegisterEntry (Lcom/google/gson/JsonElement;)Z
     2  net/minecraftforge/common/util/Lazy.concurrentOf
          -> net/neoforged/neoforge/common/util/Lazy  has no  concurrentOf (Ljava/util/function/Supplier;)Lnet/neoforged/neoforge/common/util/Lazy;
-    2  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getSpecialEffects
-         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getSpecialEffects ()Lnet/minecraftforge/common/world/BiomeSpecialEffectsBuilder;
     2  net/minecraftforge/event/ItemAttributeModifierEvent.getModifiers
          -> net/neoforged/neoforge/event/ItemAttributeModifierEvent  has no  getModifiers ()Lcom/google/common/collect/Multimap;
     2  net/minecraftforge/event/ItemAttributeModifierEvent.removeModifier
@@ -493,12 +509,14 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/level/BlockGrowFeatureEvent  has no  getRandomSource ()Lnet/minecraft/util/RandomSource;
     2  net/minecraftforge/fluids/FluidStack.removeChildTag
          -> net/neoforged/neoforge/fluids/FluidStack  has no  removeChildTag (Ljava/lang/String;)V
-    2  net/minecraftforge/fml/loading/FMLLoader.versionInfo
-         -> net/neoforged/fml/loading/FMLLoader  has no  versionInfo ()Lnet/minecraftforge/fml/loading/VersionInfo;
+    2  net/minecraftforge/fml/loading/moddiscovery/ModAnnotation$EnumHolder.getValue
+         -> net/neoforged/fml/loading/modscan/ModAnnotation$EnumHolder  has no  getValue ()Ljava/lang/String;
     2  net/minecraftforge/fml/util/ObfuscationReflectionHelper$UnableToFindFieldException.printStackTrace
          -> net/neoforged/fml/util/ObfuscationReflectionHelper$UnableToFindFieldException  has no  printStackTrace ()V
     2  net/minecraftforge/items/wrapper/RecipeWrapper.setItem
          -> net/neoforged/neoforge/items/wrapper/RecipeWrapper  has no  setItem (ILnet/minecraft/world/item/ItemStack;)V
+    2  net/minecraftforge/registries/RegistryBuilder.setMaxID
+         -> net/neoforged/neoforge/registries/RegistryBuilder  has no  setMaxID (I)Lnet/neoforged/neoforge/registries/RegistryBuilder;
     1  net/minecraftforge/common/Tags$Biomes.IS_CONIFEROUS
          -> net/neoforged/neoforge/common/Tags$Biomes  has no  IS_CONIFEROUS Lnet/minecraft/tags/TagKey;
     1  net/minecraftforge/common/Tags$Biomes.IS_WATER
@@ -597,6 +615,8 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_YELLOW Lnet/minecraft/tags/TagKey;
     1  net/minecraftforge/common/Tags$Items.STORAGE_BLOCKS_AMETHYST
          -> net/neoforged/neoforge/common/Tags$Items  has no  STORAGE_BLOCKS_AMETHYST Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/accesstransformer/Target.getASMType
+         -> net/minecraft/world/level/pathfinder/Target  has no  getASMType ()Lorg/objectweb/asm/Type;
     1  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$BossEventProgress.getPartialTick
          -> net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$BossEventProgress  has no  getPartialTick ()F
     1  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$DebugText.isCanceled
@@ -641,12 +661,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled  has no  setCanceled (Z)V
     1  net/minecraftforge/client/event/ViewportEvent$RenderFog.setResult
          -> net/neoforged/neoforge/client/event/ViewportEvent$RenderFog  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
-    1  net/minecraftforge/client/model/CompositeModel$Baked$Builder.addQuads
-         -> net/neoforged/neoforge/client/model/CompositeModel$Baked$Builder  has no  addQuads (Lnet/minecraftforge/client/RenderTypeGroup;[Lnet/minecraft/client/renderer/block/model/BakedQuad;)Lnet/neoforged/neoforge/client/model/CompositeModel$Baked$Builder;
-    1  net/minecraftforge/client/model/DynamicFluidContainerModel.getLayerRenderTypes
-         -> net/neoforged/neoforge/client/model/DynamicFluidContainerModel  has no  getLayerRenderTypes (Z)Lnet/minecraftforge/client/RenderTypeGroup;
-    1  net/minecraftforge/client/model/IModelBuilder.of
-         -> net/neoforged/neoforge/client/model/IModelBuilder  has no  of (ZZZLnet/minecraft/client/renderer/block/model/ItemTransforms;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraftforge/client/RenderTypeGroup;)Lnet/neoforged/neoforge/client/model/IModelBuilder;
     1  net/minecraftforge/client/model/data/ModelData.hashCode
          -> net/neoforged/neoforge/client/model/data/ModelData  has no  hashCode ()I
     1  net/minecraftforge/client/model/data/ModelDataManager.getAt
@@ -799,6 +813,16 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/event/village/VillageSiegeEvent  has no  isCancelable ()Z
     1  net/minecraftforge/event/village/VillageSiegeEvent.setResult
          -> net/neoforged/neoforge/event/village/VillageSiegeEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/eventbus/ListenerList.getListeners
+         -> net/neoforged/bus/ListenerList  has no  getListeners (I)[Lnet/minecraftforge/eventbus/api/IEventListener;
+    1  net/minecraftforge/eventbus/api/BusBuilder.build
+         -> net/neoforged/bus/api/BusBuilder  has no  build ()Lnet/minecraftforge/eventbus/api/IEventBus;
+    1  net/minecraftforge/eventbus/api/BusBuilder.setExceptionHandler
+         -> net/neoforged/bus/api/BusBuilder  has no  setExceptionHandler (Lnet/minecraftforge/eventbus/api/IEventExceptionHandler;)Lnet/neoforged/bus/api/BusBuilder;
+    1  net/minecraftforge/eventbus/api/BusBuilder.setTrackPhases
+         -> net/neoforged/bus/api/BusBuilder  has no  setTrackPhases (Z)Lnet/neoforged/bus/api/BusBuilder;
+    1  net/minecraftforge/eventbus/api/BusBuilder.useModLauncher
+         -> net/neoforged/bus/api/BusBuilder  has no  useModLauncher ()Lnet/neoforged/bus/api/BusBuilder;
     1  net/minecraftforge/eventbus/api/EventPriority.equals
          -> net/neoforged/bus/api/EventPriority  has no  equals (Ljava/lang/Object;)Z
     1  net/minecraftforge/eventbus/api/EventPriority.name
@@ -807,8 +831,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/bus/api/EventPriority  has no  ordinal ()I
     1  net/minecraftforge/fluids/FluidStack.getChildTag
          -> net/neoforged/neoforge/fluids/FluidStack  has no  getChildTag (Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;
-    1  net/minecraftforge/fluids/FluidType.getSound
-         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/minecraft/world/entity/Entity;Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
     1  net/minecraftforge/fluids/capability/IFluidHandler$FluidAction.ordinal
          -> net/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction  has no  ordinal ()I
     1  net/minecraftforge/fluids/capability/templates/FluidHandlerItemStack.getCapability
@@ -817,45 +839,39 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/fml/ModContainer  has no  dispatchConfigEvent (Lnet/minecraftforge/fml/config/IConfigEvent;)V
     1  net/minecraftforge/fml/ModContainer.getMod
          -> net/neoforged/fml/ModContainer  has no  getMod ()Ljava/lang/Object;
-    1  net/minecraftforge/fml/loading/FMLLoader.addAccessTransformer
-         -> net/neoforged/fml/loading/FMLLoader  has no  addAccessTransformer (Ljava/nio/file/Path;Lnet/minecraftforge/fml/loading/moddiscovery/ModFile;)V
+    1  net/minecraftforge/fml/ModWorkManager.syncExecutor
+         -> net/neoforged/fml/ModWorkManager  has no  syncExecutor ()Lnet/minecraftforge/fml/ModWorkManager$DrivenExecutor;
+    1  net/minecraftforge/fml/config/ConfigTracker.configSets
+         -> net/neoforged/fml/config/ConfigTracker  has no  configSets ()Ljava/util/Map;
+    1  net/minecraftforge/fml/javafmlmod/AutomaticEventSubscriber.inject
+         -> net/neoforged/fml/javafmlmod/AutomaticEventSubscriber  has no  inject (Lnet/neoforged/fml/ModContainer;Lnet/neoforged/neoforgespi/language/ModFileScanData;Ljava/lang/ClassLoader;)V
+    1  net/minecraftforge/fml/loading/ImmediateWindowProvider.getClass
+         -> net/neoforged/neoforgespi/earlywindow/ImmediateWindowProvider  has no  getClass ()Ljava/lang/Class;
+    1  net/minecraftforge/fml/loading/VersionInfo.forgeVersion
+         -> net/neoforged/fml/loading/VersionInfo  has no  forgeVersion ()Ljava/lang/String;
+    1  net/minecraftforge/fml/loading/moddiscovery/ModFile.getAccessTransformer
+         -> net/neoforged/fml/loading/moddiscovery/ModFile  has no  getAccessTransformer ()Ljava/util/Optional;
     1  net/minecraftforge/fml/util/ObfuscationReflectionHelper$UnableToFindMethodException.printStackTrace
          -> net/neoforged/fml/util/ObfuscationReflectionHelper$UnableToFindMethodException  has no  printStackTrace ()V
     1  net/minecraftforge/forgespi/language/ModFileScanData.addLanguageLoader
          -> net/neoforged/neoforgespi/language/ModFileScanData  has no  addLanguageLoader (Ljava/util/Map;)V
     1  net/minecraftforge/forgespi/language/ModFileScanData.getTargets
          -> net/neoforged/neoforgespi/language/ModFileScanData  has no  getTargets ()Ljava/util/Map;
+    1  net/minecraftforge/resource/ResourcePackLoader.loadResourcePacks
+         -> net/neoforged/neoforge/resource/ResourcePackLoader  has no  loadResourcePacks (Lnet/minecraft/server/packs/repository/PackRepository;Ljava/util/function/Function;)V
     1  net/minecraftforge/server/ServerLifecycleHooks.buildPackFinder
          -> net/neoforged/neoforge/server/ServerLifecycleHooks  has no  buildPackFinder (Ljava/util/Map;)Lnet/minecraft/server/packs/repository/RepositorySource;
 
-=== SHIM MISSING A CALLED MEMBER (143) ===
+=== SHIM MISSING A CALLED MEMBER (134) ===
 forge-compat supplies the class but not this member, or not with
 this descriptor. Every one is a NoSuchMethodError at a real call
 site -- the class resolves, so nothing fails until it is used.
-   29  net/minecraftforge/registries/tags/ITag.stream
-         shim lacks  stream ()Ljava/util/stream/Stream;
-   19  net/minecraftforge/common/ForgeConfigSpec.isLoaded
-         shim lacks  isLoaded ()Z
    15  net/minecraftforge/registries/DeferredRegister.makeRegistry
          shim lacks  makeRegistry (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
-   14  net/minecraftforge/registries/RegistryObject.getHolder
-         shim lacks  getHolder ()Ljava/util/Optional;
-   13  net/minecraftforge/registries/RegistryObject.create
-         shim lacks  create (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraftforge/registries/IForgeRegistry;)Lnet/minecraftforge/registries/RegistryObject;
-   11  net/minecraftforge/common/ForgeConfigSpec$Builder.defineListAllowEmpty
-         shim lacks  defineListAllowEmpty (Ljava/util/List;Ljava/util/function/Supplier;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
-   11  net/minecraftforge/registries/IForgeRegistry.getHolder
-         shim lacks  getHolder (Ljava/lang/Object;)Ljava/util/Optional;
-   10  net/minecraftforge/common/ForgeConfigSpec$Builder.define
-         shim lacks  define (Ljava/lang/String;Ljava/lang/Object;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
-   10  net/minecraftforge/common/ForgeConfigSpec.save
-         shim lacks  save ()V
    10  net/minecraftforge/fml/config/ModConfig.getConfigData
          shim lacks  getConfigData ()Lcom/electronwill/nightconfig/core/CommentedConfig;
    10  net/minecraftforge/network/NetworkDirection.buildPacket
          shim lacks  buildPacket (Lorg/apache/commons/lang3/tuple/Pair;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/network/ICustomPacket;
-   10  net/minecraftforge/registries/IForgeRegistry.containsValue
-         shim lacks  containsValue (Ljava/lang/Object;)Z
    10  net/minecraftforge/registries/tags/ITagManager.getReverseTag
          shim lacks  getReverseTag (Ljava/lang/Object;)Ljava/util/Optional;
     9  net/minecraftforge/network/simple/SimpleChannel.toVanillaPacket
@@ -1139,9 +1155,7 @@ each against the Pre/Post pair that replaced it.
    91  net/minecraftforge/common/ForgeHooks                                      no shim, no rule
    80  net/minecraftforge/event/ForgeEventFactory                                rule -> net/neoforged/neoforge/event/ForgeEventFactory (MISSING)
    71  net/minecraftforge/common/ForgeMod                                        no shim, no rule
-   71  net/minecraftforge/fml/InterModComms                                      no shim, no rule  ?= net/neoforged/fml/InterModComms
    69  net/minecraftforge/common/ToolActions                                     no shim, no rule
-   60  net/minecraftforge/client/ChunkRenderTypeSet                              no shim, no rule  ?= net/neoforged/neoforge/client/ChunkRenderTypeSet
    48  net/minecraftforge/client/gui/overlay/VanillaGuiOverlay                   no shim, no rule
    41  net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent        rule -> net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent (MISSING)
    39  net/minecraftforge/client/ForgeHooksClient                                no shim, no rule
@@ -1149,24 +1163,19 @@ each against the Pre/Post pair that replaced it.
    37  net/minecraftforge/common/IPlantable                                      no shim, no rule
    36  net/minecraftforge/common/ForgeSpawnEggItem                               no shim, no rule
    34  net/minecraftforge/fluids/ForgeFlowingFluid$Properties                    rule -> net/neoforged/neoforge/fluids/ForgeFlowingFluid$Properties (MISSING)
-   33  net/minecraftforge/common/SoundActions                                    no shim, no rule  ?= net/neoforged/neoforge/common/SoundActions
    33  net/minecraftforge/common/crafting/conditions/IConditionSerializer        rule -> net/neoforged/neoforge/common/conditions/IConditionSerializer (MISSING)
    30  net/minecraftforge/common/crafting/IIngredientSerializer                  no shim, no rule
    29  net/minecraftforge/client/gui/overlay/ForgeGui                            no shim, no rule
    29  net/minecraftforge/common/TierSortingRegistry                             no shim, no rule
-   28  net/minecraftforge/registries/RegistryBuilder                             no shim, no rule  ?= net/neoforged/neoforge/registries/RegistryBuilder
    27  net/minecraftforge/client/ConfigScreenHandler$ConfigScreenFactory         no shim, no rule
    27  net/minecraftforge/entity/IEntityAdditionalSpawnData                      no shim, no rule
    26  net/minecraftforge/common/crafting/ConditionalRecipe                      no shim, no rule
    26  net/minecraftforge/common/crafting/ConditionalRecipe$Builder              no shim, no rule
-   26  net/minecraftforge/fml/loading/LoadingModList                             no shim, no rule  ?= net/neoforged/fml/loading/LoadingModList
    25  net/minecraftforge/fluids/ForgeFlowingFluid$Source                        rule -> net/neoforged/neoforge/fluids/ForgeFlowingFluid$Source (MISSING)
    24  net/minecraftforge/common/IForgeShearable                                 no shim, no rule
    23  net/minecraftforge/common/PlantType                                       no shim, no rule
    23  net/minecraftforge/common/util/ITeleporter                                rule -> net/neoforged/neoforge/common/util/ITeleporter (MISSING)
    23  net/minecraftforge/fluids/ForgeFlowingFluid$Flowing                       rule -> net/neoforged/neoforge/fluids/ForgeFlowingFluid$Flowing (MISSING)
-   23  net/minecraftforge/fml/InterModComms$IMCMessage                           no shim, no rule  ?= net/neoforged/fml/InterModComms$IMCMessage
-   22  net/minecraftforge/common/brewing/BrewingRecipeRegistry                   no shim, no rule  ?= net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry
    21  net/minecraftforge/client/event/RenderGuiOverlayEvent$Pre                 rule -> net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Pre (MISSING)
    21  net/minecraftforge/common/ToolAction                                      no shim, no rule
    21  net/minecraftforge/common/data/ForgeAdvancementProvider                   rule -> net/neoforged/neoforge/common/data/ForgeAdvancementProvider (MISSING)
@@ -1180,74 +1189,41 @@ each against the Pre/Post pair that replaced it.
    18  net/minecraftforge/items/wrapper/EmptyHandler                             rule -> net/neoforged/neoforge/items/wrapper/EmptyHandler (MISSING)
    17  net/minecraftforge/event/TickEvent$RenderTickEvent                        rule -> net/neoforged/neoforge/event/TickEvent$RenderTickEvent (MISSING)
    17  net/minecraftforge/fluids/IFluidBlock                                     rule -> net/neoforged/neoforge/fluids/IFluidBlock (MISSING)
-   17  net/minecraftforge/resource/PathPackResources                             no shim, no rule  ?= net/minecraft/server/packs/PathPackResources
    15  net/minecraftforge/client/gui/overlay/NamedGuiOverlay                     no shim, no rule
    15  net/minecraftforge/common/crafting/IShapedRecipe                          no shim, no rule
-   15  net/minecraftforge/entity/PartEntity                                      no shim, no rule  ?= net/neoforged/neoforge/entity/PartEntity
    15  net/minecraftforge/registries/MissingMappingsEvent                        no shim, no rule
    15  net/minecraftforge/registries/MissingMappingsEvent$Mapping                no shim, no rule
    14  net/minecraftforge/common/crafting/AbstractIngredient                     no shim, no rule
    14  net/minecraftforge/common/util/NonNullLazy                                no shim, no rule
-   14  net/minecraftforge/common/world/BiomeGenerationSettingsBuilder            no shim, no rule  ?= net/neoforged/neoforge/common/world/BiomeGenerationSettingsBuilder
    14  net/minecraftforge/fluids/ForgeFlowingFluid                               rule -> net/neoforged/neoforge/fluids/ForgeFlowingFluid (MISSING)
    13  net/minecraftforge/common/world/ForgeChunkManager                         no shim, no rule
-   13  net/minecraftforge/registries/DataPackRegistryEvent$NewRegistry           no shim, no rule  ?= net/neoforged/neoforge/registries/DataPackRegistryEvent$NewRegistry
-   12  net/minecraftforge/client/RenderTypeGroup                                 no shim, no rule  ?= net/neoforged/neoforge/client/RenderTypeGroup
-   12  net/minecraftforge/common/brewing/BrewingRecipe                           no shim, no rule  ?= net/neoforged/neoforge/common/brewing/BrewingRecipe
-   12  net/minecraftforge/fml/loading/moddiscovery/ModInfo                       no shim, no rule  ?= net/neoforged/fml/loading/moddiscovery/ModInfo
-   11  net/minecraftforge/common/brewing/IBrewingRecipe                          no shim, no rule  ?= net/neoforged/neoforge/common/brewing/IBrewingRecipe
-   11  net/minecraftforge/common/crafting/CompoundIngredient                     no shim, no rule  ?= net/neoforged/neoforge/common/crafting/CompoundIngredient
-   11  net/minecraftforge/fml/javafmlmod/FMLModContainer                         no shim, no rule  ?= net/neoforged/fml/javafmlmod/FMLModContainer
-   11  net/minecraftforge/registries/RegistryManager                             no shim, no rule  ?= net/neoforged/neoforge/registries/RegistryManager
-   10  net/minecraftforge/client/gui/widget/ExtendedButton                       no shim, no rule  ?= net/neoforged/neoforge/client/gui/widget/ExtendedButton
    10  net/minecraftforge/client/gui/widget/ForgeSlider                          no shim, no rule
-   10  net/minecraftforge/common/UsernameCache                                   no shim, no rule  ?= net/neoforged/neoforge/common/UsernameCache
    10  net/minecraftforge/network/ICustomPacket                                  no shim, no rule
    10  net/minecraftforge/registries/tags/IReverseTag                            no shim, no rule
     9  net/minecraftforge/common/ForgeI18n                                       no shim, no rule
     9  net/minecraftforge/common/ForgeTier                                       no shim, no rule
     9  net/minecraftforge/common/crafting/PartialNBTIngredient                   no shim, no rule
     9  net/minecraftforge/common/extensions/IForgeBlock                          no shim, no rule
-    8  net/minecraftforge/common/world/MobSpawnSettingsBuilder                   no shim, no rule  ?= net/neoforged/neoforge/common/world/MobSpawnSettingsBuilder
-    8  net/minecraftforge/fml/loading/moddiscovery/ModFileInfo                   no shim, no rule  ?= net/neoforged/fml/loading/moddiscovery/ModFileInfo
     7  net/minecraftforge/client/ForgeRenderTypes                                no shim, no rule
-    7  net/minecraftforge/client/RenderTypeHelper                                no shim, no rule  ?= net/neoforged/neoforge/client/RenderTypeHelper
-    7  net/minecraftforge/common/util/RecipeMatcher                              no shim, no rule  ?= net/neoforged/neoforge/common/util/RecipeMatcher
     7  net/minecraftforge/common/world/ForgeBiomeModifiers$AddSpawnsBiomeModifier  no shim, no rule
     7  net/minecraftforge/common/world/ForgeChunkManager$TicketHelper            no shim, no rule
     7  net/minecraftforge/event/entity/living/LootingLevelEvent                  rule -> net/neoforged/neoforge/event/entity/living/LootingLevelEvent (MISSING)
-    7  net/minecraftforge/fml/VersionChecker$Status                              no shim, no rule  ?= net/neoforged/fml/VersionChecker$Status
     7  net/minecraftforge/fml/config/ConfigFileTypeHandler                       no shim, no rule
-    7  net/minecraftforge/fml/loading/targets/CommonLaunchHandler                no shim, no rule  ?= net/neoforged/fml/loading/targets/CommonLaunchHandler
-    6  net/minecraftforge/client/gui/widget/ScrollPanel                          no shim, no rule  ?= net/neoforged/neoforge/client/gui/widget/ScrollPanel
-    6  net/minecraftforge/common/FarmlandWaterManager                            no shim, no rule  ?= net/neoforged/neoforge/common/FarmlandWaterManager
     6  net/minecraftforge/common/extensions/IForgeFriendlyByteBuf                no shim, no rule
-    6  net/minecraftforge/common/util/TriPredicate                               no shim, no rule  ?= net/neoforged/neoforge/common/util/TriPredicate
-    6  net/minecraftforge/resource/ResourcePackLoader                            no shim, no rule  ?= net/neoforged/neoforge/resource/ResourcePackLoader
-    5  net/minecraftforge/client/IItemDecorator                                  no shim, no rule  ?= net/neoforged/neoforge/client/IItemDecorator
     5  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer$Buffered  rule -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer$Buffered (MISSING)
-    5  net/minecraftforge/common/CreativeModeTabRegistry                         no shim, no rule  ?= net/neoforged/neoforge/common/CreativeModeTabRegistry
     5  net/minecraftforge/common/capabilities/CapabilityProvider                 no shim, no rule
     5  net/minecraftforge/common/extensions/IForgeBlockEntity                    no shim, no rule
-    5  net/minecraftforge/common/util/ConcatenatedListView                       no shim, no rule  ?= net/neoforged/neoforge/common/util/ConcatenatedListView
-    5  net/minecraftforge/fml/VersionChecker$CheckResult                         no shim, no rule  ?= net/neoforged/fml/VersionChecker$CheckResult
-    5  net/minecraftforge/fml/loading/FMLConfig                                  no shim, no rule  ?= net/neoforged/fml/loading/FMLConfig
     5  net/minecraftforge/network/ConnectionData                                 no shim, no rule
     5  net/minecraftforge/versions/forge/ForgeVersion                            no shim, no rule
-    4  net/minecraftforge/client/ItemDecoratorHandler                            no shim, no rule  ?= net/neoforged/neoforge/client/ItemDecoratorHandler
     4  net/minecraftforge/client/event/RenderGuiOverlayEvent                     rule -> net/neoforged/neoforge/client/event/RenderGuiOverlayEvent (MISSING)
     4  net/minecraftforge/client/model/ForgeFaceData                             rule -> net/neoforged/neoforge/client/model/ForgeFaceData (MISSING)
-    4  net/minecraftforge/common/BasicItemListing                                no shim, no rule  ?= net/neoforged/neoforge/common/BasicItemListing
     4  net/minecraftforge/common/crafting/VanillaIngredientSerializer            no shim, no rule
     4  net/minecraftforge/common/extensions/IForgeItemStack                      no shim, no rule
     4  net/minecraftforge/event/entity/player/SleepingTimeCheckEvent             rule -> net/neoforged/neoforge/event/entity/player/SleepingTimeCheckEvent (MISSING)
     4  net/minecraftforge/fluids/capability/wrappers/FluidBlockWrapper           rule -> net/neoforged/neoforge/fluids/capability/wrappers/FluidBlockWrapper (MISSING)
     4  net/minecraftforge/fml/ModLoadingStage                                    no shim, no rule
-    4  net/minecraftforge/fml/VersionChecker                                     no shim, no rule  ?= net/neoforged/fml/VersionChecker
     4  net/minecraftforge/fml/config/IConfigEvent                                no shim, no rule
-    4  net/minecraftforge/fml/loading/moddiscovery/ModFile                       no shim, no rule  ?= net/neoforged/fml/loading/moddiscovery/ModFile
     4  net/minecraftforge/network/NetworkEvent$ServerCustomPayloadLoginEvent     no shim, no rule
-    4  net/minecraftforge/registries/holdersets/OrHolderSet                      no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/OrHolderSet
     4  net/minecraftforge/versions/mcp/MCPVersion                                no shim, no rule
     3  net/minecraftforge/client/gui/overlay/GuiOverlayManager                   no shim, no rule
     3  net/minecraftforge/common/ForgeConfig                                     no shim, no rule
@@ -1255,26 +1231,14 @@ each against the Pre/Post pair that replaced it.
     3  net/minecraftforge/common/ForgeConfigSpec$ValueSpec                       no shim, no rule
     3  net/minecraftforge/common/brewing/VanillaBrewingRecipe                    no shim, no rule
     3  net/minecraftforge/common/capabilities/CapabilityDispatcher               no shim, no rule
-    3  net/minecraftforge/common/crafting/DifferenceIngredient                   no shim, no rule  ?= net/neoforged/neoforge/common/crafting/DifferenceIngredient
-    3  net/minecraftforge/common/crafting/IntersectionIngredient                 no shim, no rule  ?= net/neoforged/neoforge/common/crafting/IntersectionIngredient
     3  net/minecraftforge/common/extensions/IForgeAbstractMinecart               no shim, no rule
-    3  net/minecraftforge/common/util/TransformationHelper                       no shim, no rule  ?= net/neoforged/neoforge/common/util/TransformationHelper
-    3  net/minecraftforge/common/world/ClimateSettingsBuilder                    no shim, no rule  ?= net/neoforged/neoforge/common/world/ClimateSettingsBuilder
     3  net/minecraftforge/common/world/ForgeBiomeModifiers$RemoveSpawnsBiomeModifier  no shim, no rule
     3  net/minecraftforge/event/entity/living/MobSpawnEvent$AllowDespawn         rule -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$AllowDespawn (MISSING)
-    3  net/minecraftforge/eventbus/EventBus                                      no shim, no rule  ?= net/neoforged/bus/EventBus
     3  net/minecraftforge/fml/ModLoadingWarning                                  no shim, no rule
-    3  net/minecraftforge/fml/loading/FMLConfig$ConfigValue                      no shim, no rule  ?= net/neoforged/fml/loading/FMLConfig$ConfigValue
     3  net/minecraftforge/network/HandshakeHandler                               no shim, no rule
     3  net/minecraftforge/network/PlayMessages$SpawnEntity                       no shim, no rule
     3  net/minecraftforge/network/filters/VanillaPacketSplitter                  no shim, no rule
-    3  net/minecraftforge/registries/DataPackRegistriesHooks                     no shim, no rule  ?= net/neoforged/neoforge/registries/DataPackRegistriesHooks
-    3  net/minecraftforge/registries/holdersets/AndHolderSet                     no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/AndHolderSet
-    2  net/minecraftforge/client/ClientCommandSourceStack                        no shim, no rule  ?= net/neoforged/neoforge/client/ClientCommandSourceStack
     2  net/minecraftforge/client/model/data/MultipartModelData$Builder           rule -> net/neoforged/neoforge/client/model/data/MultipartModelData$Builder (MISSING)
-    2  net/minecraftforge/common/IMinecartCollisionHandler                       no shim, no rule  ?= net/neoforged/neoforge/common/IMinecartCollisionHandler
-    2  net/minecraftforge/common/WorldWorkerManager                              no shim, no rule  ?= net/neoforged/neoforge/common/WorldWorkerManager
-    2  net/minecraftforge/common/WorldWorkerManager$IWorker                      no shim, no rule  ?= net/neoforged/neoforge/common/WorldWorkerManager$IWorker
     2  net/minecraftforge/common/crafting/ConditionalAdvancement$Builder         no shim, no rule
     2  net/minecraftforge/common/crafting/MultiItemValue                         no shim, no rule
     2  net/minecraftforge/common/crafting/StrictNBTIngredient$Serializer         no shim, no rule
@@ -1284,48 +1248,25 @@ each against the Pre/Post pair that replaced it.
     2  net/minecraftforge/common/loot/CanToolPerformAction                       rule -> net/neoforged/neoforge/common/loot/CanToolPerformAction (MISSING)
     2  net/minecraftforge/common/world/ForgeBiomeModifiers$RemoveFeaturesBiomeModifier  no shim, no rule
     2  net/minecraftforge/common/world/ForgeChunkManager$LoadingValidationCallback  no shim, no rule
-    2  net/minecraftforge/common/world/ModifiableStructureInfo$StructureInfo$Builder  no shim, no rule  ?= net/neoforged/neoforge/common/world/ModifiableStructureInfo$StructureInfo$Builder
-    2  net/minecraftforge/common/world/StructureModifier                         no shim, no rule  ?= net/neoforged/neoforge/common/world/StructureModifier
-    2  net/minecraftforge/common/world/StructureModifier$Phase                   no shim, no rule  ?= net/neoforged/neoforge/common/world/StructureModifier$Phase
-    2  net/minecraftforge/common/world/StructureSettingsBuilder                  no shim, no rule  ?= net/neoforged/neoforge/common/world/StructureSettingsBuilder
     2  net/minecraftforge/event/entity/ProjectileImpactEvent$ImpactResult        rule -> net/neoforged/neoforge/event/entity/ProjectileImpactEvent$ImpactResult (MISSING)
-    2  net/minecraftforge/eventbus/ListenerList                                  no shim, no rule  ?= net/neoforged/bus/ListenerList
     2  net/minecraftforge/eventbus/api/EventListenerHelper                       no shim, no rule
     2  net/minecraftforge/fluids/capability/ItemFluidContainer                   rule -> net/neoforged/neoforge/fluids/capability/ItemFluidContainer (MISSING)
     2  net/minecraftforge/fml/Bindings                                           no shim, no rule
-    2  net/minecraftforge/fml/CrashReportCallables                               no shim, no rule  ?= net/neoforged/fml/CrashReportCallables
-    2  net/minecraftforge/fml/Logging                                            no shim, no rule  ?= net/neoforged/fml/Logging
     2  net/minecraftforge/fml/StartupMessageManager                              no shim, no rule
-    2  net/minecraftforge/fml/loading/ImmediateWindowHandler                     no shim, no rule  ?= net/neoforged/fml/loading/ImmediateWindowHandler
-    2  net/minecraftforge/fml/loading/StringUtils                                no shim, no rule  ?= net/neoforged/fml/loading/StringUtils
-    2  net/minecraftforge/fml/loading/VersionInfo                                no shim, no rule  ?= net/neoforged/fml/loading/VersionInfo
-    2  net/minecraftforge/fml/loading/moddiscovery/ModAnnotation$EnumHolder      no shim, no rule  ?= net/neoforged/fml/loading/modscan/ModAnnotation$EnumHolder
     2  net/minecraftforge/fml/unsafe/UnsafeHacks                                 no shim, no rule
     2  net/minecraftforge/gametest/ForgeGameTestHooks                            no shim, no rule
-    2  net/minecraftforge/internal/BrandingControl                               no shim, no rule  ?= net/neoforged/neoforge/internal/BrandingControl
     2  net/minecraftforge/network/ServerStatusPing$ChannelData                   no shim, no rule
-    2  net/minecraftforge/registries/holdersets/NotHolderSet                     no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/NotHolderSet
     2  net/minecraftforge/resource/DelegatingPackResources                       no shim, no rule
     2  net/minecraftforge/server/command/TextComponentHelper                     rule -> net/neoforged/neoforge/server/command/TextComponentHelper (MISSING)
     1  net/minecraftforge/accesstransformer/AccessTransformer                    no shim, no rule
     1  net/minecraftforge/accesstransformer/AccessTransformerEngine              no shim, no rule
     1  net/minecraftforge/accesstransformer/INameHandler                         no shim, no rule
-    1  net/minecraftforge/accesstransformer/Target                               no shim, no rule  ?= net/minecraft/world/level/pathfinder/Target
     1  net/minecraftforge/accesstransformer/parser/AccessTransformerList         no shim, no rule
     1  net/minecraftforge/client/ConfigScreenHandler                             no shim, no rule
-    1  net/minecraftforge/client/CreativeModeTabSearchRegistry                   no shim, no rule  ?= net/neoforged/neoforge/client/CreativeModeTabSearchRegistry
-    1  net/minecraftforge/client/DimensionSpecialEffectsManager                  no shim, no rule  ?= net/neoforged/neoforge/client/DimensionSpecialEffectsManager
-    1  net/minecraftforge/client/NamedRenderTypeManager                          no shim, no rule  ?= net/neoforged/neoforge/client/NamedRenderTypeManager
     1  net/minecraftforge/client/event/TextureStitchEvent                        rule -> net/neoforged/neoforge/client/event/TextureStitchEvent (MISSING)
     1  net/minecraftforge/client/extensions/IForgeBakedModel                     rule -> net/neoforged/neoforge/client/extensions/IForgeBakedModel (MISSING)
-    1  net/minecraftforge/client/gui/ModListScreen                               no shim, no rule  ?= net/neoforged/neoforge/client/gui/ModListScreen
     1  net/minecraftforge/client/gui/TitleScreenModUpdateIndicator               no shim, no rule
-    1  net/minecraftforge/client/loading/ClientModLoader                         no shim, no rule  ?= net/neoforged/neoforge/client/loading/ClientModLoader
-    1  net/minecraftforge/client/textures/UnitTextureAtlasSprite                 no shim, no rule  ?= net/neoforged/neoforge/client/textures/UnitTextureAtlasSprite
     1  net/minecraftforge/common/DungeonHooks                                    no shim, no rule
-    1  net/minecraftforge/common/IExtensibleEnum                                 no shim, no rule  ?= net/neoforged/fml/common/asm/enumextension/IExtensibleEnum
-    1  net/minecraftforge/common/LenientUnboundedMapCodec                        no shim, no rule  ?= net/neoforged/neoforge/common/LenientUnboundedMapCodec
-    1  net/minecraftforge/common/SoundAction                                     no shim, no rule  ?= net/neoforged/neoforge/common/SoundAction
     1  net/minecraftforge/common/crafting/ConditionalAdvancement                 no shim, no rule
     1  net/minecraftforge/common/crafting/conditions/ModLoadedCondition$Serializer  rule -> net/neoforged/neoforge/common/conditions/ModLoadedCondition$Serializer (MISSING)
     1  net/minecraftforge/common/crafting/conditions/NotCondition$Serializer     rule -> net/neoforged/neoforge/common/conditions/NotCondition$Serializer (MISSING)
@@ -1333,36 +1274,16 @@ each against the Pre/Post pair that replaced it.
     1  net/minecraftforge/common/extensions/IForgeEntity                         no shim, no rule
     1  net/minecraftforge/common/extensions/IForgeFluid                          no shim, no rule
     1  net/minecraftforge/common/extensions/IForgeLivingEntity                   no shim, no rule
-    1  net/minecraftforge/common/ticket/AABBTicket                               no shim, no rule  ?= net/neoforged/neoforge/common/ticket/AABBTicket
     1  net/minecraftforge/common/util/BrainBuilder                               no shim, no rule
-    1  net/minecraftforge/common/util/FakePlayer$FakePlayerNetHandler            no shim, no rule  ?= net/neoforged/neoforge/common/util/FakePlayer$FakePlayerNetHandler
     1  net/minecraftforge/common/util/JsonUtils                                  no shim, no rule  ?= com/mojang/realmsclient/util/JsonUtils | net/neoforged/neoforge/common/util/JsonUtils
-    1  net/minecraftforge/common/util/Size2i                                     no shim, no rule  ?= net/neoforged/neoforge/common/util/Size2i
-    1  net/minecraftforge/common/util/TablePrinter                               no shim, no rule  ?= net/neoforged/neoforge/common/util/TablePrinter
-    1  net/minecraftforge/common/util/TransformationHelper$Deserializer          no shim, no rule  ?= net/neoforged/neoforge/common/util/TransformationHelper$Deserializer
-    1  net/minecraftforge/common/world/BiomeSpecialEffectsBuilder                no shim, no rule  ?= net/neoforged/neoforge/common/world/BiomeSpecialEffectsBuilder
-    1  net/minecraftforge/common/world/PieceBeardifierModifier                   no shim, no rule  ?= net/neoforged/neoforge/common/world/PieceBeardifierModifier
-    1  net/minecraftforge/common/world/StructureSettingsBuilder$StructureSpawnOverrideBuilder  no shim, no rule  ?= net/neoforged/neoforge/common/world/StructureSettingsBuilder$StructureSpawnOverrideBuilder
     1  net/minecraftforge/coremod/api/ASMAPI                                     no shim, no rule
     1  net/minecraftforge/event/entity/living/PotionColorCalculationEvent        rule -> net/neoforged/neoforge/event/entity/living/PotionColorCalculationEvent (MISSING)
     1  net/minecraftforge/event/entity/living/ZombieEvent$SummonAidEvent         rule -> net/neoforged/neoforge/event/entity/living/ZombieEvent$SummonAidEvent (MISSING)
     1  net/minecraftforge/event/entity/player/SleepingLocationCheckEvent         rule -> net/neoforged/neoforge/event/entity/player/SleepingLocationCheckEvent (MISSING)
-    1  net/minecraftforge/eventbus/BusBuilderImpl                                no shim, no rule  ?= net/neoforged/bus/BusBuilderImpl
-    1  net/minecraftforge/eventbus/EventBusErrorMessage                          no shim, no rule  ?= net/neoforged/bus/EventBusErrorMessage
-    1  net/minecraftforge/eventbus/api/BusBuilder                                no shim, no rule  ?= net/neoforged/bus/api/BusBuilder
     1  net/minecraftforge/eventbus/api/IEventBusInvokeDispatcher                 no shim, no rule
-    1  net/minecraftforge/fml/ISystemReportExtender                              no shim, no rule  ?= net/neoforged/fml/ISystemReportExtender
-    1  net/minecraftforge/fml/ModLoadingException                                no shim, no rule  ?= net/neoforged/fml/ModLoadingException
-    1  net/minecraftforge/fml/ModWorkManager                                     no shim, no rule  ?= net/neoforged/fml/ModWorkManager
     1  net/minecraftforge/fml/OptionalMod                                        no shim, no rule
-    1  net/minecraftforge/fml/config/ConfigTracker                               no shim, no rule  ?= net/neoforged/fml/config/ConfigTracker
     1  net/minecraftforge/fml/config/IConfigEvent$ConfigConfig                   no shim, no rule
-    1  net/minecraftforge/fml/javafmlmod/AutomaticEventSubscriber                no shim, no rule  ?= net/neoforged/fml/javafmlmod/AutomaticEventSubscriber
-    1  net/minecraftforge/fml/loading/ImmediateWindowProvider                    no shim, no rule  ?= net/neoforged/neoforgespi/earlywindow/ImmediateWindowProvider
-    1  net/minecraftforge/fml/loading/TracingPrintStream                         no shim, no rule  ?= net/neoforged/fml/loading/TracingPrintStream
     1  net/minecraftforge/fml/loading/moddiscovery/AbstractJarFileModProvider    no shim, no rule
-    1  net/minecraftforge/fml/loading/moddiscovery/ModValidator                  no shim, no rule  ?= net/neoforged/fml/loading/moddiscovery/ModValidator
-    1  net/minecraftforge/fml/loading/progress/ProgressMeter                     no shim, no rule  ?= net/neoforged/fml/loading/progress/ProgressMeter
     1  net/minecraftforge/forgespi/language/IModLanguageProvider                 rule -> net/neoforged/neoforgespi/language/IModLanguageProvider (MISSING)
     1  net/minecraftforge/forgespi/language/IModLanguageProvider$IModLanguageLoader  rule -> net/neoforged/neoforgespi/language/IModLanguageProvider$IModLanguageLoader (MISSING)
     1  net/minecraftforge/forgespi/locating/IModLocator$ModFileOrException       rule -> net/neoforged/neoforgespi/locating/IModLocator$ModFileOrException (MISSING)
@@ -1371,7 +1292,3 @@ each against the Pre/Post pair that replaced it.
     1  net/minecraftforge/network/NetworkEvent$LoginPayloadEvent                 no shim, no rule
     1  net/minecraftforge/network/NetworkEvent$PacketDispatcher                  no shim, no rule
     1  net/minecraftforge/registries/ObjectHolderRegistry                        no shim, no rule
-    1  net/minecraftforge/registries/holdersets/AnyHolderSet                     no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/AnyHolderSet
-    1  net/minecraftforge/registries/holdersets/CompositeHolderSet               no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/CompositeHolderSet
-    1  net/minecraftforge/registries/holdersets/HolderSetType                    no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/HolderSetType
-    1  net/minecraftforge/registries/holdersets/ICustomHolderSet                 no shim, no rule  ?= net/neoforged/neoforge/registries/holdersets/ICustomHolderSet

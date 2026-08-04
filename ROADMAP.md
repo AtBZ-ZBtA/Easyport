@@ -476,7 +476,17 @@ kinds:
 mapping.** Designing the DSL around rename tables and bolting on the rest would have meant
 rewriting the engine once the top of the work list was reached.
 
-### Phase 3 — `forge-compat` shims · 1–2 weeks · *gated by: verification throughput*
+### Phase 3 — `forge-compat` shims — **DONE**
+
+Exit criterion met: no library or sampled mod is blocked by a missing or wrong net.minecraftforge
+shim. See STATE.md for the evidence table and the four remaining library blockers, all of which
+are Phase 4 (vanilla drift) or Phase 5 (mixin application).
+
+The build order below was the plan. It held for the top of the list and was wrong about
+networking, which this phase moved forward: it was scheduled last on the assumption it depended
+on Phase 4, and measurement put SimpleChannel in 162 of 433 corpus jars, ahead of everything
+except the event bus and mod-loading context. Bridged onto NeoForge payloads instead.
+
 **Build order is now data-derived**, ranked by how many of the 288 paired mods depend on
 each API (`rule-report/lost-symbols.tsv`):
 

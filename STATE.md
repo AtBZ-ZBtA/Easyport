@@ -4,7 +4,7 @@ Dense re-entry point. If you are picking this up cold (fresh context, new contri
 read this file and nothing else until you need depth. [ROADMAP.md](ROADMAP.md) has the full
 plan; this has where things actually stand.
 
-**Last updated:** 2026-08-04, mid Phase 3 (forge-compat expansion).
+**Last updated:** 2026-08-04. Phase 3 complete; Phase 4 (vanilla bridge) is next.
 
 ---
 
@@ -85,17 +85,28 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
   automatically when the rules, forge-compat or `Translate.java` are newer — but one full
   batch was read as "both fixes changed nothing" when in fact nothing was re-tested.
 
-**Immediate next work:** capabilities. `ForgeCapabilities` (164 jars), `CapabilityManager`
-(92), `Capability` (75), `AttachCapabilitiesEvent` (86) and `ICapabilitySerializable` (40) are
-the top of the gap report and are one design problem, not five. NeoForge replaced the model
-outright — capabilities are resolved by lookup (`BlockCapability`/`ItemCapability`) rather
-than attached to objects — so this is the first item that a delegating shim cannot cover.
+**Immediate next work: Phase 4, the vanilla bridge.** Phase 3 is signed off below. Everything
+still failing fails on vanilla, not on Forge API.
 
-After that: `ForgeHooks` (91), `IForgeMenuType` (89), `ForgeEventFactory` (80),
-`Event$Result` (72), and the restructured `LivingEvent` family, which needs the same
-bridging treatment as `TickEvent`.
+The central Phase 4 problem, which three separate symptoms turn out to share: **a vanilla type
+changed shape underneath mod signatures.**
 
-The two mixin-apply failures are the hard Phase 7 problem and should be left until last.
+- `Holder` wrapping — `ArmorMaterials.IRON` went from an enum constant to
+  `Holder<ArmorMaterial>`. `FIELD_RETYPE` fixes the field read and the vanilla constructor, and
+  geckolib *still* fails because its own `WolfArmorItem` constructor declares the old type.
+- `Codec` → `MapCodec` — same shape, hits `BiomeModifier.codec()` and the loot/biome serializers.
+- NBT → data components — the largest cluster in the member-mismatch report (`FluidStack.getTag`,
+  `ItemStackHandler.serializeNBT`, `ItemStack#getOrCreateTag`).
+
+Do **not** solve these three separately. The honest fix is one pass that propagates a retype
+through mod signatures by data flow; a blanket `ArmorMaterial → Holder` rename would fix two
+mods and break every mod that calls a method *on* an `ArmorMaterial`.
+
+Also outstanding, smaller: `ForgeHooks` (91 jars) and `ForgeEventFactory` (80) were split across
+NeoForge's `EventHooks` and `CommonHooks` and need per-method rules rather than a type rename.
+
+The mixin `@Inject` and `@Accessor` failures (yungsapi, supermartijn642corelib) are Phase 5 and
+should be left until last.
 
 **Not started:** backward direction (1.21.1 → 1.20.1). Only `rules/forward.rules.tsv` exists.
 The locked decision is omnidirectional, and everything so far reads as forward progress — do
@@ -212,6 +223,48 @@ Everything below is measured, not estimated.
   the work list at 241 mods — cannot be expressed as a symbol mapping at all**; the bus is
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
+
+### Phase 3 — COMPLETE
+
+**Exit criterion:** no library or sampled mod is blocked by a missing or wrong `net.minecraftforge`
+shim. Everything still failing fails on vanilla API drift (Phase 4) or mixin application
+(Phase 5). Met.
+
+Evidence, all reproducible from `api-report/unresolved-types.txt`:
+
+| Measure | Start of phase | Now |
+|---|---|---|
+| Referenced Forge types resolved | 336 / 792 | **652 / 792** |
+| Unresolved, weighted by jars using them | 2,408 | **~1,400** of 17,771 (**92%** resolved) |
+| forge-compat classes | 44 | 92 |
+| Libraries loading | 0 / 8 | 4 / 8 |
+| Shim members missing that the corpus calls | 179 | 134 (weight 796 → 407) |
+
+**The four libraries still failing, and why none is Phase 3:**
+
+| Library | Blocker | Phase |
+|---|---|---|
+| `geckolib` | `VerifyError` — `ArmorMaterials` wrapped in `Holder`, propagating into the mod's own signatures | 4 |
+| `cyclopscore` | `GenericDirtMessageScreen` removed from vanilla | 4 |
+| `yungsapi` | mixin `@Accessor` on `CriteriaTriggers.CRITERIA`, a vanilla field that no longer exists | 5 |
+| `supermartijn642corelib` | mixin `@Inject` whose target method moved | 5 |
+
+Each was reached by clearing a chain of real shim gaps first — cyclopscore alone went through
+`NewRegistryEvent`, `ModContainer`, inherited `@SubscribeEvent` handlers, and
+`IEnvironment.Keys.NAMING` before arriving at a vanilla class.
+
+**What Phase 3 built beyond the shims:** five rule kinds that did not exist
+(`METHOD_TO_STATIC`, `FIELD_RETYPE`, `FIELD_TO_STATIC`, plus the mixin-drop cases for
+kind-mismatch and unresolvable `@Shadow`), three offline analysis tools, and four
+silent-failure checks. The checks matter more than the shim count: they caught
+`ICapabilityProvider`, `LivingDamageEvent`, `LivingTickEvent` and `IContainerFactory` — four
+rules that resolved cleanly and would have failed at runtime, three of them written the same day.
+
+**Known-incomplete inside Phase 3, deliberately:** 134 shim members and 427 rename-target
+members the corpus calls that are still missing. These are latent `NoSuchMethodError`s at call
+sites, not load blockers, and the largest cluster of them is the 1.20.5 NBT-to-components
+migration — Phase 4 work wearing a Phase 3 hat. They are enumerated and ranked rather than
+unknown.
 
 ### Phase 2 — COMPLETE, and first real mod translated end to end
 
