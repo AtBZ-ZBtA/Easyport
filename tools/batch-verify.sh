@@ -27,6 +27,17 @@ RESULTS="$OUT/batch-results.tsv"
 mkdir -p "$OUT" translated
 [ -f "$RESULTS" ] || printf 'modId\tregistryPct\tresourcePct\tstatus\n' > "$RESULTS"
 
+# Snapshot the tools and run from the copy.
+#
+# `java tools/Foo.java` recompiles from source on every invocation, so editing a tool while a
+# batch is in flight makes later mods compile a half-finished file and report TRANSLATE_FAILED.
+# That corrupted three separate runs before this existed. Relying on remembering not to edit
+# during a run does not work; snapshotting removes the failure mode outright.
+SNAP="$OUT/.tools-snapshot"
+rm -rf "$SNAP" && mkdir -p "$SNAP"
+cp tools/*.java "$SNAP"/
+echo "tools snapshotted to $SNAP (edits during this run will not affect it)"
+
 while IFS=$'\t' read -r modId src tgt; do
   [ -z "${modId:-}" ] && continue
   if grep -q "^${modId}$(printf '\t')" "$RESULTS" 2>/dev/null; then
@@ -35,7 +46,7 @@ while IFS=$'\t' read -r modId src tgt; do
   fi
   echo "=== $modId ==="
 
-  if ! java -cp "$CP" tools/Translate.java "$A9/$src" "translated/$modId.jar" \
+  if ! java -cp "$CP" "$SNAP/Translate.java" "$A9/$src" "translated/$modId.jar" \
         mappings/srg2official.tsv rules/forward.rules.tsv "$PLATFORM" > "$OUT/$modId.translate.log" 2>&1; then
     echo "  TRANSLATE_FAILED (see $OUT/$modId.translate.log)"
     printf '%s\t0\t0\tTRANSLATE_FAILED\n' "$modId" >> "$RESULTS"
@@ -53,19 +64,19 @@ while IFS=$'\t' read -r modId src tgt; do
   while IFS=$'\t' read -r dep depSrc; do
     [ -z "${dep:-}" ] && continue
     if [ ! -f "translated/$dep.jar" ]; then
-      java -cp "$CP" tools/Translate.java "$A9/$depSrc" "translated/$dep.jar" \
+      java -cp "$CP" "$SNAP/Translate.java" "$A9/$depSrc" "translated/$dep.jar" \
            mappings/srg2official.tsv rules/forward.rules.tsv "$PLATFORM" > "$OUT/$dep.dep-translate.log" 2>&1 \
         || { echo "  (dependency $dep failed to translate)"; continue; }
     fi
     modSupport="$modSupport,translated/$dep.jar"
     ndeps=$((ndeps+1))
-  done < <(java tools/Deps.java "$A9/$src" "$A9" corpus-report/corpus-manifest.tsv 2>/dev/null | tr -d '\r')
+  done < <(java "$SNAP/Deps.java" "$A9/$src" "$A9" corpus-report/corpus-manifest.tsv 2>/dev/null | tr -d '\r')
   [ "$ndeps" -gt 0 ] && echo "  + $ndeps translated dependencies"
 
   # VerifyHarness exits non-zero when the baseline itself will not boot. With dependencies
   # loaded that means one of *them* does not translate well enough to load yet -- which says
   # nothing about this mod, so it is recorded distinctly rather than blamed on the candidate.
-  if ! java tools/VerifyHarness.java devenv/neoforge-1.21.1 "$modSupport" \
+  if ! java "$SNAP/VerifyHarness.java" devenv/neoforge-1.21.1 "$modSupport" \
       "translated/$modId.jar" "$A10/$tgt" "$OUT" > "$OUT/$modId.verify.log" 2>&1; then
     if [ "$ndeps" -gt 0 ]; then
       echo "  DEPS_UNTRANSLATABLE (a dependency will not load)"
@@ -80,8 +91,13 @@ while IFS=$'\t' read -r modId src tgt; do
   # to another mod, so it is a missing dependency rather than a missing shim. Counting those
   # against the translator would send the work queue chasing classes we are not responsible
   # for -- allthecompressed fails on tv.soaryn.xycraft.*, which is simply not installed.
+  # net.neoforged is excluded too: a CNFE naming one of those means a rename produced a target
+  # that does not exist, which is our bug and never a missing dependency. architectury was
+  # misfiled as DEPS_MISSING for exactly this -- a prefix rule invented
+  # neoforge/event/TickEvent$ClientTickEvent, which NeoForge restructured away.
   foreign=$(grep -oE "ClassNotFoundException: [a-zA-Z0-9_.$]+" "$OUT/$modId.verify.log" 2>/dev/null \
-            | sed 's/.*: //' | grep -vE '^(net\.minecraftforge\.|net\.minecraft\.)' | head -1)
+            | sed 's/.*: //' \
+            | grep -vE '^(net\.minecraftforge\.|net\.minecraft\.|net\.neoforged\.)' | head -1)
   if   grep -qE "requires [a-z_]+ [0-9]" "$OUT/$modId.verify.log"; then st=DEPS_MISSING
   elif [ -n "$foreign" ]; then st=DEPS_MISSING
   elif grep -q "NOT LOADED"    "$OUT/$modId.verify.log"; then st=NOT_LOADED

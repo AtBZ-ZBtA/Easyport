@@ -193,6 +193,10 @@ public class Translate {
                     // stale index entry for a library that was deliberately removed.
                     if (name.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
                     if (isMixinConfig(name) && !deadMixins.isEmpty()) data = stripDeadMixins(data);
+                    if (isRefmap(name)) {
+                        data = remapSrgInText(new String(data, StandardCharsets.UTF_8))
+                                .getBytes(StandardCharsets.UTF_8);
+                    }
                 }
                 // Signatures cover the pre-translation bytes and cannot survive rewriting; a
                 // stale signature file makes the jar fail verification outright.
@@ -234,6 +238,10 @@ public class Translate {
             @Override public String map(String internalName) {
                 String renamed = typeRenames.get(internalName);
                 if (renamed != null) {
+                    if (!renameTargetExists(renamed)) {
+                        count(unresolved, "TYPE_RENAME target missing: " + renamed);
+                        return internalName;
+                    }
                     count(appliedCounts, "TYPE_RENAME " + internalName);
                     return renamed;
                 }
@@ -243,8 +251,13 @@ public class Translate {
                 // missed fails silently by never firing.
                 for (var e : prefixRenames.entrySet()) {
                     if (internalName.startsWith(e.getKey())) {
+                        String target = e.getValue() + internalName.substring(e.getKey().length());
+                        if (!renameTargetExists(target)) {
+                            count(unresolved, "TYPE_PREFIX target missing: " + target);
+                            return internalName;
+                        }
                         count(appliedCounts, "TYPE_PREFIX " + e.getKey());
-                        return e.getValue() + internalName.substring(e.getKey().length());
+                        return target;
                     }
                 }
                 return internalName;
@@ -252,6 +265,18 @@ public class Translate {
         }), 0);
 
         fixEventBusSubscriber(node);
+
+        // Mixin annotations address their targets as text, which the remapper never sees.
+        remapAnnotationStrings(node.visibleAnnotations);
+        remapAnnotationStrings(node.invisibleAnnotations);
+        for (MethodNode m : node.methods) {
+            remapAnnotationStrings(m.visibleAnnotations);
+            remapAnnotationStrings(m.invisibleAnnotations);
+        }
+        for (var f : node.fields) {
+            remapAnnotationStrings(f.visibleAnnotations);
+            remapAnnotationStrings(f.invisibleAnnotations);
+        }
 
         // Pass 2: structural rules.
         for (MethodNode m : node.methods) {
@@ -455,6 +480,89 @@ public class Translate {
     }
 
     // ---- resources ---------------------------------------------------------------------
+
+    /**
+     * Whether a rename target actually exists on the target platform.
+     *
+     * Renaming to a class that does not exist is worse than not renaming at all: it converts a
+     * reportable problem into a ClassNotFoundException naming a {@code net.neoforged} class
+     * that Easyport invented, which reads as a platform bug rather than a translation gap.
+     *
+     * The prefix rules make this easy to hit. {@code net/minecraftforge/event/} →
+     * {@code net/neoforged/neoforge/event/} is right for most of the tree, but NeoForge
+     * restructured tick events — Forge's single {@code TickEvent$ClientTickEvent} with a phase
+     * field became {@code event/tick/ClientTickEvent$Pre} and {@code $Post}. The prefix rule
+     * happily produced {@code neoforge/event/TickEvent$ClientTickEvent}, which exists nowhere.
+     *
+     * Returns true when no platform index is loaded, so validation is skipped rather than
+     * blocking every rename.
+     */
+    private boolean renameTargetExists(String internalName) {
+        if (targetClasses.isEmpty()) return true;
+        // Only vouch for the platform's own namespaces; forge-compat classes are not in the
+        // index and must not be rejected.
+        if (!internalName.startsWith("net/neoforged/") && !internalName.startsWith("net/minecraft/")) {
+            return true;
+        }
+        return targetClasses.contains(internalName);
+    }
+
+    /** SRG member names appearing inside text: refmaps, @At targets, @Accessor names. */
+    private static final java.util.regex.Pattern SRG_TOKEN =
+        java.util.regex.Pattern.compile("\\b([mf]_\\d+_)\\b");
+
+    /**
+     * Rewrites SRG member names embedded in strings.
+     *
+     * The bytecode remapper only reaches real member references. Mixins address their targets
+     * as *text* — refmap JSON entries, {@code @At(target = "...m_12345_...")},
+     * {@code @Accessor("f_678_")} — and those strings pass through untouched, so every
+     * injection point still names a member that does not exist under official mappings.
+     *
+     * This is why four of the highest-fan-in libraries failed with InvalidInjectionException
+     * and InvalidAccessorException after their classes translated cleanly: the code was right
+     * and the coordinates pointing into it were stale.
+     */
+    private String remapSrgInText(String text) {
+        if (srgToOfficial.isEmpty() || text == null) return text;
+        java.util.regex.Matcher m = SRG_TOKEN.matcher(text);
+        StringBuilder sb = new StringBuilder();
+        boolean changed = false;
+        while (m.find()) {
+            String official = srgToOfficial.get(m.group(1));
+            if (official != null) changed = true;
+            m.appendReplacement(sb, java.util.regex.Matcher.quoteReplacement(
+                    official != null ? official : m.group(1)));
+        }
+        m.appendTail(sb);
+        if (changed) count(appliedCounts, "SRG_IN_TEXT");
+        return sb.toString();
+    }
+
+    /** Walks annotation values, rewriting SRG names in any string they contain. */
+    private void remapAnnotationStrings(List<org.objectweb.asm.tree.AnnotationNode> anns) {
+        if (anns == null) return;
+        for (var ann : anns) remapAnnotationValues(ann.values);
+    }
+
+    private void remapAnnotationValues(List<Object> values) {
+        if (values == null) return;
+        for (int i = 0; i < values.size(); i++) {
+            Object v = values.get(i);
+            if (v instanceof String s) {
+                values.set(i, remapSrgInText(s));
+            } else if (v instanceof List<?> list) {
+                @SuppressWarnings("unchecked") List<Object> l = (List<Object>) list;
+                remapAnnotationValues(l);
+            } else if (v instanceof org.objectweb.asm.tree.AnnotationNode nested) {
+                remapAnnotationValues(nested.values);
+            }
+        }
+    }
+
+    private static boolean isRefmap(String name) {
+        return name.endsWith(".json") && name.contains("refmap");
+    }
 
     private static boolean isMixinConfig(String name) {
         return name.endsWith(".json") && name.contains("mixins") && !name.contains("/");
