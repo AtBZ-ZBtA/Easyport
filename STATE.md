@@ -350,29 +350,31 @@ The eight highest-fan-in libraries (~70 dependents between them) all still fail,
 now blocked on a *different* subsystem rather than a shared shim gap. Six rounds moved every
 one of them forward through the load sequence:
 
-Verified state after this pass. Each of the five that were blocked on a missing class moved
-through three or four distinct blockers; none load yet.
+**`architectury` is the first library to load.** It is also the highest-fan-in one — 12
+dependents — and it took nine consecutive blockers to get there: `TickEvent`,
+`TextureStitchEvent`, `EntityItemPickupEvent`, `FillBucketEvent`, `Event$Result`,
+`NetworkRegistry`, `EventNetworkChannel`, `NetworkEvent$ClientCustomPayloadEvent`, and finally
+`ForgeRegistries$Keys`.
 
-| Library | Dependents | Current blocker | Kind |
-|---|---|---|---|
-| `architectury` | 12 | `FillBucketEvent` | removed event — needs a link-only shim |
-| `placebo` | 8 | `RegisterEvent.getForgeRegistry()` | member missing on rename target |
-| `balm` | 6 | `capabilities.CapabilityManager` | capabilities — the next design piece |
-| `geckolib` | 8 | `VerifyError` on `ArmorMaterials` | vanilla `Holder` wrapping, needs a field-descriptor rule |
-| `cyclopscore` | 10 | `IEnvironment$Keys.NAMING` | modlauncher API change |
-| `yungsapi` | 10 | mixin `InvalidAccessorException` | Phase 7 |
-| `curios` | 8 | mixin apply | Phase 7 |
-| `supermartijn642corelib` | 8 | mixin apply | Phase 7 |
+**Read its 100% honestly.** Architectury registers exactly one entry — a biome modifier
+serializer — and the translated jar reproduced that one entry. The reference port registers one
+too, so the comparison is fair, but the denominator is 1. What is genuinely proven is that a
+mod can now translate, load, and register content end to end. Its resource coverage is 0/1,
+which is a separate unexplained gap worth a look.
 
-Blockers cleared this pass, in the order each library hit them: `GenericEvent`,
-`NewRegistryEvent`, `ModContainer`, `TextureStitchEvent`, `BiomeModifier`, `EntityItemPickupEvent`,
-the whole `NetworkRegistry`/`SimpleChannel` family, inherited `@SubscribeEvent` handlers, and
-access-transformer remapping.
+| Library | Dependents | Status | Current blocker | Kind |
+|---|---|---|---|---|
+| `architectury` | 12 | **OK, 100%** | — | loads and registers |
+| `placebo` | 8 | fails | `RegisterEvent.getForgeRegistry()` | member missing on rename target |
+| `balm` | 6 | fails | `capabilities.ICapabilityProvider` | capabilities — the next design piece |
+| `geckolib` | 8 | fails | `VerifyError` on `ArmorMaterials` | vanilla `Holder` wrapping; needs a field-descriptor rule |
+| `cyclopscore` | 10 | fails | `IEnvironment$Keys.NAMING` | modlauncher API change |
+| `yungsapi` | 10 | fails | mixin `InvalidAccessorException` | Phase 7 |
+| `curios` | 8 | fails | mixin apply | Phase 7 |
+| `supermartijn642corelib` | 8 | fails | mixin apply | Phase 7 |
 
-**No registry percentage has moved off zero.** Every library still fails before it registers
-anything, so the only measurement improving right now is how deep into the load sequence each
-one gets. Resource coverage (`placebo` 92.3%, `curios` 73.1%, `supermartijn642corelib` 71.4%)
-is measured without launching and is the only non-zero signal so far.
+Resource coverage is measured without launching and is the only signal for the seven that still
+fail: `placebo` 92.3%, `curios` 73.1%, `supermartijn642corelib` 71.4%, `cyclopscore` 43.2%.
 
 **Every library that was blocked on a missing class has moved at least twice.** None load yet,
 but the failures are now deeper in the sequence — construction and verification rather than

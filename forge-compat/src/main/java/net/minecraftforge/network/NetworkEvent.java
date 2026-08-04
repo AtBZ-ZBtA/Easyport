@@ -80,5 +80,53 @@ public class NetworkEvent {
         }
     }
 
+    /**
+     * The raw-channel payload events, 7 corpus jars each.
+     *
+     * Posted by {@link net.minecraftforge.network.event.EventNetworkChannel}, which is itself a
+     * link-only shim, so nothing constructs these. They exist because a listener names them as
+     * its parameter type and the class has to resolve for the mod to load -- architectury is
+     * blocked on exactly this.
+     *
+     * They extend NeoForge's {@code Event} so that a listener registration is at least valid
+     * rather than throwing at registration time. It will never fire; see EventNetworkChannel for
+     * why the raw channel cannot be bridged.
+     */
+    public static class ClientCustomPayloadEvent extends net.neoforged.bus.api.Event {
+        private final net.minecraft.network.FriendlyByteBuf payload;
+        private final Context source;
+
+        public ClientCustomPayloadEvent(net.minecraft.network.FriendlyByteBuf payload, Context source) {
+            this.payload = payload;
+            this.source = source;
+        }
+
+        public net.minecraft.network.FriendlyByteBuf getPayload() {
+            return payload;
+        }
+
+        public Context getSource() {
+            return source;
+        }
+    }
+
+    public static class ServerCustomPayloadEvent extends net.neoforged.bus.api.Event {
+        private final net.minecraft.network.FriendlyByteBuf payload;
+        private final Context source;
+
+        public ServerCustomPayloadEvent(net.minecraft.network.FriendlyByteBuf payload, Context source) {
+            this.payload = payload;
+            this.source = source;
+        }
+
+        public net.minecraft.network.FriendlyByteBuf getPayload() {
+            return payload;
+        }
+
+        public Context getSource() {
+            return source;
+        }
+    }
+
     private NetworkEvent() {}
 }
