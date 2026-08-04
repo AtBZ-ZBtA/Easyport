@@ -111,6 +111,9 @@ public class Translate {
     /** A platform type that stopped being an interface -> what to implement in its place. */
     private final Map<String, String> interfaceSubstitutes = new LinkedHashMap<>();
 
+    /** Every class in the jar being translated -> its superclass. The mod's own hierarchy. */
+    private final Map<String, String> modSuper = new HashMap<>();
+
     /** A mod class whose implements clause was substituted -> the substitute it now carries. */
     private final Map<String, String> substitutedClasses = new HashMap<>();
 
@@ -1012,9 +1015,7 @@ public class Translate {
      * as one ordinary class transform.
      */
     private void findSubstitutedClasses(ZipFile zip) {
-        if (interfaceSubstitutes.isEmpty() && coercions.isEmpty()) return;
 
-        Map<String, String> superOf = new HashMap<>();
         Enumeration<? extends ZipEntry> entries = zip.entries();
         while (entries.hasMoreElements()) {
             ZipEntry e = entries.nextElement();
@@ -1022,7 +1023,7 @@ public class Translate {
             try {
                 ClassReader reader = new ClassReader(read(zip, e));
                 if (reader.getSuperName() != null) {
-                    superOf.put(reader.getClassName(), reader.getSuperName());
+                    modSuper.put(reader.getClassName(), reader.getSuperName());
                 }
                 for (String itf : reader.getInterfaces()) {
                     String substitute = interfaceSubstitutes.get(itf);
@@ -1043,28 +1044,37 @@ public class Translate {
         // exact names left it failing with the identical error under a different class name.
         Set<String> sources = new HashSet<>();
         for (String pair : coercions.keySet()) sources.add(pair.substring(0, pair.indexOf('\t')));
-        for (String cls : superOf.keySet()) {
+        for (String cls : modSuper.keySet()) {
             if (substitutedClasses.containsKey(cls)) continue;
-            String walk = superOf.get(cls);
+            String walk = modSuper.get(cls);
             Set<String> seen = new HashSet<>();
             while (walk != null && seen.add(walk)) {
                 if (sources.contains(walk)) {
                     substitutedClasses.put(cls, walk);
                     break;
                 }
-                walk = superOf.get(walk);
+                walk = modSuper.get(walk);
             }
         }
     }
 
-    /** The nearest platform supertype declaring this member final, or null. */
+    /**
+     * The nearest supertype declaring this member final, or null.
+     *
+     * Walks the mod's own classes as well as the platform's, which it did not at first and had to.
+     * A mod class almost never extends a vanilla class directly -- ars_nouveau's
+     * {@code EntityProjectileSpell} reaches {@code Entity} through two of its own classes -- and a
+     * walk that only knew platform supertypes stopped at the first mod class and found nothing.
+     * That silently missed 38 of the 70 verification errors in one mod.
+     */
     private String finalOwnerOf(String superName, String member) {
         String cls = superName;
         Set<String> seen = new HashSet<>();
         while (cls != null && seen.add(cls)) {
             Set<String> fin = targetFinalMethods.get(cls);
             if (fin != null && fin.contains(member)) return cls;
-            cls = targetSuper.get(cls);
+            String platform = targetSuper.get(cls);
+            cls = platform != null ? platform : modSuper.get(cls);
         }
         return null;
     }
@@ -1155,14 +1165,41 @@ public class Translate {
                 Set<String> members = resolvedTargetMembers(min.owner);
                 if (members.isEmpty()) continue;
                 if (members.contains(min.name + " " + min.desc)) continue;
-                String holderDesc = min.desc.substring(0, min.desc.indexOf(')') + 1) + HOLDER_DESC;
-                if (!members.contains(min.name + " " + holderDesc)) continue;
-                String valueType = unwrappedType(min.owner, min.name, ret.getDescriptor());
-                min.desc = holderDesc;
-                insns.insert(min, new TypeInsnNode(Opcodes.CHECKCAST, valueType));
-                insns.insert(min, new MethodInsnNode(Opcodes.INVOKEINTERFACE, HOLDER,
-                        "value", "()Ljava/lang/Object;", true));
-                count(appliedCounts, "HOLDER_UNWRAP return " + min.owner + "." + min.name);
+                String args = min.desc.substring(0, min.desc.indexOf(')') + 1);
+                String holderDesc = args + HOLDER_DESC;
+                if (members.contains(min.name + " " + holderDesc)) {
+                    String valueType = unwrappedType(min.owner, min.name, ret.getDescriptor());
+                    min.desc = holderDesc;
+                    insns.insert(min, new TypeInsnNode(Opcodes.CHECKCAST, valueType));
+                    insns.insert(min, new MethodInsnNode(Opcodes.INVOKEINTERFACE, HOLDER,
+                            "value", "()Ljava/lang/Object;", true));
+                    count(appliedCounts, "HOLDER_UNWRAP return " + min.owner + "." + min.name);
+                    continue;
+                }
+
+                // Any other declared conversion, not just Holder. 1.21 changed a number of
+                // returns to a wrapper of some kind -- BuiltInLootTables.register went from
+                // returning a ResourceLocation to a ResourceKey -- and the shape of the fix is
+                // identical: take the new descriptor and convert the result back to what the
+                // mod's own bytecode expects. Only Holder was handled at first, which left the
+                // whole ResourceKey family failing at the call site with NoSuchMethodError.
+                for (String candidate : members) {
+                    int sp = candidate.indexOf(' ');
+                    if (sp != min.name.length() || !candidate.startsWith(min.name)) continue;
+                    String desc = candidate.substring(sp + 1);
+                    if (!desc.startsWith(args)) continue;
+                    Type newRet = Type.getReturnType(desc);
+                    if (newRet.getSort() != Type.OBJECT) continue;
+                    RenameRule via = declaredCoercion(newRet.getInternalName(),
+                                                      ret.getInternalName());
+                    if (via == null) continue;
+                    min.desc = desc;
+                    insns.insert(min, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                            via.newOwner(), via.newName(), via.newDesc(), false));
+                    count(appliedCounts, "COERCE return of " + min.owner + "." + min.name
+                                        + " -> " + ret.getInternalName());
+                    break;
+                }
             }
         }
     }

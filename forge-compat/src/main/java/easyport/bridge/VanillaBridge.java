@@ -76,6 +76,33 @@ public final class VanillaBridge {
         return new net.minecraft.world.entity.ai.attributes.AttributeModifier(key, amount, operation);
     }
 
+    /**
+     * The location inside a ResourceKey.
+     *
+     * 1.21 moved several registries from addressing entries by ResourceLocation to addressing
+     * them by ResourceKey, and changed the returns to match --
+     * {@code BuiltInLootTables.register} is the one the corpus leans on hardest, at 305
+     * jar-weight. The key carries the location, so the conversion is exact in this direction.
+     */
+    public static ResourceLocation keyLocation(net.minecraft.resources.ResourceKey<?> key) {
+        return key == null ? null : key.location();
+    }
+
+    /**
+     * Forge's patched {@code BuiltInLootTables.register}, which NeoForge does not have.
+     *
+     * Forge made vanilla's private helper public so mods could register loot tables; 1.21 left
+     * it private and moved registration to datapacks entirely. Neither a rename nor an argument
+     * rule reaches a method that is inaccessible, so the call moves here.
+     *
+     * Returns the location unchanged, which is what the mod does with it -- the identifier is
+     * still valid and the table itself still loads from the mod's data pack. What is lost is the
+     * eager registration, and under 1.21 there is nothing to register into.
+     */
+    public static ResourceLocation registerLootTable(ResourceLocation id) {
+        return id;
+    }
+
     public static ResourceLocation modelId(ModelResourceLocation mrl) {
         return mrl == null ? null : mrl.id();
     }

@@ -29,6 +29,7 @@ Applied:
      1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#areCapsCompatible -> easyport/bridge/CapabilityBridge#areCapsCompatible
      2  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      5  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
+     1  RENAME_METHOD net/minecraft/world/level/storage/loot/BuiltInLootTables#register -> registerLootTable
      1  SRG_IN_TEXT
     37  TYPE_PREFIX net/minecraftforge/client/event/
      3  TYPE_PREFIX net/minecraftforge/client/extensions/

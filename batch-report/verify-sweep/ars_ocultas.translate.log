@@ -6,6 +6,7 @@ Applied:
      1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/data/loot/packs/VanillaEntityLoot.add
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/data/loot/packs/VanillaBlockLoot.<init>
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/data/loot/packs/VanillaEntityLoot.<init>
+     1  COERCE return of net/minecraft/world/level/block/Block.getLootTable -> net/minecraft/resources/ResourceLocation
     21  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      1  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  JARJAR_TRANSLATE (depth 1)

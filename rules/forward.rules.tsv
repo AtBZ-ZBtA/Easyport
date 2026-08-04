@@ -742,3 +742,15 @@ FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Opera
 # the id and the display name collapsed into one identifier. Two parameters becoming one is past
 # what ARG_DROP or a coercion can express, so the construction moves to a factory. 193 jar-weight.
 CTOR_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier	(Ljava/util/UUID;Ljava/lang/String;DLnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;)V	attributeModifier	(Ljava/util/UUID;Ljava/lang/String;DLnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;)Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;	easyport/bridge/VanillaBridge
+
+# 1.21 moved several registries to addressing entries by ResourceKey and changed the returns to
+# match. The key carries the location, so converting back is exact in this direction.
+COERCE	net/minecraft/resources/ResourceKey	net/minecraft/resources/ResourceLocation	easyport/bridge/VanillaBridge	keyLocation
+
+# Forge made vanilla's private BuiltInLootTables.register public so mods could register loot
+# tables. 1.21 left it private and moved registration to datapacks. No rename or argument rule
+# reaches an inaccessible method, so the call moves to a bridge. RENAME_METHOD rather than
+# METHOD_TO_STATIC because the call was already static -- METHOD_TO_STATIC only rewrites virtual
+# and interface calls, and would have matched nothing. Heads the 305-jar-weight
+# BuiltInLootTables cluster.
+RENAME_METHOD	net/minecraft/world/level/storage/loot/BuiltInLootTables	register	(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;	easyport/bridge/VanillaBridge	registerLootTable	(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;
