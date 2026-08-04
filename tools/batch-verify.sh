@@ -28,6 +28,30 @@ OUT="batch-report"
 RESULTS="$OUT/batch-results.tsv"
 
 mkdir -p "$OUT" translated
+
+# Discard results and cached jars that predate the current inputs.
+#
+# Resuming skips mods already in the results file, which is what makes a long run interruptible.
+# But the whole point of the loop is to change a rule or a shim and re-measure, and after such a
+# change every recorded row and every cached dependency jar describes the *old* build. Without
+# this the run silently reports the previous failures back -- which it did, for a batch where
+# both fixes were already in place and nothing was re-tested.
+#
+# Staleness is decided by mtime against the three things that can change an outcome: the rules,
+# forge-compat, and the transformer itself. Automatic rather than a --force flag, because a flag
+# is exactly the kind of thing that gets left off the one run whose results then mislead.
+INPUTS=(rules/forward.rules.tsv forge-compat/forge-compat.jar tools/Translate.java)
+stale=""
+for f in "${INPUTS[@]}"; do
+  [ -f "$f" ] || continue
+  if [ ! -f "$RESULTS" ] || [ "$f" -nt "$RESULTS" ]; then stale="$f"; fi
+done
+if [ -n "$stale" ] && [ -f "$RESULTS" ]; then
+  echo "results are older than $stale -- discarding cached results and translated jars"
+  mv "$RESULTS" "$RESULTS.prev"
+  rm -f translated/*.jar
+fi
+
 [ -f "$RESULTS" ] || printf 'modId\tregistryPct\tresourcePct\tstatus\n' > "$RESULTS"
 
 # Snapshot the tools and run from the copy.
@@ -36,10 +60,17 @@ mkdir -p "$OUT" translated
 # batch is in flight makes later mods compile a half-finished file and report TRANSLATE_FAILED.
 # That corrupted three separate runs before this existed. Relying on remembering not to edit
 # during a run does not work; snapshotting removes the failure mode outright.
+#
+# The rules file is snapshotted for the same reason. It is read by Translate on every mod rather
+# than once at startup, so editing it mid-run means the mods early in the list were translated
+# with different rules to the ones after -- a single results table describing two different
+# translators, with nothing to indicate which row came from which.
 SNAP="$OUT/.tools-snapshot"
 rm -rf "$SNAP" && mkdir -p "$SNAP"
 cp tools/*.java "$SNAP"/
-echo "tools snapshotted to $SNAP (edits during this run will not affect it)"
+cp rules/forward.rules.tsv "$SNAP"/
+RULES="$SNAP/forward.rules.tsv"
+echo "tools and rules snapshotted to $SNAP (edits during this run will not affect it)"
 
 while IFS=$'\t' read -r modId src tgt; do
   [ -z "${modId:-}" ] && continue
@@ -50,7 +81,7 @@ while IFS=$'\t' read -r modId src tgt; do
   echo "=== $modId ==="
 
   if ! java -cp "$CP" "$SNAP/Translate.java" "$A9/$src" "translated/$modId.jar" \
-        mappings/srg2official.tsv rules/forward.rules.tsv "${PLATFORM_JARS[@]}" > "$OUT/$modId.translate.log" 2>&1; then
+        mappings/srg2official.tsv "$RULES" "${PLATFORM_JARS[@]}" > "$OUT/$modId.translate.log" 2>&1; then
     echo "  TRANSLATE_FAILED (see $OUT/$modId.translate.log)"
     printf '%s\t0\t0\tTRANSLATE_FAILED\n' "$modId" >> "$RESULTS"
     continue
@@ -68,7 +99,7 @@ while IFS=$'\t' read -r modId src tgt; do
     [ -z "${dep:-}" ] && continue
     if [ ! -f "translated/$dep.jar" ]; then
       java -cp "$CP" "$SNAP/Translate.java" "$A9/$depSrc" "translated/$dep.jar" \
-           mappings/srg2official.tsv rules/forward.rules.tsv "${PLATFORM_JARS[@]}" > "$OUT/$dep.dep-translate.log" 2>&1 \
+           mappings/srg2official.tsv "$RULES" "${PLATFORM_JARS[@]}" > "$OUT/$dep.dep-translate.log" 2>&1 \
         || { echo "  (dependency $dep failed to translate)"; continue; }
     fi
     modSupport="$modSupport,translated/$dep.jar"

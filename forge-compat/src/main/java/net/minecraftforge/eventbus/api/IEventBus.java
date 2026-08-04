@@ -18,6 +18,30 @@ package net.minecraftforge.eventbus.api;
 public interface IEventBus extends net.neoforged.bus.api.IEventBus {
 
     /**
+     * Forge's generic-filtered listener registration, used by 35 corpus jars.
+     *
+     * These exist so those jars link. Whether a listener registered here can ever fire depends
+     * on the event: see {@link GenericEvent} and the implementation note in {@code ForgeEventBus}.
+     * The overloads that take an explicit event class are honoured properly; the ones that
+     * relied on Forge inferring the type from the lambda are best-effort.
+     */
+    <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> genericClassFilter, java.util.function.Consumer<T> consumer);
+
+    <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> genericClassFilter, net.neoforged.bus.api.EventPriority priority,
+            java.util.function.Consumer<T> consumer);
+
+    <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> genericClassFilter, net.neoforged.bus.api.EventPriority priority,
+            boolean receiveCancelled, java.util.function.Consumer<T> consumer);
+
+    <T extends GenericEvent<? extends F>, F> void addGenericListener(
+            Class<F> genericClassFilter, net.neoforged.bus.api.EventPriority priority,
+            boolean receiveCancelled, Class<T> eventType,
+            java.util.function.Consumer<T> consumer);
+
+    /**
      * Adapts a NeoForge bus to the Forge-facing type.
      *
      * A delegating implementation rather than a cast: NeoForge's own buses do not implement

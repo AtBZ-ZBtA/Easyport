@@ -10,8 +10,30 @@ plan; this has where things actually stand.
 
 ## Resume here
 
-**The loop.** Translate a sample, run each mod, read the failure logs, fix what they name,
-repeat. The logs *are* the work queue — each failure names the exact missing class or method.
+**Work from the gap report, not from the launch logs.** This is the single biggest change to
+how this project is worked on, so it comes first.
+
+```bash
+# The whole remaining work queue, ranked, offline, in about a minute.
+java tools/RenameGaps.java api-report/forge-api-usage.txt rules/forward.rules.tsv \
+    forge-compat/forge-compat.jar \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar \
+    > api-report/unresolved-types.txt
+```
+
+It lists every Forge type the 433-jar corpus references that neither a shim nor a rule
+resolves, ranked by how many jars each one blocks, with a suggested rename target where the
+platform has a class of the same name. See [api-report/README.md](api-report/README.md).
+
+Why this matters: the old loop found missing classes by launching the game and reading the
+first `ClassNotFoundException` — about ten minutes per class, strictly one at a time, because
+the JVM stops at the first one. Architectury alone walked through `TickEvent`,
+`TextureStitchEvent` and `EntityItemPickupEvent` that way. Every input to that answer is
+static. The first run of the report resolved **196 types in one edit**.
+
+**The loop, for what the report cannot answer** — signature mismatches, verification errors
+and behaviour, which need a real launch:
 
 ```bash
 bash tools/build-forge-compat.sh          # after ANY forge-compat change; clears the baseline
@@ -23,19 +45,29 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
     devenv/neoforge-1.21.1/run/failed-<modid>.log | head -2
 ```
 
-**Two hard rules, each learned by breaking something:**
+**Three hard rules, each learned by breaking something:**
 
 - **Never chain a build into a backgrounded batch and read only the tail.** A compile error
   scrolled past once and ten minutes of verification ran against a one-class forge-compat,
   reporting every mod broken including one that was at 100%.
-- Editing `tools/*.java` mid-run is now safe — `batch-verify.sh` snapshots them at start. It
-  corrupted three runs before that existed.
+- Editing `tools/*.java` or `rules/forward.rules.tsv` mid-run is now safe — `batch-verify.sh`
+  snapshots both at start. Tool edits corrupted three runs before that existed.
+- **A batch that reports the same failures as last time may not have run.** It skips mods
+  already in `batch-results.tsv` so a long run can resume. It now discards that file
+  automatically when the rules, forge-compat or `Translate.java` are newer — but one full
+  batch was read as "both fixes changed nothing" when in fact nothing was re-tested.
 
-**Immediate next work:** the eight libraries are each blocked on a *different* subsystem now
-(see "Library layer" below). Highest leverage remaining is probably `GenericEvent` and
-`NewRegistryEvent` — both loader-side and likely plain shims. `NetworkRegistry` needs the
-networking design sketched in ROADMAP Phase 3. The two mixin-apply failures are the hard
-Phase 7 problem and should be left until last.
+**Immediate next work:** capabilities. `ForgeCapabilities` (164 jars), `CapabilityManager`
+(92), `Capability` (75), `AttachCapabilitiesEvent` (86) and `ICapabilitySerializable` (40) are
+the top of the gap report and are one design problem, not five. NeoForge replaced the model
+outright — capabilities are resolved by lookup (`BlockCapability`/`ItemCapability`) rather
+than attached to objects — so this is the first item that a delegating shim cannot cover.
+
+After that: `ForgeHooks` (91), `IForgeMenuType` (89), `ForgeEventFactory` (80),
+`Event$Result` (72), and the restructured `LivingEvent` family, which needs the same
+bridging treatment as `TickEvent`.
+
+The two mixin-apply failures are the hard Phase 7 problem and should be left until last.
 
 **Not started:** backward direction (1.21.1 → 1.20.1). Only `rules/forward.rules.tsv` exists.
 The locked decision is omnidirectional, and everything so far reads as forward progress — do
@@ -290,21 +322,28 @@ The eight highest-fan-in libraries (~70 dependents between them) all still fail,
 now blocked on a *different* subsystem rather than a shared shim gap. Six rounds moved every
 one of them forward through the load sequence:
 
-| Library | Dependents | Current blocker |
-|---|---|---|
-| `architectury` | 12 | `client.event.TextureStitchEvent` (removed in 1.21) |
-| `yungsapi` | 10 | mixin `InvalidAccessorException` |
-| `cyclopscore` | 10 | `registries.NewRegistryEvent` |
-| `placebo` | 8 | `eventbus.api.GenericEvent` |
-| `geckolib` | 8 | `network.NetworkRegistry` |
-| `curios` | 8 | mixin apply |
-| `balm` | 6 | `common.world.BiomeModifier` |
-| `supermartijn642corelib` | 8 | mixin apply |
+| Library | Dependents | Blocker was | Now |
+|---|---|---|---|
+| `architectury` | 12 | `TextureStitchEvent` | renamed to `TextureAtlasStitchedEvent`; advanced to `EntityItemPickupEvent` |
+| `yungsapi` | 10 | mixin `InvalidAccessorException` | unchanged — Phase 7 |
+| `cyclopscore` | 10 | `NewRegistryEvent` | renamed; then `ModContainer`; now inherited-handler registration (fixed, unverified) |
+| `placebo` | 8 | `eventbus.api.GenericEvent` | shimmed; then networking; now `IModInfo` (fixed by the `forgespi` rule, unverified) |
+| `geckolib` | 8 | `network.NetworkRegistry` | shimmed; now a `VerifyError` on `ArmorMaterials` — see below |
+| `curios` | 8 | mixin apply | unchanged — Phase 7 |
+| `balm` | 6 | `common.world.BiomeModifier` | renamed; now `ICapabilityProvider` (fixed by the capabilities rule, unverified) |
+| `supermartijn642corelib` | 8 | mixin apply | unchanged — Phase 7 |
 
-**The head of the distribution is exhausted.** Early rounds cleared many mods per fix because
-the same few classes blocked everything; these eight now need seven different subsystems —
-client events, mixin accessors, registry events, generic events, networking, world-gen. Expect
-roughly one library per fix from here.
+**Every library that was blocked on a missing class has moved at least twice.** None load yet,
+but the failures are now deeper in the sequence — construction and verification rather than
+linking — which is what progress looks like here.
+
+**`geckolib`'s `VerifyError` is a new failure class worth naming.** 1.21 wrapped static vanilla
+registry constants in `Holder`: `ArmorMaterials.IRON` went from an enum constant implementing
+`ArmorMaterial` to a `Holder<ArmorMaterial>`, and `ArmorItem`'s constructor changed to match.
+Fixing it needs a rule kind that rewrites a *field reference's descriptor*, which does not
+exist — the current kinds are `TYPE_RENAME`, `TYPE_PREFIX_RENAME`, `RENAME_METHOD`,
+`CTOR_TO_STATIC`, `CTOR_SWAP2` and `REMOVED`, all of which address types or methods. This is
+Phase 4 (vanilla bridge) work, and it will not be the only instance of the pattern.
 
 Two of the eight are blocked on mixin *apply* rather than a missing class, which is the hard
 Phase 7 problem: the target exists and the injection point inside it does not match. Refmap

@@ -77,3 +77,8 @@ batch-report/candidate-delta.json
 batch-report/reference-delta.json
 batch-report/coverage.tsv
 batch-report/resource-coverage.tsv
+
+# Per-run snapshot of tools + rules, taken by batch-verify so mid-run edits cannot
+# affect a batch in flight. A copy of tracked files; never edit or commit it.
+batch-report/.tools-snapshot/
+batch-report/batch-results.tsv.prev

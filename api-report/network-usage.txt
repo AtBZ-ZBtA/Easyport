@@ -1,0 +1,131 @@
+scanned 433 jars for owners under net/minecraftforge/network/
+
+=== TYPES (jars referencing) ===
+  166  net/minecraftforge/network/NetworkEvent$Context
+  162  net/minecraftforge/network/simple/SimpleChannel
+  134  net/minecraftforge/network/NetworkHooks
+  122  net/minecraftforge/network/NetworkDirection
+  111  net/minecraftforge/network/PacketDistributor
+   85  net/minecraftforge/network/NetworkRegistry
+   74  net/minecraftforge/network/NetworkRegistry$ChannelBuilder
+   26  net/minecraftforge/network/simple/SimpleChannel$MessageBuilder
+   16  net/minecraftforge/network/PacketDistributor$TargetPoint
+   10  net/minecraftforge/network/ICustomPacket
+    8  net/minecraftforge/network/event/EventNetworkChannel
+    7  net/minecraftforge/network/NetworkEvent$ClientCustomPayloadEvent
+    7  net/minecraftforge/network/NetworkEvent$ServerCustomPayloadEvent
+    6  net/minecraftforge/network/IContainerFactory
+    6  net/minecraftforge/network/PacketDistributor$PacketTarget
+    5  net/minecraftforge/network/ConnectionData
+    4  net/minecraftforge/network/NetworkEvent$ServerCustomPayloadLoginEvent
+    3  net/minecraftforge/network/HandshakeHandler
+    3  net/minecraftforge/network/PlayMessages$SpawnEntity
+    3  net/minecraftforge/network/filters/VanillaPacketSplitter
+    2  net/minecraftforge/network/ServerStatusPing$ChannelData
+    1  net/minecraftforge/network/NetworkConstants
+    1  net/minecraftforge/network/NetworkEvent
+    1  net/minecraftforge/network/NetworkEvent$GatherLoginPayloadsEvent
+    1  net/minecraftforge/network/NetworkEvent$LoginPayloadEvent
+    1  net/minecraftforge/network/NetworkEvent$PacketDispatcher
+
+=== MEMBERS (jars calling) ===
+  143  M net/minecraftforge/network/NetworkEvent$Context.enqueueWork (Ljava/lang/Runnable;)Ljava/util/concurrent/CompletableFuture;
+  140  M net/minecraftforge/network/NetworkEvent$Context.setPacketHandled (Z)V
+  133  M net/minecraftforge/network/NetworkEvent$Context.getSender ()Lnet/minecraft/server/level/ServerPlayer;
+  116  M net/minecraftforge/network/simple/SimpleChannel.sendToServer (Ljava/lang/Object;)V
+  109  M net/minecraftforge/network/simple/SimpleChannel.send (Lnet/minecraftforge/network/PacketDistributor$PacketTarget;Ljava/lang/Object;)V
+  106  M net/minecraftforge/network/simple/SimpleChannel.registerMessage (ILjava/lang/Class;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lnet/minecraftforge/network/simple/IndexedMessageCodec$MessageHandler;
+  105  M net/minecraftforge/network/PacketDistributor.with (Ljava/util/function/Supplier;)Lnet/minecraftforge/network/PacketDistributor$PacketTarget;
+  101  F net/minecraftforge/network/NetworkDirection.PLAY_TO_CLIENT Lnet/minecraftforge/network/NetworkDirection;
+   82  F net/minecraftforge/network/PacketDistributor.PLAYER Lnet/minecraftforge/network/PacketDistributor;
+   82  M net/minecraftforge/network/NetworkRegistry.newSimpleChannel (Lnet/minecraft/resources/ResourceLocation;Ljava/util/function/Supplier;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Lnet/minecraftforge/network/simple/SimpleChannel;
+   74  M net/minecraftforge/network/NetworkRegistry$ChannelBuilder.clientAcceptedVersions (Ljava/util/function/Predicate;)Lnet/minecraftforge/network/NetworkRegistry$ChannelBuilder;
+   74  M net/minecraftforge/network/NetworkRegistry$ChannelBuilder.named (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/network/NetworkRegistry$ChannelBuilder;
+   74  M net/minecraftforge/network/NetworkRegistry$ChannelBuilder.networkProtocolVersion (Ljava/util/function/Supplier;)Lnet/minecraftforge/network/NetworkRegistry$ChannelBuilder;
+   74  M net/minecraftforge/network/NetworkRegistry$ChannelBuilder.serverAcceptedVersions (Ljava/util/function/Predicate;)Lnet/minecraftforge/network/NetworkRegistry$ChannelBuilder;
+   72  M net/minecraftforge/network/NetworkHooks.openScreen (Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/MenuProvider;Ljava/util/function/Consumer;)V
+   69  M net/minecraftforge/network/NetworkRegistry$ChannelBuilder.simpleChannel ()Lnet/minecraftforge/network/simple/SimpleChannel;
+   54  M net/minecraftforge/network/NetworkHooks.openScreen (Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/MenuProvider;Lnet/minecraft/core/BlockPos;)V
+   53  F net/minecraftforge/network/NetworkDirection.PLAY_TO_SERVER Lnet/minecraftforge/network/NetworkDirection;
+   51  M net/minecraftforge/network/simple/SimpleChannel.sendTo (Ljava/lang/Object;Lnet/minecraft/network/Connection;Lnet/minecraftforge/network/NetworkDirection;)V
+   50  M net/minecraftforge/network/PacketDistributor.noArg ()Lnet/minecraftforge/network/PacketDistributor$PacketTarget;
+   48  M net/minecraftforge/network/NetworkHooks.getEntitySpawningPacket (Lnet/minecraft/world/entity/Entity;)Lnet/minecraft/network/protocol/Packet;
+   47  M net/minecraftforge/network/NetworkEvent$Context.getDirection ()Lnet/minecraftforge/network/NetworkDirection;
+   39  F net/minecraftforge/network/PacketDistributor.ALL Lnet/minecraftforge/network/PacketDistributor;
+   36  F net/minecraftforge/network/PacketDistributor.TRACKING_CHUNK Lnet/minecraftforge/network/PacketDistributor;
+   29  F net/minecraftforge/network/PacketDistributor.TRACKING_ENTITY Lnet/minecraftforge/network/PacketDistributor;
+   26  M net/minecraftforge/network/NetworkDirection.getReceptionSide ()Lnet/minecraftforge/fml/LogicalSide;
+   26  M net/minecraftforge/network/NetworkHooks.openScreen (Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/MenuProvider;)V
+   26  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.add ()V
+   26  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.decoder (Ljava/util/function/Function;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+   26  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.encoder (Ljava/util/function/BiConsumer;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+   24  F net/minecraftforge/network/PacketDistributor.TRACKING_ENTITY_AND_SELF Lnet/minecraftforge/network/PacketDistributor;
+   22  F net/minecraftforge/network/PacketDistributor.DIMENSION Lnet/minecraftforge/network/PacketDistributor;
+   22  F net/minecraftforge/network/PacketDistributor.NEAR Lnet/minecraftforge/network/PacketDistributor;
+   22  M net/minecraftforge/network/simple/SimpleChannel.registerMessage (ILjava/lang/Class;Ljava/util/function/BiConsumer;Ljava/util/function/Function;Ljava/util/function/BiConsumer;Ljava/util/Optional;)Lnet/minecraftforge/network/simple/IndexedMessageCodec$MessageHandler;
+   18  M net/minecraftforge/network/simple/SimpleChannel.messageBuilder (Ljava/lang/Class;ILnet/minecraftforge/network/NetworkDirection;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+   16  F net/minecraftforge/network/PacketDistributor.SERVER Lnet/minecraftforge/network/PacketDistributor;
+   16  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.consumerMainThread (Ljava/util/function/BiConsumer;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+   11  M net/minecraftforge/network/PacketDistributor$TargetPoint.<init> (DDDDLnet/minecraft/resources/ResourceKey;)V
+   10  M net/minecraftforge/network/ICustomPacket.getThis ()Lnet/minecraft/network/protocol/Packet;
+   10  M net/minecraftforge/network/NetworkDirection.buildPacket (Lorg/apache/commons/lang3/tuple/Pair;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/network/ICustomPacket;
+   10  M net/minecraftforge/network/simple/SimpleChannel.messageBuilder (Ljava/lang/Class;I)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    9  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.consumerNetworkThread (Ljava/util/function/BiConsumer;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    9  M net/minecraftforge/network/simple/SimpleChannel.toVanillaPacket (Ljava/lang/Object;Lnet/minecraftforge/network/NetworkDirection;)Lnet/minecraft/network/protocol/Packet;
+    8  M net/minecraftforge/network/simple/SimpleChannel.reply (Ljava/lang/Object;Lnet/minecraftforge/network/NetworkEvent$Context;)V
+    7  M net/minecraftforge/network/NetworkDirection.getOriginationSide ()Lnet/minecraftforge/fml/LogicalSide;
+    7  M net/minecraftforge/network/NetworkEvent$ClientCustomPayloadEvent.getPayload ()Lnet/minecraft/network/FriendlyByteBuf;
+    7  M net/minecraftforge/network/NetworkEvent$ClientCustomPayloadEvent.getSource ()Ljava/util/function/Supplier;
+    7  M net/minecraftforge/network/NetworkEvent$ServerCustomPayloadEvent.getPayload ()Lnet/minecraft/network/FriendlyByteBuf;
+    7  M net/minecraftforge/network/NetworkEvent$ServerCustomPayloadEvent.getSource ()Ljava/util/function/Supplier;
+    6  M net/minecraftforge/network/NetworkEvent$Context.getNetworkManager ()Lnet/minecraft/network/Connection;
+    6  M net/minecraftforge/network/PacketDistributor$PacketTarget.send (Lnet/minecraft/network/protocol/Packet;)V
+    5  M net/minecraftforge/network/NetworkHooks.getConnectionData (Lnet/minecraft/network/Connection;)Lnet/minecraftforge/network/ConnectionData;
+    5  M net/minecraftforge/network/NetworkRegistry$ChannelBuilder.eventNetworkChannel ()Lnet/minecraftforge/network/event/EventNetworkChannel;
+    5  M net/minecraftforge/network/PacketDistributor$TargetPoint.p (DDDDLnet/minecraft/resources/ResourceKey;)Ljava/util/function/Supplier;
+    5  M net/minecraftforge/network/event/EventNetworkChannel.registerObject (Ljava/lang/Object;)V
+    5  M net/minecraftforge/network/simple/SimpleChannel.isRemotePresent (Lnet/minecraft/network/Connection;)Z
+    4  M net/minecraftforge/network/ConnectionData.getModList ()Lcom/google/common/collect/ImmutableList;
+    4  M net/minecraftforge/network/NetworkDirection.ordinal ()I
+    4  M net/minecraftforge/network/NetworkDirection.values ()[Lnet/minecraftforge/network/NetworkDirection;
+    4  M net/minecraftforge/network/PacketDistributor$PacketTarget.getDirection ()Lnet/minecraftforge/network/NetworkDirection;
+    4  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.consumerNetworkThread (Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder$ToBooleanBiFunction;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    4  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.loginIndex (Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    3  F net/minecraftforge/network/NetworkDirection.LOGIN_TO_CLIENT Lnet/minecraftforge/network/NetworkDirection;
+    3  F net/minecraftforge/network/NetworkDirection.LOGIN_TO_SERVER Lnet/minecraftforge/network/NetworkDirection;
+    3  M net/minecraftforge/network/HandshakeHandler.indexFirst (Lnet/minecraftforge/network/HandshakeHandler$HandshakeConsumer;)Ljava/util/function/BiConsumer;
+    3  M net/minecraftforge/network/NetworkRegistry.newEventChannel (Lnet/minecraft/resources/ResourceLocation;Ljava/util/function/Supplier;Ljava/util/function/Predicate;Ljava/util/function/Predicate;)Lnet/minecraftforge/network/event/EventNetworkChannel;
+    3  M net/minecraftforge/network/event/EventNetworkChannel.addListener (Ljava/util/function/Consumer;)V
+    3  M net/minecraftforge/network/filters/VanillaPacketSplitter.appendPackets (Lnet/minecraft/network/ConnectionProtocol;Lnet/minecraft/network/protocol/PacketFlow;Lnet/minecraft/network/protocol/Packet;Ljava/util/List;)V
+    3  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.markAsLoginPacket ()Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    3  M net/minecraftforge/network/simple/SimpleChannel.encodeMessage (Ljava/lang/Object;Lnet/minecraft/network/FriendlyByteBuf;)I
+    2  F net/minecraftforge/network/NetworkRegistry.ABSENT Lnet/minecraftforge/network/ServerStatusPing$ChannelData;
+    2  F net/minecraftforge/network/NetworkRegistry.ACCEPTVANILLA Ljava/lang/String;
+    2  M net/minecraftforge/network/NetworkRegistry.acceptMissingOr (Ljava/lang/String;)Ljava/util/function/Predicate;
+    2  M net/minecraftforge/network/PacketDistributor.<init> (Ljava/util/function/BiFunction;Lnet/minecraftforge/network/NetworkDirection;)V
+    2  M net/minecraftforge/network/ServerStatusPing$ChannelData.version ()Ljava/lang/String;
+    2  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.buildLoginPacketList (Ljava/util/function/Function;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    2  M net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.noResponse ()Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    1  M net/minecraftforge/network/ConnectionData.getChannels ()Lcom/google/common/collect/ImmutableMap;
+    1  M net/minecraftforge/network/HandshakeHandler.biConsumerFor (Lnet/minecraftforge/network/HandshakeHandler$HandshakeConsumer;)Ljava/util/function/BiConsumer;
+    1  M net/minecraftforge/network/IContainerFactory.create (ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraft/world/inventory/AbstractContainerMenu;
+    1  M net/minecraftforge/network/IContainerFactory.m_39994_ (ILnet/minecraft/world/entity/player/Inventory;)Lnet/minecraft/world/inventory/AbstractContainerMenu;
+    1  M net/minecraftforge/network/NetworkConstants.init ()Ljava/lang/String;
+    1  M net/minecraftforge/network/NetworkEvent$Context.getPacketDispatcher ()Lnet/minecraftforge/network/NetworkEvent$PacketDispatcher;
+    1  M net/minecraftforge/network/NetworkEvent$Context.getPacketHandled ()Z
+    1  M net/minecraftforge/network/NetworkEvent$GatherLoginPayloadsEvent.add (Lnet/minecraft/network/FriendlyByteBuf;Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;)V
+    1  M net/minecraftforge/network/NetworkEvent$LoginPayloadEvent.getPayload ()Lnet/minecraft/network/FriendlyByteBuf;
+    1  M net/minecraftforge/network/NetworkEvent$LoginPayloadEvent.getSource ()Ljava/util/function/Supplier;
+    1  M net/minecraftforge/network/NetworkEvent$PacketDispatcher.sendPacket (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/FriendlyByteBuf;)V
+    1  M net/minecraftforge/network/NetworkEvent.getPayload ()Lnet/minecraft/network/FriendlyByteBuf;
+    1  M net/minecraftforge/network/NetworkEvent.getSource ()Ljava/util/function/Supplier;
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.decode (Lnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraftforge/network/PlayMessages$SpawnEntity;
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.encode (Lnet/minecraftforge/network/PlayMessages$SpawnEntity;Lnet/minecraft/network/FriendlyByteBuf;)V
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getAdditionalData ()Lnet/minecraft/network/FriendlyByteBuf;
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getPosX ()D
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getPosY ()D
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getPosZ ()D
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getVelX ()I
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getVelY ()I
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.getVelZ ()I
+    1  M net/minecraftforge/network/PlayMessages$SpawnEntity.handle (Lnet/minecraftforge/network/PlayMessages$SpawnEntity;Ljava/util/function/Supplier;)V
