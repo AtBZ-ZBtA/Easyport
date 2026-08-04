@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 31 classes, moved 5 resources
 
@@ -19,6 +19,7 @@ Applied:
      2  TYPE_PREFIX net/minecraftforge/fml/event/
      5  TYPE_PREFIX net/minecraftforge/fml/util/
     12  TYPE_PREFIX net/minecraftforge/items/
+   108  TYPE_RENAME net/minecraft/data/recipes/FinishedRecipe
     27  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      5  TYPE_RENAME net/minecraftforge/common/ForgeSpawnEggItem
      1  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper

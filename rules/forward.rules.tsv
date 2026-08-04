@@ -635,3 +635,57 @@ TYPE_RENAME	net/minecraft/world/item/DyeableLeatherItem	easyport/vanilla/Dyeable
 # 1.21, so mods pass them interchangeably and every such call now fails verification. The largest
 # single remaining cause in the sweep -- 4 of 22 mods.
 COERCE	net/minecraft/client/resources/model/ModelResourceLocation	net/minecraft/resources/ResourceLocation	easyport/bridge/VanillaBridge	modelId
+
+# Deleted vanilla types, batch two. Nested names flatten -- a relocated class cannot keep its
+# outer class when the outer class is the thing that survived.
+TYPE_RENAME	net/minecraft/world/item/RecordItem	easyport/vanilla/RecordItem
+TYPE_RENAME	net/minecraft/world/item/BowlFoodItem	easyport/vanilla/BowlFoodItem
+TYPE_RENAME	net/minecraft/data/recipes/FinishedRecipe	easyport/vanilla/FinishedRecipe
+TYPE_RENAME	net/minecraft/core/particles/ParticleOptions$Deserializer	easyport/vanilla/ParticleOptionsDeserializer
+TYPE_RENAME	net/minecraft/world/level/storage/loot/LootDataManager	easyport/vanilla/LootDataManager
+TYPE_RENAME	net/minecraft/world/level/storage/loot/LootDataId	easyport/vanilla/LootDataId
+TYPE_RENAME	net/minecraft/world/level/storage/loot/functions/LootItemConditionalFunction$Serializer	easyport/vanilla/LootItemConditionalFunctionSerializer
+TYPE_RENAME	net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer$Serializer	easyport/vanilla/LootPoolSingletonContainerSerializer
+
+# The GUI overlay family. NeoForge replaced Forge's named-overlay registry with LayeredDraw
+# layers keyed by ResourceLocation, so RenderGuiOverlayEvent cannot be renamed onto
+# RenderGuiLayerEvent -- getOverlay() would return the wrong type. Shim plus GuiOverlayBridge,
+# the same shape the tick and network events use. 3 of the 22 sampled mods.
+
+# IContext is renamed and ICondition is shimmed, which looks inconsistent and is not. IContext
+# kept its exact shape (EMPTY, getTag, getAllTags), so the rename is safe and *necessary* -- it is
+# what makes a mod's test(IContext) satisfy NeoForge's abstract method. ICondition gained a second
+# abstract method, codec(), which mods compiled against 1.20.1 cannot have implemented; renaming
+# it would resolve cleanly and then throw AbstractMethodError on the first recipe that used one.
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/ICondition$IContext	net/neoforged/neoforge/common/conditions/ICondition$IContext
+
+# --- INTERFACE_SUBSTITUTE: a vanilla interface that became a record ----------------------------
+#
+# INTERFACE_SUBSTITUTE  platformType <TAB> substitute
+#
+# Applied only in the implements clause of a class that actually implements the type. Deliberately
+# not a TYPE_RENAME: that would also rewrite the mod's reads of vanilla's own constants, which are
+# real records rather than implementations of the substitute, and the mod would fail verification
+# somewhere else entirely. Same trap the Holder work fell into by letting a new type spread.
+#
+# The paired COERCE converts an instance back into the real record wherever one is passed to
+# vanilla, including from mod classes the substitution created -- which is why Translate collects
+# substituted classes in a pass over the whole jar before rewriting any of them.
+
+# 53 corpus jars reference ArmorMaterial, and defining a custom one by implementing the interface
+# was the standard 1.20.1 idiom. 1.21 made it a record, so every such class fails to load outright
+# and takes the items registered beside it. The conversion is total -- every component of the
+# record has a getter on the old interface.
+INTERFACE_SUBSTITUTE	net/minecraft/world/item/ArmorMaterial	easyport/vanilla/ArmorMaterial
+COERCE	easyport/vanilla/ArmorMaterial	net/minecraft/world/item/ArmorMaterial	easyport/bridge/ArmorMaterialBridge	toVanilla
+
+# Forge patched ItemStack to extend CapabilityProvider, so this compiled with a parameter type
+# that no longer exists and an argument that was never really one. Neither a shim nor a rename
+# reaches a patched vanilla method; the call moves to a bridge, and the second parameter becomes
+# Object because the call site still names Forge's type.
+METHOD_TO_STATIC	net/minecraft/world/item/ItemStack	areCapsCompatible	(Lnet/minecraftforge/common/capabilities/CapabilityProvider;)Z	easyport/bridge/CapabilityBridge	areCapsCompatible	(Lnet/minecraft/world/item/ItemStack;Ljava/lang/Object;)Z
+
+# Ingredient is final in 1.21, so a mod's custom ingredient cannot be one. NeoForge's
+# ICustomIngredient is deliberately not an Ingredient either -- it converts into one -- which is
+# the same shape as the ArmorMaterial substitution and handled the same way.
+COERCE	net/minecraftforge/common/crafting/AbstractIngredient	net/minecraft/world/item/crafting/Ingredient	easyport/bridge/IngredientBridge	toVanilla

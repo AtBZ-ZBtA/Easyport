@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 153 classes, moved 1 resources
 
@@ -12,16 +12,20 @@ Applied:
      1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
      2  SRG_IN_TEXT
     30  TYPE_PREFIX net/minecraftforge/client/event/
-    19  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
+     2  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
      2  TYPE_PREFIX net/minecraftforge/energy/
     41  TYPE_PREFIX net/minecraftforge/event/
      2  TYPE_PREFIX net/minecraftforge/fml/event/
      2  TYPE_PREFIX net/minecraftforge/forgespi/
      9  TYPE_PREFIX net/minecraftforge/items/
      1  TYPE_PREFIX net/minecraftforge/server/
+    12  TYPE_RENAME net/minecraft/world/level/storage/loot/LootDataId
+     3  TYPE_RENAME net/minecraft/world/level/storage/loot/LootDataManager
      1  TYPE_RENAME net/minecraft/world/level/storage/loot/Serializer
+     6  TYPE_RENAME net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer$Serializer
      5  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      3  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
+    17  TYPE_RENAME net/minecraftforge/common/crafting/conditions/ICondition$IContext
      8  TYPE_RENAME net/minecraftforge/event/TickEvent
     12  TYPE_RENAME net/minecraftforge/event/TickEvent$ClientTickEvent
     20  TYPE_RENAME net/minecraftforge/event/TickEvent$Phase

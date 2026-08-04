@@ -1,7 +1,5 @@
 curios.jar
   143 classes, 1322 methods analysed
-  1 classes with a verification error (1 methods)
+  0 classes with a verification error (0 methods)
   1 other-mod classes absent from this classpath, not counted
-
-    1  [missing-platform-type] NoClassDefFoundError: net/minecraft/world/level/storage/loot/functions/LootItemConditionalFunction$Serializer
-         first at  top/theillusivec4/curios/common/util/SetCurioAttributesFunction.register()V
+  CLEAN - every method type-checks

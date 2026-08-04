@@ -1,9 +1,5 @@
 architectury.jar
   382 classes, 1546 methods analysed
-  2 classes with a verification error (2 methods)
+  0 classes with a verification error (0 methods)
   1 other-mod classes absent from this classpath, not counted
-
-    1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.item.RecordItem not present
-         first at  dev/architectury/core/item/ArchitecturyRecordItem.lambda$new$0(Lnet/minecraft/sounds/SoundEvent;)V
-    1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.level.storage.loot.LootDataManager not present
-         first at  dev/architectury/mixin/forge/MixinLootDataManager.reload(Lnet/minecraft/server/packs/resources/PreparableReloadListener$PreparationBarrier;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/util/profiling/ProfilerFiller;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;)V
+  CLEAN - every method type-checks

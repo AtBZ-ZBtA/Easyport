@@ -95,6 +95,15 @@ public class Translate {
     /** "from\tto" -> the bridge call that converts between them. See Translate#coercion. */
     private final Map<String, RenameRule> coercions = new LinkedHashMap<>();
 
+    /** A platform type that stopped being an interface -> what to implement in its place. */
+    private final Map<String, String> interfaceSubstitutes = new LinkedHashMap<>();
+
+    /** A mod class whose implements clause was substituted -> the substitute it now carries. */
+    private final Map<String, String> substitutedClasses = new HashMap<>();
+
+    /** Translated class bytes, held until the coercion pass has run over all of them. */
+    private final Map<String, byte[]> transformedClasses = new LinkedHashMap<>();
+
     private final Map<String, Integer> appliedCounts = new TreeMap<>();
     private final Map<String, Integer> unresolved = new TreeMap<>();
     private int classesRewritten = 0, resourcesMoved = 0;
@@ -239,6 +248,7 @@ public class Translate {
              ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(out))) {
 
             findDeadMixins(zip);
+            findSubstitutedClasses(zip);
 
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
@@ -277,6 +287,10 @@ public class Translate {
                 if (name.endsWith(".class")) {
                     data = transformClass(data);
                     classesRewritten++;
+                    // Held rather than written, so the coercion pass can run against the
+                    // *translated* hierarchy. See runCoercionPass.
+                    transformedClasses.put(name, data);
+                    continue;
                 } else {
                     String moved = renamePath(name);
                     if (!moved.equals(name)) { resourcesMoved++; name = moved; }
@@ -309,6 +323,12 @@ public class Translate {
 
                 zos.putNextEntry(new ZipEntry(name));
                 zos.write(data);
+                zos.closeEntry();
+            }
+            runCoercionPass();
+            for (var e : transformedClasses.entrySet()) {
+                zos.putNextEntry(new ZipEntry(e.getKey()));
+                zos.write(e.getValue());
                 zos.closeEntry();
             }
         }
@@ -399,7 +419,6 @@ public class Translate {
             // unwrap pass is about to change.
             applyHolderUnwrap(m.instructions);
             applyWrapAdapters(m);
-            applyValueCoercions(node, m);
             recordRemoved(m.instructions);
         }
 
@@ -764,17 +783,29 @@ public class Translate {
             count(unresolved, "HIERARCHY cannot extend final class: " + node.name
                             + " extends " + node.superName);
         }
-        for (String itf : node.interfaces) {
+        for (int i = 0; i < node.interfaces.size(); i++) {
+            String itf = node.interfaces.get(i);
             // targetMembers is the "was actually inspected" test, and it has to be. Asking
             // targetInterfaces alone reports every type the index did not look inside as "no
             // longer an interface" -- the first run of this check accused IFluidHandler,
             // IItemHandlerModifiable and BiomeModifier, all of which are interfaces and always
             // were. Same shape as the rename-target validation: never claim absence from a part
             // of the index that was never populated.
-            if (targetMembers.containsKey(itf) && !targetInterfaces.contains(itf)) {
+            if (!targetMembers.containsKey(itf) || targetInterfaces.contains(itf)) continue;
+
+            String substitute = interfaceSubstitutes.get(itf);
+            if (substitute == null) {
                 count(unresolved, "HIERARCHY not an interface any more: " + node.name
                                 + " implements " + itf);
+                continue;
             }
+            // Substituted only here, in the implements clause of a class that actually implements
+            // it. A TYPE_RENAME would also rewrite the mod's reads of vanilla's own constants,
+            // which are real records and not implementations of the substitute -- the mod would
+            // then hold a record in a variable typed as the interface and fail somewhere else
+            // entirely. Same trap the Holder work fell into by letting a new type spread.
+            node.interfaces.set(i, substitute);
+            count(appliedCounts, "HIERARCHY interface substituted: " + itf + " -> " + substitute);
         }
 
         for (MethodNode m : node.methods) {
@@ -793,6 +824,64 @@ public class Translate {
             // Private, so nothing can dispatch to it by accident. Only the declaration is touched:
             // call sites keep naming the original, and now reach the inherited final method --
             // which is the behaviour that is actually available.
+        }
+    }
+
+    /**
+     * Finds every class in the jar whose implements clause will be substituted, before any class
+     * is rewritten.
+     *
+     * A separate pass because the order classes come out of a zip is not the order they depend on
+     * each other in. The class that *passes* a custom armour material to vanilla is usually read
+     * before the material class itself, and by then the coercion pass has to already know that
+     * material no longer implements what its signature says it does.
+     *
+     * Reads only the header -- SKIP_CODE and no member walk -- so a whole jar costs about as much
+     * as one ordinary class transform.
+     */
+    private void findSubstitutedClasses(ZipFile zip) {
+        if (interfaceSubstitutes.isEmpty() && coercions.isEmpty()) return;
+
+        Map<String, String> superOf = new HashMap<>();
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry e = entries.nextElement();
+            if (!e.getName().endsWith(".class")) continue;
+            try {
+                ClassReader reader = new ClassReader(read(zip, e));
+                if (reader.getSuperName() != null) {
+                    superOf.put(reader.getClassName(), reader.getSuperName());
+                }
+                for (String itf : reader.getInterfaces()) {
+                    String substitute = interfaceSubstitutes.get(itf);
+                    if (substitute != null && targetMembers.containsKey(itf)
+                            && !targetInterfaces.contains(itf)) {
+                        substitutedClasses.put(reader.getClassName(), substitute);
+                    }
+                }
+            } catch (Exception ignored) {
+                // Unreadable class. It will fail the same way in the main pass, where the failure
+                // is reported; silently missing it here only costs a coercion.
+            }
+        }
+
+        // A subclass of a coercion source needs the same conversion its parent does.
+        // PerkTierIngredient extends the AbstractIngredient shim, and a method declared to return
+        // Ingredient returning one of those is the same problem one level down -- matching only
+        // exact names left it failing with the identical error under a different class name.
+        Set<String> sources = new HashSet<>();
+        for (String pair : coercions.keySet()) sources.add(pair.substring(0, pair.indexOf('\t')));
+        for (String cls : superOf.keySet()) {
+            if (substitutedClasses.containsKey(cls)) continue;
+            String walk = superOf.get(cls);
+            Set<String> seen = new HashSet<>();
+            while (walk != null && seen.add(walk)) {
+                if (sources.contains(walk)) {
+                    substitutedClasses.put(cls, walk);
+                    break;
+                }
+                walk = superOf.get(walk);
+            }
         }
     }
 
@@ -1037,14 +1126,14 @@ public class Translate {
      * Analysis is not cheap, so a method is only analysed when its instructions actually mention
      * a type some rule can coerce -- which for most methods in most mods is never.
      */
-    private void applyValueCoercions(ClassNode owner, MethodNode method) {
+    private void applyValueCoercions(ClassNode owner, MethodNode method, ClassLoader loader) {
         if (coercions.isEmpty() || method.instructions == null) return;
         if (!mentionsCoercibleType(method)) return;
 
         org.objectweb.asm.tree.analysis.Frame<org.objectweb.asm.tree.analysis.BasicValue>[] frames;
         try {
-            var verifier = new LenientVerifier(owner, coercions.keySet());
-            verifier.setClassLoader(coercionLoader());
+            var verifier = new LenientVerifier(owner, this::lenientPair);
+            verifier.setClassLoader(loader);
             frames = new org.objectweb.asm.tree.analysis.Analyzer<>(verifier)
                     .analyze(owner.name, method);
         } catch (Throwable t) {
@@ -1057,6 +1146,41 @@ public class Translate {
         }
 
         AbstractInsnNode[] insns = method.instructions.toArray();
+
+        // Returns first, and they are the easy half: the value is already on top of the stack, so
+        // the conversion goes straight in front of the ARETURN with no spill. A mod method
+        // declared to return Ingredient that returns its own custom ingredient needs exactly
+        // this, and handling only arguments left it failing with the same error in a new place.
+        Type declaredReturn = Type.getReturnType(method.desc);
+        if (declaredReturn.getSort() == Type.OBJECT) {
+            for (int i = 0; i < insns.length; i++) {
+                if (insns[i].getOpcode() != Opcodes.ARETURN || frames[i] == null) continue;
+                var top = frames[i].getStack(frames[i].getStackSize() - 1);
+                if (top == null || top.getType() == null) continue;
+                if (top.getType().getSort() != Type.OBJECT) continue;
+                if (top.getType().equals(declaredReturn)) continue;
+                RenameRule via = declaredCoercion(top.getType().getInternalName(),
+                                                  declaredReturn.getInternalName());
+                if (via != null) {
+                    method.instructions.insertBefore(insns[i], new MethodInsnNode(
+                            Opcodes.INVOKESTATIC, via.newOwner(), via.newName(), via.newDesc(),
+                            false));
+                    count(appliedCounts, "COERCE-marker");
+                    count(appliedCounts, "COERCE return -> " + declaredReturn.getInternalName());
+                    applyValueCoercions(owner, method, loader);
+                    return;
+                }
+                // The value is a *merge* of two branches, so its type at the return is whatever
+                // the two have in common -- which, now that the custom type is no longer an
+                // Ingredient, is Object. Converting here is impossible: there is no single value
+                // to convert, and one branch already holds the right type.
+                //
+                // So the conversion moves to the branch that needs it. A source analysis says
+                // which instructions produced the merged value, and each is checked on its own.
+                if (coerceAtProducers(owner, method, insns, i, declaredReturn, loader)) return;
+            }
+        }
+
         for (int i = 0; i < insns.length; i++) {
             if (!(insns[i] instanceof MethodInsnNode call) || frames[i] == null) continue;
             Type[] params = Type.getArgumentTypes(call.desc);
@@ -1071,8 +1195,12 @@ public class Translate {
                 if (value == null || value.getType() == null) continue;
                 if (value.getType().getSort() != Type.OBJECT) continue;
                 if (value.getType().equals(params[p])) continue;
-                RenameRule via = coercions.get(
-                        value.getType().getInternalName() + "\t" + params[p].getInternalName());
+                // Must go through the substitution-aware lookup, not the raw map. A mod class
+                // whose implements clause was substituted has a name no rule mentions, and
+                // reading the map directly silently matched nothing for exactly the case the
+                // substitution exists to serve.
+                RenameRule via = declaredCoercion(value.getType().getInternalName(),
+                                                  params[p].getInternalName());
                 if (via == null) continue;
 
                 InsnList fix = new InsnList();
@@ -1094,20 +1222,204 @@ public class Translate {
                 count(appliedCounts, "COERCE " + via.owner() + " -> " + params[p].getInternalName());
                 // One insertion invalidates the frames this loop is reading, so the method is
                 // re-analysed from scratch rather than patched further against stale ones.
-                applyValueCoercions(owner, method);
+                count(appliedCounts, "COERCE-marker");
+                applyValueCoercions(owner, method, loader);
                 return;
             }
         }
+    }
+
+    /**
+     * Runs the coercion pass over every translated class, once all of them exist.
+     *
+     * <h2>Why this cannot run inline</h2>
+     *
+     * The analysis needs to load the classes it reasons about, and the only version of them that
+     * can be loaded is the translated one. Pointed at the input jar it tries to define
+     * {@code AquaArmorMaterials implements ArmorMaterial} against a 1.21 platform where that is a
+     * record, and fails with the very {@code IncompatibleClassChangeError} the substitution
+     * exists to prevent -- so every method needing a coercion was skipped, for a reason that read
+     * like the fix had not worked.
+     *
+     * Holding the translated classes in memory and serving them to the verifier is what makes the
+     * question answerable: by this point {@code AquaArmorMaterials} implements
+     * {@code easyport.vanilla.ArmorMaterial}, which is a real interface, and the hierarchy links.
+     */
+    private void runCoercionPass() {
+        if (coercions.isEmpty() || transformedClasses.isEmpty()) return;
+        ClassLoader loader = new TranslatedClassLoader(transformedClasses, coercionLoader());
+        for (var entry : transformedClasses.entrySet()) {
+            ClassNode node = new ClassNode();
+            try {
+                new ClassReader(entry.getValue()).accept(node, 0);
+            } catch (Exception e) {
+                continue;
+            }
+            boolean changed = false;
+            for (MethodNode m : node.methods) {
+                if (m.instructions == null) continue;
+                int before = appliedCounts.getOrDefault("COERCE-marker", 0);
+                applyValueCoercions(node, m, loader);
+                if (appliedCounts.getOrDefault("COERCE-marker", 0) != before) changed = true;
+            }
+            if (changed) {
+                ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+                node.accept(writer);
+                entry.setValue(writer.toByteArray());
+            }
+        }
+        appliedCounts.remove("COERCE-marker");
+    }
+
+    /** Serves the in-progress translated classes to the coercion analysis, platform behind. */
+    private static final class TranslatedClassLoader extends ClassLoader {
+        private final Map<String, byte[]> classes;
+
+        TranslatedClassLoader(Map<String, byte[]> classes, ClassLoader parent) {
+            super(parent);
+            this.classes = classes;
+        }
+
+        @Override
+        protected Class<?> findClass(String name) throws ClassNotFoundException {
+            byte[] data = classes.get(name.replace('.', '/') + ".class");
+            if (data == null) throw new ClassNotFoundException(name);
+            return defineClass(name, data, 0, data.length);
+        }
+
+        @Override
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            // Translated classes win over the parent. Without this the platform's copy of a
+            // vanilla-named class the mod also carries would shadow the translated one, which is
+            // the whole point of serving these at all.
+            synchronized (getClassLoadingLock(name)) {
+                Class<?> found = findLoadedClass(name);
+                if (found == null) {
+                    if (classes.containsKey(name.replace('.', '/') + ".class")) {
+                        found = findClass(name);
+                    } else {
+                        return super.loadClass(name, resolve);
+                    }
+                }
+                if (resolve) resolveClass(found);
+                return found;
+            }
+        }
+    }
+
+    /**
+     * The declared conversion from one type to another, following an interface substitution.
+     *
+     * The second lookup is what lets a mod's own class participate: {@code AquaArmorMaterials}
+     * appears in no rule, but its implements clause was rewritten to
+     * {@code easyport.vanilla.ArmorMaterial}, and that type does have a conversion.
+     */
+    private RenameRule declaredCoercion(String have, String want) {
+        RenameRule exact = coercions.get(have + "\t" + want);
+        if (exact != null) return exact;
+        String via = substitutedClasses.get(have);
+        return via == null ? null : coercions.get(via + "\t" + want);
+    }
+
+    private boolean canCoerce(String have, String want) {
+        return declaredCoercion(have, want) != null;
+    }
+
+    /**
+     * What the analysis tolerates, which is deliberately wider than what it will act on.
+     *
+     * A branch merge collapses to {@code Object} once one side stops being assignable to the
+     * other, and the analyser checks the return type itself -- so it threw at the return and
+     * produced no frames at all, leaving nothing to diagnose the merge from. The pass could see
+     * the error and never see the method.
+     *
+     * Accepting {@code Object} where a coercion target is expected costs nothing, because this
+     * pass only ever *adds* conversions and the sweep re-verifies afterwards with a real
+     * verifier. A leniency that turns out to be wrong shows up as an unfixed finding, never as
+     * bad bytecode.
+     */
+    private boolean lenientPair(String have, String want) {
+        if (canCoerce(have, want)) return true;
+        if (!have.equals("java/lang/Object")) return false;
+        for (String pair : coercions.keySet()) {
+            if (pair.endsWith("\t" + want)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * A cheap gate, because the analysis is not cheap and most methods have nothing to find.
+     *
+     * Matches both the declared coercion sources and the mod's own substituted classes. Missing
+     * the second set would skip exactly the methods the substitution was performed for: a custom
+     * armour material's own name never appears in a COERCE rule, and it is the only type that
+     * shows up at the call sites that now need converting.
+     */
+    /**
+     * Converts each branch that feeds a merged value, where converting the merge itself cannot
+     * work.
+     *
+     * {@code cond ? new PerkTierIngredient(...) : Ingredient.of(tag)} leaves the two branches with
+     * no common type but {@code Object} once the custom ingredient stops being an
+     * {@code Ingredient}. There is nothing at the return to convert -- one branch is already
+     * right, and the other is not reachable from there.
+     *
+     * A {@code SourceInterpreter} answers which instructions produced the value, and the type
+     * analysis says what each of them left on the stack. The conversion then goes immediately
+     * after the producer that needs it, where the value is unambiguous and on top of the stack.
+     *
+     * @return whether anything was inserted, in which case the caller must re-analyse
+     */
+    private boolean coerceAtProducers(
+            ClassNode owner, MethodNode method, AbstractInsnNode[] insns, int at,
+            Type want, ClassLoader loader) {
+        org.objectweb.asm.tree.analysis.Frame<org.objectweb.asm.tree.analysis.BasicValue>[] types;
+        try {
+            var verifier = new LenientVerifier(owner, this::lenientPair);
+            verifier.setClassLoader(loader);
+            types = new org.objectweb.asm.tree.analysis.Analyzer<>(verifier)
+                    .analyze(owner.name, method);
+        } catch (Throwable t) {
+            return false;
+        }
+
+        // The end of a branch, not the instruction that built the value. Tracing back to the
+        // producer lands on the NEW/DUP pair, where the object does not exist yet and nothing can
+        // be called on it. The jump into the merge is the last point where the branch's value is
+        // unambiguous and on top of the stack, which is exactly what a conversion needs.
+        //
+        // Scoped to a method already known to fail at a return of `want`, so this cannot fire on
+        // a value that was merely passing through.
+        for (int i = 0; i < insns.length; i++) {
+            if (insns[i].getOpcode() != Opcodes.GOTO || types[i] == null) continue;
+            if (types[i].getStackSize() == 0) continue;
+            var top = types[i].getStack(types[i].getStackSize() - 1);
+            if (top == null || top.getType() == null) continue;
+            if (top.getType().getSort() != Type.OBJECT) continue;
+            RenameRule via = declaredCoercion(top.getType().getInternalName(),
+                                              want.getInternalName());
+            if (via == null) continue;
+            method.instructions.insertBefore(insns[i], new MethodInsnNode(
+                    Opcodes.INVOKESTATIC, via.newOwner(), via.newName(), via.newDesc(), false));
+            count(appliedCounts, "COERCE-marker");
+            count(appliedCounts, "COERCE at branch -> " + want.getInternalName());
+            applyValueCoercions(owner, method, loader);
+            return true;
+        }
+        return false;
     }
 
     private boolean mentionsCoercibleType(MethodNode method) {
         for (AbstractInsnNode insn : method.instructions) {
             String probe = insn instanceof MethodInsnNode m ? m.owner + m.desc
                          : insn instanceof TypeInsnNode t ? t.desc
-                         : insn instanceof FieldInsnNode f ? f.desc : null;
+                         : insn instanceof FieldInsnNode f ? f.owner + f.desc : null;
             if (probe == null) continue;
             for (String pair : coercions.keySet()) {
                 if (probe.contains(pair.substring(0, pair.indexOf('\t')))) return true;
+            }
+            for (String substituted : substitutedClasses.keySet()) {
+                if (probe.contains(substituted)) return true;
             }
         }
         return false;
@@ -1156,15 +1468,15 @@ public class Translate {
     private static final class LenientVerifier
             extends org.objectweb.asm.tree.analysis.SimpleVerifier {
 
-        private final Set<String> allowed;
+        private final java.util.function.BiPredicate<String, String> allowed;
 
-        LenientVerifier(ClassNode owner, Set<String> allowedPairs) {
+        LenientVerifier(ClassNode owner, java.util.function.BiPredicate<String, String> allowed) {
             super(Opcodes.ASM9,
                   Type.getObjectType(owner.name),
                   owner.superName == null ? null : Type.getObjectType(owner.superName),
                   owner.interfaces.stream().map(Type::getObjectType).toList(),
                   (owner.access & Opcodes.ACC_INTERFACE) != 0);
-            this.allowed = allowedPairs;
+            this.allowed = allowed;
         }
 
         @Override
@@ -1172,8 +1484,33 @@ public class Translate {
                                       org.objectweb.asm.tree.analysis.BasicValue expected) {
             if (super.isSubTypeOf(value, expected)) return true;
             return value.getType() != null && expected.getType() != null
-                && allowed.contains(value.getType().getInternalName() + "\t"
-                                  + expected.getType().getInternalName());
+                && value.getType().getSort() == Type.OBJECT
+                && expected.getType().getSort() == Type.OBJECT
+                && allowed.test(value.getType().getInternalName(),
+                                expected.getType().getInternalName());
+        }
+
+        /**
+         * Assignability, degrading to "yes" for a type this classpath cannot resolve.
+         *
+         * A mod's dependencies are usually not present when it is translated -- aquaculture's
+         * armour code touches geckolib -- and SimpleVerifier answers an unresolvable type by
+         * throwing, which fails the whole method rather than the one query. That skipped exactly
+         * the methods the ArmorMaterial substitution had just been built for.
+         *
+         * Assuming compatible is safe here because it can only cause a coercion to be *missed*,
+         * never inserted wrongly: insertions are driven by an explicit type-pair lookup against
+         * the rules, not by this answer. Same degradation the rename-target index uses, and for
+         * the same reason -- a check that is confidently wrong about what it cannot see does more
+         * damage than one that declines to answer.
+         */
+        @Override
+        protected boolean isAssignableFrom(Type target, Type value) {
+            try {
+                return super.isAssignableFrom(target, value);
+            } catch (Throwable unresolvable) {
+                return true;
+            }
         }
     }
     private String[] platformJarPaths = new String[0];
@@ -1221,7 +1558,18 @@ public class Translate {
             return new RenameRule(null, null, null, HOLDER_BRIDGE, "wrap",
                     "(Ljava/lang/Object;)" + HOLDER_DESC);
         }
-        return coercions.get(have.getInternalName() + "\t" + want.getInternalName());
+        RenameRule exact = coercions.get(have.getInternalName() + "\t" + want.getInternalName());
+        if (exact != null) return exact;
+
+        // A mod's *own* class whose implements clause was substituted. AquaArmorMaterials no
+        // longer implements ArmorMaterial -- it implements easyport.vanilla.ArmorMaterial -- so
+        // passing one where vanilla wants the record needs the same conversion the substitute
+        // itself does, and the value's static type is a name no rule could have been written
+        // against. This is why the substitutions are collected in a pass over the whole jar
+        // before any class is rewritten: the class that *uses* AquaArmorMaterials is very often
+        // read out of the zip before AquaArmorMaterials itself.
+        String via = substitutedClasses.get(have.getInternalName());
+        return via == null ? null : coercions.get(via + "\t" + want.getInternalName());
     }
 
     // ---- resources ---------------------------------------------------------------------
@@ -1854,6 +2202,9 @@ public class Translate {
                 }
                 case "REMOVED" -> {
                     if (c.length >= 2) removed.add(c[1]);
+                }
+                case "INTERFACE_SUBSTITUTE" -> {
+                    if (c.length >= 3) interfaceSubstitutes.put(c[1], c[2]);
                 }
                 case "COERCE" -> {
                     // from <TAB> to <TAB> bridgeOwner <TAB> bridgeName. The bridge's descriptor

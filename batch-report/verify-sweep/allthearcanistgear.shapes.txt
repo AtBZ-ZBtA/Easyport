@@ -1,5 +1,0 @@
-[hierarchy] IncompatibleClassChangeError: class com.github.jarva.allthearcanistgear.common.armor.ArcanistMaterial can not implement net.minecraft.world.item.ArmorMaterial, because it is not an interface (net.minecraft.world.item.ArmorMaterial is in unnamed module of loader java.net.URLClassLoader
-[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.data.recipes.FinishedRecipe not present
-[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.crafting.AbstractIngredient not present
-[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.crafting.IIngredientSerializer not present
-[missing-platform-type] NoClassDefFoundError: net/minecraftforge/common/crafting/AbstractIngredient

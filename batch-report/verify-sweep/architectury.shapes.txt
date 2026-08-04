@@ -1,2 +1,0 @@
-[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.item.RecordItem not present
-[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.level.storage.loot.LootDataManager not present

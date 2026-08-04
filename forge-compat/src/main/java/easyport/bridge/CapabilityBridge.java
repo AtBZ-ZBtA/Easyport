@@ -104,5 +104,23 @@ public final class CapabilityBridge {
         return (T) provider.getCapability((Capability<Object>) capability, side).orElse(null);
     }
 
+    /**
+     * Forge's {@code ItemStack.areCapsCompatible}, used when deciding whether two stacks merge.
+     *
+     * A patched vanilla method, so it is neither a Forge type Easyport can shim nor a vanilla one
+     * it can rename -- the call has to move to a bridge. It is also invisible to the type gap
+     * report for a second reason: the parameter is declared {@code CapabilityProvider} and the
+     * argument is an {@code ItemStack}, which only worked because Forge patched {@code ItemStack}
+     * to extend it. Offline verification is what surfaced it.
+     *
+     * 1.20.5 folded per-stack capability data into components, and component equality is exactly
+     * the question this asked. The second parameter is typed {@code Object} because the call site
+     * still names Forge's type, which no longer exists at run time.
+     */
+    public static boolean areCapsCompatible(net.minecraft.world.item.ItemStack self, Object other) {
+        return other instanceof net.minecraft.world.item.ItemStack that
+            && net.minecraft.world.item.ItemStack.isSameItemSameComponents(self, that);
+    }
+
     private CapabilityBridge() {}
 }

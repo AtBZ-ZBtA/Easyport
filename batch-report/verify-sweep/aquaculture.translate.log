@@ -1,12 +1,14 @@
-Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 120 classes, moved 217 resources
 
 Applied:
+     4  COERCE easyport/vanilla/ArmorMaterial -> net/minecraft/world/item/ArmorMaterial
      6  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
     41  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      6  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  EBS_STRIP (no @SubscribeEvent methods) com/teammetallurgy/aquaculture/api/fishing/Hooks
+     1  HIERARCHY interface substituted: net/minecraft/world/item/ArmorMaterial -> easyport/vanilla/ArmorMaterial
      1  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
      2  HOLDER_UNWRAP field net/minecraft/world/effect/MobEffects
      5  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
@@ -16,18 +18,21 @@ Applied:
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.gameEvent
      1  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
      1  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
+     1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#areCapsCompatible -> easyport/bridge/CapabilityBridge#areCapsCompatible
      2  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      5  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
      1  SRG_IN_TEXT
     37  TYPE_PREFIX net/minecraftforge/client/event/
      3  TYPE_PREFIX net/minecraftforge/client/extensions/
      4  TYPE_PREFIX net/minecraftforge/common/Tags
-    28  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
+    10  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
     56  TYPE_PREFIX net/minecraftforge/event/
      4  TYPE_PREFIX net/minecraftforge/fluids/
      1  TYPE_PREFIX net/minecraftforge/fml/util/
    104  TYPE_PREFIX net/minecraftforge/items/
+     2  TYPE_RENAME net/minecraft/world/item/BowlFoodItem
     13  TYPE_RENAME net/minecraft/world/item/DyeableLeatherItem
+     4  TYPE_RENAME net/minecraft/world/level/storage/loot/LootDataManager
      3  TYPE_RENAME net/minecraft/world/level/storage/loot/Serializer
      9  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      7  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
@@ -38,6 +43,7 @@ Applied:
      1  TYPE_RENAME net/minecraftforge/common/brewing/BrewingRecipeRegistry
      1  TYPE_RENAME net/minecraftforge/common/brewing/IBrewingRecipe
      2  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
+    18  TYPE_RENAME net/minecraftforge/common/crafting/conditions/ICondition$IContext
      1  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
      9  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier
     14  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier$Phase
@@ -60,7 +66,6 @@ Applied:
      3  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
-     1  HIERARCHY not an interface any more: com/teammetallurgy/aquaculture/api/AquaArmorMaterials implements net/minecraft/world/item/ArmorMaterial
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/AquaFishEntity.getDimensions(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions; (final on net/minecraft/world/entity/LivingEntity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/FishMountEntity.recalculateBoundingBox()V (final on net/minecraft/world/entity/decoration/HangingEntity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/TurtleLandEntity.canBreatheUnderwater()Z (final on net/minecraft/world/entity/LivingEntity)
