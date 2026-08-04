@@ -689,3 +689,23 @@ METHOD_TO_STATIC	net/minecraft/world/item/ItemStack	areCapsCompatible	(Lnet/mine
 # ICustomIngredient is deliberately not an Ingredient either -- it converts into one -- which is
 # the same shape as the ArmorMaterial substitution and handled the same way.
 COERCE	net/minecraftforge/common/crafting/AbstractIngredient	net/minecraft/world/item/crafting/Ingredient	easyport/bridge/IngredientBridge	toVanilla
+
+# --- ARG_FILL: a parameter 1.21 added ----------------------------------------------------------
+#
+# ARG_FILL  parameterType <TAB> bridgeOwner <TAB> bridgeName
+#
+# A call site compiled against 1.20.1 cannot supply an argument that did not exist, so the value
+# comes from a bridge and the transformer inserts it at whichever position explains the new
+# signature. If two positions both explain it the call is left alone and reported -- inserting in
+# the wrong one produces a call that links and passes every argument to the wrong parameter.
+#
+# HolderLookup.Provider is the heaviest of these by far: 1.20.5 added it to the serialization
+# family when NBT became data components.
+ARG_FILL	net/minecraft/core/HolderLookup$Provider	easyport/bridge/RegistryAccessBridge	provider
+ARG_FILL	com/mojang/serialization/MapCodec	easyport/bridge/CodecBridge	particleCodec
+ARG_FILL	net/minecraft/network/codec/StreamCodec	easyport/bridge/CodecBridge	particleStreamCodec
+
+# ParticleType(boolean, Deserializer) became (boolean, MapCodec, StreamCodec). One argument
+# changed type and one was added, so this needs both a COERCE and an ARG_FILL -- which is the
+# point of having them as separate mechanisms that compose.
+COERCE	easyport/vanilla/ParticleOptionsDeserializer	com/mojang/serialization/MapCodec	easyport/bridge/CodecBridge	particleCodecFrom

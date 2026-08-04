@@ -3,6 +3,9 @@ Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 Rewrote 181 classes, moved 8 resources
 
 Applied:
+     1  ARG_DROP java/util/function/Function from net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.create
+     2  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveAdditional
+     2  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/storage/loot/functions/EnchantWithLevelsFunction.enchantWithLevels
      1  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
     76  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
     32  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse

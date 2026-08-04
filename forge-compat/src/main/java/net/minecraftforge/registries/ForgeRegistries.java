@@ -144,5 +144,28 @@ public final class ForgeRegistries {
                 NeoForgeRegistries.Keys.INGREDIENT_TYPES;
     }
 
+    /**
+     * The Supplier-typed registries, which Forge declared differently because they are its own
+     * rather than vanilla's.
+     *
+     * The descriptor is the point: these fields are {@code Supplier<IForgeRegistry<T>>}, not
+     * {@code IForgeRegistry<T>}, and the JVM resolves a field by name *and* descriptor. Declaring
+     * them like the rest above compiles, loads, and fails with NoSuchFieldError naming a type that
+     * looks right -- which is how cyclopscore failed after four other blockers were cleared.
+     *
+     * Keys come from NeoForgeRegistries, which kept all four under the same names.
+     */
+    public static final java.util.function.Supplier<IForgeRegistry<net.neoforged.neoforge.fluids.FluidType>>
+            FLUID_TYPES = () -> IForgeRegistry.of(
+                    net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.FLUID_TYPES);
+
+    public static final java.util.function.Supplier<IForgeRegistry<com.mojang.serialization.MapCodec<? extends net.neoforged.neoforge.common.loot.IGlobalLootModifier>>>
+            GLOBAL_LOOT_MODIFIER_SERIALIZERS = () -> IForgeRegistry.of(
+                    net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS);
+
+    public static final java.util.function.Supplier<IForgeRegistry<com.mojang.serialization.MapCodec<? extends net.neoforged.neoforge.common.world.BiomeModifier>>>
+            BIOME_MODIFIER_SERIALIZERS = () -> IForgeRegistry.of(
+                    net.neoforged.neoforge.registries.NeoForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS);
+
     private ForgeRegistries() {}
 }

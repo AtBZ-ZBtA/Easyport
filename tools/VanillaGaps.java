@@ -13,6 +13,8 @@ import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.objectweb.asm.Type;
+
 /**
  * The Phase 4 work queue: every piece of *vanilla* Minecraft API the corpus uses that 1.21.1 no
  * longer has, ranked by how many jars it blocks.
@@ -105,6 +107,7 @@ public class VanillaGaps {
         List<Finding> signatureChanged = new ArrayList<>();
         List<Finding> memberGone = new ArrayList<>();
         int srgResidue = 0, checked = 0, ok = 0, skippedByRule = 0, ownerMissing = 0;
+        int holderHandled = 0;
 
         for (MemberRef ref : readMembers(Path.of(args[0]))) {
             String owner = ref.owner();
@@ -130,6 +133,7 @@ public class VanillaGaps {
             if (members.contains(name + " " + desc)) { ok++; continue; }
 
             Set<String> sameName = index.descriptorsOf(effectiveOwner, name);
+            if (holderAdapted(desc, sameName)) { holderHandled++; ok++; continue; }
             if (!sameName.isEmpty()) {
                 // Printing the platform's real descriptors is most of the fix for this class of
                 // finding: the change is usually one parameter, and seeing the two side by side
@@ -163,6 +167,8 @@ public class VanillaGaps {
         System.out.printf("  MEMBER GONE                 %d%n", memberGone.size());
         System.out.printf("TYPE GONE                     %d%n", missingTypes.size());
         System.out.println();
+        System.out.printf("resolved by Holder adaptation %d  (of the \"still resolve\" figure)%n",
+                holderHandled);
         System.out.printf("skipped, a rule handles them  %d%n", skippedByRule);
         System.out.printf("skipped, owner type is gone   %d%n", ownerMissing);
         System.out.printf("skipped, name still reads SRG %d  <- mapping health; want 0%n", srgResidue);
@@ -229,6 +235,51 @@ public class VanillaGaps {
             System.out.printf("%n       ... and %d more used by fewer than %d jars%n",
                     suppressed, LIST_THRESHOLD);
         }
+    }
+
+    /**
+     * Whether Translate's Holder passes already handle this mismatch.
+     *
+     * Without this the report keeps listing work that is done. 1.21 wrapped a large family of
+     * registry types, and the transformer discovers the whole family from the platform's own
+     * descriptors rather than from rules -- so nothing in the rules file marks these as handled,
+     * and a report that only knows about rules shows about 1,400 jar-references of phantom work
+     * at the top of its queue.
+     *
+     * A mismatch is handled when some overload of the same name differs only by a {@code Holder}
+     * standing where the corpus passes an object, or only in returning one. Those are exactly the
+     * two shapes {@code applyWrapAdapters} and {@code applyHolderUnwrap} convert.
+     */
+    private static boolean holderAdapted(String called, Set<String> platformDescriptors) {
+        boolean isMethod = called.startsWith("(");
+        for (String candidate : platformDescriptors) {
+            if (!isMethod) {
+                // A field whose type became Holder: unwrapped at the read.
+                if (candidate.equals("Lnet/minecraft/core/Holder;")) return true;
+                continue;
+            }
+            if (!candidate.startsWith("(")) continue;
+            Type[] a = Type.getArgumentTypes(called);
+            Type[] b = Type.getArgumentTypes(candidate);
+            if (a.length != b.length) continue;
+            boolean compatible = true;
+            for (int i = 0; i < a.length && compatible; i++) {
+                if (a[i].equals(b[i])) continue;
+                compatible = b[i].getSort() == Type.OBJECT
+                          && b[i].getInternalName().equals("net/minecraft/core/Holder")
+                          && a[i].getSort() == Type.OBJECT;
+            }
+            if (!compatible) continue;
+            Type wantRet = Type.getReturnType(called);
+            Type haveRet = Type.getReturnType(candidate);
+            if (haveRet.equals(wantRet)) return true;
+            if (haveRet.getSort() == Type.OBJECT
+                    && haveRet.getInternalName().equals("net/minecraft/core/Holder")
+                    && wantRet.getSort() == Type.OBJECT) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static List<String> trim(Set<String> s, int n) {

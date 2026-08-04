@@ -3,6 +3,12 @@ Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 Rewrote 120 classes, moved 217 resources
 
 Applied:
+     1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/world/item/crafting/CustomRecipe.<init>
+     1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/world/item/crafting/ShapelessRecipe.<init>
+     1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/network/chat/Component$Serializer.fromJson
+     1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/network/chat/Component$Serializer.toJson
+     1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveAdditional
+     2  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveToItem
      4  COERCE easyport/vanilla/ArmorMaterial -> net/minecraft/world/item/ArmorMaterial
      6  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
     41  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
@@ -14,7 +20,6 @@ Applied:
      5  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
     11  HOLDER_UNWRAP field net/minecraft/world/item/alchemy/Potions
      2  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
-     3  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.gameEvent
      1  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
      1  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
@@ -66,9 +71,13 @@ Applied:
      3  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB com/teammetallurgy/aquaculture/block/TackleBoxBlock.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/level/block/BaseEntityBlock)
+     1  ABSTRACT_STUB com/teammetallurgy/aquaculture/entity/FishMountEntity.calculateBoundingBox(Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/minecraft/world/phys/AABB; (added by net/minecraft/world/entity/decoration/HangingEntity)
+     1  ABSTRACT_STUB com/teammetallurgy/aquaculture/entity/FishMountEntity.defineSynchedData(Lnet/minecraft/network/syncher/SynchedEntityData$Builder;)V (added by net/minecraft/world/entity/Entity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/AquaFishEntity.getDimensions(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions; (final on net/minecraft/world/entity/LivingEntity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/FishMountEntity.recalculateBoundingBox()V (final on net/minecraft/world/entity/decoration/HangingEntity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/TurtleLandEntity.canBreatheUnderwater()Z (final on net/minecraft/world/entity/LivingEntity)
+     3  HOLDER_WRAP ambiguous: net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add(Lnet/minecraft/world/entity/ai/attributes/Attribute;D)Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;
      4  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
     32  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
      8  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z

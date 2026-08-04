@@ -3,8 +3,15 @@ Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 Rewrote 589 classes, moved 2 resources
 
 Applied:
+     2  ARG_DROP easyport/vanilla/ParticleOptionsDeserializer from net/minecraft/core/particles/ParticleType.<init>
+     1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/world/item/crafting/ShapelessRecipe.<init>
+     3  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/network/chat/Component$Serializer.fromJson
+     3  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/network/chat/Component$Serializer.toJson
+     1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.onDataPacket
+     1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveAdditional
     30  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
     24  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  EVENT_SPLIT abstract listener: net/neoforged/neoforge/client/event/ScreenEvent$Init -> 2 concrete
      1  FIELD_TO_STATIC cpw/mods/modlauncher/api/IEnvironment$Keys#NAMING -> easyport/bridge/EnvBridge#naming
      2  HOLDER_WRAP net/minecraft/world/entity/LivingEntity.getEffect
      1  HOLDER_WRAP net/minecraft/world/item/ItemStack.enchant
@@ -62,6 +69,12 @@ Applied:
     26  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/block/BlockWithEntity.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/level/block/BaseEntityBlock)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleBlurConfig$1.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/core/particles/ParticleType)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleBlurConfig$1.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/core/particles/ParticleType)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleDropColoredConfig$1.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/core/particles/ParticleType)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleDropColoredConfig$1.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/core/particles/ParticleType)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/persist/world/WorldStorage$NBTDataHolder.save(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/nbt/CompoundTag; (added by net/minecraft/world/level/saveddata/SavedData)
      6  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
      5  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
      3  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z

@@ -95,6 +95,9 @@ public class Translate {
     /** "from\tto" -> the bridge call that converts between them. See Translate#coercion. */
     private final Map<String, RenameRule> coercions = new LinkedHashMap<>();
 
+    /** A parameter type 1.21 added -> the no-arg bridge that supplies one. */
+    private final Map<String, RenameRule> argFillers = new LinkedHashMap<>();
+
     /** A platform type that stopped being an interface -> what to implement in its place. */
     private final Map<String, String> interfaceSubstitutes = new LinkedHashMap<>();
 
@@ -150,6 +153,12 @@ public class Translate {
     /** "owner.member" -> the T inside its {@code Holder<T>}, read from the generic signature. */
     private final Map<String, String> holderValueType = new HashMap<>();
 
+    /** Abstract methods each platform class declares, for stubbing ones 1.21 added. */
+    private final Map<String, Set<String>> targetAbstractMethods = new HashMap<>();
+
+    /** Platform classes that are abstract, for splitting listeners registered on one. */
+    private final Set<String> targetAbstract = new HashSet<>();
+
     /** Vanilla classes 1.21 made final, and the methods it made final, for the hierarchy checks. */
     private final Set<String> targetFinalClasses = new HashSet<>();
     private final Map<String, Set<String>> targetFinalMethods = new HashMap<>();
@@ -179,6 +188,14 @@ public class Translate {
                         new ClassReader(read(zip, e)).accept(node,
                                 ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG);
                         if ((node.access & Opcodes.ACC_INTERFACE) != 0) targetInterfaces.add(internal);
+                        if ((node.access & Opcodes.ACC_ABSTRACT) != 0) targetAbstract.add(internal);
+                        if (node.methods != null) {
+                            Set<String> abs = new HashSet<>();
+                            for (var m : node.methods) {
+                                if ((m.access & Opcodes.ACC_ABSTRACT) != 0) abs.add(m.name + " " + m.desc);
+                            }
+                            if (!abs.isEmpty()) targetAbstractMethods.put(internal, abs);
+                        }
                         Set<String> fields = new HashSet<>();
                         if (node.fields != null) {
                             for (var f : node.fields) fields.add(f.name + " " + f.desc);
@@ -390,6 +407,8 @@ public class Translate {
 
         fixEventBusSubscriber(node);
         fixIllegalHierarchy(node);
+        splitAbstractListeners(node);
+        stubAddedAbstractMethods(node);
 
         // Mixin annotations address their targets as text, which the remapper never sees.
         remapAnnotationStrings(node.visibleAnnotations);
@@ -747,6 +766,148 @@ public class Translate {
     }
 
     /**
+     * Implements abstract methods 1.21 added to a platform class the mod extends.
+     *
+     * A mod compiled against 1.20.1 implemented everything abstract *then* -- it would not have
+     * compiled otherwise. So an abstract method its superclass declares and it does not implement
+     * is, without exception, one the newer platform added. That is what makes stubbing these safe
+     * to do automatically: there is no case where the mod meant to leave one unimplemented.
+     *
+     * {@code ParticleType} is the example that forced it. 1.21 moved particle serialization onto
+     * codecs by *removing* the constructor argument and adding {@code codec()} and
+     * {@code streamCodec()} as abstract methods, so a mod's particle type is now abstract and
+     * cannot be instantiated -- an {@code InstantiationError} at registration, taking the mod with
+     * it.
+     *
+     * The stubs return null, which is the same trade the codec bridges make: the type registers
+     * and everything registered beside it survives, and the specific thing 1.21 added does not
+     * work. Every one is named in the report rather than left to be discovered.
+     */
+    private void stubAddedAbstractMethods(ClassNode node) {
+        if (targetMembers.isEmpty() || node.superName == null) return;
+        if (!targetMembers.containsKey(node.superName)) return;
+        if ((node.access & Opcodes.ACC_ABSTRACT) != 0) return;
+
+        Set<String> implemented = new HashSet<>();
+        for (MethodNode m : node.methods) implemented.add(m.name + " " + m.desc);
+
+        List<MethodNode> stubs = new ArrayList<>();
+        String cls = node.superName;
+        Set<String> seen = new HashSet<>();
+        while (cls != null && seen.add(cls)) {
+            // A lower class in the chain may already implement what a higher one declares
+            // abstract, so its concrete methods count as implemented before this class's own
+            // abstract ones are judged. Skipping this stubbed Block.asBlock() to null on every
+            // block in the mod -- BlockBehaviour declares it abstract and Block implements it,
+            // and walking the chain without tracking that overrides the real implementation.
+            Set<String> abstractHere = targetAbstractMethods.getOrDefault(cls, Set.of());
+            for (String member : targetMembers.getOrDefault(cls, Set.of())) {
+                if (member.contains("(") && !abstractHere.contains(member)) implemented.add(member);
+            }
+            for (String member : abstractHere) {
+                if (!implemented.add(member)) continue;
+                int sp = member.indexOf(' ');
+                String name = member.substring(0, sp);
+                String desc = member.substring(sp + 1);
+                MethodNode stub = new MethodNode(Opcodes.ACC_PUBLIC, name, desc, null, null);
+                Type ret = Type.getReturnType(desc);
+                if (ret.getSort() == Type.VOID) {
+                    stub.instructions.add(new InsnNode(Opcodes.RETURN));
+                } else if (ret.getSort() == Type.OBJECT || ret.getSort() == Type.ARRAY) {
+                    stub.instructions.add(new InsnNode(Opcodes.ACONST_NULL));
+                    stub.instructions.add(new InsnNode(Opcodes.ARETURN));
+                } else {
+                    stub.instructions.add(new InsnNode(
+                            ret.getSort() == Type.LONG ? Opcodes.LCONST_0
+                          : ret.getSort() == Type.FLOAT ? Opcodes.FCONST_0
+                          : ret.getSort() == Type.DOUBLE ? Opcodes.DCONST_0
+                          : Opcodes.ICONST_0));
+                    stub.instructions.add(new InsnNode(ret.getOpcode(Opcodes.IRETURN)));
+                }
+                stubs.add(stub);
+                count(unresolved, "ABSTRACT_STUB " + node.name + "." + name + desc
+                                + " (added by " + cls + ")");
+            }
+            cls = targetSuper.get(cls);
+        }
+        node.methods.addAll(stubs);
+    }
+
+    /**
+     * Splits a listener for an event NeoForge made abstract into one per concrete subclass.
+     *
+     * Forge let a mod listen for {@code ScreenEvent.Init} and receive both its {@code Pre} and
+     * {@code Post}. NeoForge refuses the registration outright:
+     *
+     * <pre>
+     * Cannot register listeners for abstract class ScreenEvent$Init.
+     * Register a listener to one of its subclasses instead!
+     * </pre>
+     *
+     * That is a hard load failure -- it happens during {@code @EventBusSubscriber} injection,
+     * before the mod's own code runs -- and it is the same strictness difference that has bitten
+     * this project twice before: NeoForge throws where Forge was quiet, so a shim has to preserve
+     * *Forge's* behaviour rather than the platform's.
+     *
+     * <h2>Why two methods rather than one</h2>
+     *
+     * Retargeting the listener at {@code Post} would load and would silently halve it. The mod
+     * asked for both phases and its handler very often branches on which one it got. So the
+     * original keeps its body and loses its annotation, and one small dispatcher per concrete
+     * subclass carries the annotation and forwards -- which is what Forge's bus did internally,
+     * made explicit.
+     *
+     * Registering the parent is not something a shim can intercept, because FML performs the
+     * registration itself from the annotation; the split has to exist in the bytecode by then.
+     */
+    private void splitAbstractListeners(ClassNode node) {
+        if (targetMembers.isEmpty()) return;
+        List<MethodNode> generated = new ArrayList<>();
+
+        for (MethodNode m : node.methods) {
+            if (m.visibleAnnotations == null) continue;
+            if (m.visibleAnnotations.stream().noneMatch(a -> SUBSCRIBE_DESC.equals(a.desc))) continue;
+            Type[] params = Type.getArgumentTypes(m.desc);
+            if (params.length != 1 || params[0].getSort() != Type.OBJECT) continue;
+
+            String event = params[0].getInternalName();
+            if (!targetAbstract.contains(event)) continue;
+            List<String> concrete = new ArrayList<>();
+            for (String suffix : new String[] {"$Pre", "$Post"}) {
+                if (targetMembers.containsKey(event + suffix)
+                        && !targetAbstract.contains(event + suffix)) {
+                    concrete.add(event + suffix);
+                }
+            }
+            if (concrete.isEmpty()) continue;
+
+            var annotations = m.visibleAnnotations;
+            m.visibleAnnotations = null;
+            String body = m.name + "$easyport";
+            m.name = body;
+            boolean isStatic = (m.access & Opcodes.ACC_STATIC) != 0;
+
+            for (String target : concrete) {
+                String suffix = target.substring(target.lastIndexOf('$') + 1);
+                MethodNode dispatcher = new MethodNode(m.access, body + suffix,
+                        "(L" + target + ";)V", null, null);
+                dispatcher.visibleAnnotations = new ArrayList<>(annotations);
+                InsnList code = dispatcher.instructions;
+                if (!isStatic) code.add(new VarInsnNode(Opcodes.ALOAD, 0));
+                code.add(new VarInsnNode(Opcodes.ALOAD, isStatic ? 0 : 1));
+                code.add(new MethodInsnNode(
+                        isStatic ? Opcodes.INVOKESTATIC : Opcodes.INVOKEVIRTUAL,
+                        node.name, body, m.desc, false));
+                code.add(new InsnNode(Opcodes.RETURN));
+                generated.add(dispatcher);
+            }
+            count(appliedCounts, "EVENT_SPLIT abstract listener: " + event
+                                + " -> " + concrete.size() + " concrete");
+        }
+        node.methods.addAll(generated);
+    }
+
+    /**
      * Handles a mod class whose *hierarchy* became illegal, which no call-site rewrite can reach.
      *
      * Offline verification turned up a failure family nothing else in this project could see, and
@@ -1067,6 +1228,75 @@ public class Translate {
 
             Type[] have = Type.getArgumentTypes(min.desc);
             Type[] want = Type.getArgumentTypes(match);
+
+            // A parameter 1.21 dropped. Removed first, for the same reason insertion happens
+            // first: the coercion loop below then sees two lists of equal length.
+            if (have.length == want.length + 1) {
+                int k = removalPoint(have, want);
+                if (k < 0) {
+                    count(unresolved, "ARG_DROP ambiguous position: " + min.owner + "." + min.name);
+                    continue;
+                }
+                InsnList fix = new InsnList();
+                int base = method.maxLocals;
+                int slot = base;
+                for (int j = have.length - 1; j > k; j--) {
+                    fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ISTORE), slot));
+                    slot += have[j].getSize();
+                }
+                fix.add(new InsnNode(have[k].getSize() == 2 ? Opcodes.POP2 : Opcodes.POP));
+                for (int j = k + 1; j < have.length; j++) {
+                    slot -= have[j].getSize();
+                    fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ILOAD), slot));
+                }
+                insns.insertBefore(min, fix);
+                method.maxLocals = base + Arrays.stream(have, k + 1, have.length)
+                                                .mapToInt(Type::getSize).sum();
+                count(appliedCounts, "ARG_DROP " + have[k].getInternalName()
+                                    + " from " + min.owner + "." + min.name);
+                Type[] narrowed = new Type[want.length];
+                System.arraycopy(have, 0, narrowed, 0, k);
+                System.arraycopy(have, k + 1, narrowed, k, have.length - k - 1);
+                have = narrowed;
+                min.desc = Type.getMethodDescriptor(Type.getReturnType(min.desc), narrowed);
+            }
+
+            // A parameter 1.21 added. Inserted first, so the coercion loop below then sees two
+            // argument lists of the same length and needs no special case.
+            if (have.length + 1 == want.length) {
+                int k = insertionPoint(have, want);
+                if (k < 0) {
+                    count(unresolved, "ARG_FILL ambiguous position: " + min.owner + "." + min.name);
+                    continue;
+                }
+                RenameRule filler = argFillers.get(want[k].getInternalName());
+                InsnList fix = new InsnList();
+                int base = method.maxLocals;
+                int slot = base;
+                // Everything above the insertion point spills, exactly as for a coercion: the
+                // new argument has to arrive at position k, and the stack only has a top.
+                for (int j = have.length - 1; j >= k; j--) {
+                    fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ISTORE), slot));
+                    slot += have[j].getSize();
+                }
+                fix.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+                        filler.newOwner(), filler.newName(), filler.newDesc(), false));
+                for (int j = k; j < have.length; j++) {
+                    slot -= have[j].getSize();
+                    fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ILOAD), slot));
+                }
+                insns.insertBefore(min, fix);
+                method.maxLocals = base + Arrays.stream(have, k, have.length)
+                                                .mapToInt(Type::getSize).sum();
+                count(appliedCounts, "ARG_FILL " + want[k].getInternalName()
+                                    + " into " + min.owner + "." + min.name);
+                Type[] widened = new Type[want.length];
+                System.arraycopy(have, 0, widened, 0, k);
+                widened[k] = want[k];
+                System.arraycopy(have, k, widened, k + 1, have.length - k);
+                have = widened;
+                min.desc = Type.getMethodDescriptor(Type.getReturnType(min.desc), widened);
+            }
 
             // Highest-indexed argument needing a coercion. Everything above it must spill;
             // everything below it never moves, so working from the top down keeps each step's
@@ -1526,15 +1756,80 @@ public class Translate {
     private boolean wrapCompatible(String called, String target) {
         Type[] a = Type.getArgumentTypes(called);
         Type[] b = Type.getArgumentTypes(target);
-        if (a.length != b.length) return false;
         if (!Type.getReturnType(called).equals(Type.getReturnType(target))) return false;
-        boolean substituted = false;
-        for (int i = 0; i < a.length; i++) {
-            if (a[i].equals(b[i])) continue;
-            if (coercion(a[i], b[i]) == null) return false;
-            substituted = true;
+        if (a.length == b.length) {
+            boolean substituted = false;
+            for (int i = 0; i < a.length; i++) {
+                if (a[i].equals(b[i])) continue;
+                if (coercion(a[i], b[i]) == null) return false;
+                substituted = true;
+            }
+            return substituted;
         }
-        return substituted;
+        if (a.length + 1 == b.length) return insertionPoint(a, b) >= 0;
+        return a.length == b.length + 1 && removalPoint(a, b) >= 0;
+    }
+
+    /**
+     * Which argument 1.21 dropped, if exactly one position explains the difference.
+     *
+     * The mirror of {@link #insertionPoint}, and it arises from the same migration seen from the
+     * other side: {@code ParticleType(boolean, Deserializer)} became {@code ParticleType(boolean)}
+     * because serialization moved from a constructor argument to abstract methods. The value the
+     * call site computes is simply no longer wanted.
+     *
+     * Ambiguity is refused for the same reason. Unlike an insertion, a wrong removal cannot even
+     * be caught by the verifier -- both alignments type-check whenever the arguments happen to
+     * share a type.
+     *
+     * @return the index of the removed parameter, or -1
+     */
+    private int removalPoint(Type[] have, Type[] want) {
+        int found = -1;
+        for (int k = 0; k < have.length; k++) {
+            boolean matches = true;
+            for (int i = 0, j = 0; j < want.length && matches; i++, j++) {
+                if (i == k) i++;
+                matches = i < have.length
+                       && (have[i].equals(want[j]) || coercion(have[i], want[j]) != null);
+            }
+            if (!matches) continue;
+            if (found >= 0) return -1;
+            found = k;
+        }
+        return found;
+    }
+
+    /**
+     * Where 1.21 inserted a parameter, if exactly one position explains the difference.
+     *
+     * A large share of the remaining vanilla drift is a signature that grew an argument rather
+     * than changing one -- a {@code HolderLookup.Provider} for registry access, a
+     * {@code StreamCodec} where a hand-written reader used to do. The call site cannot supply it,
+     * because in 1.20.1 there was nothing to supply, so the value comes from a declared
+     * {@code ARG_FILL} bridge.
+     *
+     * Ambiguity is refused rather than guessed. If two positions both explain the new signature
+     * the call is left alone and reported, because inserting in the wrong one produces a call that
+     * links and passes the arguments to the wrong parameters -- silently, and only wrong at
+     * runtime.
+     *
+     * @return the index of the inserted parameter, or -1
+     */
+    private int insertionPoint(Type[] have, Type[] want) {
+        int found = -1;
+        for (int k = 0; k < want.length; k++) {
+            if (!argFillers.containsKey(want[k].getInternalName())) continue;
+            boolean matches = true;
+            for (int i = 0, j = 0; i < have.length && matches; i++, j++) {
+                if (j == k) j++;
+                matches = have[i].equals(want[j]) || coercion(have[i], want[j]) != null;
+            }
+            if (!matches) continue;
+            if (found >= 0) return -1;          // ambiguous
+            found = k;
+        }
+        return found;
     }
 
     /**
@@ -2202,6 +2497,14 @@ public class Translate {
                 }
                 case "REMOVED" -> {
                     if (c.length >= 2) removed.add(c[1]);
+                }
+                case "ARG_FILL" -> {
+                    // type <TAB> bridgeOwner <TAB> bridgeName; the descriptor follows from the
+                    // type, so writing it out would only be a chance to write it differently.
+                    if (c.length >= 4) {
+                        argFillers.put(c[1], new RenameRule(c[1], null, null,
+                                c[2], c[3], "()L" + c[1] + ";"));
+                    }
                 }
                 case "INTERFACE_SUBSTITUTE" -> {
                     if (c.length >= 3) interfaceSubstitutes.put(c[1], c[2]);

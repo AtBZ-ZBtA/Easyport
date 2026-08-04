@@ -9,34 +9,30 @@ import net.minecraft.resources.ResourceLocation;
  * Shim for {@code IForgeRegistry<T>}, whose {@code getValue}/{@code getKey} appear in 110/96
  * corpus mods.
  *
- * Forge declares this as an interface, but mods overwhelmingly *consume* it rather than
- * implement it — chiefly by handing {@code ForgeRegistries.BLOCKS} to a
- * {@code DeferredRegister}. Modelling it as a final class holding the registry key keeps that
- * common path simple. A mod that genuinely implements the interface will not translate, which
- * the transformer reports rather than producing something subtly broken.
+ * An interface, because Forge declared one and mods call it with INVOKEINTERFACE. It was a final
+ * class here for several rounds -- mods overwhelmingly *consume* this rather than implement it,
+ * and a class holding the registry key was the simpler thing to write. That held until cyclopscore
+ * called one, and the launch failed with "Found class IForgeRegistry, but interface was expected".
+ *
+ * A shim has to match the *kind* the mod was compiled against, not just the name and the methods.
+ * Same lesson as descriptors: what the JVM resolves against is not what reads correctly in source.
+ *
+ * The state lives in {@link ForgeRegistry}, which is also what mods downcast to for the integer
+ * id surface this interface never exposed.
  */
-public class IForgeRegistry<T> {
-
-    private final ResourceKey<? extends Registry<T>> key;
-
-    protected IForgeRegistry(ResourceKey<? extends Registry<T>> key) {
-        this.key = key;
-    }
+public interface IForgeRegistry<T> {
 
     /**
-     * Public factory, for bridge code outside this package.
+     * Factory, for bridge code outside this package.
      *
-     * The constructor stays package-private because mods never call it -- they read the
-     * constants on {@link ForgeRegistries}. This exists for {@code easyport.bridge}, which has
-     * to build one from a registry key recovered at runtime.
+     * Mods never build one -- they read the constants on {@link ForgeRegistries}. This exists for
+     * {@code easyport.bridge}, which has to build one from a registry key recovered at runtime.
      */
-    public static <T> IForgeRegistry<T> of(ResourceKey<? extends Registry<T>> key) {
+    static <T> IForgeRegistry<T> of(ResourceKey<? extends Registry<T>> key) {
         return new ForgeRegistry<>(key);
     }
 
-    public ResourceKey<? extends Registry<T>> getRegistryKey() {
-        return key;
-    }
+    ResourceKey<? extends Registry<T>> getRegistryKey();
 
     /**
      * Resolved on every call, never cached.
@@ -45,21 +41,21 @@ public class IForgeRegistry<T> {
      * happens long before the registries themselves are populated. Caching here would pin null.
      */
     @SuppressWarnings("unchecked")
-    protected Registry<T> registry() {
-        return (Registry<T>) BuiltInRegistries.REGISTRY.get(key.location());
+    private Registry<T> registry() {
+        return (Registry<T>) BuiltInRegistries.REGISTRY.get(getRegistryKey().location());
     }
 
-    public T getValue(ResourceLocation id) {
+    default T getValue(ResourceLocation id) {
         Registry<T> r = registry();
         return r == null ? null : r.get(id);
     }
 
-    public ResourceLocation getKey(T value) {
+    default ResourceLocation getKey(T value) {
         Registry<T> r = registry();
         return r == null ? null : r.getKey(value);
     }
 
-    public boolean containsKey(ResourceLocation id) {
+    default boolean containsKey(ResourceLocation id) {
         Registry<T> r = registry();
         return r != null && r.containsKey(id);
     }
@@ -73,41 +69,41 @@ public class IForgeRegistry<T> {
      * accessors above do -- these objects are built during class initialisation, before any
      * registry is populated, so anything eager would pin null.
      */
-    public void register(ResourceLocation id, T value) {
+    default void register(ResourceLocation id, T value) {
         Registry<T> r = registry();
         if (r == null) {
-            throw new IllegalStateException("registry " + key.location() + " is not available yet");
+            throw new IllegalStateException("registry " + getRegistryKey().location() + " is not available yet");
         }
         Registry.register(r, id, value);
     }
 
-    public java.util.Set<java.util.Map.Entry<ResourceKey<T>, T>> getEntries() {
+    default java.util.Set<java.util.Map.Entry<ResourceKey<T>, T>> getEntries() {
         Registry<T> r = registry();
         return r == null ? java.util.Set.of() : r.entrySet();
     }
 
-    public java.util.Iterator<T> iterator() {
+    default java.util.Iterator<T> iterator() {
         return getValues().iterator();
     }
 
-    public java.util.Set<ResourceLocation> getKeys() {
+    default java.util.Set<ResourceLocation> getKeys() {
         Registry<T> r = registry();
         return r == null ? java.util.Set.of() : r.keySet();
     }
 
     /** 11 jars each. Holder lookup and value membership, both straight from vanilla. */
-    public java.util.Optional<net.minecraft.core.Holder<T>> getHolder(T value) {
+    default java.util.Optional<net.minecraft.core.Holder<T>> getHolder(T value) {
         Registry<T> r = registry();
         if (r == null) return java.util.Optional.empty();
         return r.getResourceKey(value).flatMap(r::getHolder).map(h -> (net.minecraft.core.Holder<T>) h);
     }
 
-    public boolean containsValue(T value) {
+    default boolean containsValue(T value) {
         Registry<T> r = registry();
         return r != null && r.getKey(value) != null;
     }
 
-    public java.util.Optional<ResourceKey<T>> getResourceKey(T value) {
+    default java.util.Optional<ResourceKey<T>> getResourceKey(T value) {
         Registry<T> r = registry();
         return r == null ? java.util.Optional.empty() : r.getResourceKey(value);
     }
@@ -119,14 +115,14 @@ public class IForgeRegistry<T> {
      * delegated to. Returns null before the registry exists rather than throwing, matching the
      * other accessors here.
      */
-    public com.mojang.serialization.Codec<T> getCodec() {
+    default com.mojang.serialization.Codec<T> getCodec() {
         Registry<T> r = registry();
         return r == null ? null : r.byNameCodec();
     }
 
     /** Forge's registry name, which is the key's location. 12 jars. */
-    public ResourceLocation getRegistryName() {
-        return key.location();
+    default ResourceLocation getRegistryName() {
+        return getRegistryKey().location();
     }
 
     /**
@@ -135,9 +131,9 @@ public class IForgeRegistry<T> {
      * Forge's "delegate" is NeoForge's {@code Holder.Reference}, reached through the vanilla
      * registry's wrapper lookup. Throws rather than returning null, matching the name.
      */
-    public net.minecraft.core.Holder.Reference<T> getDelegateOrThrow(T value) {
+    default net.minecraft.core.Holder.Reference<T> getDelegateOrThrow(T value) {
         Registry<T> r = registry();
-        if (r == null) throw new IllegalStateException("registry " + key.location() + " not available");
+        if (r == null) throw new IllegalStateException("registry " + getRegistryKey().location() + " not available");
         return r.getResourceKey(value)
                 .flatMap(r::getHolder)
                 .orElseThrow(() -> new IllegalStateException("no delegate for " + value));
@@ -150,7 +146,7 @@ public class IForgeRegistry<T> {
      * so this reconstructs the view rather than delegating. Built fresh on each call because the
      * underlying registry is resolved lazily and tag contents change on datapack reload.
      */
-    public net.minecraftforge.registries.tags.ITagManager<T> tags() {
+    default net.minecraftforge.registries.tags.ITagManager<T> tags() {
         return new net.minecraftforge.registries.tags.ITagManager<T>() {
 
             @Override
@@ -180,7 +176,7 @@ public class IForgeRegistry<T> {
 
             @Override
             public net.minecraft.tags.TagKey<T> createTagKey(ResourceLocation location) {
-                return net.minecraft.tags.TagKey.create(key, location);
+                return net.minecraft.tags.TagKey.create(getRegistryKey(), location);
             }
 
             @Override
@@ -194,7 +190,7 @@ public class IForgeRegistry<T> {
         };
     }
 
-    public java.util.Collection<T> getValues() {
+    default java.util.Collection<T> getValues() {
         Registry<T> r = registry();
         return r == null ? java.util.List.of() : r.stream().toList();
     }

@@ -223,6 +223,9 @@ Type renames are therefore an explicit allowlist in the rule file, **not** a bla
 | `FIELD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Deleted constant, value still computable |
 | `CTOR_TO_STATIC` | owner, ctorDesc, factoryName, factoryDesc | Constructor became a static factory |
 | `CTOR_SWAP2` | owner, oldDesc, newDesc, [narrowTopTo] | Two constructor arguments reordered |
+| `COERCE` | from, to, bridgeOwner, bridgeName | A type stopped being assignable to what replaced it |
+| `INTERFACE_SUBSTITUTE` | platformType, substitute | A vanilla interface became a record |
+| `ARG_FILL` | paramType, bridgeOwner, bridgeName | 1.21 added a parameter the call site cannot supply |
 | `REMOVED` | symbol | No replacement — reported, never rewritten |
 
 `METHOD_TO_STATIC` and `FIELD_TO_STATIC` exist for the case neither a rename nor a shim can
@@ -244,6 +247,43 @@ type — after the swap that value is buried). It refuses wide arguments, since 
 that no longer exists is the measured failure mode from `handport/` — 5 false positives out
 of 26 symbols — and a jar that loads while quietly doing the wrong thing is worse than one
 that refuses.
+
+### The Phase 4 kinds, and the passes that need no rules at all
+
+`COERCE`, `INTERFACE_SUBSTITUTE` and `ARG_FILL` all address the same migration seen from
+different angles: a vanilla type changed shape underneath code that was compiled against the old
+one. They compose deliberately — `ParticleType` needed a `COERCE` *and* an argument removal in
+one call.
+
+- **`COERCE`** converts a value at the vanilla boundary. Unlike every other kind, its trigger is
+  not a descriptor: `ModelResourceLocation` stopped being a `ResourceLocation` while every call
+  site kept saying `ResourceLocation`, so nothing static about the instruction is wrong and only
+  following the value finds it. That pass runs a type analysis over each method and inserts the
+  conversion where an argument, a return, or a branch feeding one disagrees.
+- **`INTERFACE_SUBSTITUTE`** rewrites what a class implements, and *only* that. A `TYPE_RENAME`
+  would also rewrite reads of vanilla's own constants, which are real records rather than
+  implementations of the substitute — the mod would then fail verification somewhere else.
+- **`ARG_FILL`** supplies a parameter 1.21 added, at whichever position explains the new
+  signature. An ambiguous position is refused and reported: inserting in the wrong one produces a
+  call that links and hands every argument to the wrong parameter.
+
+Three passes need no rules, because they read the answer off the platform:
+
+| Pass | Does |
+|---|---|
+| Holder unwrap / wrap | Converts at every boundary where 1.21 wrapped a registry constant. The family is discovered from the platform's own descriptors, so it never needs updating |
+| Illegal hierarchy | Renames an override of a method 1.21 made final; reports an extends/implements that became impossible |
+| Abstract stub | Implements abstract methods 1.21 *added* to a class the mod extends |
+
+The abstract-stub pass rests on one observation: a mod compiled against 1.20.1 implemented
+everything abstract then, so anything unimplemented now was added since. There is no case where
+the author meant to leave one out. It still has to track which ancestor implements what — an
+early version stubbed `Block.asBlock()` to null on every block, because `BlockBehaviour` declares
+it abstract and `Block` implements it.
+
+Stubs and placeholder codecs are a deliberate trade, and always reported: the type registers and
+everything registered beside it survives, while the specific thing 1.21 added does not work.
+The alternative is a mod that fails to load at all.
 
 ### The report
 
@@ -458,3 +498,66 @@ It mirrors `Translate` exactly, and getting that wrong made it useless twice:
 
 Narrow beats complete. Flagging *every* abstract target produced 91 hits, nearly all correct
 interfaces like `IItemHandler`; a warning list that size gets skimmed and ignored.
+
+### VanillaGaps — the same question asked of *vanilla*
+
+```bash
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "<corpus-dir>" "net/minecraft/" > api-report/vanilla-api-usage.txt
+
+java -cp "devenv/spi/asm.jar" tools/VanillaGaps.java \
+    api-report/vanilla-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    > api-report/vanilla-gaps.txt
+```
+
+`RenameGaps` asks whether a type resolves. For `net.minecraft` the answer is almost always yes
+and it is the wrong question — 1.21 mostly kept type names and changed what is inside them.
+`ItemStack` still exists and no longer has `getTag`. Pointed at vanilla, `RenameGaps` reports a
+clean bill of health on a corpus that cannot link.
+
+So this inverts the emphasis: missing types are a footnote, and the body of the report is members
+that no longer exist on types that do.
+
+| Section | Means |
+|---|---|
+| `SIGNATURE CHANGED` | The name survives, the descriptor does not. Prints the platform's real descriptors alongside, because the difference usually names the type that moved |
+| `MEMBER GONE` | No member of that name survives. Needs a rule, a bridge, or a `REMOVED` entry |
+| `TYPE GONE` | The class was deleted. Relocate-then-rename |
+| `BY OWNING TYPE` | Jar-weighted rollup. **Read this first** — it says which *subsystem* to fix, and forty one-jar findings on one class beat one forty-jar finding on a class nothing else uses |
+
+It knows about the Holder passes, which is the difference between a queue and a wish list. The
+transformer discovers that family from the platform's own descriptors rather than from rules, so
+nothing in `forward.rules.tsv` marks any of it done — and a report that only understood rules put
+about 1,400 jar-references of already-finished work at the top of its list.
+
+### VerifyBytecode / verify-bytecode.sh / verify-sweep.sh — the JVM's own checks, offline
+
+```bash
+bash tools/verify-sweep.sh < batch-report/phase4.tsv     # translate + type-check a whole list
+bash tools/verify-bytecode.sh translated/geckolib.jar    # one jar
+```
+
+**Run this before any launch.** Through Phase 4 most failures are `VerifyError`, which is the
+most expensive kind this project produces: ten minutes of launch to find, one method reported,
+and the JVM stops there — so a jar with forty bad methods took forty launches to survey. This
+surveys all of them in seconds.
+
+It also sees a failure class nothing else can. Six mods had a class hierarchy that is simply
+illegal against 1.21 — extending something now final, implementing something that stopped being
+an interface — and no call-site analysis reaches those.
+
+Three things make the output worth reading rather than skimming:
+
+- **Findings are grouped by shape**, not listed per method. One transformer bug produces the same
+  error hundreds of times, and the useful figure is how many distinct shapes remain.
+- **A missing class is sorted by package.** `net.minecraft` and `net.minecraftforge` are
+  Easyport's responsibility, so a missing one is a real gap; anything else is another mod this
+  run did not load. Suppressing the second kind took the first geckolib report from 12 shapes to
+  1, and the one that remained was the real bug.
+- **The mod author's own port is subtracted.** `SimpleVerifier` is not the JVM — it merges types
+  by loading classes and reports mismatches the real verifier would not. Two such shapes survived
+  a full round of investigation before turning out to be present in the reference ports too. Same
+  differential move Phase 1 made for registry coverage.
+
+A clean run means the classes will load. It does not mean the mod works — that is what
+`batch-verify.sh` answers, and the two are not substitutes for each other.

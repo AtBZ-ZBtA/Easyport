@@ -3,6 +3,8 @@ Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
 Rewrote 167 classes, moved 1 resources
 
 Applied:
+     1  ARG_DROP java/util/function/Supplier from net/minecraft/world/level/block/StairBlock.<init>
+     1  ARG_DROP net/minecraft/world/level/block/state/properties/WoodType from net/minecraft/world/level/block/FenceGateBlock.<init>
     13  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      4  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      3  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add

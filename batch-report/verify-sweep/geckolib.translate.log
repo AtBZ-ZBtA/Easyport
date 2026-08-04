@@ -9,7 +9,6 @@ Applied:
     10  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
      8  HOLDER_UNWRAP field net/minecraft/world/item/ArmorMaterials
      1  HOLDER_UNWRAP return net/minecraft/world/item/ArmorItem.getMaterial
-    10  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add
      2  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
      1  JARJAR_TRANSLATE (depth 1)
     18  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
@@ -28,6 +27,12 @@ Applied:
      2  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB software/bernie/example/block/FertilizerBlock.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/level/block/DirectionalBlock)
+     1  ABSTRACT_STUB software/bernie/example/block/GeckoHabitatBlock.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/level/block/BaseEntityBlock)
+     1  ABSTRACT_STUB software/bernie/example/entity/BikeEntity.isFood(Lnet/minecraft/world/item/ItemStack;)Z (added by net/minecraft/world/entity/animal/Animal)
+     1  ABSTRACT_STUB software/bernie/example/entity/RaceCarEntity.isFood(Lnet/minecraft/world/item/ItemStack;)Z (added by net/minecraft/world/entity/animal/Animal)
+     1  ABSTRACT_STUB software/bernie/geckolib/cache/AnimatableIdCache.save(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/nbt/CompoundTag; (added by net/minecraft/world/level/saveddata/SavedData)
+    10  HOLDER_WRAP ambiguous: net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add(Lnet/minecraft/world/entity/ai/attributes/Attribute;D)Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;
      1  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
      2  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
 

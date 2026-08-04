@@ -28,27 +28,40 @@ import net.minecraft.resources.ResourceLocation;
  * Integer ids come from vanilla's own registry, which has kept them throughout -- Forge's ids
  * were vanilla's, not a parallel numbering.
  */
-public class ForgeRegistry<V> extends IForgeRegistry<V> {
+public class ForgeRegistry<V> implements IForgeRegistry<V> {
+
+    private final ResourceKey<? extends Registry<V>> key;
 
     ForgeRegistry(ResourceKey<? extends Registry<V>> key) {
-        super(key);
+        this.key = key;
+    }
+
+    @Override
+    public ResourceKey<? extends Registry<V>> getRegistryKey() {
+        return key;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Registry<V> reg() {
+        return (Registry<V>) net.minecraft.core.registries.BuiltInRegistries.REGISTRY
+                .get(key.location());
     }
 
     /** Forge returned -1 for an unregistered value, and mods branch on that. */
     public int getID(V value) {
-        Registry<V> r = registry();
+        Registry<V> r = reg();
         return r == null ? -1 : r.getId(value);
     }
 
     public int getID(ResourceLocation id) {
-        Registry<V> r = registry();
+        Registry<V> r = reg();
         if (r == null) return -1;
         V value = r.get(id);
         return value == null ? -1 : r.getId(value);
     }
 
     public V getValue(int id) {
-        Registry<V> r = registry();
+        Registry<V> r = reg();
         return r == null ? null : r.byId(id);
     }
 
@@ -69,7 +82,4 @@ public class ForgeRegistry<V> extends IForgeRegistry<V> {
 
     public void freeze() {}
 
-    public Set<ResourceLocation> getKeys() {
-        return super.getKeys();
-    }
 }
