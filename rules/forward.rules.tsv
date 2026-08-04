@@ -243,7 +243,6 @@ TYPE_PREFIX_RENAME	net/minecraftforge/client/settings/	net/neoforged/neoforge/cl
 TYPE_PREFIX_RENAME	net/minecraftforge/client/extensions/	net/neoforged/neoforge/client/extensions/
 TYPE_PREFIX_RENAME	net/minecraftforge/common/loot/	net/neoforged/neoforge/common/loot/
 TYPE_PREFIX_RENAME	net/minecraftforge/common/data/	net/neoforged/neoforge/common/data/
-TYPE_PREFIX_RENAME	net/minecraftforge/common/util/	net/neoforged/neoforge/common/util/
 TYPE_PREFIX_RENAME	net/minecraftforge/server/	net/neoforged/neoforge/server/
 
 # Tags is a single class whose nested tag holders (Tags$Items, Tags$Blocks) are what mods use.
@@ -371,3 +370,24 @@ TYPE_RENAME	net/minecraftforge/event/entity/player/PlayerSleepInBedEvent	net/neo
 # This is the shape for the rest of the "rename target missing a called member" list in
 # api-report/unresolved-types.txt, which currently runs to several hundred entries.
 METHOD_TO_STATIC	net/neoforged/neoforge/registries/RegisterEvent	getForgeRegistry	()Lnet/minecraftforge/registries/IForgeRegistry;	easyport/bridge/RegistryBridge	getForgeRegistry	(Lnet/neoforged/neoforge/registries/RegisterEvent;)Lnet/minecraftforge/registries/IForgeRegistry;
+
+# common/util was a prefix rule and should not have been.
+#
+# The package is split down the middle. NeoForge kept FakePlayer, Lazy, ITeleporter and friends
+# at the same path, so those rename cleanly. It also kept INBTSerializable there -- with
+# different method signatures. Its serializeNBT/deserializeNBT gained a HolderLookup.Provider
+# parameter in 1.20.5, when NBT started needing registry access, so a Forge implementor
+# overrides nothing and leaves the real interface methods abstract. 61 jars implement it.
+#
+# LazyOptional and the NonNull* functional interfaces have no NeoForge equivalent at all and are
+# shimmed; the prefix rule was harmless for them only because the target-existence check refused
+# it. Relying on that is relying on an accident.
+#
+# So: enumerate the ones that genuinely moved, and let everything else fall through to a shim.
+TYPE_RENAME	net/minecraftforge/common/util/FakePlayer	net/neoforged/neoforge/common/util/FakePlayer
+TYPE_RENAME	net/minecraftforge/common/util/FakePlayerFactory	net/neoforged/neoforge/common/util/FakePlayerFactory
+TYPE_RENAME	net/minecraftforge/common/util/Lazy	net/neoforged/neoforge/common/util/Lazy
+TYPE_RENAME	net/minecraftforge/common/util/ITeleporter	net/neoforged/neoforge/common/util/ITeleporter
+TYPE_RENAME	net/minecraftforge/common/util/BlockSnapshot	net/neoforged/neoforge/common/util/BlockSnapshot
+TYPE_RENAME	net/minecraftforge/common/util/MutableHashedLinkedMap	net/neoforged/neoforge/common/util/MutableHashedLinkedMap
+TYPE_RENAME	net/minecraftforge/common/util/LogicalSidedProvider	net/neoforged/neoforge/common/util/LogicalSidedProvider
