@@ -1201,8 +1201,10 @@ public class Translate {
                 // families of constants without wrapping them in a Holder --
                 // BuiltInLootTables went from ResourceLocation to ResourceKey -- and the fix is
                 // the same shape: read the new type, convert back to what the mod expects.
+                // Sorted: members is a HashSet, so two candidates would otherwise be chosen
+                // between by hash order, and a translator has to emit the same bytes every run.
                 String want = fin.desc.substring(1, fin.desc.length() - 1);
-                for (String candidate : members) {
+                for (String candidate : new java.util.TreeSet<>(members)) {
                     int sp = candidate.indexOf(' ');
                     if (sp != fin.name.length() || !candidate.startsWith(fin.name)) continue;
                     String actual = candidate.substring(sp + 1);
@@ -1243,7 +1245,7 @@ public class Translate {
                 // identical: take the new descriptor and convert the result back to what the
                 // mod's own bytecode expects. Only Holder was handled at first, which left the
                 // whole ResourceKey family failing at the call site with NoSuchMethodError.
-                for (String candidate : members) {
+                for (String candidate : new java.util.TreeSet<>(members)) {
                     int sp = candidate.indexOf(' ');
                     if (sp != min.name.length() || !candidate.startsWith(min.name)) continue;
                     String desc = candidate.substring(sp + 1);
