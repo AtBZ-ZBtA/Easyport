@@ -70,9 +70,7 @@ public final class VanillaBridge {
     public static net.minecraft.world.entity.ai.attributes.AttributeModifier attributeModifier(
             java.util.UUID id, String name, double amount,
             net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation operation) {
-        ResourceLocation key = id != null
-                ? ResourceLocation.fromNamespaceAndPath("easyport", id.toString())
-                : ResourceLocation.fromNamespaceAndPath("easyport", "modifier");
+        ResourceLocation key = identifierFor(id);
         return new net.minecraft.world.entity.ai.attributes.AttributeModifier(key, amount, operation);
     }
 
@@ -101,6 +99,126 @@ public final class VanillaBridge {
      */
     public static ResourceLocation registerLootTable(ResourceLocation id) {
         return id;
+    }
+
+    /**
+     * The tool-item constructors, which 1.21 moved attack stats into the item properties.
+     *
+     * {@code PickaxeItem(Tier, int, float, Properties)} became {@code PickaxeItem(Tier,
+     * Properties)}: the attack damage and speed are an {@code ItemAttributeModifiers} component
+     * on the properties now, built by the same {@code createAttributes} vanilla uses itself. Four
+     * parameters becoming two is past ARG_DROP, which handles one at a time, so each of these is
+     * a factory.
+     *
+     * Nothing is lost. The values the mod passed are exactly the values createAttributes takes,
+     * and vanilla builds its own tools this way -- this is a transcription of the migration, not
+     * an approximation of it.
+     */
+    public static net.minecraft.world.item.PickaxeItem pickaxe(
+            net.minecraft.world.item.Tier tier, int damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return new net.minecraft.world.item.PickaxeItem(tier, toolProps(tier, damage, speed, props));
+    }
+
+    public static net.minecraft.world.item.AxeItem axe(
+            net.minecraft.world.item.Tier tier, float damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return new net.minecraft.world.item.AxeItem(tier, toolProps(tier, damage, speed, props));
+    }
+
+    public static net.minecraft.world.item.ShovelItem shovel(
+            net.minecraft.world.item.Tier tier, float damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return new net.minecraft.world.item.ShovelItem(tier, toolProps(tier, damage, speed, props));
+    }
+
+    public static net.minecraft.world.item.HoeItem hoe(
+            net.minecraft.world.item.Tier tier, int damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return new net.minecraft.world.item.HoeItem(tier, toolProps(tier, damage, speed, props));
+    }
+
+    public static net.minecraft.world.item.SwordItem sword(
+            net.minecraft.world.item.Tier tier, int damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return new net.minecraft.world.item.SwordItem(tier,
+                props.attributes(net.minecraft.world.item.SwordItem.createAttributes(
+                        tier, damage, speed)));
+    }
+
+    /**
+     * The collapsed-argument forms, for ARG_COLLAPSE. Same conversion as the factories above,
+     * returning the properties rather than the item, because a super(...) call still has to
+     * reach the real constructor.
+     */
+    public static net.minecraft.world.item.Item.Properties pickaxeProps(
+            net.minecraft.world.item.Tier tier, int damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return toolProps(tier, damage, speed, props);
+    }
+
+    public static net.minecraft.world.item.Item.Properties diggerProps(
+            net.minecraft.world.item.Tier tier, float damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return toolProps(tier, damage, speed, props);
+    }
+
+    public static net.minecraft.world.item.Item.Properties swordProps(
+            net.minecraft.world.item.Tier tier, int damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return props.attributes(net.minecraft.world.item.SwordItem.createAttributes(
+                tier, damage, speed));
+    }
+
+    private static net.minecraft.world.item.Item.Properties toolProps(
+            net.minecraft.world.item.Tier tier, float damage, float speed,
+            net.minecraft.world.item.Item.Properties props) {
+        return props.attributes(net.minecraft.world.item.DiggerItem.createAttributes(
+                tier, damage, speed));
+    }
+
+    /**
+     * Forge's {@code CraftingHelper.register}, for condition and ingredient serializers.
+     *
+     * NeoForge kept the class name and dropped these methods when 1.20.5 replaced serializers
+     * with codecs -- so the type renames cleanly and the call does not, which is exactly the
+     * shape RenameGaps' member check exists to catch.
+     *
+     * A no-op returning its argument. The serializer it registers has nothing to read it back,
+     * for the same reason IConditionSerializer is a link-only shim: a condition the mod builds in
+     * code still works, and one written into a recipe file does not.
+     */
+    public static Object registerSerializer(Object serializer) {
+        return serializer;
+    }
+
+    /**
+     * Vanilla's two well-known attribute-modifier UUIDs, which 1.21 replaced with named ids.
+     *
+     * Mapping these exactly matters: an item that *replaces* the base attack damage modifier has
+     * to use the same identifier vanilla does, or the two stack and the weapon does double
+     * damage. A UUID-derived identifier would be unique, stable, and silently wrong in exactly
+     * that way -- which is the failure mode this project cares most about, since nothing crashes.
+     */
+    private static final java.util.UUID BASE_ATTACK_DAMAGE_UUID =
+            java.util.UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+    private static final java.util.UUID BASE_ATTACK_SPEED_UUID =
+            java.util.UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
+
+    public static java.util.UUID baseAttackDamageUuid() {
+        return BASE_ATTACK_DAMAGE_UUID;
+    }
+
+    public static java.util.UUID baseAttackSpeedUuid() {
+        return BASE_ATTACK_SPEED_UUID;
+    }
+
+    private static ResourceLocation identifierFor(java.util.UUID id) {
+        if (BASE_ATTACK_DAMAGE_UUID.equals(id)) return net.minecraft.world.item.Item.BASE_ATTACK_DAMAGE_ID;
+        if (BASE_ATTACK_SPEED_UUID.equals(id)) return net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID;
+        return id != null
+                ? ResourceLocation.fromNamespaceAndPath("easyport", id.toString())
+                : ResourceLocation.fromNamespaceAndPath("easyport", "modifier");
     }
 
     public static ResourceLocation modelId(ModelResourceLocation mrl) {

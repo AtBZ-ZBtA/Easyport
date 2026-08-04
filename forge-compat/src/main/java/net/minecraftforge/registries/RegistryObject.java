@@ -86,6 +86,30 @@ public final class RegistryObject<T> implements Supplier<T> {
         return of(DeferredHolder.create(registry.getRegistryKey(), name));
     }
 
+    /**
+     * The registry-key form of the same factory, called where a mod has a ResourceKey rather than
+     * an IForgeRegistry -- typically for a registry NeoForge exposes only by key.
+     *
+     * From the shim member check: a shim that supplies the class but not every overload the corpus
+     * calls fails with NoSuchMethodError at the call site, having loaded perfectly.
+     */
+    public static <T> RegistryObject<T> create(
+            ResourceLocation name, net.minecraft.resources.ResourceKey<? extends net.minecraft.core.Registry<T>> registry) {
+        return of(DeferredHolder.create(registry, name));
+    }
+
+    /**
+     * Forge's three-argument form. The mod id is what Forge used to decide which registry a
+     * *modded* registry key belonged to; NeoForge resolves that from the key alone, so it is
+     * accepted and ignored.
+     */
+    public static <T> RegistryObject<T> create(
+            ResourceLocation name,
+            net.minecraft.resources.ResourceKey<? extends net.minecraft.core.Registry<T>> registry,
+            String modid) {
+        return create(name, registry);
+    }
+
     public DeferredHolder<?, ?> unwrap() {
         return delegate;
     }

@@ -36,9 +36,22 @@ public final class ArmorMaterialBridge {
 
     private static net.minecraft.world.item.ArmorMaterial build(
             easyport.vanilla.ArmorMaterial material) {
+        // Every armour slot 1.21 knows about, asked one at a time and defaulted on failure.
+        //
+        // 1.21 added BODY, for wolf armour. A 1.20.1 material has never heard of it, and the
+        // common idiom -- an EnumMap keyed by the slots that existed then -- returns null for it,
+        // so asking blows up inside the *mod's* method with a NullPointerException that names
+        // EnumMap and nothing else. Defaulting to zero is right on the merits too: a material
+        // written before wolf armour existed has no opinion about it.
         Map<ArmorItem.Type, Integer> defense = new EnumMap<>(ArmorItem.Type.class);
         for (ArmorItem.Type type : ArmorItem.Type.values()) {
-            defense.put(type, material.getDefenseForType(type));
+            int value = 0;
+            try {
+                value = material.getDefenseForType(type);
+            } catch (RuntimeException unknownToThisMaterial) {
+                // Left at zero.
+            }
+            defense.put(type, value);
         }
 
         Holder<net.minecraft.sounds.SoundEvent> equipSound =

@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 181 classes, moved 8 resources
 
@@ -12,8 +12,12 @@ Applied:
     32  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  EBS_STRIP (no @SubscribeEvent methods) com/supermartijn642/core/CommonUtils
      2  HOLDER_WRAP net/minecraft/advancements/critereon/EnchantmentPredicate.<init>
+    34  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
+    16  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
+     2  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      3  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      4  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     1  RENAME_METHOD net/neoforged/neoforge/common/crafting/CraftingHelper#register -> registerSerializer
      2  SRG_IN_TEXT
     49  TYPE_PREFIX net/minecraftforge/client/event/
      6  TYPE_PREFIX net/minecraftforge/client/extensions/
@@ -41,11 +45,10 @@ Applied:
     25  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB com/supermartijn642/core/data/recipe/ConditionalRecipeSerializer.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+     1  ABSTRACT_STUB com/supermartijn642/core/data/recipe/ConditionalRecipeSerializer.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
      1  MIXIN_DROP (target became an interface: net/minecraft/client/renderer/texture/atlas/SpriteResourceLoader) SpriteResourceLoaderMixin
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) com/supermartijn642/core/registry/ClientRegistrationHandler
-    34  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
-    16  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
-     2  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
 
 Wrote translated\supermartijn642corelib.jar
       translated\supermartijn642corelib.report.tsv

@@ -1,8 +1,9 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 42 classes, moved 34 resources
 
 Applied:
+     1  ARG_COLLAPSE net/minecraft/world/item/SwordItem.<init>
      1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/world/item/crafting/ShapelessRecipe.<init>
     14  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      2  CTOR_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier#attributeModifier
@@ -12,6 +13,10 @@ Applied:
      3  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
      6  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
+     8  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
+     5  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
+     4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
+     1  RENAME_METHOD net/minecraft/world/food/FoodProperties$Builder#saturationMod -> saturationModifier
      4  TYPE_PREFIX net/minecraftforge/common/Tags
     19  TYPE_PREFIX net/minecraftforge/event/
    115  TYPE_PREFIX net/minecraftforge/items/
@@ -28,9 +33,8 @@ Applied:
      4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/InterModEnqueueEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
-     8  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
-     5  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
-     4  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
+     1  ABSTRACT_STUB com/traverse/bhc/common/recipes/HeartAmuletRecipe$BHCSerializer.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+     1  ABSTRACT_STUB com/traverse/bhc/common/recipes/HeartAmuletRecipe$BHCSerializer.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
     12  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
 
 Wrote translated\bhc.jar

@@ -47,6 +47,18 @@ public final class CodecBridge {
         return particleCodec();
     }
 
+    /**
+     * The codec standing in for a mod's hand-written loot serializer.
+     *
+     * LootItemConditionType and its function counterpart took a Serializer in 1.20.1 and take a
+     * MapCodec now. Same trade as the particle codec: the type registers and the mod's custom
+     * loot condition will not be read back from a datapack, which the LootSerializer stand-in
+     * already documents.
+     */
+    public static MapCodec<?> lootCodecFrom(easyport.vanilla.LootSerializer<?> serializer) {
+        return MapCodec.unit(() -> null);
+    }
+
     public static StreamCodec<RegistryFriendlyByteBuf, ParticleOptions> particleStreamCodec() {
         return StreamCodec.unit(null);
     }

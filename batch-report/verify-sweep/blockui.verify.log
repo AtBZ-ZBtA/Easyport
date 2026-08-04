@@ -1,5 +1,5 @@
 blockui.jar
-  121 classes, 1216 methods analysed
+  121 classes, 1223 methods analysed
   3 classes with a verification error (4 methods)
 
     4  [hierarchy] IncompatibleClassChangeError: class com.ldtteam.blockui.util.resloc.OutOfJarResourceLocation cannot inherit from final class net.minecraft.resources.ResourceLocation

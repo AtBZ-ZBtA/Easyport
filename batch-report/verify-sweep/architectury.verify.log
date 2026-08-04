@@ -1,5 +1,5 @@
 architectury.jar
-  382 classes, 1546 methods analysed
+  382 classes, 1547 methods analysed
   0 classes with a verification error (0 methods)
   1 other-mod classes absent from this classpath, not counted
   CLEAN - every method type-checks

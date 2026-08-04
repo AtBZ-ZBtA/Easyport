@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 399 classes, moved 32 resources
 
@@ -56,6 +56,16 @@ Applied:
      4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/InterModEnqueueEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.clearContent()V (added by net/minecraft/world/Clearable)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.getContainerSize()I (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.getItem(I)Lnet/minecraft/world/item/ItemStack; (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.isEmpty()Z (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.removeItem(II)Lnet/minecraft/world/item/ItemStack; (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.removeItemNoUpdate(I)Lnet/minecraft/world/item/ItemStack; (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.setChanged()V (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.setItem(ILnet/minecraft/world/item/ItemStack;)V (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.stillValid(Lnet/minecraft/world/entity/player/Player;)Z (added by net/minecraft/world/Container)
+     1  ABSTRACT_STUB net/blay09/mods/balm/forge/world/BalmBiomeModifier.codec()Lcom/mojang/serialization/MapCodec; (added by net/neoforged/neoforge/common/world/BiomeModifier)
      7  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent
      8  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Post
      9  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Pre

@@ -760,3 +760,49 @@ COERCE	net/minecraft/resources/ResourceKey	net/minecraft/resources/ResourceLocat
 # and interface calls, and would have matched nothing. Heads the 305-jar-weight
 # BuiltInLootTables cluster.
 RENAME_METHOD	net/minecraft/world/level/storage/loot/BuiltInLootTables	register	(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;	easyport/bridge/VanillaBridge	registerLootTable	(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/resources/ResourceLocation;
+
+# Forge needed a custom client factory because its own spawn packet reconstructed the entity
+# client-side. 1.20.5 folded extra spawn data into vanilla's packet, so NeoForge dropped the
+# method; discarding the factory is correct rather than lossy. Same change as the PlayMessages
+# shim, seen from the builder end.
+METHOD_TO_STATIC	net/minecraft/world/entity/EntityType$Builder	setCustomClientFactory	(Ljava/util/function/BiFunction;)Lnet/minecraft/world/entity/EntityType$Builder;	easyport/bridge/ItemBridge	setCustomClientFactory	(Lnet/minecraft/world/entity/EntityType$Builder;Ljava/util/function/BiFunction;)Lnet/minecraft/world/entity/EntityType$Builder;
+
+# --- Tool items: 1.21 moved attack stats into the item properties ------------------------------
+#
+# PickaxeItem(Tier, int, float, Properties) became PickaxeItem(Tier, Properties): damage and speed
+# are an ItemAttributeModifiers component now, built by the same createAttributes vanilla uses.
+# Four parameters becoming two is past ARG_DROP, which handles one at a time, so each is a
+# factory. Nothing is lost -- the values the mod passed are the values createAttributes takes.
+CTOR_TO_STATIC	net/minecraft/world/item/PickaxeItem	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V	pickaxe	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/PickaxeItem;	easyport/bridge/VanillaBridge
+CTOR_TO_STATIC	net/minecraft/world/item/SwordItem	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V	sword	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/SwordItem;	easyport/bridge/VanillaBridge
+CTOR_TO_STATIC	net/minecraft/world/item/AxeItem	(Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V	axe	(Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/AxeItem;	easyport/bridge/VanillaBridge
+CTOR_TO_STATIC	net/minecraft/world/item/ShovelItem	(Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V	shovel	(Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/ShovelItem;	easyport/bridge/VanillaBridge
+CTOR_TO_STATIC	net/minecraft/world/item/HoeItem	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V	hoe	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/HoeItem;	easyport/bridge/VanillaBridge
+
+# The same four constructors as super(...) calls, which CTOR_TO_STATIC cannot rewrite -- there is
+# no NEW/DUP pair when a mod subclasses the tool. ARG_COLLAPSE folds the arguments in place.
+ARG_COLLAPSE	net/minecraft/world/item/PickaxeItem	<init>	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V	(Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V	easyport/bridge/VanillaBridge	pickaxeProps
+ARG_COLLAPSE	net/minecraft/world/item/SwordItem	<init>	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V	(Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V	easyport/bridge/VanillaBridge	swordProps
+ARG_COLLAPSE	net/minecraft/world/item/AxeItem	<init>	(Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V	(Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V	easyport/bridge/VanillaBridge	diggerProps
+ARG_COLLAPSE	net/minecraft/world/item/ShovelItem	<init>	(Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V	(Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V	easyport/bridge/VanillaBridge	diggerProps
+ARG_COLLAPSE	net/minecraft/world/item/HoeItem	<init>	(Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V	(Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V	easyport/bridge/VanillaBridge	pickaxeProps
+
+# NeoForge kept CraftingHelper and dropped its register methods when codecs replaced serializers,
+# so the type renames cleanly and the call does not. No-op returning its argument -- the
+# serializer has nothing to read it back, same as the IConditionSerializer shim it takes.
+# Owner is post-rename.
+RENAME_METHOD	net/neoforged/neoforge/common/crafting/CraftingHelper	register	(Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;)Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;	easyport/bridge/VanillaBridge	registerSerializer	(Ljava/lang/Object;)Ljava/lang/Object;
+
+# LootItemConditionType and its function counterpart took a Serializer in 1.20.1 and take a
+# MapCodec now -- the same shape as the particle deserializer, and the same trade.
+COERCE	easyport/vanilla/LootSerializer	com/mojang/serialization/MapCodec	easyport/bridge/CodecBridge	lootCodecFrom
+
+# 1.21 replaced vanilla's two well-known attribute-modifier UUIDs with named ResourceLocations.
+# The bridge maps these two exactly rather than deriving an id, because an item that replaces the
+# base attack damage modifier must use the identifier vanilla uses or the two stack.
+FIELD_TO_STATIC	net/minecraft/world/item/Item	BASE_ATTACK_DAMAGE_UUID	Ljava/util/UUID;	easyport/bridge/VanillaBridge	baseAttackDamageUuid	()Ljava/util/UUID;
+FIELD_TO_STATIC	net/minecraft/world/item/Item	BASE_ATTACK_SPEED_UUID	Ljava/util/UUID;	easyport/bridge/VanillaBridge	baseAttackSpeedUuid	()Ljava/util/UUID;
+
+# FoodProperties.Builder renamed saturationMod to saturationModifier. Same shape, so a plain
+# call-site rewrite. 1.21 also dropped meat()/alwaysEat(), which are separate findings.
+RENAME_METHOD	net/minecraft/world/food/FoodProperties$Builder	saturationMod	(F)Lnet/minecraft/world/food/FoodProperties$Builder;	net/minecraft/world/food/FoodProperties$Builder	saturationModifier	(F)Lnet/minecraft/world/food/FoodProperties$Builder;

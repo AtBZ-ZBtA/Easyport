@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 589 classes, moved 2 resources
 
@@ -15,9 +15,16 @@ Applied:
      1  FIELD_TO_STATIC cpw/mods/modlauncher/api/IEnvironment$Keys#NAMING -> easyport/bridge/EnvBridge#naming
      2  HOLDER_WRAP net/minecraft/world/entity/LivingEntity.getEffect
      1  HOLDER_WRAP net/minecraft/world/item/ItemStack.enchant
+     1  HOLDER_WRAP net/minecraft/world/level/storage/loot/functions/LootItemFunctionType.<init>
+     1  HOLDER_WRAP net/minecraft/world/level/storage/loot/predicates/LootItemConditionType.<init>
+     6  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getOrCreateTag -> easyport/bridge/ItemBridge#getOrCreateTag
+     5  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
+     3  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
+     3  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Loading#getConfig -> easyport/bridge/ConfigBridge#getConfig
      1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Reloading#getConfig -> easyport/bridge/ConfigBridge#getConfig
      5  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     1  RENAME_METHOD net/neoforged/neoforge/common/crafting/CraftingHelper#register -> registerSerializer
      1  SRG_IN_TEXT
     76  TYPE_PREFIX net/minecraftforge/client/event/
     24  TYPE_PREFIX net/minecraftforge/client/extensions/
@@ -68,16 +75,21 @@ Applied:
     26  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/advancement/criterion/GuiContainerOpenTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/advancement/criterion/ItemCraftedTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/advancement/criterion/ModItemObtainedTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/block/BlockWithEntity.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/level/block/BaseEntityBlock)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleBlur$RenderType.begin(Lcom/mojang/blaze3d/vertex/Tesselator;Lnet/minecraft/client/renderer/texture/TextureManager;)Lcom/mojang/blaze3d/vertex/BufferBuilder; (added by net/minecraft/client/particle/ParticleRenderType)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleBlurConfig$1.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/core/particles/ParticleType)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleBlurConfig$1.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/core/particles/ParticleType)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleDropColoredConfig$1.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/core/particles/ParticleType)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleDropColoredConfig$1.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/core/particles/ParticleType)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/loot/modifier/LootModifierInjectItem.codec()Lcom/mojang/serialization/MapCodec; (added by net/neoforged/neoforge/common/loot/IGlobalLootModifier)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/persist/world/WorldStorage$NBTDataHolder.save(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/nbt/CompoundTag; (added by net/minecraft/world/level/saveddata/SavedData)
-     6  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
-     5  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
-     3  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
-     3  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/recipe/type/RecipeSerializerCraftingShapedCustomOutput.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/recipe/type/RecipeSerializerCraftingShapedCustomOutput.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/recipe/type/RecipeSerializerCraftingShapelessCustomOutput.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/recipe/type/RecipeSerializerCraftingShapelessCustomOutput.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
     38  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
      1  TYPE_PREFIX target missing: net/neoforged/neoforge/event/ForgeEventFactory
      5  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent

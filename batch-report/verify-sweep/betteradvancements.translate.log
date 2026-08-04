@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 36 classes, moved 1 resources
 
@@ -17,7 +17,12 @@ Applied:
      1  TYPE_RENAME net/minecraftforge/fml/common/Mod
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
-  (none)
+     1  ABSTRACT_STUB betteradvancements/common/gui/BetterAdvancementsScreen.onAddAdvancementRoot(Lnet/minecraft/advancements/AdvancementNode;)V (added by net/minecraft/advancements/AdvancementTree$Listener)
+     1  ABSTRACT_STUB betteradvancements/common/gui/BetterAdvancementsScreen.onAddAdvancementTask(Lnet/minecraft/advancements/AdvancementNode;)V (added by net/minecraft/advancements/AdvancementTree$Listener)
+     1  ABSTRACT_STUB betteradvancements/common/gui/BetterAdvancementsScreen.onRemoveAdvancementRoot(Lnet/minecraft/advancements/AdvancementNode;)V (added by net/minecraft/advancements/AdvancementTree$Listener)
+     1  ABSTRACT_STUB betteradvancements/common/gui/BetterAdvancementsScreen.onRemoveAdvancementTask(Lnet/minecraft/advancements/AdvancementNode;)V (added by net/minecraft/advancements/AdvancementTree$Listener)
+     1  ABSTRACT_STUB betteradvancements/common/gui/BetterAdvancementsScreen.onSelectedTabChanged(Lnet/minecraft/advancements/AdvancementHolder;)V (added by net/minecraft/client/multiplayer/ClientAdvancements$Listener)
+     1  ABSTRACT_STUB betteradvancements/common/gui/BetterAdvancementsScreen.onUpdateAdvancementProgress(Lnet/minecraft/advancements/AdvancementNode;Lnet/minecraft/advancements/AdvancementProgress;)V (added by net/minecraft/client/multiplayer/ClientAdvancements$Listener)
 
 Wrote translated\betteradvancements.jar
       translated\betteradvancements.report.tsv

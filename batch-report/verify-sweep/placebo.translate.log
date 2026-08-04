@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 153 classes, moved 1 resources
 
@@ -11,6 +11,10 @@ Applied:
      1  EBS_BUS FORGE -> GAME
      2  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
      1  HOLDER_WRAP net/minecraft/world/entity/LivingEntity.getAttribute
+     1  HOLDER_WRAP net/minecraft/world/level/storage/loot/entries/LootPoolEntryType.<init>
+     6  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
+     2  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
+     4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      4  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
      2  SRG_IN_TEXT
@@ -51,9 +55,6 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      2  HOLDER_WRAP ambiguous: net/minecraft/world/item/ItemStack.<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/nbt/CompoundTag;)V
      1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) LootTablesMixin
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/shadowsoffire/placebo/loot/LootSystem
-     6  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
-     2  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
-     4  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
 
 Wrote translated\placebo.jar
       translated\placebo.report.tsv

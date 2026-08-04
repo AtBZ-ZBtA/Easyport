@@ -79,5 +79,23 @@ public final class ItemBridge {
         return stack.has(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
     }
 
+    /**
+     * Forge's {@code EntityType.Builder.setCustomClientFactory}, which NeoForge removed.
+     *
+     * Forge needed it because its own spawn packet had to reconstruct the entity client-side.
+     * 1.20.5 folded extra spawn data into vanilla's packet, so the factory has nothing left to
+     * do and NeoForge dropped the method -- see the PlayMessages shim, which is the same change
+     * seen from the packet end.
+     *
+     * Returns the builder so the call chain continues. The factory is discarded, which is correct
+     * rather than lossy: the entity is now constructed by its registered type and populated
+     * through IEntityWithComplexSpawn, both of which forge-compat already routes.
+     */
+    public static net.minecraft.world.entity.EntityType.Builder<?> setCustomClientFactory(
+            net.minecraft.world.entity.EntityType.Builder<?> builder,
+            java.util.function.BiFunction<?, ?, ?> factory) {
+        return builder;
+    }
+
     private ItemBridge() {}
 }

@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 143 classes, moved 1 resources
 
@@ -14,6 +14,9 @@ Applied:
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
      3  HOLDER_WRAP net/minecraft/world/item/ItemStack.getEnchantmentLevel
      2  HOLDER_WRAP net/minecraft/world/item/enchantment/EnchantmentHelper.getItemEnchantmentLevel
+     1  HOLDER_WRAP net/minecraft/world/level/storage/loot/functions/LootItemFunctionType.<init>
+     1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getOrCreateTag -> easyport/bridge/ItemBridge#getOrCreateTag
+     4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
      9  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      2  SRG_IN_TEXT
     54  TYPE_PREFIX net/minecraftforge/client/event/
@@ -46,9 +49,8 @@ Applied:
      4  TYPE_RENAME net/minecraftforge/fml/loading/FMLLoader
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB top/theillusivec4/curios/common/util/EquipCurioTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
      1  MIXIN_DROP (@Shadow field not found: net/minecraft/world/level/storage/loot/functions/ApplyBonusCount#enchantment) MixinApplyBonusCount
-     1  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
-     4  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
     12  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
      5  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent
     11  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LootingLevelEvent

@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 261 classes, moved 1 resources
 
@@ -12,6 +12,8 @@ Applied:
     10  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add
      2  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
      1  JARJAR_TRANSLATE (depth 1)
+     1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getOrCreateTag -> easyport/bridge/ItemBridge#getOrCreateTag
+     2  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
     18  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      2  SRG_IN_TEXT
     16  TYPE_PREFIX net/minecraftforge/client/event/
@@ -33,8 +35,6 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB software/bernie/example/entity/BikeEntity.isFood(Lnet/minecraft/world/item/ItemStack;)Z (added by net/minecraft/world/entity/animal/Animal)
      1  ABSTRACT_STUB software/bernie/example/entity/RaceCarEntity.isFood(Lnet/minecraft/world/item/ItemStack;)Z (added by net/minecraft/world/entity/animal/Animal)
      1  ABSTRACT_STUB software/bernie/geckolib/cache/AnimatableIdCache.save(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/nbt/CompoundTag; (added by net/minecraft/world/level/saveddata/SavedData)
-     1  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
-     2  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
 
 Wrote translated\geckolib.jar
       translated\geckolib.report.tsv

@@ -105,6 +105,12 @@ public class Translate {
     /** "from\tto" -> the bridge call that converts between them. See Translate#coercion. */
     private final Map<String, RenameRule> coercions = new LinkedHashMap<>();
 
+    /** Several parameters 1.21 folded into one. See Translate#applyArgCollapse. */
+    record CollapseRule(String owner, String name, String oldDesc, String newDesc,
+                        String bridgeOwner, String bridgeName) {}
+
+    private final List<CollapseRule> collapseRules = new ArrayList<>();
+
     /** A parameter type 1.21 added -> the no-arg bridge that supplies one. */
     private final Map<String, RenameRule> argFillers = new LinkedHashMap<>();
 
@@ -442,6 +448,7 @@ public class Translate {
             applyMethodToStaticRules(m.instructions);
             applyFieldRetypeRules(m.instructions);
             applyFieldToStaticRules(m.instructions);
+            applyArgCollapse(m);
             applyCtorRules(m.instructions);
             applySwapRules(m.instructions);
             // Unwrap before wrap, and both after the explicit rules. Unwrap normalises what the
@@ -623,8 +630,14 @@ public class Translate {
             if (!(insn instanceof org.objectweb.asm.tree.FieldInsnNode fin)) continue;
             if (fin.getOpcode() != Opcodes.GETSTATIC) continue;
             for (RenameRule r : fieldToStaticRules) {
-                if (!r.owner().equals(fin.owner) || !r.name().equals(fin.name)
-                        || !r.desc().equals(fin.desc)) continue;
+                if (!r.name().equals(fin.name) || !r.desc().equals(fin.desc)) continue;
+                // The owner is matched through the hierarchy, not by equality. javac records the
+                // *qualifying* class for a static field reference, and for an inherited one
+                // referred to unqualified that is the referring class -- so a mod extending
+                // SwordItem and reading BASE_ATTACK_DAMAGE_UUID emits its own class as the owner.
+                // Matching by equality missed every such read, and the failure named the mod's
+                // class as the one lacking a vanilla field.
+                if (!inheritsFrom(fin.owner, r.owner())) continue;
                 insns.set(fin, new MethodInsnNode(Opcodes.INVOKESTATIC,
                         r.newOwner(), r.newName(), r.newDesc(), false));
                 count(appliedCounts, "FIELD_TO_STATIC " + r.owner() + "#" + r.name()
@@ -798,17 +811,26 @@ public class Translate {
      * work. Every one is named in the report rather than left to be discovered.
      */
     private void stubAddedAbstractMethods(ClassNode node) {
-        if (targetMembers.isEmpty() || node.superName == null) return;
-        if (!targetMembers.containsKey(node.superName)) return;
+        if (targetMembers.isEmpty()) return;
         if ((node.access & Opcodes.ACC_ABSTRACT) != 0) return;
 
         Set<String> implemented = new HashSet<>();
         for (MethodNode m : node.methods) implemented.add(m.name + " " + m.desc);
 
+        // Interfaces as well as the superclass chain. 1.21 added getIncorrectBlocksForDrops to
+        // Tier, and a mod's anonymous `new Tier() { ... }` therefore no longer implements it --
+        // an AbstractMethodError the first time a tool is used, from a class that loads perfectly.
+        // Walking only the superclass chain missed every one of those.
+        java.util.ArrayDeque<String> roots = new java.util.ArrayDeque<>();
+        if (node.superName != null) roots.add(node.superName);
+        roots.addAll(node.interfaces);
+        if (roots.stream().noneMatch(targetMembers::containsKey)) return;
+
         List<MethodNode> stubs = new ArrayList<>();
-        String cls = node.superName;
         Set<String> seen = new HashSet<>();
-        while (cls != null && seen.add(cls)) {
+        while (!roots.isEmpty()) {
+            String cls = roots.poll();
+            if (!seen.add(cls)) continue;
             // A lower class in the chain may already implement what a higher one declares
             // abstract, so its concrete methods count as implemented before this class's own
             // abstract ones are judged. Skipping this stubbed Block.asBlock() to null on every
@@ -842,7 +864,10 @@ public class Translate {
                 count(unresolved, "ABSTRACT_STUB " + node.name + "." + name + desc
                                 + " (added by " + cls + ")");
             }
-            cls = targetSuper.get(cls);
+            String sup = targetSuper.get(cls);
+            if (sup != null) roots.add(sup);
+            List<String> ifs = targetIfaces.get(cls);
+            if (ifs != null) roots.addAll(ifs);
         }
         node.methods.addAll(stubs);
     }
@@ -1058,6 +1083,18 @@ public class Translate {
         }
     }
 
+    /** Whether the class is, or descends from, the ancestor -- across mod and platform. */
+    private boolean inheritsFrom(String cls, String ancestor) {
+        String walk = cls;
+        Set<String> seen = new HashSet<>();
+        while (walk != null && seen.add(walk)) {
+            if (walk.equals(ancestor)) return true;
+            String platform = targetSuper.get(walk);
+            walk = platform != null ? platform : modSuper.get(walk);
+        }
+        return false;
+    }
+
     /**
      * The nearest supertype declaring this member final, or null.
      *
@@ -1201,6 +1238,62 @@ public class Translate {
                     break;
                 }
             }
+        }
+    }
+
+    /**
+     * Collapses several arguments into one, where 1.21 folded them into another parameter.
+     *
+     * `PickaxeItem(Tier, int, float, Properties)` became `PickaxeItem(Tier, Properties)`: attack
+     * damage and speed are a component on the properties now. Four parameters became two, which
+     * is past {@code ARG_DROP} -- that handles one at a time -- and past {@code CTOR_TO_STATIC},
+     * which needs a NEW/DUP pair to rewrite and finds none, because a mod's own tool class calls
+     * this as {@code super(...)}. That combination is why this needs a mechanism of its own.
+     *
+     * The rewrite spills every argument to a local, reloads the leading ones that did not change,
+     * then calls a bridge with *all* the originals to produce the single replacement. Reloading
+     * the originals after spilling is what makes it work: the bridge needs the `Tier` that the
+     * constructor also still needs, and there is no way to reach a value twice on the stack.
+     */
+    private void applyArgCollapse(MethodNode method) {
+        if (collapseRules.isEmpty() || method.instructions == null) return;
+        InsnList insns = method.instructions;
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof MethodInsnNode min)) continue;
+            CollapseRule rule = null;
+            for (CollapseRule r : collapseRules) {
+                if (r.owner().equals(min.owner) && r.name().equals(min.name)
+                        && r.oldDesc().equals(min.desc)) { rule = r; break; }
+            }
+            if (rule == null) continue;
+
+            Type[] have = Type.getArgumentTypes(rule.oldDesc());
+            Type[] want = Type.getArgumentTypes(rule.newDesc());
+            int keep = 0;
+            while (keep < want.length - 1 && keep < have.length && have[keep].equals(want[keep])) {
+                keep++;
+            }
+
+            InsnList fix = new InsnList();
+            int base = method.maxLocals;
+            int[] slot = new int[have.length];
+            int next = base;
+            for (int i = 0; i < have.length; i++) { slot[i] = next; next += have[i].getSize(); }
+            for (int i = have.length - 1; i >= 0; i--) {
+                fix.add(new VarInsnNode(have[i].getOpcode(Opcodes.ISTORE), slot[i]));
+            }
+            for (int i = 0; i < keep; i++) {
+                fix.add(new VarInsnNode(have[i].getOpcode(Opcodes.ILOAD), slot[i]));
+            }
+            for (int i = 0; i < have.length; i++) {
+                fix.add(new VarInsnNode(have[i].getOpcode(Opcodes.ILOAD), slot[i]));
+            }
+            fix.add(new MethodInsnNode(Opcodes.INVOKESTATIC, rule.bridgeOwner(), rule.bridgeName(),
+                    Type.getMethodDescriptor(want[want.length - 1], have), false));
+            insns.insertBefore(min, fix);
+            method.maxLocals = next;
+            min.desc = rule.newDesc();
+            count(appliedCounts, "ARG_COLLAPSE " + min.owner + "." + min.name);
         }
     }
 
@@ -2570,6 +2663,11 @@ public class Translate {
                 }
                 case "REMOVED" -> {
                     if (c.length >= 2) removed.add(c[1]);
+                }
+                case "ARG_COLLAPSE" -> {
+                    if (c.length >= 7) {
+                        collapseRules.add(new CollapseRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                    }
                 }
                 case "ARG_FILL" -> {
                     // type <TAB> bridgeOwner <TAB> bridgeName; the descriptor follows from the
