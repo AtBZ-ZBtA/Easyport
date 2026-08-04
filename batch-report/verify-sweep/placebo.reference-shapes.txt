@@ -1,0 +1,2 @@
+[hierarchy] IncompatibleClassChangeError: class dev.shadowsoffire.placebo.color.GradientColor cannot inherit from final class net.minecraft.network.chat.TextColor
+[types] Error at instruction N: Method owner: expected Ljava/io/BufferedReader;, but found Ljava/lang/Object;

@@ -3,6 +3,7 @@ Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 Rewrote 120 classes, moved 217 resources
 
 Applied:
+     6  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
     41  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      6  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  EBS_STRIP (no @SubscribeEvent methods) com/teammetallurgy/aquaculture/api/fishing/Hooks

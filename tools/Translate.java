@@ -92,6 +92,9 @@ public class Translate {
     private final Map<String, String> typeRenames = new LinkedHashMap<>();
     private final Map<String, String> prefixRenames = new LinkedHashMap<>();
 
+    /** "from\tto" -> the bridge call that converts between them. See Translate#coercion. */
+    private final Map<String, RenameRule> coercions = new LinkedHashMap<>();
+
     private final Map<String, Integer> appliedCounts = new TreeMap<>();
     private final Map<String, Integer> unresolved = new TreeMap<>();
     private int classesRewritten = 0, resourcesMoved = 0;
@@ -143,6 +146,7 @@ public class Translate {
     private final Map<String, Set<String>> targetFinalMethods = new HashMap<>();
 
     private void loadTargetIndex(String[] jars) {
+        platformJarPaths = jars;
         for (String j : jars) {
             Path p = Paths.get(j);
             if (!Files.isRegularFile(p)) continue;
@@ -224,6 +228,7 @@ public class Translate {
     }
 
     private void run(Path in, Path out, Path mappings, Path rules) throws Exception {
+        inputJar = in;
         loadMappings(mappings);
         loadRules(rules);
         System.out.printf("Loaded %d SRG mappings, %d type renames, %d ctor rules, %d removed-API entries%n",
@@ -394,6 +399,7 @@ public class Translate {
             // unwrap pass is about to change.
             applyHolderUnwrap(m.instructions);
             applyWrapAdapters(m);
+            applyValueCoercions(node, m);
             recordRemoved(m.instructions);
         }
 
@@ -973,9 +979,9 @@ public class Translate {
             Type[] have = Type.getArgumentTypes(min.desc);
             Type[] want = Type.getArgumentTypes(match);
 
-            // Highest-indexed argument needing a wrap. Everything above it must spill; everything
-            // below it never moves, so wrapping from the top down keeps each step's spill set as
-            // small as it can be.
+            // Highest-indexed argument needing a coercion. Everything above it must spill;
+            // everything below it never moves, so working from the top down keeps each step's
+            // spill set as small as it can be.
             for (int i = have.length - 1; i >= 0; i--) {
                 if (have[i].equals(want[i])) continue;
                 int base = method.maxLocals;
@@ -985,8 +991,9 @@ public class Translate {
                     fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ISTORE), slot));
                     slot += have[j].getSize();
                 }
-                fix.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOLDER_BRIDGE, "wrap",
-                        "(Ljava/lang/Object;)" + HOLDER_DESC, false));
+                RenameRule via = coercion(have[i], want[i]);
+                fix.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+                        via.newOwner(), via.newName(), via.newDesc(), false));
                 // Reload in the mirror order of the spill, so the operand stack is rebuilt
                 // exactly as it was rather than reversed.
                 for (int j = i + 1; j < have.length; j++) {
@@ -1003,14 +1010,183 @@ public class Translate {
     }
 
     /**
-     * Whether {@code target} is {@code called} with some object parameters wrapped in a Holder.
+     * Inserts coercions where a value's *type* stopped being acceptable, though the call did not
+     * change.
+     *
+     * <h2>Why descriptors are not enough</h2>
+     *
+     * {@link #applyWrapAdapters} finds calls whose descriptor no longer resolves. This finds the
+     * opposite and harder case, where the descriptor is untouched and the value flowing into it
+     * is wrong. {@code ModelResourceLocation} extended {@code ResourceLocation} in 1.20.1, so a
+     * mod passing one to something taking a resource location compiled to a call site that still
+     * reads perfectly: the parameter says {@code ResourceLocation} and always did. 1.21 made
+     * {@code ModelResourceLocation} a record that merely holds one, and now the same instruction
+     * fails verification while every descriptor involved still matches.
+     *
+     * Nothing static about the call site reveals that. The only thing that does is what the
+     * verifier does -- follow the value.
+     *
+     * <h2>How</h2>
+     *
+     * The method is analysed with a verifier made deliberately lenient: it accepts a value of the
+     * old type where the new one is expected, but only for pairs a {@code COERCE} rule declares.
+     * That lets the analysis complete instead of stopping at the first mismatch, and the frames
+     * it produces then say what is really on the stack at every call. Each argument is compared
+     * against the declared parameter, and a declared coercion is inserted where the two disagree.
+     *
+     * Analysis is not cheap, so a method is only analysed when its instructions actually mention
+     * a type some rule can coerce -- which for most methods in most mods is never.
+     */
+    private void applyValueCoercions(ClassNode owner, MethodNode method) {
+        if (coercions.isEmpty() || method.instructions == null) return;
+        if (!mentionsCoercibleType(method)) return;
+
+        org.objectweb.asm.tree.analysis.Frame<org.objectweb.asm.tree.analysis.BasicValue>[] frames;
+        try {
+            var verifier = new LenientVerifier(owner, coercions.keySet());
+            verifier.setClassLoader(coercionLoader());
+            frames = new org.objectweb.asm.tree.analysis.Analyzer<>(verifier)
+                    .analyze(owner.name, method);
+        } catch (Throwable t) {
+            // A method this analysis cannot complete is left exactly as it was. Guessing from a
+            // partial frame set is how a transformer inserts a conversion in the wrong place.
+            if (System.getenv("EASYPORT_DEBUG") != null) t.printStackTrace();
+            count(unresolved, "COERCE analysis failed (" + t.getClass().getSimpleName() + ": "
+                            + t.getMessage() + "): " + owner.name + "." + method.name);
+            return;
+        }
+
+        AbstractInsnNode[] insns = method.instructions.toArray();
+        for (int i = 0; i < insns.length; i++) {
+            if (!(insns[i] instanceof MethodInsnNode call) || frames[i] == null) continue;
+            Type[] params = Type.getArgumentTypes(call.desc);
+            if (params.length == 0) continue;
+            var frame = frames[i];
+            for (int p = params.length - 1; p >= 0; p--) {
+                // Arguments sit at the top of the frame in declaration order, so the last
+                // parameter is nearest the top. Counting back from the top gives the slot.
+                int depth = 0;
+                for (int q = p + 1; q < params.length; q++) depth += params[q].getSize();
+                var value = frame.getStack(frame.getStackSize() - depth - params[p].getSize());
+                if (value == null || value.getType() == null) continue;
+                if (value.getType().getSort() != Type.OBJECT) continue;
+                if (value.getType().equals(params[p])) continue;
+                RenameRule via = coercions.get(
+                        value.getType().getInternalName() + "\t" + params[p].getInternalName());
+                if (via == null) continue;
+
+                InsnList fix = new InsnList();
+                int base = method.maxLocals;
+                int slot = base;
+                for (int q = params.length - 1; q > p; q--) {
+                    fix.add(new VarInsnNode(params[q].getOpcode(Opcodes.ISTORE), slot));
+                    slot += params[q].getSize();
+                }
+                fix.add(new MethodInsnNode(Opcodes.INVOKESTATIC,
+                        via.newOwner(), via.newName(), via.newDesc(), false));
+                for (int q = p + 1; q < params.length; q++) {
+                    slot -= params[q].getSize();
+                    fix.add(new VarInsnNode(params[q].getOpcode(Opcodes.ILOAD), slot));
+                }
+                method.instructions.insertBefore(call, fix);
+                method.maxLocals = base + Arrays.stream(params, p + 1, params.length)
+                                                .mapToInt(Type::getSize).sum();
+                count(appliedCounts, "COERCE " + via.owner() + " -> " + params[p].getInternalName());
+                // One insertion invalidates the frames this loop is reading, so the method is
+                // re-analysed from scratch rather than patched further against stale ones.
+                applyValueCoercions(owner, method);
+                return;
+            }
+        }
+    }
+
+    private boolean mentionsCoercibleType(MethodNode method) {
+        for (AbstractInsnNode insn : method.instructions) {
+            String probe = insn instanceof MethodInsnNode m ? m.owner + m.desc
+                         : insn instanceof TypeInsnNode t ? t.desc
+                         : insn instanceof FieldInsnNode f ? f.desc : null;
+            if (probe == null) continue;
+            for (String pair : coercions.keySet()) {
+                if (probe.contains(pair.substring(0, pair.indexOf('\t')))) return true;
+            }
+        }
+        return false;
+    }
+
+    /** Classpath for the coercion analysis: the platform jars, loaded once. */
+    private ClassLoader coercionLoader() {
+        if (coercionLoader == null) {
+            List<java.net.URL> urls = new ArrayList<>();
+            // The mod's own jar first. SimpleVerifier computes subtype relations by loading
+            // classes, and a mod class it cannot load fails the whole analysis -- which is what
+            // happened on every one of the nine methods this pass first identified.
+            if (inputJar != null) {
+                try { urls.add(inputJar.toUri().toURL()); } catch (Exception ignored) { }
+            }
+            for (String jar : platformJarPaths) {
+                try {
+                    Path p = Paths.get(jar);
+                    if (Files.isRegularFile(p)) urls.add(p.toUri().toURL());
+                } catch (Exception ignored) {
+                    // A jar that will not resolve just makes the analysis less able to answer,
+                    // which the caller already treats as "leave this method alone".
+                }
+            }
+            coercionLoader = new java.net.URLClassLoader(urls.toArray(new java.net.URL[0]),
+                    Translate.class.getClassLoader());
+        }
+        return coercionLoader;
+    }
+
+    private ClassLoader coercionLoader;
+    private Path inputJar;
+
+    /**
+     * A verifier that tolerates exactly the type mismatches a {@code COERCE} rule knows how to fix.
+     *
+     * A named class rather than an anonymous one because it has to be. {@code SimpleVerifier}'s
+     * public constructor throws {@code IllegalStateException} when the instance is not exactly a
+     * {@code SimpleVerifier} -- ASM's guard against subclasses skipping the API version -- and
+     * only {@code super(...)} can reach the protected constructor that accepts one. The anonymous
+     * version compiled cleanly and failed at run time on all nine methods this pass exists for.
+     *
+     * The leniency is narrow on purpose. Accepting every mismatch would let the analysis finish
+     * on genuinely broken bytecode, and this pass would then insert nothing and report nothing.
+     */
+    private static final class LenientVerifier
+            extends org.objectweb.asm.tree.analysis.SimpleVerifier {
+
+        private final Set<String> allowed;
+
+        LenientVerifier(ClassNode owner, Set<String> allowedPairs) {
+            super(Opcodes.ASM9,
+                  Type.getObjectType(owner.name),
+                  owner.superName == null ? null : Type.getObjectType(owner.superName),
+                  owner.interfaces.stream().map(Type::getObjectType).toList(),
+                  (owner.access & Opcodes.ACC_INTERFACE) != 0);
+            this.allowed = allowedPairs;
+        }
+
+        @Override
+        protected boolean isSubTypeOf(org.objectweb.asm.tree.analysis.BasicValue value,
+                                      org.objectweb.asm.tree.analysis.BasicValue expected) {
+            if (super.isSubTypeOf(value, expected)) return true;
+            return value.getType() != null && expected.getType() != null
+                && allowed.contains(value.getType().getInternalName() + "\t"
+                                  + expected.getType().getInternalName());
+        }
+    }
+    private String[] platformJarPaths = new String[0];
+
+    /**
+     * Whether {@code target} is {@code called} with some arguments coerced.
      *
      * Requires at least one actual substitution, so an unrelated overload that happens to differ
      * only in return type is not treated as a match. Return types must agree exactly: a return
      * that also changed is the {@link #applyHolderUnwrap} case, which runs first and would have
      * handled it.
      */
-    private static boolean wrapCompatible(String called, String target) {
+    private boolean wrapCompatible(String called, String target) {
         Type[] a = Type.getArgumentTypes(called);
         Type[] b = Type.getArgumentTypes(target);
         if (a.length != b.length) return false;
@@ -1018,14 +1194,34 @@ public class Translate {
         boolean substituted = false;
         for (int i = 0; i < a.length; i++) {
             if (a[i].equals(b[i])) continue;
-            if (b[i].getSort() == Type.OBJECT && b[i].getInternalName().equals(HOLDER)
-                    && a[i].getSort() == Type.OBJECT) {
-                substituted = true;
-                continue;
-            }
-            return false;
+            if (coercion(a[i], b[i]) == null) return false;
+            substituted = true;
         }
         return substituted;
+    }
+
+    /**
+     * The bridge call that turns a value of {@code have} into one of {@code want}, or null.
+     *
+     * Two sources. Holder wrapping is built in and untyped on the way in, because 1.21 wrapped a
+     * whole family of registry types and enumerating them would be one chance per type to miss
+     * one. Everything else is declared by a {@code COERCE} rule, because those are one-off shape
+     * changes with no family behind them and no way to recognise one from its descriptor alone.
+     *
+     * The {@code COERCE} case exists because of {@code ModelResourceLocation}, which stopped being
+     * a {@code ResourceLocation} subclass and became a record wrapping one. Every mod that passes
+     * a model location to something taking a resource location breaks, and it broke four of the
+     * twenty-two mods in the sweep -- the largest single remaining cause. Structurally it is the
+     * same problem as Holder wrapping, a value that needs converting at the vanilla boundary, so
+     * it uses the same spill-and-reload machinery rather than a mechanism of its own.
+     */
+    private RenameRule coercion(Type have, Type want) {
+        if (have.getSort() != Type.OBJECT || want.getSort() != Type.OBJECT) return null;
+        if (want.getInternalName().equals(HOLDER)) {
+            return new RenameRule(null, null, null, HOLDER_BRIDGE, "wrap",
+                    "(Ljava/lang/Object;)" + HOLDER_DESC);
+        }
+        return coercions.get(have.getInternalName() + "\t" + want.getInternalName());
     }
 
     // ---- resources ---------------------------------------------------------------------
@@ -1658,6 +1854,15 @@ public class Translate {
                 }
                 case "REMOVED" -> {
                     if (c.length >= 2) removed.add(c[1]);
+                }
+                case "COERCE" -> {
+                    // from <TAB> to <TAB> bridgeOwner <TAB> bridgeName. The bridge's descriptor
+                    // follows from the pair, so writing it in the rule would only be a chance to
+                    // write it differently to the method it names.
+                    if (c.length >= 5) {
+                        coercions.put(c[1] + "\t" + c[2], new RenameRule(c[1], null, null,
+                                c[3], c[4], "(L" + c[1] + ";)L" + c[2] + ";"));
+                    }
                 }
                 default -> System.err.println("  unknown rule kind, ignored: " + c[0]);
             }

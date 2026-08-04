@@ -1,0 +1,2 @@
+[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.core.particles.ParticleOptions$Deserializer not present
+[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.fluids.capability.ItemFluidContainer not present

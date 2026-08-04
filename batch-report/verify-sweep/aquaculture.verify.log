@@ -1,12 +1,10 @@
 aquaculture.jar
   120 classes, 776 methods analysed
-  4 classes with a verification error (8 methods)
+  3 classes with a verification error (7 methods)
   1 other-mod classes absent from this classpath, not counted
 
     4  [hierarchy] IncompatibleClassChangeError: class com.teammetallurgy.aquaculture.api.AquaArmorMaterials can not implement net.minecraft.world.item.ArmorMaterial, because it is not an interface (net.minecraft.world.item.ArmorMaterial is in unnamed module of loader java.net.URLClassLoader @38cee291)
          first at  com/teammetallurgy/aquaculture/init/AquaItems.lambda$static$15()Lnet/minecraft/world/item/Item;
-    1  [types] Error at instruction N: Argument N: expected Lnet/minecraft/resources/ResourceLocation;, but found Lnet/minecraft/client/resources/model/ModelResourceLocation;
-         first at  com/teammetallurgy/aquaculture/client/ClientHandler.registerModels(Lnet/neoforged/neoforge/client/event/ModelEvent$RegisterAdditional;)V
     1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.item.BowlFoodItem not present
          first at  com/teammetallurgy/aquaculture/init/AquaItems.lambda$static$28()Lnet/minecraft/world/item/Item;
     1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.capabilities.CapabilityProvider not present

@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.." || exit 1
 
 A9="scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods"
 A10="scrapyard/forge 1.21.1 modpacks/All the Mods 10 - ATM10/mods"
-CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar"
+CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar;devenv/spi/asm-analysis.jar"
 SUPPORT_SRC="testkit/inspector/inspector.jar forge-compat/forge-compat.jar"
 # Target-platform jar, so the transformer can tell which mixin targets still exist.
 # All platform jars, not just neoforge. FML classes (@Mod, FMLLoader, ModLoader) live in the

@@ -1,0 +1,7 @@
+baubley-heart-canisters-1.21.1-1.4.1.jar
+  47 classes, 235 methods analysed
+  1 classes with a verification error (1 methods)
+  1 other-mod classes absent from this classpath, not counted
+
+    1  [types] Error at instruction N: Method owner: expected Ljava/io/BufferedWriter;, but found Ljava/lang/Object;
+         first at  com/traverse/bhc/common/BaubleyHeartCanisters.jsonSetup()V

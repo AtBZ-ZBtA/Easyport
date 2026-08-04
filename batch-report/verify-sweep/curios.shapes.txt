@@ -1,0 +1,1 @@
+[missing-platform-type] NoClassDefFoundError: net/minecraft/world/level/storage/loot/functions/LootItemConditionalFunction$Serializer

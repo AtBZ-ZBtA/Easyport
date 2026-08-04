@@ -618,3 +618,20 @@ TYPE_RENAME	net/minecraft/advancements/critereon/ContextAwarePredicate	easyport/
 # 16 jars, and the one stand-in here that genuinely works: DYED_COLOR replaced the interface
 # rather than removing the feature, so getColor and setColor read and write the real stack.
 TYPE_RENAME	net/minecraft/world/item/DyeableLeatherItem	easyport/vanilla/DyeableLeatherItem
+
+# --- COERCE: a vanilla type that stopped being assignable to what it replaced ------------------
+#
+# COERCE  from <TAB> to <TAB> bridgeOwner <TAB> bridgeName
+#
+# Inserts a conversion at the argument position where the old type meets a signature that now
+# wants the new one, using the same spill-and-reload machinery as Holder wrapping -- structurally
+# it is the same problem, a value needing conversion at the vanilla boundary.
+#
+# Unlike Holder wrapping this cannot be discovered from descriptors, because there is no family
+# to recognise: each of these is a one-off shape change, and the only evidence that two types are
+# related is knowing what happened between the versions.
+
+# ModelResourceLocation extended ResourceLocation in 1.20.1 and became a record holding one in
+# 1.21, so mods pass them interchangeably and every such call now fails verification. The largest
+# single remaining cause in the sweep -- 4 of 22 mods.
+COERCE	net/minecraft/client/resources/model/ModelResourceLocation	net/minecraft/resources/ResourceLocation	easyport/bridge/VanillaBridge	modelId

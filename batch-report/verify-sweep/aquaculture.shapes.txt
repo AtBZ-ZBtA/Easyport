@@ -1,0 +1,4 @@
+[hierarchy] IncompatibleClassChangeError: class com.teammetallurgy.aquaculture.api.AquaArmorMaterials can not implement net.minecraft.world.item.ArmorMaterial, because it is not an interface (net.minecraft.world.item.ArmorMaterial is in unnamed module of loader java.net.URLClassLoader @38cee291)
+[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.item.BowlFoodItem not present
+[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.capabilities.CapabilityProvider not present
+[missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.crafting.conditions.IConditionSerializer not present

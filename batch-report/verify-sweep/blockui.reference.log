@@ -1,0 +1,6 @@
+blockui-1.0.211-1.21.1-snapshot.jar
+  166 classes, 1648 methods analysed
+  4 classes with a verification error (5 methods)
+
+    5  [hierarchy] IncompatibleClassChangeError: class com.ldtteam.blockui.util.resloc.OutOfJarResourceLocation cannot inherit from final class net.minecraft.resources.ResourceLocation
+         first at  com/ldtteam/blockui/mod/ClientEventSubscriber.lambda$onClientTickStart$4(Lcom/ldtteam/blockui/views/BOWindow;)V

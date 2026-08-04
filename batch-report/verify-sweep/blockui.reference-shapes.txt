@@ -1,0 +1,1 @@
+[hierarchy] IncompatibleClassChangeError: class com.ldtteam.blockui.util.resloc.OutOfJarResourceLocation cannot inherit from final class net.minecraft.resources.ResourceLocation

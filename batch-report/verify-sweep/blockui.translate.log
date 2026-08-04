@@ -3,6 +3,7 @@ Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 Rewrote 121 classes, moved 1 resources
 
 Applied:
+     1  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
      6  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
     11  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  FIELD_TO_STATIC net/neoforged/fml/common/EventBusSubscriber$Bus#FORGE -> easyport/bridge/BusBridge#forge

@@ -1,0 +1,8 @@
+Placebo-1.21.1-9.9.2.jar
+  164 classes, 1432 methods analysed
+  3 classes with a verification error (3 methods)
+
+    2  [types] Error at instruction N: Method owner: expected Ljava/io/BufferedReader;, but found Ljava/lang/Object;
+         first at  dev/shadowsoffire/placebo/patreon/TrailsManager.lambda$init$0()V
+    1  [hierarchy] IncompatibleClassChangeError: class dev.shadowsoffire.placebo.color.GradientColor cannot inherit from final class net.minecraft.network.chat.TextColor
+         first at  dev/shadowsoffire/placebo/Placebo.lambda$setup$0()V

@@ -1,9 +1,7 @@
 balm.jar
   399 classes, 1975 methods analysed
-  2 classes with a verification error (3 methods)
+  1 classes with a verification error (2 methods)
   5 other-mod classes absent from this classpath, not counted
 
     2  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.client.event.RenderGuiOverlayEvent not present
          first at  net/blay09/mods/balm/forge/event/ForgeBalmClientEvents.lambda$registerEvents$64(Lnet/blay09/mods/balm/forge/event/ForgeBalmEvents;Lnet/blay09/mods/balm/api/event/EventPriority;Lnet/minecraftforge/client/event/RenderGuiOverlayEvent$Post;)V
-    1  [types] Error at instruction N: Argument N: expected Lnet/minecraft/resources/ResourceLocation;, but found Lnet/minecraft/client/resources/model/ModelResourceLocation;
-         first at  net/blay09/mods/balm/forge/client/rendering/ForgeBalmModels.getUnbakedMissingModel()Lnet/minecraft/client/resources/model/UnbakedModel;
