@@ -20,7 +20,10 @@ A10="scrapyard/forge 1.21.1 modpacks/All the Mods 10 - ATM10/mods"
 CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar"
 SUPPORT="testkit/inspector/inspector.jar,forge-compat/forge-compat.jar"
 # Target-platform jar, so the transformer can tell which mixin targets still exist.
-PLATFORM="devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar"
+# All platform jars, not just neoforge. FML classes (@Mod, FMLLoader, ModLoader) live in the
+# loader jar, and validating against a partial index silently rejects correct renames -- which
+# for @Mod would mean the mod is never discovered at all.
+PLATFORM_JARS=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar)
 OUT="batch-report"
 RESULTS="$OUT/batch-results.tsv"
 
@@ -47,7 +50,7 @@ while IFS=$'\t' read -r modId src tgt; do
   echo "=== $modId ==="
 
   if ! java -cp "$CP" "$SNAP/Translate.java" "$A9/$src" "translated/$modId.jar" \
-        mappings/srg2official.tsv rules/forward.rules.tsv "$PLATFORM" > "$OUT/$modId.translate.log" 2>&1; then
+        mappings/srg2official.tsv rules/forward.rules.tsv "${PLATFORM_JARS[@]}" > "$OUT/$modId.translate.log" 2>&1; then
     echo "  TRANSLATE_FAILED (see $OUT/$modId.translate.log)"
     printf '%s\t0\t0\tTRANSLATE_FAILED\n' "$modId" >> "$RESULTS"
     continue
@@ -65,7 +68,7 @@ while IFS=$'\t' read -r modId src tgt; do
     [ -z "${dep:-}" ] && continue
     if [ ! -f "translated/$dep.jar" ]; then
       java -cp "$CP" "$SNAP/Translate.java" "$A9/$depSrc" "translated/$dep.jar" \
-           mappings/srg2official.tsv rules/forward.rules.tsv "$PLATFORM" > "$OUT/$dep.dep-translate.log" 2>&1 \
+           mappings/srg2official.tsv rules/forward.rules.tsv "${PLATFORM_JARS[@]}" > "$OUT/$dep.dep-translate.log" 2>&1 \
         || { echo "  (dependency $dep failed to translate)"; continue; }
     fi
     modSupport="$modSupport,translated/$dep.jar"
