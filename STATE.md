@@ -365,16 +365,27 @@ which is a separate unexplained gap worth a look.
 | Library | Dependents | Status | Current blocker | Kind |
 |---|---|---|---|---|
 | `architectury` | 12 | **OK, 100%** | — | loads and registers |
-| `placebo` | 8 | fails | `RegisterEvent.getForgeRegistry()` | member missing on rename target |
-| `balm` | 6 | fails | `capabilities.ICapabilityProvider` | capabilities — the next design piece |
+| `balm` | 6 | **OK, 100%** | — | loads and registers |
+| `placebo` | 8 | **OK, 0%** | loads, registers nothing | see below |
 | `geckolib` | 8 | fails | `VerifyError` on `ArmorMaterials` | vanilla `Holder` wrapping; needs a field-descriptor rule |
 | `cyclopscore` | 10 | fails | `IEnvironment$Keys.NAMING` | modlauncher API change |
 | `yungsapi` | 10 | fails | mixin `InvalidAccessorException` | Phase 7 |
 | `curios` | 8 | fails | mixin apply | Phase 7 |
 | `supermartijn642corelib` | 8 | fails | mixin apply | Phase 7 |
 
-Resource coverage is measured without launching and is the only signal for the seven that still
-fail: `placebo` 92.3%, `curios` 73.1%, `supermartijn642corelib` 71.4%, `cyclopscore` 43.2%.
+**Three of eight now load.** Both 100% figures have a denominator of 1 — architectury and balm
+each register a single biome modifier serializer, and their reference ports register one too.
+Fair comparisons, tiny samples. What is proven is the end-to-end path, not completeness.
+
+**`placebo` is the case to look at next.** It loads cleanly and registers *nothing*, where the
+reference registers one loot pool entry type. That is the failure mode this project cares most
+about — no error, no missing class, just absent content. Its translation report is clean apart
+from six `ItemStack#getTag` calls (Phase 4 data components) and one dropped mixin,
+`LootTablesMixin`, whose target `LootDataManager` was removed in 1.21. The dropped mixin is the
+first suspect.
+
+Resource coverage is measured without launching: `placebo` 92.3%, `curios` 73.1%,
+`supermartijn642corelib` 71.4%, `cyclopscore` 43.2%, `balm` 16.7%.
 
 **Every library that was blocked on a missing class has moved at least twice.** None load yet,
 but the failures are now deeper in the sequence — construction and verification rather than
