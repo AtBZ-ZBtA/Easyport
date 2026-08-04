@@ -193,7 +193,16 @@ public class Translate {
                     // stale index entry for a library that was deliberately removed.
                     if (name.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
                     if (isMixinConfig(name) && !deadMixins.isEmpty()) data = stripDeadMixins(data);
-                    if (isRefmap(name)) {
+                    // Access transformers address members by name as text, exactly like refmaps,
+                    // and are just as invisible to the bytecode remapper. 234 of the 433 corpus
+                    // jars ship one -- more than half -- and every line in every one of them
+                    // names an SRG member that does not exist under official mappings.
+                    //
+                    // Nothing reports it. The AT is parsed, no line matches, the widening simply
+                    // does not happen, and the mod loads normally until it touches the member it
+                    // asked to be made public. Placebo surfaced it as an IllegalAccessError on
+                    // TextColor.NAMED_COLORS, several rounds after its classes translated cleanly.
+                    if (isRefmap(name) || isAccessTransformer(name)) {
                         data = remapSrgInText(new String(data, StandardCharsets.UTF_8))
                                 .getBytes(StandardCharsets.UTF_8);
                     }
@@ -580,6 +589,18 @@ public class Translate {
 
     private static boolean isRefmap(String name) {
         return name.endsWith(".json") && name.contains("refmap");
+    }
+
+    /**
+     * Access transformer configs, which NeoForge still reads from the conventional path.
+     *
+     * Matched on the filename rather than the exact path: the default location is
+     * META-INF/accesstransformer.cfg, but a mod may declare additional ones under other names,
+     * and remapping a file that turns out not to be an AT is harmless -- SRG tokens only appear
+     * in files that mean them.
+     */
+    private static boolean isAccessTransformer(String name) {
+        return name.startsWith("META-INF/") && name.endsWith(".cfg") && name.contains("accesstransformer");
     }
 
     private static boolean isMixinConfig(String name) {

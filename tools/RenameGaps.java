@@ -50,11 +50,14 @@ public class RenameGaps {
         Set<String> shimmed = classesIn(Path.of(args[2]));
         Set<String> platform = new HashSet<>();
         Set<String> abstractTypes = new HashSet<>();
+        List<Path> platformJars = new ArrayList<>();
         for (int i = 3; i < args.length; i++) {
             Path jar = Path.of(args[i]);
+            platformJars.add(jar);
             platform.addAll(classesIn(jar));
             abstractTypes.addAll(abstractClassesIn(jar));
         }
+        Map<String, Set<String>> platformMembers = declaredMembers(platformJars);
 
         // Simple name -> platform classes carrying it, for suggesting rename targets.
         Map<String, List<String>> bySimpleName = new LinkedHashMap<>();
@@ -124,6 +127,39 @@ public class RenameGaps {
             System.out.println("version is never reached. Check each is deliberate.");
             shadowed.forEach(System.out::println);
         }
+        // A rename that resolves is not a rename that works. NeoForge kept plenty of Forge's
+        // names on types with different shapes -- ICapabilityProvider is a three-parameter
+        // generic interface there and a one-method LazyOptional producer in Forge -- so a rule
+        // can silently redirect a mod onto something it cannot actually use.
+        //
+        // Checking every member the corpus calls against the target's real member set turns that
+        // into a static finding rather than an AbstractMethodError or NoSuchMethodError reached
+        // only when the code path runs, which for capabilities may be a long way into a game.
+        List<String> mismatched = new ArrayList<>();
+        for (MemberRef ref : readMembers(Path.of(args[0]))) {
+            String target = rules.apply(ref.owner());
+            if (target == null || !platform.contains(target)) continue;
+            Set<String> members = platformMembers.get(target);
+            if (members == null) continue;
+            String wanted = ref.name() + " " + remapDescriptor(ref.desc(), rules);
+            if (members.contains(wanted)) continue;
+            // Constructors of a renamed type are a different question -- shapes routinely change
+            // and CTOR rules exist for that -- so they are left to the ctor rules to report.
+            if (ref.name().equals("<init>")) continue;
+            mismatched.add(String.format("%5d  %s.%s%n         -> %s  has no  %s",
+                    ref.jars(), ref.owner(), ref.name(), target, wanted));
+        }
+        mismatched.sort((a, b) -> Integer.parseInt(b.substring(0, 5).trim())
+                                - Integer.parseInt(a.substring(0, 5).trim()));
+        if (!mismatched.isEmpty()) {
+            System.out.println();
+            System.out.println("=== RENAME TARGET MISSING A CALLED MEMBER (" + mismatched.size() + ") ===");
+            System.out.println("The rule resolves, but the target does not have what the corpus");
+            System.out.println("calls on it. Each is a NoSuchMethodError or AbstractMethodError");
+            System.out.println("waiting to happen -- convert the rule to a shim, or drop it.");
+            mismatched.forEach(System.out::println);
+        }
+
         if (!abstractTargets.isEmpty()) {
             System.out.println();
             System.out.println("=== RENAMES ONTO AN ABSTRACT TYPE (" + abstractTargets.size() + ") ===");
@@ -164,6 +200,121 @@ public class RenameGaps {
         if (candidates == null || candidates.isEmpty()) return "";
         return "  ?= " + String.join(" | ", candidates.size() > 3
                 ? candidates.subList(0, 3) : candidates);
+    }
+
+    /** A member the corpus calls: "M owner.name desc" or "F owner.name desc". */
+    private record MemberRef(String kind, String owner, String name, String desc, int jars) {}
+
+    /** Pulls the MEMBERS section, which says what the corpus actually calls on each type. */
+    private static List<MemberRef> readMembers(Path p) throws IOException {
+        List<MemberRef> out = new ArrayList<>();
+        boolean inMembers = false;
+        for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
+            if (line.startsWith("=== MEMBERS")) { inMembers = true; continue; }
+            if (!inMembers) continue;
+            String t = line.trim();
+            if (t.isEmpty()) continue;
+            // "  143  M net/x/Y.name (Ldesc;)V"
+            String[] parts = t.split("\\s+");
+            if (parts.length < 4) continue;
+            int jars;
+            try {
+                jars = Integer.parseInt(parts[0]);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            String ownerAndName = parts[2];
+            int dot = ownerAndName.lastIndexOf('.');
+            if (dot < 0) continue;
+            out.add(new MemberRef(parts[1], ownerAndName.substring(0, dot),
+                    ownerAndName.substring(dot + 1), parts[3], jars));
+        }
+        return out;
+    }
+
+    /** Every method/field a class declares, as "name desc", including inherited members. */
+    private static Map<String, Set<String>> declaredMembers(List<Path> jars) throws IOException {
+        Map<String, Set<String>> out = new java.util.HashMap<>();
+        Map<String, String> superOf = new java.util.HashMap<>();
+        Map<String, List<String>> interfacesOf = new java.util.HashMap<>();
+
+        for (Path jar : jars) {
+            try (ZipFile zf = new ZipFile(jar.toFile())) {
+                var entries = zf.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry e = entries.nextElement();
+                    if (!e.getName().endsWith(".class")) continue;
+                    try (var in = zf.getInputStream(e)) {
+                        var reader = new org.objectweb.asm.ClassReader(in);
+                        Set<String> members = new HashSet<>();
+                        reader.accept(new org.objectweb.asm.ClassVisitor(
+                                org.objectweb.asm.Opcodes.ASM9) {
+                            @Override public org.objectweb.asm.MethodVisitor visitMethod(
+                                    int a, String n, String d, String s, String[] ex) {
+                                members.add(n + " " + d);
+                                return null;
+                            }
+                            @Override public org.objectweb.asm.FieldVisitor visitField(
+                                    int a, String n, String d, String s, Object v) {
+                                members.add(n + " " + d);
+                                return null;
+                            }
+                        }, org.objectweb.asm.ClassReader.SKIP_CODE);
+                        out.put(reader.getClassName(), members);
+                        if (reader.getSuperName() != null) {
+                            superOf.put(reader.getClassName(), reader.getSuperName());
+                        }
+                        interfacesOf.put(reader.getClassName(), List.of(reader.getInterfaces()));
+                    } catch (Exception ignored) {
+                        // unparseable; treated as having no members
+                    }
+                }
+            }
+        }
+
+        // Fold in inherited members. A mod calling toString() or a method declared on a
+        // superclass is calling something that exists, and reporting it as missing would bury
+        // the real findings under noise.
+        Map<String, Set<String>> resolved = new java.util.HashMap<>();
+        for (String c : out.keySet()) {
+            Set<String> all = new HashSet<>();
+            java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>();
+            queue.add(c);
+            Set<String> seen = new HashSet<>();
+            while (!queue.isEmpty()) {
+                String k = queue.poll();
+                if (!seen.add(k)) continue;
+                Set<String> own = out.get(k);
+                if (own != null) all.addAll(own);
+                String sup = superOf.get(k);
+                if (sup != null) queue.add(sup);
+                List<String> ifs = interfacesOf.get(k);
+                if (ifs != null) queue.addAll(ifs);
+            }
+            resolved.put(c, all);
+        }
+        return resolved;
+    }
+
+    /** Rewrites every type inside a descriptor through the rules. */
+    private static String remapDescriptor(String desc, Rules rules) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while (i < desc.length()) {
+            char ch = desc.charAt(i);
+            if (ch == 'L') {
+                int end = desc.indexOf(';', i);
+                if (end < 0) { sb.append(desc.substring(i)); break; }
+                String type = desc.substring(i + 1, end);
+                String mapped = rules.apply(type);
+                sb.append('L').append(mapped != null ? mapped : type).append(';');
+                i = end + 1;
+            } else {
+                sb.append(ch);
+                i++;
+            }
+        }
+        return sb.toString();
     }
 
     /** Pulls the "<count>  <internal/name>" lines out of a MemberScan TYPES section. */

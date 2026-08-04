@@ -255,15 +255,25 @@ TYPE_PREFIX_RENAME	net/minecraftforge/forgespi/	net/neoforged/neoforgespi/
 TYPE_PREFIX_RENAME	net/minecraftforge/fml/util/	net/neoforged/fml/util/
 TYPE_PREFIX_RENAME	net/minecraftforge/common/crafting/conditions/	net/neoforged/neoforge/common/conditions/
 
-# Capabilities moved out of common/ and lost their old lifecycle along the way. Only part of the
-# package survives the move -- ICapabilityProvider and RegisterCapabilitiesEvent exist at the new
-# path, while ForgeCapabilities, CapabilityManager and Capability itself do not, because NeoForge
-# resolves capabilities by lookup rather than by attaching them to objects.
+# Capabilities: deliberately NOT renamed. This rule existed briefly and was wrong.
 #
-# The prefix is still worth having: it resolves the two that moved, and the existence check drops
-# the rest so they stay visible in the gap report rather than being half-renamed. The three that
-# remain need the capability bridge, which is a design change and not a rename.
-TYPE_PREFIX_RENAME	net/minecraftforge/common/capabilities/	net/neoforged/neoforge/capabilities/
+# The names survived the move, so a prefix rule looks like it works -- ICapabilityProvider and
+# RegisterCapabilitiesEvent both exist under net/neoforged/neoforge/capabilities/. The shapes did
+# not survive:
+#
+#   Forge     ICapabilityProvider          { LazyOptional<T> getCapability(Capability<T>, Direction) }
+#   NeoForge  ICapabilityProvider<O, C, T> { T getCapability(O, C) }
+#
+# 106 corpus jars *implement* Forge's interface. Renaming makes each of them declare a method
+# that overrides nothing and leaves NeoForge's abstract method unimplemented -- the class still
+# loads, and fails with AbstractMethodError whenever something asks it for a capability, which
+# may be deep into a game. RegisterCapabilitiesEvent is the same story: it exists, and its
+# register(Class) -- called by 68 jars -- does not.
+#
+# Both were caught by the member check in tools/RenameGaps.java rather than by a launch, which
+# is the point of that check. Left unresolved and visible in the gap report until the capability
+# bridge is designed; a rename that resolves onto an incompatible type is worse than no rule,
+# because the gap report then stops mentioning it.
 
 # --- Restructured events: renamed, not merely moved -------------------------------------------
 #
@@ -288,7 +298,13 @@ TYPE_RENAME	net/minecraftforge/event/entity/living/LivingDamageEvent	net/neoforg
 # Ticking moved out of the per-entity event and into the shared tick package. Forge's
 # LivingTickEvent had no phase field -- it fired once, cancellably, before the tick -- so Pre is
 # an exact match rather than the coin-flip that Pre/Post mapping usually is.
-TYPE_RENAME	net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent	net/neoforged/neoforge/event/tick/EntityTickEvent$Pre
+# Withdrawn: LivingTickEvent -> EntityTickEvent$Pre.
+#
+# The event does correspond, but Forge's getEntity() returns LivingEntity and NeoForge's returns
+# Entity, so all 41 jars calling it would take a NoSuchMethodError -- a rename cannot narrow a
+# return type. Needs a shim that wraps the NeoForge event and re-declares the accessor, which is
+# the same bridging shape as TickEvent. Flagged by the member check, not by a launch.
+# TYPE_RENAME	net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent	net/neoforged/neoforge/event/tick/EntityTickEvent$Pre
 
 # Pickup split into a cancellable Pre and an informational Post. Forge had one of each already
 # under different names, so both map cleanly.

@@ -16,6 +16,33 @@ java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scr
 |---|---|
 | `forge-api-usage.txt` | Every `net.minecraftforge` type and member the corpus references, ranked by how many jars use it |
 | `network-usage.txt` | The same, narrowed to `net.minecraftforge.network` — the input to the networking shims |
+| `unresolved-types.txt` | Output of `RenameGaps`: what nothing resolves, plus three classes of *wrong* resolution |
+
+## The three silent-failure checks
+
+`unresolved-types.txt` leads with warnings, not gaps, because a rule that resolves incorrectly
+is worse than a missing one — the gap report stops mentioning it, and the failure moves to
+runtime.
+
+**Rename target missing a called member.** The rule resolves but the target does not have what
+the corpus calls on it. NeoForge kept many Forge names on differently-shaped types:
+`ICapabilityProvider` is a one-method `LazyOptional` producer in Forge and a three-parameter
+generic interface in NeoForge. 106 jars *implement* the Forge one; renaming leaves NeoForge's
+abstract method unimplemented and fails with `AbstractMethodError` only when something asks for
+a capability. This check also withdrew a rule written the same hour —
+`LivingTickEvent` → `EntityTickEvent$Pre` is the right event, but `getEntity()` narrowed from
+`LivingEntity` to `Entity`, so all 41 callers would take a `NoSuchMethodError`.
+
+**Rename onto an abstract type with `Pre`/`Post` children.** NeoForge split several concrete
+Forge events and kept the old name as an abstract parent. The rename resolves, the mod loads,
+the listener registers — and nothing ever posts that class. Caught `LivingDamageEvent`, where
+24 jars would have had listeners that load cleanly and never fire.
+
+**Shim shadowed by a rule.** A broadly-scoped prefix rule can quietly disable a shim written to
+paper over a signature difference.
+
+Narrow beats complete here. Flagging *every* abstract target produced 91 hits, nearly all
+correct interfaces like `IItemHandler`; a warning list that size gets skimmed and ignored.
 
 Counts are **jars, not call sites**. One mod calling something forty times is one mod's worth of
 evidence; raw occurrence counts let a single heavy user outvote the corpus.

@@ -1,7 +1,1026 @@
 referenced Forge types: 792
   resolved by forge-compat: 50
-  resolved by a rule:       482
-  UNRESOLVED:               260
+  resolved by a rule:       495
+  UNRESOLVED:               247
+
+=== RENAME TARGET MISSING A CALLED MEMBER (499) ===
+The rule resolves, but the target does not have what the corpus
+calls on it. Each is a NoSuchMethodError or AbstractMethodError
+waiting to happen -- convert the rule to a shim, or drop it.
+   68  net/minecraftforge/common/capabilities/RegisterCapabilitiesEvent.register
+         -> net/neoforged/neoforge/capabilities/RegisterCapabilitiesEvent  has no  register (Ljava/lang/Class;)V
+   49  net/minecraftforge/fluids/FluidStack.getTag
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  getTag ()Lnet/minecraft/nbt/CompoundTag;
+   49  net/minecraftforge/items/ItemStackHandler.deserializeNBT
+         -> net/neoforged/neoforge/items/ItemStackHandler  has no  deserializeNBT (Lnet/minecraft/nbt/CompoundTag;)V
+   47  net/minecraftforge/items/ItemHandlerHelper.canItemStacksStack
+         -> net/neoforged/neoforge/items/ItemHandlerHelper  has no  canItemStacksStack (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
+   44  net/minecraftforge/client/event/ModelEvent$RegisterAdditional.register
+         -> net/neoforged/neoforge/client/event/ModelEvent$RegisterAdditional  has no  register (Lnet/minecraft/resources/ResourceLocation;)V
+   43  net/minecraftforge/client/event/ModelEvent$RegisterGeometryLoaders.register
+         -> net/neoforged/neoforge/client/event/ModelEvent$RegisterGeometryLoaders  has no  register (Ljava/lang/String;Lnet/neoforged/neoforge/client/model/geometry/IGeometryLoader;)V
+   42  net/minecraftforge/items/ItemStackHandler.serializeNBT
+         -> net/neoforged/neoforge/items/ItemStackHandler  has no  serializeNBT ()Lnet/minecraft/nbt/CompoundTag;
+   41  net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent.getEntity
+         -> net/neoforged/neoforge/event/tick/EntityTickEvent$Pre  has no  getEntity ()Lnet/minecraft/world/entity/LivingEntity;
+   39  net/minecraftforge/items/ItemHandlerHelper.copyStackWithSize
+         -> net/neoforged/neoforge/items/ItemHandlerHelper  has no  copyStackWithSize (Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;
+   37  net/minecraftforge/fluids/FluidStack.loadFluidStackFromNBT
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  loadFluidStackFromNBT (Lnet/minecraft/nbt/CompoundTag;)Lnet/neoforged/neoforge/fluids/FluidStack;
+   36  net/minecraftforge/common/Tags$Items.GLASS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS Lnet/minecraft/tags/TagKey;
+   34  net/minecraftforge/common/Tags$Items.STONE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  STONE Lnet/minecraft/tags/TagKey;
+   34  net/minecraftforge/fluids/FluidStack.writeToNBT
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  writeToNBT (Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;
+   34  net/minecraftforge/fml/event/config/ModConfigEvent.getConfig
+         -> net/neoforged/fml/event/config/ModConfigEvent  has no  getConfig ()Lnet/minecraftforge/fml/config/ModConfig;
+   33  net/minecraftforge/common/crafting/CraftingHelper.register
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  register (Lnet/neoforged/neoforge/common/conditions/IConditionSerializer;)Lnet/neoforged/neoforge/common/conditions/IConditionSerializer;
+   33  net/minecraftforge/fml/event/config/ModConfigEvent$Reloading.getConfig
+         -> net/neoforged/fml/event/config/ModConfigEvent$Reloading  has no  getConfig ()Lnet/minecraftforge/fml/config/ModConfig;
+   31  net/minecraftforge/common/crafting/CraftingHelper.register
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  register (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraftforge/common/crafting/IIngredientSerializer;)Lnet/minecraftforge/common/crafting/IIngredientSerializer;
+   28  net/minecraftforge/event/entity/living/LivingHurtEvent.getAmount
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre  has no  getAmount ()F
+   28  net/minecraftforge/fml/event/config/ModConfigEvent$Loading.getConfig
+         -> net/neoforged/fml/event/config/ModConfigEvent$Loading  has no  getConfig ()Lnet/minecraftforge/fml/config/ModConfig;
+   26  net/minecraftforge/event/entity/living/LivingHurtEvent.setAmount
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre  has no  setAmount (F)V
+   25  net/minecraftforge/common/crafting/CraftingHelper.serialize
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize (Lnet/neoforged/neoforge/common/conditions/ICondition;)Lcom/google/gson/JsonObject;
+   24  net/minecraftforge/common/Tags$Items.OBSIDIAN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  OBSIDIAN Lnet/minecraft/tags/TagKey;
+   24  net/minecraftforge/client/event/EntityRenderersEvent$AddLayers.getSkin
+         -> net/neoforged/neoforge/client/event/EntityRenderersEvent$AddLayers  has no  getSkin (Ljava/lang/String;)Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;
+   24  net/minecraftforge/client/event/RenderLevelStageEvent.getPartialTick
+         -> net/neoforged/neoforge/client/event/RenderLevelStageEvent  has no  getPartialTick ()F
+   24  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.m_246326_
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  m_246326_ (Lnet/minecraft/world/level/ItemLike;)V
+   24  net/minecraftforge/fluids/capability/templates/FluidTank.readFromNBT
+         -> net/neoforged/neoforge/fluids/capability/templates/FluidTank  has no  readFromNBT (Lnet/minecraft/nbt/CompoundTag;)Lnet/neoforged/neoforge/fluids/capability/templates/FluidTank;
+   24  net/minecraftforge/fluids/capability/templates/FluidTank.writeToNBT
+         -> net/neoforged/neoforge/fluids/capability/templates/FluidTank  has no  writeToNBT (Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;
+   23  net/minecraftforge/common/Tags$Items.STRING
+         -> net/neoforged/neoforge/common/Tags$Items  has no  STRING Lnet/minecraft/tags/TagKey;
+   23  net/minecraftforge/client/event/InputEvent$MouseScrollingEvent.getScrollDelta
+         -> net/neoforged/neoforge/client/event/InputEvent$MouseScrollingEvent  has no  getScrollDelta ()D
+   23  net/minecraftforge/fluids/FluidStack.hasTag
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  hasTag ()Z
+   23  net/minecraftforge/fluids/FluidType$Properties.sound
+         -> net/neoforged/neoforge/fluids/FluidType$Properties  has no  sound (Lnet/minecraftforge/common/SoundAction;Lnet/minecraft/sounds/SoundEvent;)Lnet/neoforged/neoforge/fluids/FluidType$Properties;
+   22  net/minecraftforge/registries/RegisterEvent.getForgeRegistry
+         -> net/neoforged/neoforge/registries/RegisterEvent  has no  getForgeRegistry ()Lnet/minecraftforge/registries/IForgeRegistry;
+   21  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.accept
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  accept (Ljava/util/function/Supplier;)V
+   21  net/minecraftforge/fluids/FluidUtil.getFluidHandler
+         -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/item/ItemStack;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+   20  net/minecraftforge/common/capabilities/ICapabilityProvider.getCapability
+         -> net/neoforged/neoforge/capabilities/ICapabilityProvider  has no  getCapability (Lnet/neoforged/neoforge/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+   20  net/minecraftforge/common/crafting/CraftingHelper.getItemStack
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getItemStack (Lcom/google/gson/JsonObject;Z)Lnet/minecraft/world/item/ItemStack;
+   20  net/minecraftforge/event/entity/living/LivingDamageEvent.getAmount
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post  has no  getAmount ()F
+   19  net/minecraftforge/common/Tags$Items.LEATHER
+         -> net/neoforged/neoforge/common/Tags$Items  has no  LEATHER Lnet/minecraft/tags/TagKey;
+   18  net/minecraftforge/common/Tags$Items.COBBLESTONE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  COBBLESTONE Lnet/minecraft/tags/TagKey;
+   18  net/minecraftforge/common/Tags$Items.SHEARS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  SHEARS Lnet/minecraft/tags/TagKey;
+   18  net/minecraftforge/event/entity/player/EntityItemPickupEvent.getEntity
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  getEntity ()Lnet/minecraft/world/entity/player/Player;
+   18  net/minecraftforge/fluids/FluidStack.setTag
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  setTag (Lnet/minecraft/nbt/CompoundTag;)V
+   17  net/minecraftforge/event/entity/living/LivingDamageEvent.setAmount
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post  has no  setAmount (F)V
+   17  net/minecraftforge/event/entity/player/EntityItemPickupEvent.getItem
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  getItem ()Lnet/minecraft/world/entity/item/ItemEntity;
+   16  net/minecraftforge/common/Tags$Blocks.STONE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  STONE Lnet/minecraft/tags/TagKey;
+   16  net/minecraftforge/event/level/BlockEvent$BlockToolModificationEvent.getToolAction
+         -> net/neoforged/neoforge/event/level/BlockEvent$BlockToolModificationEvent  has no  getToolAction ()Lnet/minecraftforge/common/ToolAction;
+   16  net/minecraftforge/fml/util/thread/EffectiveSide.get
+         -> net/neoforged/fml/util/thread/EffectiveSide  has no  get ()Lnet/minecraftforge/fml/LogicalSide;
+   15  net/minecraftforge/common/Tags$Blocks.GLASS
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS Lnet/minecraft/tags/TagKey;
+   15  net/minecraftforge/common/Tags$Items.GUNPOWDER
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GUNPOWDER Lnet/minecraft/tags/TagKey;
+   15  net/minecraftforge/common/util/INBTSerializable.deserializeNBT
+         -> net/neoforged/neoforge/common/util/INBTSerializable  has no  deserializeNBT (Lnet/minecraft/nbt/Tag;)V
+   15  net/minecraftforge/common/util/INBTSerializable.serializeNBT
+         -> net/neoforged/neoforge/common/util/INBTSerializable  has no  serializeNBT ()Lnet/minecraft/nbt/Tag;
+   15  net/minecraftforge/event/entity/SpawnPlacementRegisterEvent.register
+         -> net/neoforged/neoforge/event/entity/RegisterSpawnPlacementsEvent  has no  register (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/SpawnPlacements$Type;Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/world/entity/SpawnPlacements$SpawnPredicate;Lnet/neoforged/neoforge/event/entity/RegisterSpawnPlacementsEvent$Operation;)V
+   15  net/minecraftforge/fluids/FluidStack.readFromPacket
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  readFromPacket (Lnet/minecraft/network/FriendlyByteBuf;)Lnet/neoforged/neoforge/fluids/FluidStack;
+   15  net/minecraftforge/fluids/FluidStack.writeToPacket
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  writeToPacket (Lnet/minecraft/network/FriendlyByteBuf;)V
+   14  net/minecraftforge/common/Tags$Items.STORAGE_BLOCKS_QUARTZ
+         -> net/neoforged/neoforge/common/Tags$Items  has no  STORAGE_BLOCKS_QUARTZ Lnet/minecraft/tags/TagKey;
+   14  net/minecraftforge/common/crafting/CraftingHelper.getIngredient
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getIngredient (Lcom/google/gson/JsonElement;Z)Lnet/minecraft/world/item/crafting/Ingredient;
+   14  net/minecraftforge/common/data/BlockTagsProvider.m_274426_
+         -> net/neoforged/neoforge/common/data/BlockTagsProvider  has no  m_274426_ ()Ljava/util/concurrent/CompletableFuture;
+   14  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getGenerationSettings
+         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getGenerationSettings ()Lnet/minecraftforge/common/world/BiomeGenerationSettingsBuilder;
+   14  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.getEntries
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  getEntries ()Lnet/neoforged/neoforge/common/util/MutableHashedLinkedMap;
+   14  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.m_246342_
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  m_246342_ (Lnet/minecraft/world/item/ItemStack;)V
+   13  net/minecraftforge/common/Tags$Items.ARMORS_BOOTS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_BOOTS Lnet/minecraft/tags/TagKey;
+   13  net/minecraftforge/common/Tags$Items.ARMORS_HELMETS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_HELMETS Lnet/minecraft/tags/TagKey;
+   13  net/minecraftforge/common/Tags$Items.SAND
+         -> net/neoforged/neoforge/common/Tags$Items  has no  SAND Lnet/minecraft/tags/TagKey;
+   13  net/minecraftforge/common/util/FakePlayer.m_21008_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_21008_ (Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;)V
+   13  net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus.bus
+         -> net/neoforged/fml/common/EventBusSubscriber$Bus  has no  bus ()Ljava/util/function/Supplier;
+   12  net/minecraftforge/common/Tags$Items.ARMORS_CHESTPLATES
+         -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_CHESTPLATES Lnet/minecraft/tags/TagKey;
+   12  net/minecraftforge/common/Tags$Items.ARMORS_LEGGINGS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_LEGGINGS Lnet/minecraft/tags/TagKey;
+   12  net/minecraftforge/common/Tags$Items.GLASS_COLORLESS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_COLORLESS Lnet/minecraft/tags/TagKey;
+   12  net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus.FORGE
+         -> net/neoforged/fml/common/EventBusSubscriber$Bus  has no  FORGE Lnet/neoforged/fml/common/EventBusSubscriber$Bus;
+   12  net/minecraftforge/common/crafting/CraftingHelper.getID
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getID (Lnet/minecraftforge/common/crafting/IIngredientSerializer;)Lnet/minecraft/resources/ResourceLocation;
+   12  net/minecraftforge/event/AnvilUpdateEvent.setCost
+         -> net/neoforged/neoforge/event/AnvilUpdateEvent  has no  setCost (I)V
+   12  net/minecraftforge/event/entity/living/LivingChangeTargetEvent.getNewTarget
+         -> net/neoforged/neoforge/event/entity/living/LivingChangeTargetEvent  has no  getNewTarget ()Lnet/minecraft/world/entity/LivingEntity;
+   12  net/minecraftforge/event/entity/living/MobEffectEvent$Applicable.setResult
+         -> net/neoforged/neoforge/event/entity/living/MobEffectEvent$Applicable  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+   12  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.getUseBlock
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  getUseBlock ()Lnet/minecraftforge/eventbus/api/Event$Result;
+   12  net/minecraftforge/event/entity/player/PlayerInteractEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent  has no  setCanceled (Z)V
+   12  net/minecraftforge/fml/ModContainer.addConfig
+         -> net/neoforged/fml/ModContainer  has no  addConfig (Lnet/minecraftforge/fml/config/ModConfig;)V
+   11  net/minecraftforge/common/Tags$Items.SANDSTONE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  SANDSTONE Lnet/minecraft/tags/TagKey;
+   11  net/minecraftforge/common/capabilities/ICapabilityProvider.getCapability
+         -> net/neoforged/neoforge/capabilities/ICapabilityProvider  has no  getCapability (Lnet/neoforged/neoforge/capabilities/Capability;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+   11  net/minecraftforge/common/crafting/CraftingHelper.processConditions
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  processConditions (Lcom/google/gson/JsonObject;Ljava/lang/String;Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;)Z
+   11  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.setUseBlock
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  setUseBlock (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+   11  net/minecraftforge/event/level/BlockEvent$BreakEvent.getExpToDrop
+         -> net/neoforged/neoforge/event/level/BlockEvent$BreakEvent  has no  getExpToDrop ()I
+   11  net/minecraftforge/fluids/FluidStack.getOrCreateTag
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  getOrCreateTag ()Lnet/minecraft/nbt/CompoundTag;
+   11  net/minecraftforge/fluids/FluidUtil.getFluidHandler
+         -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+   11  net/minecraftforge/fml/loading/FMLLoader.getLoadingModList
+         -> net/neoforged/fml/loading/FMLLoader  has no  getLoadingModList ()Lnet/minecraftforge/fml/loading/LoadingModList;
+   11  net/minecraftforge/items/SlotItemHandler.m_5852_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_5852_ (Lnet/minecraft/world/item/ItemStack;)V
+   11  net/minecraftforge/items/SlotItemHandler.m_5857_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_5857_ (Lnet/minecraft/world/item/ItemStack;)Z
+   11  net/minecraftforge/registries/RegisterEvent$RegisterHelper.register
+         -> net/neoforged/neoforge/registries/RegisterEvent$RegisterHelper  has no  register (Ljava/lang/String;Ljava/lang/Object;)V
+   10  net/minecraftforge/common/Tags$Items.GRAVEL
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GRAVEL Lnet/minecraft/tags/TagKey;
+   10  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_5483_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_5483_ (DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   10  net/minecraftforge/common/util/FakePlayer.m_6034_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_6034_ (DDD)V
+   10  net/minecraftforge/event/entity/living/LivingHurtEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre  has no  setCanceled (Z)V
+   10  net/minecraftforge/event/entity/player/CriticalHitEvent.getDamageModifier
+         -> net/neoforged/neoforge/event/entity/player/CriticalHitEvent  has no  getDamageModifier ()F
+   10  net/minecraftforge/event/level/BlockEvent$BreakEvent.setExpToDrop
+         -> net/neoforged/neoforge/event/level/BlockEvent$BreakEvent  has no  setExpToDrop (I)V
+   10  net/minecraftforge/registries/RegisterEvent.getVanillaRegistry
+         -> net/neoforged/neoforge/registries/RegisterEvent  has no  getVanillaRegistry ()Lnet/minecraft/core/Registry;
+    9  net/minecraftforge/common/Tags$Items.HEADS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  HEADS Lnet/minecraft/tags/TagKey;
+    9  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$DebugText.getLeft
+         -> net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$DebugText  has no  getLeft ()Ljava/util/ArrayList;
+    9  net/minecraftforge/client/event/EntityRenderersEvent$AddLayers.getRenderer
+         -> net/neoforged/neoforge/client/event/EntityRenderersEvent$AddLayers  has no  getRenderer (Lnet/minecraft/world/entity/EntityType;)Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;
+    9  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_5601_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_5601_ (FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    9  net/minecraftforge/common/util/LogicalSidedProvider.get
+         -> net/neoforged/neoforge/common/util/LogicalSidedProvider  has no  get (Lnet/minecraftforge/fml/LogicalSide;)Ljava/lang/Object;
+    9  net/minecraftforge/event/entity/living/LivingDamageEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post  has no  setCanceled (Z)V
+    9  net/minecraftforge/event/entity/player/EntityItemPickupEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  setCanceled (Z)V
+    9  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.getUseItem
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  getUseItem ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    9  net/minecraftforge/items/SlotItemHandler.m_142406_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_142406_ (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;)V
+    9  net/minecraftforge/items/SlotItemHandler.m_6654_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_6654_ ()V
+    8  net/minecraftforge/common/Tags$Blocks.SAND
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  SAND Lnet/minecraft/tags/TagKey;
+    8  net/minecraftforge/client/model/geometry/IGeometryBakingContext.getRenderType
+         -> net/neoforged/neoforge/client/model/geometry/IGeometryBakingContext  has no  getRenderType (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/client/RenderTypeGroup;
+    8  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_5752_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_5752_ ()V
+    8  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_7421_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_7421_ (FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    8  net/minecraftforge/common/loot/LootTableIdCondition$Builder.m_6409_
+         -> net/neoforged/neoforge/common/loot/LootTableIdCondition$Builder  has no  m_6409_ ()Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition;
+    8  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getMobSpawnSettings
+         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getMobSpawnSettings ()Lnet/minecraftforge/common/world/MobSpawnSettingsBuilder;
+    8  net/minecraftforge/event/entity/living/LivingDropsEvent.getLootingLevel
+         -> net/neoforged/neoforge/event/entity/living/LivingDropsEvent  has no  getLootingLevel ()I
+    8  net/minecraftforge/fluids/FluidType.getSound
+         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
+    8  net/minecraftforge/items/SlotItemHandler.m_6201_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_6201_ (I)Lnet/minecraft/world/item/ItemStack;
+    8  net/minecraftforge/items/wrapper/SidedInvWrapper.create
+         -> net/neoforged/neoforge/items/wrapper/SidedInvWrapper  has no  create (Lnet/minecraft/world/WorldlyContainer;[Lnet/minecraft/core/Direction;)[Lnet/neoforged/neoforge/common/util/LazyOptional;
+    8  net/minecraftforge/registries/NewRegistryEvent.create
+         -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/minecraftforge/registries/RegistryBuilder;)Ljava/util/function/Supplier;
+    7  net/minecraftforge/common/Tags$Blocks.COBBLESTONE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  COBBLESTONE Lnet/minecraft/tags/TagKey;
+    7  net/minecraftforge/common/Tags$Items.NETHERRACK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  NETHERRACK Lnet/minecraft/tags/TagKey;
+    7  net/minecraftforge/common/util/FakePlayer.m_21205_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_21205_ ()Lnet/minecraft/world/item/ItemStack;
+    7  net/minecraftforge/event/entity/EntityAttributeModificationEvent.add
+         -> net/neoforged/neoforge/event/entity/EntityAttributeModificationEvent  has no  add (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/ai/attributes/Attribute;)V
+    7  net/minecraftforge/event/entity/player/CriticalHitEvent.setDamageModifier
+         -> net/neoforged/neoforge/event/entity/player/CriticalHitEvent  has no  setDamageModifier (F)V
+    7  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.setUseItem
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  setUseItem (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    7  net/minecraftforge/fluids/FluidStack.equals
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  equals (Ljava/lang/Object;)Z
+    7  net/minecraftforge/fluids/FluidStack.getRawFluid
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  getRawFluid ()Lnet/minecraft/world/level/material/Fluid;
+    7  net/minecraftforge/fluids/FluidType.getSound
+         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/neoforged/neoforge/fluids/FluidStack;Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
+    7  net/minecraftforge/fml/loading/FMLLoader.getLaunchHandler
+         -> net/neoforged/fml/loading/FMLLoader  has no  getLaunchHandler ()Lnet/minecraftforge/fml/loading/targets/CommonLaunchHandler;
+    7  net/minecraftforge/items/SlotItemHandler.m_8010_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_8010_ (Lnet/minecraft/world/entity/player/Player;)Z
+    7  net/minecraftforge/items/wrapper/RecipeWrapper.m_8020_
+         -> net/neoforged/neoforge/items/wrapper/RecipeWrapper  has no  m_8020_ (I)Lnet/minecraft/world/item/ItemStack;
+    6  net/minecraftforge/common/Tags$Blocks.STAINED_GLASS
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  STAINED_GLASS Lnet/minecraft/tags/TagKey;
+    6  net/minecraftforge/common/Tags$Items.STAINED_GLASS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  STAINED_GLASS Lnet/minecraft/tags/TagKey;
+    6  net/minecraftforge/common/Tags$Items.STAINED_GLASS_PANES
+         -> net/neoforged/neoforge/common/Tags$Items  has no  STAINED_GLASS_PANES Lnet/minecraft/tags/TagKey;
+    6  net/minecraftforge/common/Tags$Items.TOOLS_SHIELDS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  TOOLS_SHIELDS Lnet/minecraft/tags/TagKey;
+    6  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$DebugText.getRight
+         -> net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$DebugText  has no  getRight ()Ljava/util/ArrayList;
+    6  net/minecraftforge/client/event/RegisterItemDecorationsEvent.register
+         -> net/neoforged/neoforge/client/event/RegisterItemDecorationsEvent  has no  register (Lnet/minecraft/world/level/ItemLike;Lnet/minecraftforge/client/IItemDecorator;)V
+    6  net/minecraftforge/client/event/ScreenEvent$MouseScrolled$Pre.getScrollDelta
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled$Pre  has no  getScrollDelta ()D
+    6  net/minecraftforge/client/model/IDynamicBakedModel.getRenderTypes
+         -> net/neoforged/neoforge/client/model/IDynamicBakedModel  has no  getRenderTypes (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;)Lnet/minecraftforge/client/ChunkRenderTypeSet;
+    6  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.bakeElements
+         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  bakeElements (Ljava/util/List;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;)Ljava/util/List;
+    6  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_85950_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_85950_ (FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    6  net/minecraftforge/event/entity/living/LivingHurtEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre  has no  isCanceled ()Z
+    6  net/minecraftforge/event/entity/player/EntityItemPickupEvent.setResult
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    6  net/minecraftforge/event/entity/player/PlayerInteractEvent.setCancellationResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent  has no  setCancellationResult (Lnet/minecraft/world/InteractionResult;)V
+    6  net/minecraftforge/eventbus/api/Event.setCanceled
+         -> net/neoforged/bus/api/Event  has no  setCanceled (Z)V
+    5  net/minecraftforge/common/Tags$Blocks.GLASS_COLORLESS
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_COLORLESS Lnet/minecraft/tags/TagKey;
+    5  net/minecraftforge/common/Tags$Blocks.NETHERRACK
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  NETHERRACK Lnet/minecraft/tags/TagKey;
+    5  net/minecraftforge/common/Tags$Blocks.OBSIDIAN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  OBSIDIAN Lnet/minecraft/tags/TagKey;
+    5  net/minecraftforge/common/Tags$Items.DUSTS_PRISMARINE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  DUSTS_PRISMARINE Lnet/minecraft/tags/TagKey;
+    5  net/minecraftforge/client/event/RenderHighlightEvent$Block.getPartialTick
+         -> net/neoforged/neoforge/client/event/RenderHighlightEvent$Block  has no  getPartialTick ()F
+    5  net/minecraftforge/common/crafting/CraftingHelper.getCondition
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getCondition (Lcom/google/gson/JsonObject;)Lnet/neoforged/neoforge/common/conditions/ICondition;
+    5  net/minecraftforge/common/crafting/CraftingHelper.getItemStack
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getItemStack (Lcom/google/gson/JsonObject;ZZ)Lnet/minecraft/world/item/ItemStack;
+    5  net/minecraftforge/common/crafting/CraftingHelper.getNBT
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getNBT (Lcom/google/gson/JsonElement;)Lnet/minecraft/nbt/CompoundTag;
+    5  net/minecraftforge/common/util/FakePlayer.m_150109_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_150109_ ()Lnet/minecraft/world/entity/player/Inventory;
+    5  net/minecraftforge/common/util/FakePlayer.m_21120_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_21120_ (Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;
+    5  net/minecraftforge/event/ItemAttributeModifierEvent.addModifier
+         -> net/neoforged/neoforge/event/ItemAttributeModifierEvent  has no  addModifier (Lnet/minecraft/world/entity/ai/attributes/Attribute;Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)Z
+    5  net/minecraftforge/event/ItemAttributeModifierEvent.getSlotType
+         -> net/neoforged/neoforge/event/ItemAttributeModifierEvent  has no  getSlotType ()Lnet/minecraft/world/entity/EquipmentSlot;
+    5  net/minecraftforge/event/entity/player/AdvancementEvent$AdvancementEarnEvent.getAdvancement
+         -> net/neoforged/neoforge/event/entity/player/AdvancementEvent$AdvancementEarnEvent  has no  getAdvancement ()Lnet/minecraft/advancements/Advancement;
+    5  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.setCancellationResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  setCancellationResult (Lnet/minecraft/world/InteractionResult;)V
+    5  net/minecraftforge/fluids/FluidStack.hashCode
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  hashCode ()I
+    5  net/minecraftforge/fluids/FluidType$Properties.pathType
+         -> net/neoforged/neoforge/fluids/FluidType$Properties  has no  pathType (Lnet/minecraft/world/level/pathfinder/BlockPathTypes;)Lnet/neoforged/neoforge/fluids/FluidType$Properties;
+    5  net/minecraftforge/registries/NewRegistryEvent.create
+         -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/minecraftforge/registries/RegistryBuilder;Ljava/util/function/Consumer;)Ljava/util/function/Supplier;
+    4  net/minecraftforge/common/Tags$Blocks.GRAVEL
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GRAVEL Lnet/minecraft/tags/TagKey;
+    4  net/minecraftforge/common/Tags$Blocks.STAINED_GLASS_PANES
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  STAINED_GLASS_PANES Lnet/minecraft/tags/TagKey;
+    4  net/minecraftforge/common/Tags$Items.TOOLS_BOWS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  TOOLS_BOWS Lnet/minecraft/tags/TagKey;
+    4  net/minecraftforge/client/event/RenderGuiEvent$Post.getPartialTick
+         -> net/neoforged/neoforge/client/event/RenderGuiEvent$Post  has no  getPartialTick ()F
+    4  net/minecraftforge/client/event/RenderNameTagEvent.getResult
+         -> net/neoforged/neoforge/client/event/RenderNameTagEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    4  net/minecraftforge/client/model/CompositeModel$Baked$Builder.addQuads
+         -> net/neoforged/neoforge/client/model/CompositeModel$Baked$Builder  has no  addQuads (Lnet/minecraftforge/client/RenderTypeGroup;Ljava/util/Collection;)Lnet/neoforged/neoforge/client/model/CompositeModel$Baked$Builder;
+    4  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.createUnbakedItemElements
+         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemElements (ILnet/minecraft/client/renderer/texture/SpriteContents;)Ljava/util/List;
+    4  net/minecraftforge/common/util/BlockSnapshot.restore
+         -> net/neoforged/neoforge/common/util/BlockSnapshot  has no  restore (ZZ)Z
+    4  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.m_246601_
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  m_246601_ (Ljava/util/Collection;)V
+    4  net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn.getResult
+         -> net/neoforged/neoforge/event/entity/living/FinalizeSpawnEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    4  net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn.getSpawner
+         -> net/neoforged/neoforge/event/entity/living/FinalizeSpawnEvent  has no  getSpawner ()Lnet/minecraft/world/level/BaseSpawner;
+    4  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.getResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    4  net/minecraftforge/event/entity/player/PlayerInteractEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent  has no  isCanceled ()Z
+    4  net/minecraftforge/event/level/SaplingGrowTreeEvent.getResult
+         -> net/neoforged/neoforge/event/level/BlockGrowFeatureEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    4  net/minecraftforge/eventbus/api/Event.isCancelable
+         -> net/neoforged/bus/api/Event  has no  isCancelable ()Z
+    4  net/minecraftforge/fml/util/ObfuscationReflectionHelper.remapName
+         -> net/neoforged/fml/util/ObfuscationReflectionHelper  has no  remapName (Lcpw/mods/modlauncher/api/INameMappingService$Domain;Ljava/lang/String;)Ljava/lang/String;
+    4  net/minecraftforge/items/SlotItemHandler.m_5866_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_5866_ (Lnet/minecraft/world/item/ItemStack;)I
+    3  net/minecraftforge/common/Tags$Blocks.GLASS_SILICA
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_SILICA Lnet/minecraft/tags/TagKey;
+    3  net/minecraftforge/common/Tags$Items.INGOTS_NETHER_BRICK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  INGOTS_NETHER_BRICK Lnet/minecraft/tags/TagKey;
+    3  net/minecraftforge/common/Tags$Items.SAND_COLORLESS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  SAND_COLORLESS Lnet/minecraft/tags/TagKey;
+    3  net/minecraftforge/common/util/FakePlayer.f_8941_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_8941_ Lnet/minecraft/server/level/ServerPlayerGameMode;
+    3  net/minecraftforge/client/model/BakedModelWrapper.getRenderTypes
+         -> net/neoforged/neoforge/client/model/BakedModelWrapper  has no  getRenderTypes (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;)Lnet/minecraftforge/client/ChunkRenderTypeSet;
+    3  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.createUnbakedItemMaskElements
+         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemMaskElements (ILnet/minecraft/client/renderer/texture/SpriteContents;)Ljava/util/List;
+    3  net/minecraftforge/client/settings/KeyModifier.ordinal
+         -> net/neoforged/neoforge/client/settings/KeyModifier  has no  ordinal ()I
+    3  net/minecraftforge/common/crafting/CraftingHelper.processConditions
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  processConditions (Lcom/google/gson/JsonArray;Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;)Z
+    3  net/minecraftforge/common/crafting/CraftingHelper.serialize
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize ([Lnet/neoforged/neoforge/common/conditions/ICondition;)Lcom/google/gson/JsonArray;
+    3  net/minecraftforge/common/crafting/CraftingHelper.write
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  write (Lnet/minecraft/network/FriendlyByteBuf;Lnet/minecraft/world/item/crafting/Ingredient;)V
+    3  net/minecraftforge/common/util/FakePlayer.m_146922_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_146922_ (F)V
+    3  net/minecraftforge/common/util/FakePlayer.m_8119_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_8119_ ()V
+    3  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getClimateSettings
+         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getClimateSettings ()Lnet/minecraftforge/common/world/ClimateSettingsBuilder;
+    3  net/minecraftforge/energy/EnergyStorage.deserializeNBT
+         -> net/neoforged/neoforge/energy/EnergyStorage  has no  deserializeNBT (Lnet/minecraft/nbt/Tag;)V
+    3  net/minecraftforge/energy/EnergyStorage.serializeNBT
+         -> net/neoforged/neoforge/energy/EnergyStorage  has no  serializeNBT ()Lnet/minecraft/nbt/Tag;
+    3  net/minecraftforge/event/entity/EntityMobGriefingEvent.setResult
+         -> net/neoforged/neoforge/event/entity/EntityMobGriefingEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    3  net/minecraftforge/event/entity/living/LivingChangeTargetEvent.getOriginalTarget
+         -> net/neoforged/neoforge/event/entity/living/LivingChangeTargetEvent  has no  getOriginalTarget ()Lnet/minecraft/world/entity/LivingEntity;
+    3  net/minecraftforge/event/entity/living/LivingChangeTargetEvent.setNewTarget
+         -> net/neoforged/neoforge/event/entity/living/LivingChangeTargetEvent  has no  setNewTarget (Lnet/minecraft/world/entity/LivingEntity;)V
+    3  net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn.getSpawnTag
+         -> net/neoforged/neoforge/event/entity/living/FinalizeSpawnEvent  has no  getSpawnTag ()Lnet/minecraft/nbt/CompoundTag;
+    3  net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn.setResult
+         -> net/neoforged/neoforge/event/entity/living/FinalizeSpawnEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    3  net/minecraftforge/event/entity/living/MobSpawnEvent$PositionCheck.setResult
+         -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$PositionCheck  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    3  net/minecraftforge/event/entity/player/CriticalHitEvent.getResult
+         -> net/neoforged/neoforge/event/entity/player/CriticalHitEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    3  net/minecraftforge/event/entity/player/PlayerEvent$ItemPickupEvent.getEntity
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Post  has no  getEntity ()Lnet/minecraft/world/entity/player/Player;
+    3  net/minecraftforge/event/entity/player/PlayerEvent$ItemPickupEvent.getStack
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Post  has no  getStack ()Lnet/minecraft/world/item/ItemStack;
+    3  net/minecraftforge/event/entity/player/PlayerInteractEvent.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent  has no  isCancelable ()Z
+    3  net/minecraftforge/event/entity/player/PlayerSleepInBedEvent.setResult
+         -> net/neoforged/neoforge/event/entity/player/CanPlayerSleepEvent  has no  setResult (Lnet/minecraft/world/entity/player/Player$BedSleepingProblem;)V
+    3  net/minecraftforge/eventbus/api/Event.isCanceled
+         -> net/neoforged/bus/api/Event  has no  isCanceled ()Z
+    3  net/minecraftforge/eventbus/api/Event.setResult
+         -> net/neoforged/bus/api/Event  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    3  net/minecraftforge/fluids/FluidType$Properties.adjacentPathType
+         -> net/neoforged/neoforge/fluids/FluidType$Properties  has no  adjacentPathType (Lnet/minecraft/world/level/pathfinder/BlockPathTypes;)Lnet/neoforged/neoforge/fluids/FluidType$Properties;
+    3  net/minecraftforge/fluids/FluidType.getBlockPathType
+         -> net/neoforged/neoforge/fluids/FluidType  has no  getBlockPathType (Lnet/minecraft/world/level/material/FluidState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/Mob;Z)Lnet/minecraft/world/level/pathfinder/BlockPathTypes;
+    3  net/minecraftforge/fluids/FluidType.getSound
+         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
+    3  net/minecraftforge/items/ItemHandlerHelper.canItemStacksStackRelaxed
+         -> net/neoforged/neoforge/items/ItemHandlerHelper  has no  canItemStacksStackRelaxed (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
+    3  net/minecraftforge/items/wrapper/RecipeWrapper.m_7983_
+         -> net/neoforged/neoforge/items/wrapper/RecipeWrapper  has no  m_7983_ ()Z
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_BLACK
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_BLACK Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_BLUE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_BLUE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_BROWN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_BROWN Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_CYAN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_CYAN Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_GRAY
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_GRAY Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_GREEN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_GREEN Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_LIGHT_BLUE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_LIGHT_BLUE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_LIGHT_GRAY
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_LIGHT_GRAY Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_LIME
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_LIME Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_MAGENTA
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_MAGENTA Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_ORANGE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_ORANGE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_PINK
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PINK Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_PURPLE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PURPLE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_RED
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_RED Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_TINTED
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_TINTED Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_WHITE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_WHITE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.GLASS_YELLOW
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_YELLOW Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Blocks.SANDSTONE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  SANDSTONE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.GLASS_LIME
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_LIME Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.GLASS_PANES_BLACK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_BLACK Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.GLASS_RED
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_RED Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.GLASS_SILICA
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_SILICA Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.GLASS_TINTED
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_TINTED Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.GLASS_WHITE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_WHITE Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.INGOTS_BRICK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  INGOTS_BRICK Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.SAND_RED
+         -> net/neoforged/neoforge/common/Tags$Items  has no  SAND_RED Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.TOOLS_CROSSBOWS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  TOOLS_CROSSBOWS Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/Tags$Items.TOOLS_FISHING_RODS
+         -> net/neoforged/neoforge/common/Tags$Items  has no  TOOLS_FISHING_RODS Lnet/minecraft/tags/TagKey;
+    2  net/minecraftforge/common/loot/LootModifierManager.GSON_INSTANCE
+         -> net/neoforged/neoforge/common/loot/LootModifierManager  has no  GSON_INSTANCE Lcom/google/gson/Gson;
+    2  net/minecraftforge/api/distmarker/Dist.equals
+         -> net/neoforged/api/distmarker/Dist  has no  equals (Ljava/lang/Object;)Z
+    2  net/minecraftforge/api/distmarker/Dist.ordinal
+         -> net/neoforged/api/distmarker/Dist  has no  ordinal ()I
+    2  net/minecraftforge/client/event/RenderGuiEvent$Post.getWindow
+         -> net/neoforged/neoforge/client/event/RenderGuiEvent$Post  has no  getWindow ()Lcom/mojang/blaze3d/platform/Window;
+    2  net/minecraftforge/client/event/RenderHighlightEvent.setCanceled
+         -> net/neoforged/neoforge/client/event/RenderHighlightEvent  has no  setCanceled (Z)V
+    2  net/minecraftforge/client/event/ScreenEvent$CharacterTyped.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$CharacterTyped  has no  setCanceled (Z)V
+    2  net/minecraftforge/client/event/ScreenEvent$KeyPressed.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$KeyPressed  has no  setCanceled (Z)V
+    2  net/minecraftforge/client/event/ScreenEvent$MouseScrolled$Post.getScrollDelta
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled$Post  has no  getScrollDelta ()D
+    2  net/minecraftforge/client/model/BakedModelWrapper.m_213637_
+         -> net/neoforged/neoforge/client/model/BakedModelWrapper  has no  m_213637_ (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;Lnet/minecraft/util/RandomSource;)Ljava/util/List;
+    2  net/minecraftforge/client/model/ElementsModel.bake
+         -> net/neoforged/neoforge/client/model/ElementsModel  has no  bake (Lnet/neoforged/neoforge/client/model/geometry/IGeometryBakingContext;Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/BakedModel;
+    2  net/minecraftforge/client/model/data/MultipartModelData.builder
+         -> net/neoforged/neoforge/client/model/data/MultipartModelData  has no  builder ()Lnet/neoforged/neoforge/client/model/data/MultipartModelData$Builder;
+    2  net/minecraftforge/client/model/geometry/IUnbakedGeometry.bake
+         -> net/neoforged/neoforge/client/model/geometry/IUnbakedGeometry  has no  bake (Lnet/neoforged/neoforge/client/model/geometry/IGeometryBakingContext;Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/BakedModel;
+    2  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.bakeElementFace
+         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  bakeElementFace (Lnet/minecraft/client/renderer/block/model/BlockElement;Lnet/minecraft/client/renderer/block/model/BlockElementFace;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraft/core/Direction;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/block/model/BakedQuad;
+    2  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_6122_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_6122_ (IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    2  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_7120_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_7120_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    2  net/minecraftforge/common/crafting/CraftingHelper.getIngredient
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getIngredient (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraft/world/item/crafting/Ingredient;
+    2  net/minecraftforge/common/crafting/conditions/ICondition.shouldRegisterEntry
+         -> net/neoforged/neoforge/common/conditions/ICondition  has no  shouldRegisterEntry (Lcom/google/gson/JsonElement;)Z
+    2  net/minecraftforge/common/data/BlockTagsProvider.m_206424_
+         -> net/neoforged/neoforge/common/data/BlockTagsProvider  has no  m_206424_ (Lnet/minecraft/tags/TagKey;)Lnet/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender;
+    2  net/minecraftforge/common/data/BlockTagsProvider.m_213708_
+         -> net/neoforged/neoforge/common/data/BlockTagsProvider  has no  m_213708_ (Lnet/minecraft/data/CachedOutput;)Ljava/util/concurrent/CompletableFuture;
+    2  net/minecraftforge/common/util/FakePlayer.m_146884_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_146884_ (Lnet/minecraft/world/phys/Vec3;)V
+    2  net/minecraftforge/common/util/FakePlayer.m_150110_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_150110_ ()Lnet/minecraft/world/entity/player/Abilities;
+    2  net/minecraftforge/common/util/FakePlayer.m_20148_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20148_ ()Ljava/util/UUID;
+    2  net/minecraftforge/common/util/FakePlayer.m_20154_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20154_ ()Lnet/minecraft/world/phys/Vec3;
+    2  net/minecraftforge/common/util/FakePlayer.m_20185_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20185_ ()D
+    2  net/minecraftforge/common/util/FakePlayer.m_20186_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20186_ ()D
+    2  net/minecraftforge/common/util/FakePlayer.m_20189_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20189_ ()D
+    2  net/minecraftforge/common/util/FakePlayer.m_21204_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_21204_ ()Lnet/minecraft/world/entity/ai/attributes/AttributeMap;
+    2  net/minecraftforge/common/util/FakePlayer.m_269291_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_269291_ ()Lnet/minecraft/world/damagesource/DamageSources;
+    2  net/minecraftforge/common/util/FakePlayer.m_36157_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_36157_ (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;
+    2  net/minecraftforge/common/util/FakePlayer.m_36187_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_36187_ (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/GameType;)Z
+    2  net/minecraftforge/common/util/FakePlayer.m_36334_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_36334_ ()V
+    2  net/minecraftforge/common/util/FakePlayer.m_36337_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_36337_ ()Z
+    2  net/minecraftforge/common/util/FakePlayer.m_5706_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_5706_ (Lnet/minecraft/world/entity/Entity;)V
+    2  net/minecraftforge/common/util/FakePlayer.m_9236_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_9236_ ()Lnet/minecraft/world/level/Level;
+    2  net/minecraftforge/common/util/FakePlayer.m_9240_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_9240_ ()V
+    2  net/minecraftforge/common/util/Lazy.concurrentOf
+         -> net/neoforged/neoforge/common/util/Lazy  has no  concurrentOf (Ljava/util/function/Supplier;)Lnet/neoforged/neoforge/common/util/Lazy;
+    2  net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder.getSpecialEffects
+         -> net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder  has no  getSpecialEffects ()Lnet/minecraftforge/common/world/BiomeSpecialEffectsBuilder;
+    2  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.m_246267_
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  m_246267_ (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/CreativeModeTab$TabVisibility;)V
+    2  net/minecraftforge/event/ItemAttributeModifierEvent.getModifiers
+         -> net/neoforged/neoforge/event/ItemAttributeModifierEvent  has no  getModifiers ()Lcom/google/common/collect/Multimap;
+    2  net/minecraftforge/event/ItemAttributeModifierEvent.removeModifier
+         -> net/neoforged/neoforge/event/ItemAttributeModifierEvent  has no  removeModifier (Lnet/minecraft/world/entity/ai/attributes/Attribute;Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;)Z
+    2  net/minecraftforge/event/entity/EntityAttributeModificationEvent.add
+         -> net/neoforged/neoforge/event/entity/EntityAttributeModificationEvent  has no  add (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/ai/attributes/Attribute;D)V
+    2  net/minecraftforge/event/entity/EntityEvent$Size.setNewEyeHeight
+         -> net/neoforged/neoforge/event/entity/EntityEvent$Size  has no  setNewEyeHeight (F)V
+    2  net/minecraftforge/event/entity/ProjectileImpactEvent.setImpactResult
+         -> net/neoforged/neoforge/event/entity/ProjectileImpactEvent  has no  setImpactResult (Lnet/neoforged/neoforge/event/entity/ProjectileImpactEvent$ImpactResult;)V
+    2  net/minecraftforge/event/entity/living/LivingDamageEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post  has no  isCanceled ()Z
+    2  net/minecraftforge/event/entity/living/MobSpawnEvent$PositionCheck.getResult
+         -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$PositionCheck  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    2  net/minecraftforge/event/entity/living/ShieldBlockEvent.setShieldTakesDamage
+         -> net/neoforged/neoforge/event/entity/living/LivingShieldBlockEvent  has no  setShieldTakesDamage (Z)V
+    2  net/minecraftforge/event/entity/player/AdvancementEvent.getAdvancement
+         -> net/neoforged/neoforge/event/entity/player/AdvancementEvent  has no  getAdvancement ()Lnet/minecraft/advancements/Advancement;
+    2  net/minecraftforge/event/entity/player/BonemealEvent.getBlock
+         -> net/neoforged/neoforge/event/entity/player/BonemealEvent  has no  getBlock ()Lnet/minecraft/world/level/block/state/BlockState;
+    2  net/minecraftforge/event/entity/player/BonemealEvent.setResult
+         -> net/neoforged/neoforge/event/entity/player/BonemealEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    2  net/minecraftforge/event/entity/player/CriticalHitEvent.setResult
+         -> net/neoforged/neoforge/event/entity/player/CriticalHitEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    2  net/minecraftforge/event/entity/player/EntityItemPickupEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  isCanceled ()Z
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.getSide
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  getSide ()Lnet/minecraftforge/fml/LogicalSide;
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.getUseBlock
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  getUseBlock ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.getUseItem
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  getUseItem ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.setUseItem
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  setUseItem (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.getSide
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  getSide ()Lnet/minecraftforge/fml/LogicalSide;
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.setResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    2  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickEmpty.setCancellationResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickEmpty  has no  setCancellationResult (Lnet/minecraft/world/InteractionResult;)V
+    2  net/minecraftforge/event/level/BlockEvent$BreakEvent.setResult
+         -> net/neoforged/neoforge/event/level/BlockEvent$BreakEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    2  net/minecraftforge/event/level/SaplingGrowTreeEvent.getRandomSource
+         -> net/neoforged/neoforge/event/level/BlockGrowFeatureEvent  has no  getRandomSource ()Lnet/minecraft/util/RandomSource;
+    2  net/minecraftforge/fluids/FluidStack.removeChildTag
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  removeChildTag (Ljava/lang/String;)V
+    2  net/minecraftforge/fml/loading/FMLLoader.versionInfo
+         -> net/neoforged/fml/loading/FMLLoader  has no  versionInfo ()Lnet/minecraftforge/fml/loading/VersionInfo;
+    2  net/minecraftforge/fml/util/ObfuscationReflectionHelper$UnableToFindFieldException.printStackTrace
+         -> net/neoforged/fml/util/ObfuscationReflectionHelper$UnableToFindFieldException  has no  printStackTrace ()V
+    2  net/minecraftforge/items/SlotItemHandler.m_6659_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_6659_ ()Z
+    2  net/minecraftforge/items/SlotItemHandler.m_7993_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_7993_ ()Lnet/minecraft/world/item/ItemStack;
+    2  net/minecraftforge/items/wrapper/RecipeWrapper.m_6836_
+         -> net/neoforged/neoforge/items/wrapper/RecipeWrapper  has no  m_6836_ (ILnet/minecraft/world/item/ItemStack;)V
+    1  net/minecraftforge/common/Tags$Biomes.IS_CONIFEROUS
+         -> net/neoforged/neoforge/common/Tags$Biomes  has no  IS_CONIFEROUS Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Biomes.IS_WATER
+         -> net/neoforged/neoforge/common/Tags$Biomes  has no  IS_WATER Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_BLACK
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_BLACK Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_BLUE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_BLUE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_BROWN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_BROWN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_CYAN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_CYAN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_GRAY
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_GRAY Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_GREEN
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_GREEN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_LIGHT_BLUE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_LIGHT_BLUE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_LIGHT_GRAY
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_LIGHT_GRAY Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_LIME
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_LIME Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_MAGENTA
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_MAGENTA Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_ORANGE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_ORANGE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_PINK
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_PINK Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_PURPLE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_PURPLE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_RED
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_RED Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_WHITE
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_WHITE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.GLASS_PANES_YELLOW
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  GLASS_PANES_YELLOW Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.SAND_COLORLESS
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  SAND_COLORLESS Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Blocks.STORAGE_BLOCKS_QUARTZ
+         -> net/neoforged/neoforge/common/Tags$Blocks  has no  STORAGE_BLOCKS_QUARTZ Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_BLACK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_BLACK Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_BLUE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_BLUE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_BROWN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_BROWN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_CYAN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_CYAN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_GRAY
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_GRAY Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_GREEN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_GREEN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_LIGHT_BLUE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_LIGHT_BLUE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_LIGHT_GRAY
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_LIGHT_GRAY Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_MAGENTA
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_MAGENTA Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_ORANGE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_ORANGE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_BLUE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_BLUE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_BROWN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_BROWN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_CYAN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_CYAN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_GRAY
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_GRAY Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_GREEN
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_GREEN Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_LIGHT_BLUE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_LIGHT_BLUE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_LIGHT_GRAY
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_LIGHT_GRAY Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_LIME
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_LIME Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_MAGENTA
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_MAGENTA Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_ORANGE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_ORANGE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_PINK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_PINK Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_PURPLE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_PURPLE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_RED
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_RED Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_WHITE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_WHITE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PANES_YELLOW
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PANES_YELLOW Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PINK
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PINK Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_PURPLE
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_PURPLE Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.GLASS_YELLOW
+         -> net/neoforged/neoforge/common/Tags$Items  has no  GLASS_YELLOW Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/Tags$Items.STORAGE_BLOCKS_AMETHYST
+         -> net/neoforged/neoforge/common/Tags$Items  has no  STORAGE_BLOCKS_AMETHYST Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/common/util/FakePlayer.f_19853_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_19853_ Lnet/minecraft/world/level/Level;
+    1  net/minecraftforge/common/util/FakePlayer.f_20922_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_20922_ I
+    1  net/minecraftforge/common/util/FakePlayer.f_36093_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_36093_ Lnet/minecraft/world/entity/player/Inventory;
+    1  net/minecraftforge/common/util/FakePlayer.f_36096_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_36096_ Lnet/minecraft/world/inventory/AbstractContainerMenu;
+    1  net/minecraftforge/common/util/FakePlayer.f_8906_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_8906_ Lnet/minecraft/server/network/ServerGamePacketListenerImpl;
+    1  net/minecraftforge/common/util/FakePlayer.f_8940_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  f_8940_ I
+    1  net/minecraftforge/items/SlotItemHandler.f_40220_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  f_40220_ I
+    1  net/minecraftforge/items/SlotItemHandler.f_40221_
+         -> net/neoforged/neoforge/items/SlotItemHandler  has no  f_40221_ I
+    1  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$BossEventProgress.getPartialTick
+         -> net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$BossEventProgress  has no  getPartialTick ()F
+    1  net/minecraftforge/client/event/CustomizeGuiOverlayEvent$DebugText.isCanceled
+         -> net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$DebugText  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/InputEvent$Key.isCanceled
+         -> net/neoforged/neoforge/client/event/InputEvent$Key  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/InputEvent$MouseButton$Pre.isCancelable
+         -> net/neoforged/neoforge/client/event/InputEvent$MouseButton$Pre  has no  isCancelable ()Z
+    1  net/minecraftforge/client/event/InputEvent$MouseScrollingEvent.isCancelable
+         -> net/neoforged/neoforge/client/event/InputEvent$MouseScrollingEvent  has no  isCancelable ()Z
+    1  net/minecraftforge/client/event/RenderGuiEvent$Post.isCanceled
+         -> net/neoforged/neoforge/client/event/RenderGuiEvent$Post  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/RenderGuiEvent$Pre.getPartialTick
+         -> net/neoforged/neoforge/client/event/RenderGuiEvent$Pre  has no  getPartialTick ()F
+    1  net/minecraftforge/client/event/RenderGuiEvent$Pre.getWindow
+         -> net/neoforged/neoforge/client/event/RenderGuiEvent$Pre  has no  getWindow ()Lcom/mojang/blaze3d/platform/Window;
+    1  net/minecraftforge/client/event/RenderGuiEvent$Pre.isCancelable
+         -> net/neoforged/neoforge/client/event/RenderGuiEvent$Pre  has no  isCancelable ()Z
+    1  net/minecraftforge/client/event/RenderLevelStageEvent.isCanceled
+         -> net/neoforged/neoforge/client/event/RenderLevelStageEvent  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/RenderLivingEvent.setCanceled
+         -> net/neoforged/neoforge/client/event/RenderLivingEvent  has no  setCanceled (Z)V
+    1  net/minecraftforge/client/event/ScreenEvent$CharacterTyped.isCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$CharacterTyped  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/ScreenEvent$KeyPressed.isCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$KeyPressed  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/ScreenEvent$MouseButtonPressed$Post.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseButtonPressed$Post  has no  setCanceled (Z)V
+    1  net/minecraftforge/client/event/ScreenEvent$MouseButtonPressed.isCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseButtonPressed  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/ScreenEvent$MouseButtonPressed.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseButtonPressed  has no  setCanceled (Z)V
+    1  net/minecraftforge/client/event/ScreenEvent$MouseButtonReleased$Post.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseButtonReleased$Post  has no  setCanceled (Z)V
+    1  net/minecraftforge/client/event/ScreenEvent$MouseDragged$Post.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseDragged$Post  has no  setCanceled (Z)V
+    1  net/minecraftforge/client/event/ScreenEvent$MouseScrolled.getScrollDelta
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled  has no  getScrollDelta ()D
+    1  net/minecraftforge/client/event/ScreenEvent$MouseScrolled.isCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled  has no  isCanceled ()Z
+    1  net/minecraftforge/client/event/ScreenEvent$MouseScrolled.setCanceled
+         -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled  has no  setCanceled (Z)V
+    1  net/minecraftforge/client/event/ViewportEvent$RenderFog.setResult
+         -> net/neoforged/neoforge/client/event/ViewportEvent$RenderFog  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/client/model/CompositeModel$Baked$Builder.addQuads
+         -> net/neoforged/neoforge/client/model/CompositeModel$Baked$Builder  has no  addQuads (Lnet/minecraftforge/client/RenderTypeGroup;[Lnet/minecraft/client/renderer/block/model/BakedQuad;)Lnet/neoforged/neoforge/client/model/CompositeModel$Baked$Builder;
+    1  net/minecraftforge/client/model/DynamicFluidContainerModel.getLayerRenderTypes
+         -> net/neoforged/neoforge/client/model/DynamicFluidContainerModel  has no  getLayerRenderTypes (Z)Lnet/minecraftforge/client/RenderTypeGroup;
+    1  net/minecraftforge/client/model/IModelBuilder.of
+         -> net/neoforged/neoforge/client/model/IModelBuilder  has no  of (ZZZLnet/minecraft/client/renderer/block/model/ItemTransforms;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraftforge/client/RenderTypeGroup;)Lnet/neoforged/neoforge/client/model/IModelBuilder;
+    1  net/minecraftforge/client/model/data/ModelData.hashCode
+         -> net/neoforged/neoforge/client/model/data/ModelData  has no  hashCode ()I
+    1  net/minecraftforge/client/model/data/ModelDataManager.getAt
+         -> net/neoforged/neoforge/client/model/data/ModelDataManager  has no  getAt (Lnet/minecraft/world/level/ChunkPos;)Ljava/util/Map;
+    1  net/minecraftforge/client/model/generators/BlockStateProvider.m_213708_
+         -> net/neoforged/neoforge/client/model/generators/BlockStateProvider  has no  m_213708_ (Lnet/minecraft/data/CachedOutput;)Ljava/util/concurrent/CompletableFuture;
+    1  net/minecraftforge/client/model/generators/BlockStateProvider.m_6055_
+         -> net/neoforged/neoforge/client/model/generators/BlockStateProvider  has no  m_6055_ ()Ljava/lang/String;
+    1  net/minecraftforge/client/model/generators/ModelBuilder$FaceRotation.ordinal
+         -> net/neoforged/neoforge/client/model/generators/ModelBuilder$FaceRotation  has no  ordinal ()I
+    1  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.createUnbakedItemElements
+         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemElements (ILnet/minecraft/client/renderer/texture/SpriteContents;Lnet/neoforged/neoforge/client/model/ForgeFaceData;)Ljava/util/List;
+    1  net/minecraftforge/client/model/obj/ObjModel.bake
+         -> net/neoforged/neoforge/client/model/obj/ObjModel  has no  bake (Lnet/neoforged/neoforge/client/model/geometry/IGeometryBakingContext;Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/BakedModel;
+    1  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_141991_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_141991_ ()V
+    1  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_252986_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_252986_ (Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_7122_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_7122_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_7404_
+         -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer  has no  m_7404_ (IIII)V
+    1  net/minecraftforge/client/settings/KeyModifier.equals
+         -> net/neoforged/neoforge/client/settings/KeyModifier  has no  equals (Ljava/lang/Object;)Z
+    1  net/minecraftforge/client/settings/KeyModifier.name
+         -> net/neoforged/neoforge/client/settings/KeyModifier  has no  name ()Ljava/lang/String;
+    1  net/minecraftforge/common/data/BlockTagsProvider.m_6055_
+         -> net/neoforged/neoforge/common/data/BlockTagsProvider  has no  m_6055_ ()Ljava/lang/String;
+    1  net/minecraftforge/common/data/LanguageProvider.m_213708_
+         -> net/neoforged/neoforge/common/data/LanguageProvider  has no  m_213708_ (Lnet/minecraft/data/CachedOutput;)Ljava/util/concurrent/CompletableFuture;
+    1  net/minecraftforge/common/data/LanguageProvider.m_6055_
+         -> net/neoforged/neoforge/common/data/LanguageProvider  has no  m_6055_ ()Ljava/lang/String;
+    1  net/minecraftforge/common/util/BlockSnapshot.restore
+         -> net/neoforged/neoforge/common/util/BlockSnapshot  has no  restore (Z)Z
+    1  net/minecraftforge/common/util/FakePlayer.m_142687_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_142687_ (Lnet/minecraft/world/entity/Entity$RemovalReason;)V
+    1  net/minecraftforge/common/util/FakePlayer.m_146926_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_146926_ (F)V
+    1  net/minecraftforge/common/util/FakePlayer.m_19879_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_19879_ ()I
+    1  net/minecraftforge/common/util/FakePlayer.m_19890_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_19890_ (DDDFF)V
+    1  net/minecraftforge/common/util/FakePlayer.m_20182_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20182_ ()Lnet/minecraft/world/phys/Vec3;
+    1  net/minecraftforge/common/util/FakePlayer.m_20193_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20193_ ()Lnet/minecraft/world/level/Level;
+    1  net/minecraftforge/common/util/FakePlayer.m_20225_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20225_ (Z)V
+    1  net/minecraftforge/common/util/FakePlayer.m_20258_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20258_ (Lnet/minecraft/nbt/CompoundTag;)V
+    1  net/minecraftforge/common/util/FakePlayer.m_20260_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_20260_ (Z)V
+    1  net/minecraftforge/common/util/FakePlayer.m_21133_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_21133_ (Lnet/minecraft/world/entity/ai/attributes/Attribute;)D
+    1  net/minecraftforge/common/util/FakePlayer.m_21335_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_21335_ (Lnet/minecraft/world/entity/Entity;)V
+    1  net/minecraftforge/common/util/FakePlayer.m_217043_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_217043_ ()Lnet/minecraft/util/RandomSource;
+    1  net/minecraftforge/common/util/FakePlayer.m_284535_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_284535_ (Lnet/minecraft/world/level/Level;)V
+    1  net/minecraftforge/common/util/FakePlayer.m_36333_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_36333_ ()F
+    1  net/minecraftforge/common/util/FakePlayer.m_36335_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_36335_ ()Lnet/minecraft/world/item/ItemCooldowns;
+    1  net/minecraftforge/common/util/FakePlayer.m_6374_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_6374_ ()Lnet/minecraft/core/Direction;
+    1  net/minecraftforge/common/util/FakePlayer.m_6853_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_6853_ (Z)V
+    1  net/minecraftforge/common/util/FakePlayer.m_7618_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_7618_ (Lnet/minecraft/commands/arguments/EntityAnchorArgument$Anchor;Lnet/minecraft/world/phys/Vec3;)V
+    1  net/minecraftforge/common/util/FakePlayer.m_7678_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_7678_ (DDDFF)V
+    1  net/minecraftforge/common/util/FakePlayer.m_8960_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_8960_ ()Lnet/minecraft/server/PlayerAdvancements;
+    1  net/minecraftforge/common/util/FakePlayer.m_9217_
+         -> net/neoforged/neoforge/common/util/FakePlayer  has no  m_9217_ ()V
+    1  net/minecraftforge/common/world/BiomeModifier$Phase.equals
+         -> net/neoforged/neoforge/common/world/BiomeModifier$Phase  has no  equals (Ljava/lang/Object;)Z
+    1  net/minecraftforge/common/world/BiomeModifier$Phase.ordinal
+         -> net/neoforged/neoforge/common/world/BiomeModifier$Phase  has no  ordinal ()I
+    1  net/minecraftforge/event/AnvilUpdateEvent.getCost
+         -> net/neoforged/neoforge/event/AnvilUpdateEvent  has no  getCost ()I
+    1  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.accept
+         -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  accept (Ljava/util/function/Supplier;Lnet/minecraft/world/item/CreativeModeTab$TabVisibility;)V
+    1  net/minecraftforge/event/ItemAttributeModifierEvent.removeAttribute
+         -> net/neoforged/neoforge/event/ItemAttributeModifierEvent  has no  removeAttribute (Lnet/minecraft/world/entity/ai/attributes/Attribute;)Ljava/util/Collection;
+    1  net/minecraftforge/event/TagsUpdatedEvent$UpdateCause.ordinal
+         -> net/neoforged/neoforge/event/TagsUpdatedEvent$UpdateCause  has no  ordinal ()I
+    1  net/minecraftforge/event/entity/EntityAttributeModificationEvent.has
+         -> net/neoforged/neoforge/event/entity/EntityAttributeModificationEvent  has no  has (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/ai/attributes/Attribute;)Z
+    1  net/minecraftforge/event/entity/EntityEvent$Size.getNewEyeHeight
+         -> net/neoforged/neoforge/event/entity/EntityEvent$Size  has no  getNewEyeHeight ()F
+    1  net/minecraftforge/event/entity/EntityMobGriefingEvent.getResult
+         -> net/neoforged/neoforge/event/entity/EntityMobGriefingEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/EntityMountEvent.setResult
+         -> net/neoforged/neoforge/event/entity/EntityMountEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/living/LivingAttackEvent.setResult
+         -> net/neoforged/neoforge/event/entity/living/LivingIncomingDamageEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/living/LivingBreatheEvent.setCanRefillAir
+         -> net/neoforged/neoforge/event/entity/living/LivingBreatheEvent  has no  setCanRefillAir (Z)V
+    1  net/minecraftforge/event/entity/living/LivingConversionEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingConversionEvent  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/living/LivingConversionEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingConversionEvent  has no  setCanceled (Z)V
+    1  net/minecraftforge/event/entity/living/LivingDeathEvent.setResult
+         -> net/neoforged/neoforge/event/entity/living/LivingDeathEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/living/LivingEntityUseItemEvent$Finish.getResult
+         -> net/neoforged/neoforge/event/entity/living/LivingEntityUseItemEvent$Finish  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/living/LivingEntityUseItemEvent$Start.setResult
+         -> net/neoforged/neoforge/event/entity/living/LivingEntityUseItemEvent$Start  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/living/LivingEntityUseItemEvent.isCancelable
+         -> net/neoforged/neoforge/event/entity/living/LivingEntityUseItemEvent  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/living/LivingEntityUseItemEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingEntityUseItemEvent  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/living/LivingEntityUseItemEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/living/LivingEntityUseItemEvent  has no  setCanceled (Z)V
+    1  net/minecraftforge/event/entity/living/MobEffectEvent$Added.isCanceled
+         -> net/neoforged/neoforge/event/entity/living/MobEffectEvent$Added  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/living/MobEffectEvent$Applicable.getResult
+         -> net/neoforged/neoforge/event/entity/living/MobEffectEvent$Applicable  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/living/MobEffectEvent$Applicable.isCanceled
+         -> net/neoforged/neoforge/event/entity/living/MobEffectEvent$Applicable  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/living/MobEffectEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/living/MobEffectEvent  has no  setCanceled (Z)V
+    1  net/minecraftforge/event/entity/living/MobSpawnEvent$SpawnPlacementCheck.setResult
+         -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$SpawnPlacementCheck  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/living/MobSpawnEvent.getResult
+         -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/living/MobSpawnEvent.setResult
+         -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/living/ShieldBlockEvent.shieldTakesDamage
+         -> net/neoforged/neoforge/event/entity/living/LivingShieldBlockEvent  has no  shieldTakesDamage ()Z
+    1  net/minecraftforge/event/entity/player/AttackEntityEvent.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/AttackEntityEvent  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/BonemealEvent.getResult
+         -> net/neoforged/neoforge/event/entity/player/BonemealEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/player/CriticalHitEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/player/CriticalHitEvent  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/player/EntityItemPickupEvent.getResult
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/player/PlayerEvent$ItemPickupEvent.getOriginalEntity
+         -> net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Post  has no  getOriginalEntity ()Lnet/minecraft/world/entity/item/ItemEntity;
+    1  net/minecraftforge/event/entity/player/PlayerEvent$StartTracking.isCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerEvent$StartTracking  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/player/PlayerEvent.isCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerEvent  has no  isCanceled ()Z
+    1  net/minecraftforge/event/entity/player/PlayerEvent.setCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerEvent  has no  setCanceled (Z)V
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$EntityInteract.getSide
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$EntityInteract  has no  getSide ()Lnet/minecraftforge/fml/LogicalSide;
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$EntityInteract.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$EntityInteract  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$EntityInteractSpecific.setResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$EntityInteractSpecific  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.getResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickBlock.setUseBlock
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickBlock  has no  setUseBlock (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty.getCancellationResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty  has no  getCancellationResult ()Lnet/minecraft/world/InteractionResult;
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty.setCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty  has no  setCanceled (Z)V
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty.setCancellationResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$LeftClickEmpty  has no  setCancellationResult (Lnet/minecraft/world/InteractionResult;)V
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickBlock  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickEmpty.getCancellationResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickEmpty  has no  getCancellationResult ()Lnet/minecraft/world/InteractionResult;
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickEmpty.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickEmpty  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickEmpty.setCanceled
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickEmpty  has no  setCanceled (Z)V
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickItem.getSide
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickItem  has no  getSide ()Lnet/minecraftforge/fml/LogicalSide;
+    1  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickItem.isCancelable
+         -> net/neoforged/neoforge/event/entity/player/PlayerInteractEvent$RightClickItem  has no  isCancelable ()Z
+    1  net/minecraftforge/event/entity/player/PlayerSpawnPhantomsEvent.getResult
+         -> net/neoforged/neoforge/event/entity/player/PlayerSpawnPhantomsEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/level/BlockEvent$BreakEvent.getResult
+         -> net/neoforged/neoforge/event/level/BlockEvent$BreakEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/level/BlockEvent$BreakEvent.isCancelable
+         -> net/neoforged/neoforge/event/level/BlockEvent$BreakEvent  has no  isCancelable ()Z
+    1  net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Pre.setResult
+         -> net/neoforged/neoforge/event/level/block/CropGrowEvent$Pre  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/level/BlockEvent$EntityPlaceEvent.isCancelable
+         -> net/neoforged/neoforge/event/level/BlockEvent$EntityPlaceEvent  has no  isCancelable ()Z
+    1  net/minecraftforge/event/level/ExplosionEvent$Detonate.isCanceled
+         -> net/neoforged/neoforge/event/level/ExplosionEvent$Detonate  has no  isCanceled ()Z
+    1  net/minecraftforge/event/level/NoteBlockEvent$Note.ordinal
+         -> net/neoforged/neoforge/event/level/NoteBlockEvent$Note  has no  ordinal ()I
+    1  net/minecraftforge/event/level/SaplingGrowTreeEvent.setResult
+         -> net/neoforged/neoforge/event/level/BlockGrowFeatureEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/event/village/VillageSiegeEvent.getResult
+         -> net/neoforged/neoforge/event/village/VillageSiegeEvent  has no  getResult ()Lnet/minecraftforge/eventbus/api/Event$Result;
+    1  net/minecraftforge/event/village/VillageSiegeEvent.isCancelable
+         -> net/neoforged/neoforge/event/village/VillageSiegeEvent  has no  isCancelable ()Z
+    1  net/minecraftforge/event/village/VillageSiegeEvent.setResult
+         -> net/neoforged/neoforge/event/village/VillageSiegeEvent  has no  setResult (Lnet/minecraftforge/eventbus/api/Event$Result;)V
+    1  net/minecraftforge/eventbus/api/EventPriority.equals
+         -> net/neoforged/bus/api/EventPriority  has no  equals (Ljava/lang/Object;)Z
+    1  net/minecraftforge/eventbus/api/EventPriority.name
+         -> net/neoforged/bus/api/EventPriority  has no  name ()Ljava/lang/String;
+    1  net/minecraftforge/eventbus/api/EventPriority.ordinal
+         -> net/neoforged/bus/api/EventPriority  has no  ordinal ()I
+    1  net/minecraftforge/fluids/FluidStack.getChildTag
+         -> net/neoforged/neoforge/fluids/FluidStack  has no  getChildTag (Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;
+    1  net/minecraftforge/fluids/FluidType.getSound
+         -> net/neoforged/neoforge/fluids/FluidType  has no  getSound (Lnet/minecraft/world/entity/Entity;Lnet/minecraftforge/common/SoundAction;)Lnet/minecraft/sounds/SoundEvent;
+    1  net/minecraftforge/fluids/capability/IFluidHandler$FluidAction.ordinal
+         -> net/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction  has no  ordinal ()I
+    1  net/minecraftforge/fluids/capability/templates/FluidHandlerItemStack.getCapability
+         -> net/neoforged/neoforge/fluids/capability/templates/FluidHandlerItemStack  has no  getCapability (Lnet/neoforged/neoforge/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+    1  net/minecraftforge/fml/ModContainer.dispatchConfigEvent
+         -> net/neoforged/fml/ModContainer  has no  dispatchConfigEvent (Lnet/minecraftforge/fml/config/IConfigEvent;)V
+    1  net/minecraftforge/fml/ModContainer.getMod
+         -> net/neoforged/fml/ModContainer  has no  getMod ()Ljava/lang/Object;
+    1  net/minecraftforge/fml/loading/FMLLoader.addAccessTransformer
+         -> net/neoforged/fml/loading/FMLLoader  has no  addAccessTransformer (Ljava/nio/file/Path;Lnet/minecraftforge/fml/loading/moddiscovery/ModFile;)V
+    1  net/minecraftforge/fml/util/ObfuscationReflectionHelper$UnableToFindMethodException.printStackTrace
+         -> net/neoforged/fml/util/ObfuscationReflectionHelper$UnableToFindMethodException  has no  printStackTrace ()V
+    1  net/minecraftforge/forgespi/language/ModFileScanData.addLanguageLoader
+         -> net/neoforged/neoforgespi/language/ModFileScanData  has no  addLanguageLoader (Ljava/util/Map;)V
+    1  net/minecraftforge/forgespi/language/ModFileScanData.getTargets
+         -> net/neoforged/neoforgespi/language/ModFileScanData  has no  getTargets ()Ljava/util/Map;
+    1  net/minecraftforge/server/ServerLifecycleHooks.buildPackFinder
+         -> net/neoforged/neoforge/server/ServerLifecycleHooks  has no  buildPackFinder (Ljava/util/Map;)Lnet/minecraft/server/packs/repository/RepositorySource;
+
+=== RENAMES ONTO AN ABSTRACT TYPE (11) ===
+These resolve and then do nothing if the type is an event: the bus
+dispatches by exact class and nothing posts an abstract one. Check
+each against the Pre/Post pair that replaced it.
+   10  net/minecraftforge/client/event/ScreenEvent$Init  -> net/neoforged/neoforge/client/event/ScreenEvent$Init  (has Pre/Post)
+    5  net/minecraftforge/client/event/RenderLivingEvent  -> net/neoforged/neoforge/client/event/RenderLivingEvent  (has Pre/Post)
+    4  net/minecraftforge/client/event/InputEvent$MouseButton  -> net/neoforged/neoforge/client/event/InputEvent$MouseButton  (has Pre/Post)
+    3  net/minecraftforge/client/event/ScreenEvent$KeyPressed  -> net/neoforged/neoforge/client/event/ScreenEvent$KeyPressed  (has Pre/Post)
+    3  net/minecraftforge/client/event/ScreenEvent$Render  -> net/neoforged/neoforge/client/event/ScreenEvent$Render  (has Pre/Post)
+    2  net/minecraftforge/client/event/RenderPlayerEvent  -> net/neoforged/neoforge/client/event/RenderPlayerEvent  (has Pre/Post)
+    2  net/minecraftforge/client/event/ScreenEvent$CharacterTyped  -> net/neoforged/neoforge/client/event/ScreenEvent$CharacterTyped  (has Pre/Post)
+    2  net/minecraftforge/client/event/ScreenEvent$MouseButtonPressed  -> net/neoforged/neoforge/client/event/ScreenEvent$MouseButtonPressed  (has Pre/Post)
+    2  net/minecraftforge/client/event/ScreenEvent$MouseButtonReleased  -> net/neoforged/neoforge/client/event/ScreenEvent$MouseButtonReleased  (has Pre/Post)
+    1  net/minecraftforge/client/event/ScreenEvent$MouseScrolled  -> net/neoforged/neoforge/client/event/ScreenEvent$MouseScrolled  (has Pre/Post)
+    1  net/minecraftforge/event/entity/living/LivingConversionEvent  -> net/neoforged/neoforge/event/entity/living/LivingConversionEvent  (has Pre/Post)
 
 === UNRESOLVED ===
   164  net/minecraftforge/common/capabilities/ForgeCapabilities                  rule -> net/neoforged/neoforge/capabilities/ForgeCapabilities (MISSING)
@@ -20,12 +1039,9 @@ referenced Forge types: 792
    58  net/minecraftforge/registries/tags/ITagManager                            no shim, no rule
    53  net/minecraftforge/registries/tags/ITag                                   no shim, no rule
    48  net/minecraftforge/client/gui/overlay/VanillaGuiOverlay                   no shim, no rule
-   41  net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent        rule -> net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent (MISSING)
    40  net/minecraftforge/common/capabilities/ICapabilitySerializable            rule -> net/neoforged/neoforge/capabilities/ICapabilitySerializable (MISSING)
-   40  net/minecraftforge/event/entity/living/LivingAttackEvent                  rule -> net/neoforged/neoforge/event/entity/living/LivingAttackEvent (MISSING)
    39  net/minecraftforge/client/ForgeHooksClient                                no shim, no rule
    38  net/minecraftforge/client/event/RegisterGuiOverlaysEvent                  rule -> net/neoforged/neoforge/client/event/RegisterGuiOverlaysEvent (MISSING)
-   38  net/minecraftforge/event/entity/living/LivingHurtEvent                    rule -> net/neoforged/neoforge/event/entity/living/LivingHurtEvent (MISSING)
    37  net/minecraftforge/common/IPlantable                                      no shim, no rule
    36  net/minecraftforge/common/ForgeSpawnEggItem                               no shim, no rule
    34  net/minecraftforge/fluids/ForgeFlowingFluid$Properties                    rule -> net/neoforged/neoforge/fluids/ForgeFlowingFluid$Properties (MISSING)
@@ -44,7 +1060,6 @@ referenced Forge types: 792
    24  net/minecraftforge/common/IForgeShearable                                 no shim, no rule
    23  net/minecraftforge/common/PlantType                                       no shim, no rule
    23  net/minecraftforge/common/util/ITeleporter                                rule -> net/neoforged/neoforge/common/util/ITeleporter (MISSING)
-   23  net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn        rule -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$FinalizeSpawn (MISSING)
    23  net/minecraftforge/fluids/ForgeFlowingFluid$Flowing                       rule -> net/neoforged/neoforge/fluids/ForgeFlowingFluid$Flowing (MISSING)
    23  net/minecraftforge/fml/InterModComms$IMCMessage                           no shim, no rule  ?= net/neoforged/fml/InterModComms$IMCMessage
    22  net/minecraftforge/common/brewing/BrewingRecipeRegistry                   no shim, no rule  ?= net/neoforged/neoforge/common/brewing/BrewingRecipeRegistry
@@ -58,7 +1073,6 @@ referenced Forge types: 792
    18  net/minecraftforge/client/gui/overlay/IGuiOverlay                         no shim, no rule
    18  net/minecraftforge/common/data/ForgeAdvancementProvider$AdvancementGenerator  rule -> net/neoforged/neoforge/common/data/ForgeAdvancementProvider$AdvancementGenerator (MISSING)
    18  net/minecraftforge/common/world/ForgeBiomeModifiers$AddFeaturesBiomeModifier  no shim, no rule
-   18  net/minecraftforge/event/entity/player/EntityItemPickupEvent              rule -> net/neoforged/neoforge/event/entity/player/EntityItemPickupEvent (MISSING)
    18  net/minecraftforge/items/wrapper/EmptyHandler                             rule -> net/neoforged/neoforge/items/wrapper/EmptyHandler (MISSING)
    17  net/minecraftforge/event/TickEvent$RenderTickEvent                        rule -> net/neoforged/neoforge/event/TickEvent$RenderTickEvent (MISSING)
    17  net/minecraftforge/fluids/IFluidBlock                                     rule -> net/neoforged/neoforge/fluids/IFluidBlock (MISSING)
@@ -66,8 +1080,6 @@ referenced Forge types: 792
    15  net/minecraftforge/client/gui/overlay/NamedGuiOverlay                     no shim, no rule
    15  net/minecraftforge/common/crafting/IShapedRecipe                          no shim, no rule
    15  net/minecraftforge/entity/PartEntity                                      no shim, no rule  ?= net/neoforged/neoforge/entity/PartEntity
-   15  net/minecraftforge/event/entity/SpawnPlacementRegisterEvent               rule -> net/neoforged/neoforge/event/entity/SpawnPlacementRegisterEvent (MISSING)
-   15  net/minecraftforge/event/entity/SpawnPlacementRegisterEvent$Operation     rule -> net/neoforged/neoforge/event/entity/SpawnPlacementRegisterEvent$Operation (MISSING)
    15  net/minecraftforge/registries/MissingMappingsEvent                        no shim, no rule
    15  net/minecraftforge/registries/MissingMappingsEvent$Mapping                no shim, no rule
    14  net/minecraftforge/common/crafting/AbstractIngredient                     no shim, no rule
@@ -87,14 +1099,12 @@ referenced Forge types: 792
    10  net/minecraftforge/client/gui/widget/ExtendedButton                       no shim, no rule  ?= net/neoforged/neoforge/client/gui/widget/ExtendedButton
    10  net/minecraftforge/client/gui/widget/ForgeSlider                          no shim, no rule
    10  net/minecraftforge/common/UsernameCache                                   no shim, no rule  ?= net/neoforged/neoforge/common/UsernameCache
-   10  net/minecraftforge/event/level/SaplingGrowTreeEvent                       rule -> net/neoforged/neoforge/event/level/SaplingGrowTreeEvent (MISSING)
    10  net/minecraftforge/network/ICustomPacket                                  no shim, no rule
    10  net/minecraftforge/registries/tags/IReverseTag                            no shim, no rule
     9  net/minecraftforge/common/ForgeI18n                                       no shim, no rule
     9  net/minecraftforge/common/ForgeTier                                       no shim, no rule
     9  net/minecraftforge/common/crafting/PartialNBTIngredient                   no shim, no rule
     9  net/minecraftforge/common/extensions/IForgeBlock                          no shim, no rule
-    9  net/minecraftforge/event/entity/living/ShieldBlockEvent                   rule -> net/neoforged/neoforge/event/entity/living/ShieldBlockEvent (MISSING)
     8  net/minecraftforge/common/world/MobSpawnSettingsBuilder                   no shim, no rule  ?= net/neoforged/neoforge/common/world/MobSpawnSettingsBuilder
     8  net/minecraftforge/fml/loading/moddiscovery/ModFileInfo                   no shim, no rule  ?= net/neoforged/fml/loading/moddiscovery/ModFileInfo
     8  net/minecraftforge/network/event/EventNetworkChannel                      no shim, no rule
@@ -151,8 +1161,6 @@ referenced Forge types: 792
     3  net/minecraftforge/common/world/ClimateSettingsBuilder                    no shim, no rule  ?= net/neoforged/neoforge/common/world/ClimateSettingsBuilder
     3  net/minecraftforge/common/world/ForgeBiomeModifiers$RemoveSpawnsBiomeModifier  no shim, no rule
     3  net/minecraftforge/event/entity/living/MobSpawnEvent$AllowDespawn         rule -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$AllowDespawn (MISSING)
-    3  net/minecraftforge/event/entity/player/PlayerEvent$ItemPickupEvent        rule -> net/neoforged/neoforge/event/entity/player/PlayerEvent$ItemPickupEvent (MISSING)
-    3  net/minecraftforge/event/entity/player/PlayerSleepInBedEvent              rule -> net/neoforged/neoforge/event/entity/player/PlayerSleepInBedEvent (MISSING)
     3  net/minecraftforge/eventbus/EventBus                                      no shim, no rule  ?= net/neoforged/bus/EventBus
     3  net/minecraftforge/fml/ModLoadingWarning                                  no shim, no rule
     3  net/minecraftforge/fml/loading/FMLConfig$ConfigValue                      no shim, no rule  ?= net/neoforged/fml/loading/FMLConfig$ConfigValue
@@ -181,7 +1189,6 @@ referenced Forge types: 792
     2  net/minecraftforge/common/world/StructureModifier$Phase                   no shim, no rule  ?= net/neoforged/neoforge/common/world/StructureModifier$Phase
     2  net/minecraftforge/common/world/StructureSettingsBuilder                  no shim, no rule  ?= net/neoforged/neoforge/common/world/StructureSettingsBuilder
     2  net/minecraftforge/event/entity/ProjectileImpactEvent$ImpactResult        rule -> net/neoforged/neoforge/event/entity/ProjectileImpactEvent$ImpactResult (MISSING)
-    2  net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Post              rule -> net/neoforged/neoforge/event/level/BlockEvent$CropGrowEvent$Post (MISSING)
     2  net/minecraftforge/eventbus/ListenerList                                  no shim, no rule  ?= net/neoforged/bus/ListenerList
     2  net/minecraftforge/eventbus/api/EventListenerHelper                       no shim, no rule
     2  net/minecraftforge/fluids/capability/ItemFluidContainer                   rule -> net/neoforged/neoforge/fluids/capability/ItemFluidContainer (MISSING)
@@ -235,7 +1242,6 @@ referenced Forge types: 792
     1  net/minecraftforge/event/entity/living/PotionColorCalculationEvent        rule -> net/neoforged/neoforge/event/entity/living/PotionColorCalculationEvent (MISSING)
     1  net/minecraftforge/event/entity/living/ZombieEvent$SummonAidEvent         rule -> net/neoforged/neoforge/event/entity/living/ZombieEvent$SummonAidEvent (MISSING)
     1  net/minecraftforge/event/entity/player/SleepingLocationCheckEvent         rule -> net/neoforged/neoforge/event/entity/player/SleepingLocationCheckEvent (MISSING)
-    1  net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Pre               rule -> net/neoforged/neoforge/event/level/BlockEvent$CropGrowEvent$Pre (MISSING)
     1  net/minecraftforge/eventbus/BusBuilderImpl                                no shim, no rule  ?= net/neoforged/bus/BusBuilderImpl
     1  net/minecraftforge/eventbus/EventBusErrorMessage                          no shim, no rule  ?= net/neoforged/bus/EventBusErrorMessage
     1  net/minecraftforge/eventbus/api/BusBuilder                                no shim, no rule  ?= net/neoforged/bus/api/BusBuilder

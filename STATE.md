@@ -15,7 +15,8 @@ how this project is worked on, so it comes first.
 
 ```bash
 # The whole remaining work queue, ranked, offline, in about a minute.
-java tools/RenameGaps.java api-report/forge-api-usage.txt rules/forward.rules.tsv \
+java -cp "devenv/spi/asm.jar" tools/RenameGaps.java \
+    api-report/forge-api-usage.txt rules/forward.rules.tsv \
     forge-compat/forge-compat.jar \
     devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
     devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar \
@@ -24,7 +25,20 @@ java tools/RenameGaps.java api-report/forge-api-usage.txt rules/forward.rules.ts
 
 It lists every Forge type the 433-jar corpus references that neither a shim nor a rule
 resolves, ranked by how many jars each one blocks, with a suggested rename target where the
-platform has a class of the same name. See [api-report/README.md](api-report/README.md).
+platform has a class of the same name.
+
+**Read its warning sections before its gap list.** A rule that resolves *incorrectly* is worse
+than a missing one, because the gap report stops mentioning it and the failure moves to
+runtime. The checks caught `ICapabilityProvider` (same name, incompatible shape, 106 jars),
+`LivingDamageEvent` (renamed onto an abstract parent nothing posts, 24 jars), and withdrew a
+rule written the same hour — `LivingTickEvent` → `EntityTickEvent$Pre`, right event, but
+`getEntity()` narrowed its return type and all 41 callers would have broken. See
+[api-report/README.md](api-report/README.md).
+
+**Rule of thumb this produced:** an event NeoForge *removed* gets a link-only shim in
+forge-compat, never a rename. The mod links and the event simply never fires, which is
+accurate — there is nothing to fire it. `FillBucketEvent`, `AttachCapabilitiesEvent` and
+`LootingLevelEvent` are in this category.
 
 Why this matters: the old loop found missing classes by launching the game and reading the
 first `ClassNotFoundException` — about ten minutes per class, strictly one at a time, because
