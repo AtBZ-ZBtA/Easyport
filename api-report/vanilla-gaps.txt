@@ -2,14 +2,14 @@
 
 referenced vanilla types      3106
 member references checked     25288
-  still resolve               23221  (91.8%)
-  SIGNATURE CHANGED           1049
-  MEMBER GONE                 1018
+  still resolve               23230  (91.9%)
+  SIGNATURE CHANGED           1044
+  MEMBER GONE                 1014
 TYPE GONE                     114
 
 resolved by Holder adaptation 234  (of the "still resolve" figure)
 resolved by ARG_FILL / ARG_DROP  182  (of the "still resolve" figure)
-resolved by an explicit rule  20  (of the "still resolve" figure)
+resolved by an explicit rule  29  (of the "still resolve" figure)
 REMOVED, reported not rewritten 0  (excluded from both)
 skipped, owner type is gone   432
 skipped, name still reads SRG 1  <- mapping health; want 0
@@ -17,7 +17,7 @@ skipped, name still reads SRG 1  <- mapping health; want 0
 Jar counts, not call sites. One mod calling something forty times is
 one mod's worth of evidence.
 
-=== SIGNATURE CHANGED (1049) ===
+=== SIGNATURE CHANGED (1044) ===
 The member is still there and takes something else. This is Phase 4's central
 problem -- a vanilla type changed shape underneath the signature. Read the two
 descriptors together; the difference names the type that moved.
@@ -85,9 +85,6 @@ descriptors together; the difference names the type that moved.
    45  net/minecraft/client/renderer/texture/TextureAtlasSprite.getU
        calls (D)F
          has  (F)F
-   44  net/minecraft/world/item/SwordItem.<init>
-       calls (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
-         has  (Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;Lnet/minecraft/world/item/component/Tool;)V  |  (Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V
    43  net/minecraft/advancements/Advancement$Builder.addCriterion
        calls (Ljava/lang/String;Lnet/minecraft/advancements/CriterionTriggerInstance;)Lnet/minecraft/advancements/Advancement$Builder;
          has  (Ljava/lang/String;Lnet/minecraft/advancements/Criterion;)Lnet/minecraft/advancements/Advancement$Builder;
@@ -139,9 +136,6 @@ descriptors together; the difference names the type that moved.
    31  net/minecraft/network/FriendlyByteBuf.writeCollection
        calls (Ljava/util/Collection;Lnet/minecraft/network/FriendlyByteBuf$Writer;)V
          has  (Ljava/util/Collection;Lnet/minecraft/network/codec/StreamEncoder;)V
-   31  net/minecraft/world/item/PickaxeItem.<init>
-       calls (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
-         has  (Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V
    31  net/minecraft/world/item/enchantment/EnchantmentHelper.setEnchantments
        calls (Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V
          has  (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/enchantment/ItemEnchantments;)V
@@ -151,9 +145,6 @@ descriptors together; the difference names the type that moved.
    30  net/minecraft/client/renderer/MultiBufferSource.immediate
        calls (Lcom/mojang/blaze3d/vertex/BufferBuilder;)Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;
          has  (Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;)Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;
-   30  net/minecraft/world/item/AxeItem.<init>
-       calls (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
-         has  (Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V
    30  net/minecraft/world/item/ItemStack.getTooltipLines
        calls (Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;
          has  (Lnet/minecraft/world/item/Item$TooltipContext;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;
@@ -166,18 +157,12 @@ descriptors together; the difference names the type that moved.
    30  net/minecraft/world/level/storage/loot/functions/LootItemConditionalFunction.<init>
        calls ([Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition;)V
          has  (Ljava/util/List;)V
-   29  net/minecraft/world/item/ShovelItem.<init>
-       calls (Lnet/minecraft/world/item/Tier;FFLnet/minecraft/world/item/Item$Properties;)V
-         has  (Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V
    29  net/minecraft/world/item/enchantment/Enchantment.<init>
        calls (Lnet/minecraft/world/item/enchantment/Enchantment$Rarity;Lnet/minecraft/world/item/enchantment/EnchantmentCategory;[Lnet/minecraft/world/entity/EquipmentSlot;)V
          has  (Lnet/minecraft/network/chat/Component;Lnet/minecraft/world/item/enchantment/Enchantment$EnchantmentDefinition;Lnet/minecraft/core/HolderSet;Lnet/minecraft/core/component/DataComponentMap;)V
    28  net/minecraft/world/entity/Entity.getCapability
        calls (Lnet/minecraftforge/common/capabilities/Capability;)Lnet/minecraftforge/common/util/LazyOptional;
          has  (Lnet/neoforged/neoforge/capabilities/EntityCapability;Ljava/lang/Object;)Ljava/lang/Object;  |  (Lnet/neoforged/neoforge/capabilities/EntityCapability;)Ljava/lang/Object;
-   28  net/minecraft/world/item/HoeItem.<init>
-       calls (Lnet/minecraft/world/item/Tier;IFLnet/minecraft/world/item/Item$Properties;)V
-         has  (Lnet/minecraft/world/item/Tier;Lnet/minecraft/world/item/Item$Properties;)V
    28  net/minecraft/world/level/gameevent/GameEvent.ENTITY_PLACE
        calls Lnet/minecraft/world/level/gameevent/GameEvent;
          has  Lnet/minecraft/core/Holder$Reference;
@@ -1648,7 +1633,7 @@ descriptors together; the difference names the type that moved.
 
        ... and 508 more used by fewer than 3 jars
 
-=== MEMBER GONE (1018) ===
+=== MEMBER GONE (1014) ===
 No member of that name survives on the owner. Needs a rename rule, a bridge, or
 a REMOVED entry so the translate report names it rather than the JVM.
 
@@ -1684,8 +1669,6 @@ a REMOVED entry so the translate report names it rather than the JVM.
        calls (Lnet/minecraft/network/chat/Component;)Lnet/minecraft/world/item/ItemStack;
    58  net/minecraft/network/syncher/SynchedEntityData.define
        calls (Lnet/minecraft/network/syncher/EntityDataAccessor;Ljava/lang/Object;)V
-   57  net/minecraft/world/food/FoodProperties$Builder.saturationMod
-       calls (F)Lnet/minecraft/world/food/FoodProperties$Builder;
    51  net/minecraft/world/item/ItemStack.getOrCreateTagElement
        calls (Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;
    50  net/minecraft/world/item/enchantment/Enchantments.BLOCK_FORTUNE
@@ -1813,8 +1796,6 @@ a REMOVED entry so the translate report names it rather than the JVM.
    19  net/minecraft/core/registries/BuiltInRegistries.ENCHANTMENT
        calls Lnet/minecraft/core/Registry;
          (field)
-   19  net/minecraft/world/entity/EntityType$Builder.setCustomClientFactory
-       calls (Ljava/util/function/BiFunction;)Lnet/minecraft/world/entity/EntityType$Builder;
    19  net/minecraft/world/entity/EquipmentSlot$Type.ARMOR
        calls Lnet/minecraft/world/entity/EquipmentSlot$Type;
          (field)
@@ -2092,9 +2073,6 @@ a REMOVED entry so the translate report names it rather than the JVM.
        calls ()Z
     6  net/minecraft/world/item/ArmorMaterial.getToughness
        calls ()F
-    6  net/minecraft/world/item/Item.BASE_ATTACK_DAMAGE_UUID
-       calls Ljava/util/UUID;
-         (field)
     6  net/minecraft/world/item/ItemStack.canApplyAtEnchantingTable
        calls (Lnet/minecraft/world/item/enchantment/Enchantment;)Z
     6  net/minecraft/world/item/ItemStack.readShareTag
@@ -2169,9 +2147,6 @@ a REMOVED entry so the translate report names it rather than the JVM.
        calls ()F
     5  net/minecraft/world/item/CrossbowItem.containsChargedProjectile
        calls (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/Item;)Z
-    5  net/minecraft/world/item/Item.BASE_ATTACK_SPEED_UUID
-       calls Ljava/util/UUID;
-         (field)
     5  net/minecraft/world/item/Item.getRarity
        calls (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/Rarity;
     5  net/minecraft/world/item/Item.getShareTag
@@ -2610,9 +2585,9 @@ head of this list, not the head of the lists above.
      281      8     24  net/minecraft/world/item/enchantment/EnchantmentHelper
      236     37      4  net/minecraft/world/level/gameevent/GameEvent
      233      4      0  net/minecraft/data/recipes/ShapedRecipeBuilder
-     229     10     26  net/minecraft/world/item/Item
      221      5     28  net/minecraft/world/entity/player/Player
      219      6     10  net/minecraft/world/item/crafting/ShapedRecipe
+     218     10     24  net/minecraft/world/item/Item
      210      9      4  net/minecraft/advancements/Advancement$Builder
      199      7     24  net/minecraft/world/entity/Entity
      179      4      0  net/minecraft/data/recipes/ShapelessRecipeBuilder
@@ -2623,7 +2598,6 @@ head of this list, not the head of the lists above.
      130      2      2  net/minecraft/nbt/NbtUtils
      123      8      1  net/minecraft/world/item/crafting/RecipeManager
      115      4      1  net/minecraft/world/item/crafting/CraftingRecipe
-     111      0      3  net/minecraft/world/food/FoodProperties$Builder
      108      1      2  net/minecraft/world/level/block/state/BlockBehaviour$Properties
      100      9      6  net/minecraft/world/level/block/state/BlockState
       95      4      0  net/minecraft/data/recipes/RecipeProvider
@@ -2634,7 +2608,6 @@ head of this list, not the head of the lists above.
       83      1      9  net/minecraft/client/Minecraft
       80      0      5  net/minecraft/world/food/FoodProperties
       70      2      6  net/minecraft/advancements/critereon/ItemPredicate
-      70      4      4  net/minecraft/world/item/SwordItem
       69      1      0  net/minecraft/data/loot/LootTableProvider
       64      3      0  net/minecraft/advancements/critereon/InventoryChangeTrigger$TriggerInstance
       64      1      4  net/minecraft/network/syncher/SynchedEntityData
@@ -2646,6 +2619,7 @@ head of this list, not the head of the lists above.
       56      5      0  net/minecraft/nbt/NbtIo
       56      3      6  net/minecraft/world/effect/MobEffect
       55      4      1  net/minecraft/world/item/crafting/ShapelessRecipe
+      54      0      2  net/minecraft/world/food/FoodProperties$Builder
       53      2      8  net/minecraft/advancements/Advancement
       53      3      7  net/minecraft/world/item/BlockItem
       53      1      3  net/minecraft/world/item/BucketItem
@@ -2655,7 +2629,6 @@ head of this list, not the head of the lists above.
       46      3      4  net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity
       44      0      4  net/minecraft/core/Holder$Reference
       42      5      8  net/minecraft/world/item/ArmorItem
-      42      3      2  net/minecraft/world/item/PickaxeItem
       42      6      1  net/minecraft/world/item/trading/MerchantOffer
       41      0      3  net/minecraft/core/Holder
       41      8      0  net/minecraft/core/cauldron/CauldronInteraction
@@ -2668,13 +2641,10 @@ head of this list, not the head of the lists above.
       39      7      6  net/minecraft/world/level/Level
       38      7     12  net/minecraft/server/level/ServerPlayer
       37      3      0  net/minecraft/data/recipes/SpecialRecipeBuilder
-      37      3      2  net/minecraft/world/item/AxeItem
-      37      3      2  net/minecraft/world/item/ShovelItem
       37      2      1  net/minecraft/world/level/block/TrapDoorBlock
       35      2      0  net/minecraft/client/renderer/MultiBufferSource
       34      1      1  net/minecraft/advancements/CriteriaTriggers
       34      2      4  net/minecraft/world/effect/MobEffectInstance
-      34      3      1  net/minecraft/world/item/HoeItem
       33      2      1  net/minecraft/client/gui/screens/Screen
       33      4      0  net/minecraft/client/renderer/entity/MobRenderer
       33      3      0  net/minecraft/data/recipes/SmithingTransformRecipeBuilder
@@ -2699,6 +2669,7 @@ head of this list, not the head of the lists above.
       26      2      0  net/minecraft/client/gui/screens/inventory/AbstractContainerScreen
       26      1      2  net/minecraft/client/renderer/GameRenderer
       26      0      1  net/minecraft/world/item/DyeColor
+      26      3      4  net/minecraft/world/item/SwordItem
       26      2      1  net/minecraft/world/item/crafting/SmeltingRecipe
       26      4      1  net/minecraft/world/level/block/BaseEntityBlock
       25      0      6  net/minecraft/advancements/critereon/LocationPredicate
@@ -2731,7 +2702,6 @@ head of this list, not the head of the lists above.
       19      0      6  net/minecraft/client/renderer/RenderType
       19      0      3  net/minecraft/client/resources/DefaultPlayerSkin
       19      0      4  net/minecraft/client/resources/SkinManager
-      19      0      1  net/minecraft/world/entity/EntityType$Builder
       19      0      1  net/minecraft/world/entity/EquipmentSlot$Type
       19      1      5  net/minecraft/world/item/alchemy/PotionBrewing
       18      5      0  net/minecraft/client/gui/components/MultiLineLabel
@@ -2792,6 +2762,7 @@ head of this list, not the head of the lists above.
       12      0      5  net/minecraft/world/level/block/entity/DispenserBlockEntity
       12      2      1  net/minecraft/world/level/storage/loot/ValidationContext
       11      5      0  net/minecraft/world/entity/vehicle/AbstractMinecart
+      11      2      2  net/minecraft/world/item/PickaxeItem
       11      2      0  net/minecraft/world/item/SmithingTemplateItem
       11      1      0  net/minecraft/world/item/crafting/CraftingBookCategory
       11      3      0  net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement

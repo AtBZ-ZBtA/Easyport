@@ -325,14 +325,14 @@ Evidence, all reproducible:
 |---|---|---|
 | Libraries loading | 4 / 8 | **6 / 8** |
 | Libraries + sampled mods that type-check clean | 5 / 22 | **22 / 22** |
-| Vanilla member references that resolve | 89.3% | **91.8%** |
+| Vanilla member references that resolve | 89.3% | **91.9%** |
 | Vanilla types deleted with no stand-in | 126 | 114 |
 
-**Read the percentage last, not first.** It moved 2.5 points and that understates the phase badly,
+**Read the percentage last, not first.** It moved 2.6 points and that understates the phase badly,
 because it is dominated by the enormous majority of references that never broke. The rows above
 it are the ones that mean anything: what actually changed is that mods which could not load now
-load. Of the 436 references the phase fixed, 416 came from the passes that need no rules at all
-(`Holder` 234, arity 182) and only 20 from explicit rules — running the current transformer
+load. Of the 445 references the phase fixed, 416 came from the passes that need no rules at all
+(`Holder` 234, arity 182) and only 29 from explicit rules — running the current transformer
 against the *Phase 3* rule set still scores 91.5%.
 
 That is worth knowing before writing more rules: on the vanilla side, the leverage has been in

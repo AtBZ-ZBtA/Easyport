@@ -88,18 +88,18 @@ sign-off:
 | Forge side | |
 |---|---|
 | Referenced Forge types | 792 |
-| Resolved by forge-compat | 86 |
-| Resolved by a rule | 588 |
-| **Unresolved** | **118** |
+| Resolved by forge-compat | 88 |
+| Resolved by a rule | 587 |
+| **Unresolved** | **117** |
 
 | Vanilla side | |
 |---|---|
 | Member references checked | 25,288 |
-| **Still resolve** | **23,221 — 91.8%** |
+| **Still resolve** | **23,230 — 91.9%** |
 | of which, by Holder adaptation | 234 |
 | of which, by `ARG_FILL` / `ARG_DROP` | 182 |
-| Signature changed | 1,049 |
-| Member gone | 1,018 |
+| Signature changed | 1,044 |
+| Member gone | 1,014 |
 | Types deleted outright | 114 |
 
 The head of the distribution is done: the event bus, mod-loading context, registries, config,

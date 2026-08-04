@@ -1,14 +1,9 @@
 referenced Forge types: 792
-  resolved by forge-compat: 86
-  resolved by a rule:       588
-  UNRESOLVED:               118
+  resolved by forge-compat: 88
+  resolved by a rule:       587
+  UNRESOLVED:               117
 
-=== SHIMS SHADOWED BY A RULE (1) ===
-A rule redirects these to a real platform class, so forge-compat's
-version is never reached. Check each is deliberate.
-   49  net/minecraftforge/common/crafting/conditions/ICondition  -> net/neoforged/neoforge/common/conditions/ICondition
-
-=== RENAME TARGET MISSING A CALLED MEMBER (427) ===
+=== RENAME TARGET MISSING A CALLED MEMBER (426) ===
 The rule resolves, but the target does not have what the corpus
 calls on it. Each is a NoSuchMethodError or AbstractMethodError
 waiting to happen -- convert the rule to a shim, or drop it.
@@ -30,8 +25,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/common/Tags$Items  has no  STONE Lnet/minecraft/tags/TagKey;
    34  net/minecraftforge/fluids/FluidStack.writeToNBT
          -> net/neoforged/neoforge/fluids/FluidStack  has no  writeToNBT (Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;
-   33  net/minecraftforge/common/crafting/CraftingHelper.register
-         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  register (Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;)Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;
    31  net/minecraftforge/common/crafting/CraftingHelper.register
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  register (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraftforge/common/crafting/IIngredientSerializer;)Lnet/minecraftforge/common/crafting/IIngredientSerializer;
    28  net/minecraftforge/event/entity/living/LivingHurtEvent.getAmount
@@ -39,7 +32,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
    26  net/minecraftforge/event/entity/living/LivingHurtEvent.setAmount
          -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre  has no  setAmount (F)V
    25  net/minecraftforge/common/crafting/CraftingHelper.serialize
-         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize (Lnet/neoforged/neoforge/common/conditions/ICondition;)Lcom/google/gson/JsonObject;
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize (Lnet/minecraftforge/common/crafting/conditions/ICondition;)Lcom/google/gson/JsonObject;
    24  net/minecraftforge/common/Tags$Items.OBSIDIAN
          -> net/neoforged/neoforge/common/Tags$Items  has no  OBSIDIAN Lnet/minecraft/tags/TagKey;
    24  net/minecraftforge/client/event/EntityRenderersEvent$AddLayers.getSkin
@@ -255,7 +248,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     5  net/minecraftforge/client/event/RenderHighlightEvent$Block.getPartialTick
          -> net/neoforged/neoforge/client/event/RenderHighlightEvent$Block  has no  getPartialTick ()F
     5  net/minecraftforge/common/crafting/CraftingHelper.getCondition
-         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getCondition (Lcom/google/gson/JsonObject;)Lnet/neoforged/neoforge/common/conditions/ICondition;
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getCondition (Lcom/google/gson/JsonObject;)Lnet/minecraftforge/common/crafting/conditions/ICondition;
     5  net/minecraftforge/common/crafting/CraftingHelper.getItemStack
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getItemStack (Lcom/google/gson/JsonObject;ZZ)Lnet/minecraft/world/item/ItemStack;
     5  net/minecraftforge/common/crafting/CraftingHelper.getNBT
@@ -329,7 +322,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     3  net/minecraftforge/common/crafting/CraftingHelper.processConditions
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  processConditions (Lcom/google/gson/JsonArray;Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;)Z
     3  net/minecraftforge/common/crafting/CraftingHelper.serialize
-         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize ([Lnet/neoforged/neoforge/common/conditions/ICondition;)Lcom/google/gson/JsonArray;
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  serialize ([Lnet/minecraftforge/common/crafting/conditions/ICondition;)Lcom/google/gson/JsonArray;
     3  net/minecraftforge/common/crafting/CraftingHelper.write
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  write (Lnet/minecraft/network/FriendlyByteBuf;Lnet/minecraft/world/item/crafting/Ingredient;)V
     3  net/minecraftforge/common/crafting/DifferenceIngredient.of
@@ -464,8 +457,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/common/crafting/CompoundIngredient  has no  getChildren ()Ljava/util/Collection;
     2  net/minecraftforge/common/crafting/CraftingHelper.getIngredient
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getIngredient (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/network/FriendlyByteBuf;)Lnet/minecraft/world/item/crafting/Ingredient;
-    2  net/minecraftforge/common/crafting/conditions/ICondition.shouldRegisterEntry
-         -> net/neoforged/neoforge/common/conditions/ICondition  has no  shouldRegisterEntry (Lcom/google/gson/JsonElement;)Z
     2  net/minecraftforge/common/util/Lazy.concurrentOf
          -> net/neoforged/neoforge/common/util/Lazy  has no  concurrentOf (Ljava/util/function/Supplier;)Lnet/neoforged/neoforge/common/util/Lazy;
     2  net/minecraftforge/event/ItemAttributeModifierEvent.getModifiers
@@ -688,6 +679,8 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/client/settings/KeyModifier  has no  equals (Ljava/lang/Object;)Z
     1  net/minecraftforge/client/settings/KeyModifier.name
          -> net/neoforged/neoforge/client/settings/KeyModifier  has no  name ()Ljava/lang/String;
+    1  net/minecraftforge/common/crafting/conditions/IConditionBuilder.modLoaded
+         -> net/neoforged/neoforge/common/conditions/IConditionBuilder  has no  modLoaded (Ljava/lang/String;)Lnet/minecraftforge/common/crafting/conditions/ICondition;
     1  net/minecraftforge/common/util/BlockSnapshot.restore
          -> net/neoforged/neoforge/common/util/BlockSnapshot  has no  restore (Z)Z
     1  net/minecraftforge/common/util/FakePlayer.getAttributeValue
@@ -867,7 +860,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     1  net/minecraftforge/server/ServerLifecycleHooks.buildPackFinder
          -> net/neoforged/neoforge/server/ServerLifecycleHooks  has no  buildPackFinder (Ljava/util/Map;)Lnet/minecraft/server/packs/repository/RepositorySource;
 
-=== SHIM MISSING A CALLED MEMBER (151) ===
+=== SHIM MISSING A CALLED MEMBER (149) ===
 forge-compat supplies the class but not this member, or not with
 this descriptor. Every one is a NoSuchMethodError at a real call
 site -- the class resolves, so nothing fails until it is used.
@@ -889,8 +882,6 @@ site -- the class resolves, so nothing fails until it is used.
          shim lacks  postEvent (Lnet/neoforged/bus/api/Event;)V
     8  net/minecraftforge/network/simple/SimpleChannel.reply
          shim lacks  reply (Ljava/lang/Object;Lnet/minecraftforge/network/NetworkEvent$Context;)V
-    8  net/minecraftforge/registries/RegistryObject.create
-         shim lacks  create (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceKey;Ljava/lang/String;)Lnet/minecraftforge/registries/RegistryObject;
     7  net/minecraftforge/client/gui/overlay/ForgeGui.getMinecraft
          shim lacks  getMinecraft ()Lnet/minecraft/client/Minecraft;
     7  net/minecraftforge/common/ForgeConfigSpec$Builder.defineList
@@ -1010,7 +1001,7 @@ site -- the class resolves, so nothing fails until it is used.
     2  net/minecraftforge/common/capabilities/Capability.isRegistered
          shim lacks  isRegistered ()Z
     2  net/minecraftforge/common/crafting/conditions/IConditionSerializer.getJson
-         shim lacks  getJson (Lnet/neoforged/neoforge/common/conditions/ICondition;)Lcom/google/gson/JsonObject;
+         shim lacks  getJson (Lnet/minecraftforge/common/crafting/conditions/ICondition;)Lcom/google/gson/JsonObject;
     2  net/minecraftforge/event/TickEvent$Type.equals
          shim lacks  equals (Ljava/lang/Object;)Z
     2  net/minecraftforge/fluids/capability/ItemFluidContainer.m_7373_
@@ -1107,8 +1098,6 @@ site -- the class resolves, so nothing fails until it is used.
          shim lacks  isCorrect (Lcom/electronwill/nightconfig/core/CommentedConfig;)Z
     1  net/minecraftforge/common/capabilities/Capability.addListener
          shim lacks  addListener (Ljava/util/function/Consumer;)Lnet/minecraftforge/common/capabilities/Capability;
-    1  net/minecraftforge/common/crafting/conditions/IConditionSerializer.read
-         shim lacks  read (Lcom/google/gson/JsonObject;)Lnet/neoforged/neoforge/common/conditions/ICondition;
     1  net/minecraftforge/common/extensions/IForgeMenuType.create
          shim lacks  create (ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/network/FriendlyByteBuf;)Ljava/lang/Object;
     1  net/minecraftforge/common/util/LazyOptional.hashCode
@@ -1174,10 +1163,17 @@ site -- the class resolves, so nothing fails until it is used.
     1  net/minecraftforge/registries/RegistryObject.orElseThrow
          shim lacks  orElseThrow (Ljava/util/function/Supplier;)Ljava/lang/Object;
 
-=== RENAMES ONTO AN ABSTRACT TYPE (11) ===
-These resolve and then do nothing if the type is an event: the bus
-dispatches by exact class and nothing posts an abstract one. Check
-each against the Pre/Post pair that replaced it.
+=== RENAMES ONTO AN ABSTRACT TYPE (11) -- HANDLED, listed for reference ===
+A listener whose parameter is one of these is split automatically:
+Translate#splitAbstractListeners keeps the mod's method as the body
+and generates one annotated dispatcher per concrete subclass, which
+reproduces Forge's behaviour of firing for both phases.
+
+This was a warning section until that pass existed, and it is kept
+as information rather than deleted: a rename onto an abstract event
+is still worth seeing, and the split only covers @SubscribeEvent
+parameters -- a mod holding one of these in a *variable* is not
+something any static check here can distinguish.
    10  net/minecraftforge/client/event/ScreenEvent$Init  -> net/neoforged/neoforge/client/event/ScreenEvent$Init  (has Pre/Post)
     5  net/minecraftforge/client/event/RenderLivingEvent  -> net/neoforged/neoforge/client/event/RenderLivingEvent  (has Pre/Post)
     4  net/minecraftforge/client/event/InputEvent$MouseButton  -> net/neoforged/neoforge/client/event/InputEvent$MouseButton  (has Pre/Post)
@@ -1254,7 +1250,6 @@ each against the Pre/Post pair that replaced it.
     3  net/minecraftforge/event/entity/living/MobSpawnEvent$AllowDespawn         rule -> net/neoforged/neoforge/event/entity/living/MobSpawnEvent$AllowDespawn (MISSING)
     3  net/minecraftforge/fml/ModLoadingWarning                                  no shim, no rule
     3  net/minecraftforge/network/HandshakeHandler                               no shim, no rule
-    3  net/minecraftforge/network/PlayMessages$SpawnEntity                       no shim, no rule
     3  net/minecraftforge/network/filters/VanillaPacketSplitter                  no shim, no rule
     2  net/minecraftforge/client/model/data/MultipartModelData$Builder           rule -> net/neoforged/neoforge/client/model/data/MultipartModelData$Builder (MISSING)
     2  net/minecraftforge/common/crafting/ConditionalAdvancement$Builder         no shim, no rule
@@ -1285,9 +1280,9 @@ each against the Pre/Post pair that replaced it.
     1  net/minecraftforge/client/gui/TitleScreenModUpdateIndicator               no shim, no rule
     1  net/minecraftforge/common/DungeonHooks                                    no shim, no rule
     1  net/minecraftforge/common/crafting/ConditionalAdvancement                 no shim, no rule
-    1  net/minecraftforge/common/crafting/conditions/ModLoadedCondition$Serializer  rule -> net/neoforged/neoforge/common/conditions/ModLoadedCondition$Serializer (MISSING)
-    1  net/minecraftforge/common/crafting/conditions/NotCondition$Serializer     rule -> net/neoforged/neoforge/common/conditions/NotCondition$Serializer (MISSING)
-    1  net/minecraftforge/common/crafting/conditions/TagEmptyCondition$Serializer  rule -> net/neoforged/neoforge/common/conditions/TagEmptyCondition$Serializer (MISSING)
+    1  net/minecraftforge/common/crafting/conditions/ModLoadedCondition$Serializer  no shim, no rule
+    1  net/minecraftforge/common/crafting/conditions/NotCondition$Serializer     no shim, no rule
+    1  net/minecraftforge/common/crafting/conditions/TagEmptyCondition$Serializer  no shim, no rule
     1  net/minecraftforge/common/extensions/IForgeEntity                         no shim, no rule
     1  net/minecraftforge/common/extensions/IForgeFluid                          no shim, no rule
     1  net/minecraftforge/common/extensions/IForgeLivingEntity                   no shim, no rule
