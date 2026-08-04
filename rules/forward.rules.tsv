@@ -277,6 +277,27 @@ TYPE_PREFIX_RENAME	net/minecraftforge/common/crafting/conditions/	net/neoforged/
 
 # --- Restructured events: renamed, not merely moved -------------------------------------------
 #
+# READ THIS BEFORE TRUSTING THE BLOCK BELOW.
+#
+# These renames are load-enabling stopgaps, not correct translations. NeoForge renamed the
+# events' *accessors* along with the events, and a type rename cannot follow that:
+#
+#   LivingHurtEvent.getAmount()        -> LivingDamageEvent$Pre has getNewDamage()
+#   EntityItemPickupEvent.getEntity()  -> ItemEntityPickupEvent$Pre has getPlayer()
+#   SpawnPlacementRegisterEvent.register(...) -> different signature entirely
+#
+# So a renamed listener resolves its event, registers, fires -- and throws NoSuchMethodError on
+# the first accessor it touches. Every instance is listed by the member check in RenameGaps.
+#
+# Kept anyway, deliberately: without them the mod does not load at all and contributes nothing,
+# whereas with them it loads, registers its content, and fails only if that specific event
+# actually fires. Loud and narrow beats total and silent. But they are a stepping stone.
+#
+# The real fix is the shim-and-bridge shape already used for TickEvent: a forge-compat class
+# carrying the Forge accessor names, plus a bridge subscribing to the NeoForge event and
+# re-posting the Forge-shaped one. That is the plan for the whole restructured-event family and
+# it is not done.
+#
 # The prefix rules above handle events NeoForge only repackaged. These are the ones it also
 # renamed or split, where a prefix rule either produces a missing target (harmless -- refused and
 # reported) or, far worse, lands on a real class that is never posted.

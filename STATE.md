@@ -35,10 +35,24 @@ rule written the same hour — `LivingTickEvent` → `EntityTickEvent$Pre`, righ
 `getEntity()` narrowed its return type and all 41 callers would have broken. See
 [api-report/README.md](api-report/README.md).
 
-**Rule of thumb this produced:** an event NeoForge *removed* gets a link-only shim in
-forge-compat, never a rename. The mod links and the event simply never fires, which is
-accurate — there is nothing to fire it. `FillBucketEvent`, `AttachCapabilitiesEvent` and
-`LootingLevelEvent` are in this category.
+**Two rules of thumb this produced, for events:**
+
+- An event NeoForge *removed* gets a **link-only shim**, never a rename. The mod links and the
+  event never fires, which is accurate — there is nothing to fire it. `FillBucketEvent`,
+  `AttachCapabilitiesEvent`, `LootingLevelEvent`.
+- An event NeoForge *restructured* needs a **shim plus a bridge** — the `TickEvent` shape — not
+  a rename. NeoForge renamed the accessors along with the events (`getAmount` →
+  `getNewDamage`, `getEntity` → `getPlayer`), and a type rename cannot follow that. The renames
+  currently in `forward.rules.tsv` for `LivingHurtEvent`, `LivingDamageEvent`,
+  `EntityItemPickupEvent` and friends are **load-enabling stopgaps**: the mod loads and
+  registers its content, then throws `NoSuchMethodError` if that event actually fires. Every
+  instance is listed by the member check. Converting this family to shim-and-bridge is the
+  largest single piece of unfinished event work.
+
+**One shim trick worth knowing.** `Event$Result` (72 jars) had to be supplied as a top-level
+class *literally named* `Event$Result` — `$` is a legal Java identifier character, so it
+compiles to exactly the internal name mods reference. It could not be nested, because its outer
+class `Event` is one of the types that must be renamed to NeoForge's rather than shimmed.
 
 Why this matters: the old loop found missing classes by launching the game and reading the
 first `ClassNotFoundException` — about ten minutes per class, strictly one at a time, because

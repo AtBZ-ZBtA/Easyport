@@ -42,6 +42,18 @@ public class NetworkRegistry {
         return new SimpleChannel(name, version);
     }
 
+    /**
+     * Forge's raw-packet channel. See {@link net.minecraftforge.network.event.EventNetworkChannel}
+     * -- it links and does not carry traffic.
+     */
+    public static net.minecraftforge.network.event.EventNetworkChannel newEventChannel(
+            ResourceLocation name,
+            Supplier<String> networkProtocolVersion,
+            Predicate<String> clientAcceptedVersions,
+            Predicate<String> serverAcceptedVersions) {
+        return new net.minecraftforge.network.event.EventNetworkChannel(name);
+    }
+
     /** Forge's fluent form. Order of calls is free, so nothing is validated until build. */
     public static class ChannelBuilder {
 
@@ -71,6 +83,10 @@ public class NetworkRegistry {
 
         public SimpleChannel simpleChannel() {
             return newSimpleChannel(name, version, null, null);
+        }
+
+        public net.minecraftforge.network.event.EventNetworkChannel eventNetworkChannel() {
+            return newEventChannel(name, version, null, null);
         }
     }
 
