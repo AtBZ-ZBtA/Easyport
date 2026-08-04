@@ -305,6 +305,99 @@ Everything below is measured, not estimated.
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
 
+### Phase 4 — COMPLETE
+
+**Exit criterion:** no library or sampled mod is blocked by vanilla API drift that a transformer
+can fix. Met, with one honest exception named below.
+
+Every library that was blocked on vanilla now loads; the two that still fail, fail on mixin
+*apply*, which is Phase 5. In the sample, one mod — `blockui` — is still blocked by a vanilla
+change, and it is the one shape no bytecode rewrite reaches: `OutOfJarResourceLocation extends
+ResourceLocation`, and 1.21 made that a final record. There is no version of that class the mod
+can be. It is now **reported at translate time** rather than discovered at launch, which is the
+deliverable — the transformer identifies what it cannot do instead of producing something that
+half-works.
+
+Evidence, all reproducible:
+
+| Measure | Start of phase | Now |
+|---|---|---|
+| Libraries loading | 4 / 8 | **6 / 8** |
+| Vanilla member references that resolve | 89.3% | **92.0%** |
+| Libraries + sampled mods that type-check clean | 5 / 22 | **22 / 22** |
+| Vanilla types deleted with no stand-in | 126 | 114 |
+
+**The three libraries that were blocked by vanilla drift all load now.** geckolib had been
+blocked since Phase 3 on `ArmorMaterials` becoming `Holder`-wrapped; cyclopscore took five more
+blockers after the one it was stuck on. The two that still fail — yungsapi and
+supermartijn642corelib — fail on mixin *apply*, which is Phase 5.
+
+#### The one decision the phase turned on
+
+1.21 changed the *shape* of vanilla types that mod signatures are written in terms of. The
+tempting fix is to let the new shape spread outward from the field read or the call site. That
+was tried, as `FIELD_RETYPE` on `ArmorMaterials`, and it does not stop at the vanilla boundary:
+geckolib still failed one layer in, because its own `WolfArmorItem` constructor declares
+`ArmorMaterial`. Following that means propagating a retype through mod signatures by data flow.
+
+**Easyport does the opposite. It adapts at every vanilla boundary and leaves mod code's worldview
+exactly as its author compiled it.** Every adaptation is then local to one instruction, and
+nothing has to be inferred about the mod's own types.
+
+Six mechanisms fall out of that, and three need no rules at all because they read the answer off
+the platform. See the Resume-here section above for the table and for the two that look wrong
+until you hit the case.
+
+#### What Phase 4 built beyond the mechanisms
+
+Three offline tools, and they mattered more than any single mechanism:
+
+- **`VanillaGaps`** — the vanilla counterpart to `RenameGaps`, asking a deliberately different
+  question. 25,272 member references ranked, and its `BY OWNING TYPE` rollup is what turned "port
+  data components, attributes, enchantments, potions" into "these are one problem".
+- **`VerifyBytecode` / `verify-sweep.sh`** — the JVM's type checks, offline. A `VerifyError` costs
+  a full launch to find, reports one method, and stops; this surveys a whole jar in seconds. It is
+  also the only thing that sees an illegal class hierarchy, which nothing in the plan anticipated:
+  six classes across four of the twenty-two mods, every one fatal at load. Pointed at a mod that
+  is not even in the tested set — ars_nouveau, which several sampled mods depend on — it found 70
+  more, of which 38 were one bug in the hierarchy check itself.
+- The **differential against the mod author's own port**, without which the verifier is not usable:
+  `SimpleVerifier` is not the JVM and reports mismatches the real verifier would not. Two such
+  shapes survived a full round of investigation before turning out to be present in the reference
+  ports too.
+
+#### Two bugs worth remembering, because everything looked correct
+
+**Constructors are not inherited.** Both offline tools fold supertype members into their view of a
+class, which is right for every kind of member except this one.
+`DropExperienceBlock(BlockBehaviour$Properties)` was removed in 1.21 and looked present the whole
+time, because `Block` declares a constructor of the same shape. The rule written for it matched
+nothing, the report said nothing, and the mod failed at load. It survived several rounds precisely
+because nothing looked wrong.
+
+**A new way of matching can subtract.** Teaching the transformer to match overloads that add or
+drop a parameter made `AttributeSupplier$Builder.add(Attribute, double)` ambiguous — it now also
+matched `add(Holder)` by dropping the `double` — so the call was correctly refused and geckolib
+went from loading to `NoSuchMethodError`. The ambiguity check worked; the *widening* took
+something away. Same-arity overloads now win outright, and the lesson is in the hard rules above.
+
+#### Known-incomplete inside Phase 4, deliberately
+
+**Overrides.** All six mechanisms adapt *call sites*. A mod that declares
+`saveAdditional(CompoundTag)` is not calling anything — it is failing to override something,
+because 1.21 added a parameter. The method links, the class loads, and vanilla never calls it.
+This is the largest remaining shape and it needs a different kind of pass: rewriting the mod's own
+method signature and adapting its body.
+
+**Placeholder conversions.** Where a codec would have to be derived from a mod's hand-written
+serializer, the bridge returns something inert and the report names it. The trade is always the
+same way round — the type registers and everything registered beside it survives, while the
+specific thing 1.21 added does not work. The alternative is a mod that fails to load at all.
+
+**The ranked remainder** is in [api-report/README.md](api-report/README.md): `ItemStack`
+NBT→components (1,207 jar-weight), `FriendlyByteBuf` and `StreamCodec` (684), data-driven
+`Enchantments` (492), `Ingredient` (349), `BlockEntity` overrides (312).
+
 ### Phase 3 — COMPLETE
 
 **Exit criterion:** no library or sampled mod is blocked by a missing or wrong `net.minecraftforge`
@@ -391,7 +484,7 @@ throws when `EVENT_BUS.register()` gets an object with no `@SubscribeEvent` meth
 accepted it silently. That is a hard load failure on real corpus mods, so `ForgeEventBus`
 makes it a no-op.
 
-### Phase 3 — forge-compat, IN PROGRESS
+### Phase 3 — forge-compat, working notes (superseded by the sign-off above)
 
 21 classes covering the head of the work list: `MinecraftForge`, `IEventBus`/`ForgeEventBus`,
 `FMLJavaModLoadingContext`, `ModLoadingContext`, `ModConfig`, `IConfigSpec`, `ModList`,
