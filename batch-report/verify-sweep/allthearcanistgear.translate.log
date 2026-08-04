@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 28 classes, moved 47 resources
 
@@ -28,7 +28,7 @@ Applied:
      6  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
-  (none)
+     1  HIERARCHY not an interface any more: com/github/jarva/allthearcanistgear/common/armor/ArcanistMaterial implements net/minecraft/world/item/ArmorMaterial
 
 Wrote translated\allthearcanistgear.jar
       translated\allthearcanistgear.report.tsv

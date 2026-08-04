@@ -15,11 +15,11 @@ import net.minecraft.resources.ResourceLocation;
  * common path simple. A mod that genuinely implements the interface will not translate, which
  * the transformer reports rather than producing something subtly broken.
  */
-public final class IForgeRegistry<T> {
+public class IForgeRegistry<T> {
 
     private final ResourceKey<? extends Registry<T>> key;
 
-    IForgeRegistry(ResourceKey<? extends Registry<T>> key) {
+    protected IForgeRegistry(ResourceKey<? extends Registry<T>> key) {
         this.key = key;
     }
 
@@ -31,7 +31,7 @@ public final class IForgeRegistry<T> {
      * to build one from a registry key recovered at runtime.
      */
     public static <T> IForgeRegistry<T> of(ResourceKey<? extends Registry<T>> key) {
-        return new IForgeRegistry<>(key);
+        return new ForgeRegistry<>(key);
     }
 
     public ResourceKey<? extends Registry<T>> getRegistryKey() {
@@ -45,7 +45,7 @@ public final class IForgeRegistry<T> {
      * happens long before the registries themselves are populated. Caching here would pin null.
      */
     @SuppressWarnings("unchecked")
-    private Registry<T> registry() {
+    protected Registry<T> registry() {
         return (Registry<T>) BuiltInRegistries.REGISTRY.get(key.location());
     }
 

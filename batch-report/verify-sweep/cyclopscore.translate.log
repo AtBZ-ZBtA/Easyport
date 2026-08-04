@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 589 classes, moved 2 resources
 
@@ -24,10 +24,14 @@ Applied:
     15  TYPE_PREFIX net/minecraftforge/forgespi/
     63  TYPE_PREFIX net/minecraftforge/items/
      9  TYPE_PREFIX net/minecraftforge/server/
+    15  TYPE_RENAME net/minecraft/advancements/critereon/AbstractCriterionTriggerInstance
+    26  TYPE_RENAME net/minecraft/advancements/critereon/ContextAwarePredicate
+     2  TYPE_RENAME net/minecraft/client/gui/screens/GenericDirtMessageScreen
     10  TYPE_RENAME net/minecraft/world/level/storage/loot/Serializer
    132  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
    105  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
      3  TYPE_RENAME net/minecraftforge/client/ItemDecoratorHandler
+     2  TYPE_RENAME net/minecraftforge/common/ForgeSpawnEggItem
      1  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
      1  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
      3  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier
@@ -38,6 +42,10 @@ Applied:
     11  TYPE_RENAME net/minecraftforge/event/entity/player/EntityItemPickupEvent
     24  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
     27  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     5  TYPE_RENAME net/minecraftforge/fluids/ForgeFlowingFluid
+     4  TYPE_RENAME net/minecraftforge/fluids/ForgeFlowingFluid$Flowing
+    29  TYPE_RENAME net/minecraftforge/fluids/ForgeFlowingFluid$Properties
+     4  TYPE_RENAME net/minecraftforge/fluids/ForgeFlowingFluid$Source
      2  TYPE_RENAME net/minecraftforge/fml/InterModComms
     12  TYPE_RENAME net/minecraftforge/fml/InterModComms$IMCMessage
     29  TYPE_RENAME net/minecraftforge/fml/ModContainer
@@ -61,10 +69,6 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
     38  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
      1  TYPE_PREFIX target missing: net/neoforged/neoforge/event/ForgeEventFactory
      5  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent
-     5  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid
-     4  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Flowing
-    29  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Properties
-     4  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Source
     10  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/capability/ItemFluidContainer
 
 Wrote translated\cyclopscore.jar

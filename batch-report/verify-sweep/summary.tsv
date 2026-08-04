@@ -1,10 +1,10 @@
-architectury	ERRORS	11
-yungsapi	ERRORS	4
-cyclopscore	ERRORS	19
+architectury	ERRORS	7
+yungsapi	CLEAN	0
+cyclopscore	ERRORS	7
 supermartijn642corelib	ERRORS	8
-placebo	ERRORS	13
+placebo	ERRORS	11
 geckolib	CLEAN	0
-curios	ERRORS	9
+curios	ERRORS	5
 balm	ERRORS	7
 additional_lights	CLEAN	0
 aiimprovements	CLEAN	0
@@ -13,8 +13,8 @@ allthecompressed	CLEAN	0
 alltheores	CLEAN	0
 appleskin	ERRORS	4
 appmek	CLEAN	0
-aquaculture	ERRORS	27
-ars_creo	ERRORS	7
+aquaculture	ERRORS	13
+ars_creo	CLEAN	0
 ars_ocultas	CLEAN	0
 betteradvancements	CLEAN	0
 bhc	CLEAN	0

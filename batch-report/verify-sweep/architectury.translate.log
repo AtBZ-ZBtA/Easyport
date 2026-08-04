@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 382 classes, moved 1 resources
 
@@ -22,6 +22,8 @@ Applied:
      2  TYPE_RENAME net/minecraftforge/common/CreativeModeTabRegistry
     12  TYPE_RENAME net/minecraftforge/common/SoundAction
      4  TYPE_RENAME net/minecraftforge/common/SoundActions
+     4  TYPE_RENAME net/minecraftforge/common/ToolAction
+     2  TYPE_RENAME net/minecraftforge/common/ToolActions
      1  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
     25  TYPE_RENAME net/minecraftforge/common/util/MutableHashedLinkedMap
     25  TYPE_RENAME net/minecraftforge/common/world/BiomeGenerationSettingsBuilder
@@ -48,6 +50,8 @@ Applied:
     17  TYPE_RENAME net/minecraftforge/eventbus/api/Event
     96  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
    110  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     3  TYPE_RENAME net/minecraftforge/fluids/ForgeFlowingFluid
+    20  TYPE_RENAME net/minecraftforge/fluids/ForgeFlowingFluid$Properties
      5  TYPE_RENAME net/minecraftforge/fml/ModContainer
      7  TYPE_RENAME net/minecraftforge/fml/common/Mod
     21  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
@@ -68,8 +72,6 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
      1  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/TextureStitchEvent
     13  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/player/FillBucketEvent
-     3  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid
-    20  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Properties
 
 Wrote translated\architectury.jar
       translated\architectury.report.tsv

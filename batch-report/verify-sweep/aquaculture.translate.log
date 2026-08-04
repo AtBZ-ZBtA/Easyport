@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 120 classes, moved 217 resources
 
@@ -26,9 +26,13 @@ Applied:
      4  TYPE_PREFIX net/minecraftforge/fluids/
      1  TYPE_PREFIX net/minecraftforge/fml/util/
    104  TYPE_PREFIX net/minecraftforge/items/
+    13  TYPE_RENAME net/minecraft/world/item/DyeableLeatherItem
      3  TYPE_RENAME net/minecraft/world/level/storage/loot/Serializer
      9  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      7  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
+     2  TYPE_RENAME net/minecraftforge/common/ForgeSpawnEggItem
+     9  TYPE_RENAME net/minecraftforge/common/ToolAction
+     4  TYPE_RENAME net/minecraftforge/common/ToolActions
      6  TYPE_RENAME net/minecraftforge/common/brewing/BrewingRecipe
      1  TYPE_RENAME net/minecraftforge/common/brewing/BrewingRecipeRegistry
      1  TYPE_RENAME net/minecraftforge/common/brewing/IBrewingRecipe
@@ -55,6 +59,10 @@ Applied:
      3  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  HIERARCHY not an interface any more: com/teammetallurgy/aquaculture/api/AquaArmorMaterials implements net/minecraft/world/item/ArmorMaterial
+     1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/AquaFishEntity.getDimensions(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions; (final on net/minecraft/world/entity/LivingEntity)
+     1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/FishMountEntity.recalculateBoundingBox()V (final on net/minecraft/world/entity/decoration/HangingEntity)
+     1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/TurtleLandEntity.canBreatheUnderwater()Z (final on net/minecraft/world/entity/LivingEntity)
      4  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
     32  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
      8  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z

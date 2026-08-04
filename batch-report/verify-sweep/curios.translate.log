@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 143 classes, moved 1 resources
 
@@ -8,6 +8,7 @@ Applied:
      2  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
      3  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
+     3  HOLDER_WRAP net/minecraft/world/item/ItemStack.getEnchantmentLevel
      2  HOLDER_WRAP net/minecraft/world/item/enchantment/EnchantmentHelper.getItemEnchantmentLevel
      9  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      2  SRG_IN_TEXT
@@ -16,6 +17,8 @@ Applied:
      8  TYPE_PREFIX net/minecraftforge/common/data/
    190  TYPE_PREFIX net/minecraftforge/event/
     52  TYPE_PREFIX net/minecraftforge/items/
+     6  TYPE_RENAME net/minecraft/advancements/critereon/AbstractCriterionTriggerInstance
+    20  TYPE_RENAME net/minecraft/advancements/critereon/ContextAwarePredicate
      1  TYPE_RENAME net/minecraft/world/level/storage/loot/Serializer
     22  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      6  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn

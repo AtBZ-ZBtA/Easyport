@@ -562,3 +562,59 @@ TYPE_RENAME	net/minecraftforge/registries/holdersets/ICustomHolderSet	net/neofor
 # would never be found -- and NeoForge dropped its bus() accessor. The accessor moves to a static.
 METHOD_TO_STATIC	net/neoforged/fml/common/EventBusSubscriber$Bus	bus	()Ljava/util/function/Supplier;	easyport/bridge/BusBridge	bus	(Lnet/neoforged/fml/common/EventBusSubscriber$Bus;)Ljava/util/function/Supplier;
 FIELD_TO_STATIC	net/neoforged/fml/common/EventBusSubscriber$Bus	FORGE	Lnet/neoforged/fml/common/EventBusSubscriber$Bus;	easyport/bridge/BusBridge	forge	()Lnet/neoforged/fml/common/EventBusSubscriber$Bus;
+
+# --- Phase 4: types found by offline bytecode verification -------------------------------------
+#
+# These came from tools/verify-sweep.sh rather than from the type gap report, and the difference
+# is worth knowing. A type a mod *extends or implements* barely registers in the gap report --
+# it appears once per jar, not once per call -- but it fails the whole class at load. Verification
+# ranks by what breaks rather than by how often it is mentioned, so it surfaces a different and
+# more urgent set.
+#
+# Each target below was checked member by member before being written. ToolAction and ItemAbility
+# agree on get/name/getActions; BaseFlowingFluid keeps ForgeFlowingFluid's protected
+# Properties-taking constructor and the same builder; DeferredSpawnEggItem keeps the
+# (Supplier,int,int,Item$Properties) constructor mods subclass.
+
+# 21 jars. Forge's ToolAction and NeoForge's ItemAbility are the same three-method value type.
+TYPE_RENAME	net/minecraftforge/common/ToolAction	net/neoforged/neoforge/common/ItemAbility
+TYPE_RENAME	net/minecraftforge/common/ToolActions	net/neoforged/neoforge/common/ItemAbilities
+
+# 36 jars, and mods subclass it, so the constructor mattered more than the name. It matches.
+TYPE_RENAME	net/minecraftforge/common/ForgeSpawnEggItem	net/neoforged/neoforge/common/DeferredSpawnEggItem
+
+# 14 jars. Renamed wholesale, nested Properties/Source/Flowing included and unchanged in shape.
+TYPE_RENAME	net/minecraftforge/fluids/ForgeFlowingFluid	net/neoforged/neoforge/fluids/BaseFlowingFluid
+TYPE_RENAME	net/minecraftforge/fluids/ForgeFlowingFluid$Properties	net/neoforged/neoforge/fluids/BaseFlowingFluid$Properties
+TYPE_RENAME	net/minecraftforge/fluids/ForgeFlowingFluid$Source	net/neoforged/neoforge/fluids/BaseFlowingFluid$Source
+TYPE_RENAME	net/minecraftforge/fluids/ForgeFlowingFluid$Flowing	net/neoforged/neoforge/fluids/BaseFlowingFluid$Flowing
+
+# Vanilla dropped the "Dirt" variant when the screen stopped drawing a dirt background. Same
+# single-Component constructor. This is what cyclopscore has been blocked on since Phase 3.
+TYPE_RENAME	net/minecraft/client/gui/screens/GenericDirtMessageScreen	net/minecraft/client/gui/screens/GenericMessageScreen
+
+# PositionImpl was the record-shaped implementation of Position; 1.21 deleted it and Vec3 already
+# implemented the same interface with the same (DDD) constructor.
+TYPE_RENAME	net/minecraft/core/PositionImpl	net/minecraft/world/phys/Vec3
+
+# --- Relocate-then-rename: vanilla types 1.21 deleted ------------------------------------------
+#
+# A mod jar cannot supply a class under net.minecraft -- module resolution refuses it, proven in
+# testkit/vanilla-package-probe -- so a deleted vanilla type is replaced by a stand-in under
+# easyport.vanilla and every reference is rewritten to it.
+#
+# Read the stand-ins before trusting these. Most restore *loading* and not behaviour, because the
+# vanilla code that used to call them is gone; DyeableLeatherItem is the exception, since dye
+# colour was moved to a data component rather than removed and every method has an exact
+# equivalent. The per-jar report is where that difference has to show up -- a clean load must not
+# be read as a clean port.
+
+# 34 jars. Advancement criteria moved to codecs in 1.20.5; the JSON-serialising base class and
+# the predicate type in its constructor both went. Both are relocated, because a constructor is
+# resolved by descriptor and the super(...) calls name the predicate type.
+TYPE_RENAME	net/minecraft/advancements/critereon/AbstractCriterionTriggerInstance	easyport/vanilla/AbstractCriterionTriggerInstance
+TYPE_RENAME	net/minecraft/advancements/critereon/ContextAwarePredicate	easyport/vanilla/ContextAwarePredicate
+
+# 16 jars, and the one stand-in here that genuinely works: DYED_COLOR replaced the interface
+# rather than removing the feature, so getColor and setColor read and write the real stack.
+TYPE_RENAME	net/minecraft/world/item/DyeableLeatherItem	easyport/vanilla/DyeableLeatherItem

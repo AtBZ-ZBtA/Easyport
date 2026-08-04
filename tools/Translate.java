@@ -138,6 +138,10 @@ public class Translate {
     /** "owner.member" -> the T inside its {@code Holder<T>}, read from the generic signature. */
     private final Map<String, String> holderValueType = new HashMap<>();
 
+    /** Vanilla classes 1.21 made final, and the methods it made final, for the hierarchy checks. */
+    private final Set<String> targetFinalClasses = new HashSet<>();
+    private final Map<String, Set<String>> targetFinalMethods = new HashMap<>();
+
     private void loadTargetIndex(String[] jars) {
         for (String j : jars) {
             Path p = Paths.get(j);
@@ -150,10 +154,13 @@ public class Translate {
                     if (!n.endsWith(".class")) continue;
                     String internal = n.substring(0, n.length() - 6);
                     targetClasses.add(internal);
-                    // Only vanilla is worth indexing in detail -- mixins target net.minecraft,
-                    // and reading every field of every platform class would triple the cost of
-                    // a scan that runs once per mod.
-                    if (!internal.startsWith("net/minecraft/")) continue;
+                    // Vanilla and NeoForge are indexed in detail; nothing else is. Mixins target
+                    // net.minecraft, and the hierarchy checks need net.neoforged too -- placebo's
+                    // only remaining blocker is overriding a method NeoForge made final. Reading
+                    // every member of every jar on the path would triple a scan that runs once
+                    // per mod for no finding either check can use.
+                    if (!internal.startsWith("net/minecraft/")
+                            && !internal.startsWith("net/neoforged/")) continue;
                     try {
                         ClassNode node = new ClassNode();
                         new ClassReader(read(zip, e)).accept(node,
@@ -176,6 +183,14 @@ public class Translate {
                         targetMembers.put(internal, members);
                         if (node.superName != null) targetSuper.put(internal, node.superName);
                         if (node.interfaces != null) targetIfaces.put(internal, node.interfaces);
+                        if ((node.access & Opcodes.ACC_FINAL) != 0) targetFinalClasses.add(internal);
+                        if (node.methods != null) {
+                            Set<String> fin = new HashSet<>();
+                            for (var m : node.methods) {
+                                if ((m.access & Opcodes.ACC_FINAL) != 0) fin.add(m.name + " " + m.desc);
+                            }
+                            if (!fin.isEmpty()) targetFinalMethods.put(internal, fin);
+                        }
 
                         // Generic signatures, kept only for Holder-typed members. The erased
                         // descriptor says Holder and nothing else; the type argument inside the
@@ -349,6 +364,7 @@ public class Translate {
         }), 0);
 
         fixEventBusSubscriber(node);
+        fixIllegalHierarchy(node);
 
         // Mixin annotations address their targets as text, which the remapper never sees.
         remapAnnotationStrings(node.visibleAnnotations);
@@ -703,6 +719,87 @@ public class Translate {
         }
         resolvedMemberCache.put(cls, all);
         return all;
+    }
+
+    /**
+     * Handles a mod class whose *hierarchy* became illegal, which no call-site rewrite can reach.
+     *
+     * Offline verification turned up a failure family nothing else in this project could see, and
+     * it is not small: six classes across four mods, every one of them fatal at load. 1.21 sealed
+     * a lot of vanilla down.
+     *
+     * <h2>Overriding a method that became final -- fixed</h2>
+     *
+     * {@code TurtleLandEntity} overrides {@code LivingEntity.canBreatheUnderwater()}, which 1.21
+     * made final. The whole class fails to load, taking with it every entity, item and block that
+     * class registers.
+     *
+     * Renaming the declaration out of the way fixes the load. Nothing else has to change: an
+     * internal call to {@code this.canBreatheUnderwater()} then resolves to the inherited final
+     * method, which is vanilla's own behaviour and the only behaviour available now. What is lost
+     * is precisely the mod's override, and that is what the report names.
+     *
+     * This is a behaviour change, so it is loud. A silently different turtle is worse than a
+     * reported one, and the alternative -- refusing to translate the mod -- loses everything else
+     * the class carries.
+     *
+     * <h2>Extending a class or implementing a type that changed kind -- reported</h2>
+     *
+     * {@code OutOfJarResourceLocation extends ResourceLocation}, now a final record.
+     * {@code AquaArmorMaterials implements ArmorMaterial}, now a record rather than an interface.
+     * Neither has a mechanical fix: the mod's class exists to *be* that type, and there is no
+     * longer a version of that type it can be. Reported here rather than left to surface as an
+     * {@code IncompatibleClassChangeError} halfway through a launch.
+     */
+    private void fixIllegalHierarchy(ClassNode node) {
+        if (targetMembers.isEmpty()) return;
+
+        if (node.superName != null && targetFinalClasses.contains(node.superName)) {
+            count(unresolved, "HIERARCHY cannot extend final class: " + node.name
+                            + " extends " + node.superName);
+        }
+        for (String itf : node.interfaces) {
+            // targetMembers is the "was actually inspected" test, and it has to be. Asking
+            // targetInterfaces alone reports every type the index did not look inside as "no
+            // longer an interface" -- the first run of this check accused IFluidHandler,
+            // IItemHandlerModifiable and BiomeModifier, all of which are interfaces and always
+            // were. Same shape as the rename-target validation: never claim absence from a part
+            // of the index that was never populated.
+            if (targetMembers.containsKey(itf) && !targetInterfaces.contains(itf)) {
+                count(unresolved, "HIERARCHY not an interface any more: " + node.name
+                                + " implements " + itf);
+            }
+        }
+
+        for (MethodNode m : node.methods) {
+            if (m.name.startsWith("<") || (m.access & Opcodes.ACC_STATIC) != 0) continue;
+            String owner = finalOwnerOf(node.superName, m.name + " " + m.desc);
+            if (owner == null) continue;
+            count(unresolved, "HIERARCHY override of a now-final method dropped: "
+                            + node.name + "." + m.name + m.desc + " (final on " + owner + ")");
+            m.name = "easyport$" + m.name;
+            // All three access bits must be cleared before setting private. Clearing only PUBLIC
+            // left a protected method as private|protected, which is 0x6 and a ClassFormatError:
+            // "illegal modifiers". The verifier caught it; a launch would have reported it as the
+            // mod being corrupt.
+            m.access &= ~(Opcodes.ACC_PUBLIC | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE);
+            m.access |= Opcodes.ACC_PRIVATE;
+            // Private, so nothing can dispatch to it by accident. Only the declaration is touched:
+            // call sites keep naming the original, and now reach the inherited final method --
+            // which is the behaviour that is actually available.
+        }
+    }
+
+    /** The nearest platform supertype declaring this member final, or null. */
+    private String finalOwnerOf(String superName, String member) {
+        String cls = superName;
+        Set<String> seen = new HashSet<>();
+        while (cls != null && seen.add(cls)) {
+            Set<String> fin = targetFinalMethods.get(cls);
+            if (fin != null && fin.contains(member)) return cls;
+            cls = targetSuper.get(cls);
+        }
+        return null;
     }
 
     /**

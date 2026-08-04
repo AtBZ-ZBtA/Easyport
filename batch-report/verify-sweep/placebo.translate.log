@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 169 type renames, 2 ctor rules, 4 removed-API entries
 
 Rewrote 153 classes, moved 1 resources
 
@@ -39,6 +39,8 @@ Applied:
     34  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  HIERARCHY cannot extend final class: dev/shadowsoffire/placebo/color/GradientColor extends net/minecraft/network/chat/TextColor
+     1  HIERARCHY override of a now-final method dropped: dev/shadowsoffire/placebo/reload/DynamicRegistry.getContext()Lnet/neoforged/neoforge/common/conditions/ICondition$IContext; (final on net/neoforged/neoforge/resource/ContextAwareReloadListener)
      1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) LootTablesMixin
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/shadowsoffire/placebo/loot/LootSystem
      6  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;

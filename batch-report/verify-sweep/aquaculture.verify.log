@@ -1,28 +1,14 @@
 aquaculture.jar
   120 classes, 776 methods analysed
-  15 classes with a verification error (24 methods)
+  4 classes with a verification error (8 methods)
   1 other-mod classes absent from this classpath, not counted
 
-    6  [missing-platform-type] NoClassDefFoundError: net/minecraftforge/entity/IEntityAdditionalSpawnData
-         first at  com/teammetallurgy/aquaculture/client/renderer/entity/AquaBobberRenderer.render(Lcom/teammetallurgy/aquaculture/entity/AquaFishingBobberEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V
     4  [hierarchy] IncompatibleClassChangeError: class com.teammetallurgy.aquaculture.api.AquaArmorMaterials can not implement net.minecraft.world.item.ArmorMaterial, because it is not an interface (net.minecraft.world.item.ArmorMaterial is in unnamed module of loader java.net.URLClassLoader @38cee291)
          first at  com/teammetallurgy/aquaculture/init/AquaItems.lambda$static$15()Lnet/minecraft/world/item/Item;
-    3  [hierarchy] IncompatibleClassChangeError: class com.teammetallurgy.aquaculture.entity.TurtleLandEntity overrides final method net.minecraft.world.entity.LivingEntity.canBreatheUnderwater()Z
-         first at  com/teammetallurgy/aquaculture/entity/TurtleLandEntity$GetOutOfWaterGoal.<init>(Lcom/teammetallurgy/aquaculture/entity/TurtleLandEntity;)V
-    2  [hierarchy] IncompatibleClassChangeError: class com.teammetallurgy.aquaculture.entity.AquaFishEntity overrides final method net.minecraft.world.entity.LivingEntity.getDimensions(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions;
-         first at  com/teammetallurgy/aquaculture/client/renderer/entity/AquaFishRenderer.render(Lcom/teammetallurgy/aquaculture/entity/AquaFishEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V
-    2  [missing-platform-type] NoClassDefFoundError: net/minecraft/world/item/DyeableLeatherItem
-         first at  com/teammetallurgy/aquaculture/init/AquaItems.lambda$static$6()Lnet/minecraft/world/item/Item;
-    1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.PlantType not present
-         first at  com/teammetallurgy/aquaculture/block/FarmlandMoistBlock.canSustainPlant(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraftforge/common/IPlantable;)Z
     1  [types] Error at instruction N: Argument N: expected Lnet/minecraft/resources/ResourceLocation;, but found Lnet/minecraft/client/resources/model/ModelResourceLocation;
          first at  com/teammetallurgy/aquaculture/client/ClientHandler.registerModels(Lnet/neoforged/neoforge/client/event/ModelEvent$RegisterAdditional;)V
-    1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.ForgeSpawnEggItem not present
-         first at  com/teammetallurgy/aquaculture/init/AquaEntities.lambda$registerMob$6(Lnet/minecraftforge/registries/RegistryObject;II)Lnet/minecraft/world/item/Item;
     1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.world.item.BowlFoodItem not present
          first at  com/teammetallurgy/aquaculture/init/AquaItems.lambda$static$28()Lnet/minecraft/world/item/Item;
-    1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.ToolAction not present
-         first at  com/teammetallurgy/aquaculture/item/ItemFilletKnife.canPerformAction(Lnet/minecraft/world/item/ItemStack;Lnet/minecraftforge/common/ToolAction;)Z
     1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.capabilities.CapabilityProvider not present
          first at  com/teammetallurgy/aquaculture/item/crafting/BrewingNBT.testNBT(Lnet/minecraft/world/item/crafting/Ingredient;Lnet/minecraft/world/item/ItemStack;)Z
     1  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.crafting.conditions.IConditionSerializer not present

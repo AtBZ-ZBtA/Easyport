@@ -27,57 +27,57 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
  */
 public final class ForgeRegistries {
 
-    public static final IForgeRegistry<Block> BLOCKS = new IForgeRegistry<>(Registries.BLOCK);
-    public static final IForgeRegistry<Item> ITEMS = new IForgeRegistry<>(Registries.ITEM);
-    public static final IForgeRegistry<Fluid> FLUIDS = new IForgeRegistry<>(Registries.FLUID);
-    public static final IForgeRegistry<MobEffect> MOB_EFFECTS = new IForgeRegistry<>(Registries.MOB_EFFECT);
-    public static final IForgeRegistry<EntityType<?>> ENTITY_TYPES = new IForgeRegistry<>(Registries.ENTITY_TYPE);
+    public static final IForgeRegistry<Block> BLOCKS = new ForgeRegistry<>(Registries.BLOCK);
+    public static final IForgeRegistry<Item> ITEMS = new ForgeRegistry<>(Registries.ITEM);
+    public static final IForgeRegistry<Fluid> FLUIDS = new ForgeRegistry<>(Registries.FLUID);
+    public static final IForgeRegistry<MobEffect> MOB_EFFECTS = new ForgeRegistry<>(Registries.MOB_EFFECT);
+    public static final IForgeRegistry<EntityType<?>> ENTITY_TYPES = new ForgeRegistry<>(Registries.ENTITY_TYPE);
     public static final IForgeRegistry<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
-            new IForgeRegistry<>(Registries.BLOCK_ENTITY_TYPE);
-    public static final IForgeRegistry<MenuType<?>> MENU_TYPES = new IForgeRegistry<>(Registries.MENU);
-    public static final IForgeRegistry<Enchantment> ENCHANTMENTS = new IForgeRegistry<>(Registries.ENCHANTMENT);
+            new ForgeRegistry<>(Registries.BLOCK_ENTITY_TYPE);
+    public static final IForgeRegistry<MenuType<?>> MENU_TYPES = new ForgeRegistry<>(Registries.MENU);
+    public static final IForgeRegistry<Enchantment> ENCHANTMENTS = new ForgeRegistry<>(Registries.ENCHANTMENT);
     public static final IForgeRegistry<net.minecraft.sounds.SoundEvent> SOUND_EVENTS =
-            new IForgeRegistry<>(Registries.SOUND_EVENT);
+            new ForgeRegistry<>(Registries.SOUND_EVENT);
     public static final IForgeRegistry<net.minecraft.world.item.crafting.RecipeType<?>> RECIPE_TYPES =
-            new IForgeRegistry<>(Registries.RECIPE_TYPE);
+            new ForgeRegistry<>(Registries.RECIPE_TYPE);
     public static final IForgeRegistry<net.minecraft.world.item.crafting.RecipeSerializer<?>> RECIPE_SERIALIZERS =
-            new IForgeRegistry<>(Registries.RECIPE_SERIALIZER);
+            new ForgeRegistry<>(Registries.RECIPE_SERIALIZER);
     public static final IForgeRegistry<net.minecraft.world.entity.ai.attributes.Attribute> ATTRIBUTES =
-            new IForgeRegistry<>(Registries.ATTRIBUTE);
+            new ForgeRegistry<>(Registries.ATTRIBUTE);
     public static final IForgeRegistry<net.minecraft.core.particles.ParticleType<?>> PARTICLE_TYPES =
-            new IForgeRegistry<>(Registries.PARTICLE_TYPE);
+            new ForgeRegistry<>(Registries.PARTICLE_TYPE);
 
     // The tail, added from the shim audit rather than one launch failure at a time. Each of
     // these is a NoSuchFieldError the moment a mod touches it, and the class resolving fine
     // means nothing catches it earlier. Counts are corpus jars: POTIONS 31, FEATURES 28.
     public static final IForgeRegistry<net.minecraft.world.item.alchemy.Potion> POTIONS =
-            new IForgeRegistry<>(Registries.POTION);
+            new ForgeRegistry<>(Registries.POTION);
     public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.Feature<?>> FEATURES =
-            new IForgeRegistry<>(Registries.FEATURE);
+            new ForgeRegistry<>(Registries.FEATURE);
     public static final IForgeRegistry<net.minecraft.world.level.biome.Biome> BIOMES =
-            new IForgeRegistry<>(Registries.BIOME);
+            new ForgeRegistry<>(Registries.BIOME);
     public static final IForgeRegistry<net.minecraft.world.entity.npc.VillagerProfession> VILLAGER_PROFESSIONS =
-            new IForgeRegistry<>(Registries.VILLAGER_PROFESSION);
+            new ForgeRegistry<>(Registries.VILLAGER_PROFESSION);
     public static final IForgeRegistry<net.minecraft.world.entity.ai.village.poi.PoiType> POI_TYPES =
-            new IForgeRegistry<>(Registries.POINT_OF_INTEREST_TYPE);
+            new ForgeRegistry<>(Registries.POINT_OF_INTEREST_TYPE);
     public static final IForgeRegistry<net.minecraft.stats.StatType<?>> STAT_TYPES =
-            new IForgeRegistry<>(Registries.STAT_TYPE);
+            new ForgeRegistry<>(Registries.STAT_TYPE);
     public static final IForgeRegistry<net.minecraft.world.entity.decoration.PaintingVariant> PAINTING_VARIANTS =
-            new IForgeRegistry<>(Registries.PAINTING_VARIANT);
+            new ForgeRegistry<>(Registries.PAINTING_VARIANT);
     public static final IForgeRegistry<net.minecraft.world.level.levelgen.carver.WorldCarver<?>> WORLD_CARVERS =
-            new IForgeRegistry<>(Registries.CARVER);
+            new ForgeRegistry<>(Registries.CARVER);
     public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType<?>>
-            FOLIAGE_PLACER_TYPES = new IForgeRegistry<>(Registries.FOLIAGE_PLACER_TYPE);
+            FOLIAGE_PLACER_TYPES = new ForgeRegistry<>(Registries.FOLIAGE_PLACER_TYPE);
     public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType<?>>
-            TREE_DECORATOR_TYPES = new IForgeRegistry<>(Registries.TREE_DECORATOR_TYPE);
+            TREE_DECORATOR_TYPES = new ForgeRegistry<>(Registries.TREE_DECORATOR_TYPE);
     public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType<?>>
-            BLOCK_STATE_PROVIDER_TYPES = new IForgeRegistry<>(Registries.BLOCK_STATE_PROVIDER_TYPE);
+            BLOCK_STATE_PROVIDER_TYPES = new ForgeRegistry<>(Registries.BLOCK_STATE_PROVIDER_TYPE);
     // Typed over vanilla's element type rather than Forge's. Forge declared this constant over
     // brigadier's ArgumentType; vanilla's registry actually holds ArgumentTypeInfo. Mods name
     // only the erased IForgeRegistry in their descriptors, so the distinction never reaches
     // them -- and brigadier is not on this module's compile classpath anyway.
     public static final IForgeRegistry<net.minecraft.commands.synchronization.ArgumentTypeInfo<?, ?>>
-            COMMAND_ARGUMENT_TYPES = new IForgeRegistry<>(Registries.COMMAND_ARGUMENT_TYPE);
+            COMMAND_ARGUMENT_TYPES = new ForgeRegistry<>(Registries.COMMAND_ARGUMENT_TYPE);
 
     /**
      * Registry *keys*, as distinct from the registries above. 105 corpus jars.
