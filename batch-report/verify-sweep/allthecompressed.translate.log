@@ -1,0 +1,23 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 25 classes, moved 5288 resources
+
+Applied:
+     8  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     3  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+    65  TYPE_PREFIX net/minecraftforge/client/model/
+    31  TYPE_PREFIX net/minecraftforge/common/data/
+     7  TYPE_PREFIX net/minecraftforge/data/event/
+     3  TYPE_PREFIX net/minecraftforge/forgespi/
+     1  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     2  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     4  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     1  TYPE_RENAME net/minecraftforge/resource/PathPackResources
+     1  TYPE_RENAME net/minecraftforge/resource/ResourcePackLoader
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+  (none)
+
+Wrote translated\allthecompressed.jar
+      translated\allthecompressed.report.tsv

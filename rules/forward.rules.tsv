@@ -392,26 +392,28 @@ TYPE_RENAME	net/minecraftforge/common/util/BlockSnapshot	net/neoforged/neoforge/
 TYPE_RENAME	net/minecraftforge/common/util/MutableHashedLinkedMap	net/neoforged/neoforge/common/util/MutableHashedLinkedMap
 TYPE_RENAME	net/minecraftforge/common/util/LogicalSidedProvider	net/neoforged/neoforge/common/util/LogicalSidedProvider
 
-# --- Vanilla constants wrapped in Holder ------------------------------------------------------
+# --- Vanilla constants wrapped in Holder --- WITHDRAWN, now handled automatically -------------
 #
-# FIELD_RETYPE  owner <TAB> newFieldDescriptor
+# Two rules used to live here and both are gone:
 #
-# 1.21 turned several holder classes from enums implementing the thing they described into plain
-# carriers of Holder<T> constants. ArmorMaterials.IRON went from an ArmorMaterials enum constant
-# implementing ArmorMaterial to a Holder<ArmorMaterial>, and ArmorItem's constructor changed to
-# match.
+#   FIELD_RETYPE  net/minecraft/world/item/ArmorMaterials  Lnet/minecraft/core/Holder;
+#   RENAME_METHOD net/minecraft/world/item/ArmorItem  <init>  (ArmorMaterial,Type,Properties)V
+#                                                  -> (Holder,Type,Properties)V
 #
-# The field names did not change, so neither the SRG mapping nor any type rename touches this.
-# Only the descriptor moved -- and the verifier reads descriptors, so this fails before the code
-# runs, as a VerifyError rather than a NoSuchFieldError. geckolib and aquaculture both die here.
+# They were the right diagnosis and the wrong treatment. 1.21 wrapped a family of vanilla
+# constants -- MobEffects, Attributes, Potions, SoundEvents, ArmorMaterials -- and these rules
+# let the new Holder type spread outward from the field read. It does not stop at the vanilla
+# boundary: geckolib still failed, one layer in, because its *own* WolfArmorItem constructor
+# declares ArmorMaterial and the call site now passed a Holder.
 #
-# Per-owner rather than per-field: the wrapping was wholesale, so enumerating the constants would
-# be one chance per constant to miss one, and a missed one fails identically.
-FIELD_RETYPE	net/minecraft/world/item/ArmorMaterials	Lnet/minecraft/core/Holder;
-
-# The consuming constructor. Argument order is unchanged, so this is a plain call-site rewrite
-# and RENAME_METHOD covers it -- INVOKESPECIAL is preserved and only the descriptor moves.
-RENAME_METHOD	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/world/item/ArmorMaterial;Lnet/minecraft/world/item/ArmorItem$Type;Lnet/minecraft/world/item/Item$Properties;)V	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/core/Holder;Lnet/minecraft/world/item/ArmorItem$Type;Lnet/minecraft/world/item/Item$Properties;)V
+# Chasing that would mean propagating a retype through mod signatures by data flow. Easyport
+# does the opposite instead -- unwraps at every vanilla boundary so the mod's own bytecode keeps
+# the types its author compiled against, and wraps again on the way back in. See
+# Translate#applyHolderUnwrap and #applyWrapAdapters, which discover the whole family from the
+# platform's own descriptors and need no rules here at all.
+#
+# Left as a comment rather than deleted: re-adding either one silently disables the automatic
+# pass for that type, because a field already retyped to Holder no longer looks like a gap.
 
 # ItemHandlerHelper kept most of its class in NeoForge but lost these two, both of which
 # vanilla absorbed in 1.20.5 when component comparison replaced NBT comparison. Static to

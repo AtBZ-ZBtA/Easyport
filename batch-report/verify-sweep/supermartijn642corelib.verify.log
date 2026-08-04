@@ -1,0 +1,10 @@
+supermartijn642corelib.jar
+  181 classes, 2037 methods analysed
+  4 classes with a verification error (8 methods)
+
+    6  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraftforge.common.crafting.conditions.IConditionSerializer not present
+         first at  com/supermartijn642/core/registry/RegistrationHandler$1.register(Ljava/lang/String;Lcom/supermartijn642/core/data/condition/ResourceConditionSerializer;)Lcom/supermartijn642/core/data/condition/ResourceConditionSerializer;
+    1  [missing-platform-type] NoClassDefFoundError: net/minecraftforge/common/crafting/conditions/IConditionSerializer
+         first at  com/supermartijn642/core/data/condition/ResourceConditions.wrap(Lnet/minecraft/resources/ResourceLocation;Lcom/supermartijn642/core/data/condition/ResourceConditionSerializer;)Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;
+    1  [types] Error at instruction N: Argument N: expected Lnet/minecraft/resources/ResourceLocation;, but found Lnet/minecraft/client/resources/model/ModelResourceLocation;
+         first at  com/supermartijn642/core/registry/ClientRegistrationHandler.registerModelOverwrite(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/function/Function;)V

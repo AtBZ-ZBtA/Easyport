@@ -1,0 +1,18 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 20 classes, moved 1 resources
+
+Applied:
+     1  SRG_IN_TEXT
+     3  TYPE_PREFIX net/minecraftforge/event/
+     2  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     7  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     2  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+  (none)
+
+Wrote translated\aiimprovements.jar
+      translated\aiimprovements.report.tsv

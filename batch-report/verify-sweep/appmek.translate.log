@@ -1,0 +1,23 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 74 classes, moved 24 resources
+
+Applied:
+    13  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     9  TYPE_PREFIX net/minecraftforge/client/event/
+    25  TYPE_PREFIX net/minecraftforge/client/model/
+     5  TYPE_PREFIX net/minecraftforge/common/Tags
+    52  TYPE_PREFIX net/minecraftforge/common/data/
+     7  TYPE_PREFIX net/minecraftforge/data/event/
+    33  TYPE_PREFIX net/minecraftforge/fluids/
+     3  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     1  TYPE_RENAME net/minecraftforge/fml/common/Mod
+    10  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     7  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+     5  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+    18  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
+
+Wrote translated\appmek.jar
+      translated\appmek.report.tsv

@@ -10,14 +10,18 @@ import java.util.zip.ZipOutputStream;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 /**
  * Easyport transformer: rewrites a mod jar from Forge 1.20.1 to NeoForge 1.21.1.
@@ -125,6 +129,15 @@ public class Translate {
     /** Target class -> its declared fields as "name desc", for validating {@code @Shadow}. */
     private final Map<String, Set<String>> targetFields = new HashMap<>();
 
+    /** Vanilla class -> every member it declares, as "name desc". Fields and methods together. */
+    private final Map<String, Set<String>> targetMembers = new HashMap<>();
+    private final Map<String, String> targetSuper = new HashMap<>();
+    private final Map<String, List<String>> targetIfaces = new HashMap<>();
+    private final Map<String, Set<String>> resolvedMemberCache = new HashMap<>();
+
+    /** "owner.member" -> the T inside its {@code Holder<T>}, read from the generic signature. */
+    private final Map<String, String> holderValueType = new HashMap<>();
+
     private void loadTargetIndex(String[] jars) {
         for (String j : jars) {
             Path p = Paths.get(j);
@@ -151,6 +164,39 @@ public class Translate {
                             for (var f : node.fields) fields.add(f.name + " " + f.desc);
                         }
                         targetFields.put(internal, fields);
+
+                        // Methods and hierarchy, for the Holder adaptation passes. Those ask a
+                        // different question to @Shadow validation -- "what does this type have,
+                        // including inherited" rather than "what does it declare" -- so the two
+                        // indexes are kept apart rather than one being made to serve both.
+                        Set<String> members = new HashSet<>(fields);
+                        if (node.methods != null) {
+                            for (var m : node.methods) members.add(m.name + " " + m.desc);
+                        }
+                        targetMembers.put(internal, members);
+                        if (node.superName != null) targetSuper.put(internal, node.superName);
+                        if (node.interfaces != null) targetIfaces.put(internal, node.interfaces);
+
+                        // Generic signatures, kept only for Holder-typed members. The erased
+                        // descriptor says Holder and nothing else; the type argument inside the
+                        // signature is the only place the platform records what is *in* the
+                        // holder, and unwrapping has to cast to something.
+                        if (node.fields != null) {
+                            for (var f : node.fields) {
+                                if (f.signature != null && HOLDER_DESC.equals(f.desc)) {
+                                    String arg = holderTypeArgument(f.signature);
+                                    if (arg != null) holderValueType.put(internal + "." + f.name, arg);
+                                }
+                            }
+                        }
+                        if (node.methods != null) {
+                            for (var m : node.methods) {
+                                if (m.signature == null || !m.desc.endsWith(HOLDER_DESC)) continue;
+                                String ret = m.signature.substring(m.signature.lastIndexOf(')') + 1);
+                                String arg = holderTypeArgument(ret);
+                                if (arg != null) holderValueType.put(internal + "." + m.name, arg);
+                            }
+                        }
                     } catch (Exception ignored) {
                         // Unparseable class: it still counts as present, just not inspectable.
                     }
@@ -325,6 +371,13 @@ public class Translate {
             applyFieldToStaticRules(m.instructions);
             applyCtorRules(m.instructions);
             applySwapRules(m.instructions);
+            // Unwrap before wrap, and both after the explicit rules. Unwrap normalises what the
+            // mod receives back to its 1.20.1 static types, which is what lets the wrap pass
+            // decide about each argument by looking at the call site alone. Running them the
+            // other way round would have the wrap pass reasoning about values whose type the
+            // unwrap pass is about to change.
+            applyHolderUnwrap(m.instructions);
+            applyWrapAdapters(m);
             recordRemoved(m.instructions);
         }
 
@@ -612,6 +665,270 @@ public class Translate {
             String sym = min.owner + "#" + min.name + min.desc;
             if (removed.contains(sym)) count(unresolved, "REMOVED " + sym);
         }
+    }
+
+    // ---- Holder adaptation -------------------------------------------------------------
+
+    private static final String HOLDER = "net/minecraft/core/Holder";
+    private static final String HOLDER_DESC = "Lnet/minecraft/core/Holder;";
+    private static final String HOLDER_BRIDGE = "easyport/bridge/HolderBridge";
+
+    /**
+     * Every member a vanilla type has, inherited members included.
+     *
+     * Inheritance matters more here than it looks. {@code ArmorItem.getMaterial()} is declared on
+     * {@code ArmorItem}, but plenty of the calls this pass has to judge land on members a
+     * supertype declares, and treating those as absent would have this pass adapting calls that
+     * were never broken.
+     *
+     * Empty when the platform index is not loaded, which switches both adaptation passes off
+     * rather than having them guess.
+     */
+    private Set<String> resolvedTargetMembers(String cls) {
+        Set<String> hit = resolvedMemberCache.get(cls);
+        if (hit != null) return hit;
+        Set<String> all = new HashSet<>();
+        java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>();
+        Set<String> seen = new HashSet<>();
+        queue.add(cls);
+        while (!queue.isEmpty()) {
+            String k = queue.poll();
+            if (!seen.add(k)) continue;
+            Set<String> own = targetMembers.get(k);
+            if (own != null) all.addAll(own);
+            String sup = targetSuper.get(k);
+            if (sup != null) queue.add(sup);
+            List<String> ifs = targetIfaces.get(k);
+            if (ifs != null) queue.addAll(ifs);
+        }
+        resolvedMemberCache.put(cls, all);
+        return all;
+    }
+
+    /**
+     * What to cast an unwrapped value to.
+     *
+     * The obvious answer -- whatever the corpus said the type was -- is wrong for the case that
+     * matters most. {@code ArmorMaterials} was an *enum implementing* {@code ArmorMaterial} in
+     * 1.20.1, so a mod reading {@code ArmorMaterials.IRON} has the descriptor
+     * {@code Lnet/minecraft/world/item/ArmorMaterials;}. In 1.21 that class is a plain carrier of
+     * {@code Holder<ArmorMaterial>} constants and is no longer an {@code ArmorMaterial} at all;
+     * casting the unwrapped value back to it produces bytecode that fails verification with
+     * "expected ArmorMaterial, but found ArmorMaterials".
+     *
+     * So the platform's own generic signature decides, and the corpus descriptor is only the
+     * fallback for a member with no signature -- where it is also usually right, because a type
+     * that was never an enum did not change identity when it got wrapped.
+     */
+    private String unwrappedType(String owner, String name, String corpusDesc) {
+        String fromSignature = holderValueType.get(owner + "." + name);
+        if (fromSignature != null) return fromSignature;
+        return corpusDesc.substring(1, corpusDesc.length() - 1);
+    }
+
+    /**
+     * The {@code T} in a {@code Lnet/minecraft/core/Holder&lt;LT;&gt;;} generic signature.
+     *
+     * Deliberately literal rather than a full signature parse: a nested or wildcard argument is
+     * not something to guess at, so anything that is not a plain class type yields null and the
+     * caller falls back.
+     */
+    private static String holderTypeArgument(String signature) {
+        String open = "Lnet/minecraft/core/Holder<";
+        int i = signature.indexOf(open);
+        if (i < 0) return null;
+        int start = i + open.length();
+        if (start >= signature.length() || signature.charAt(start) != 'L') return null;
+        int end = signature.indexOf(';', start);
+        if (end < 0) return null;
+        String inner = signature.substring(start + 1, end);
+        // A nested generic argument (Holder<Foo<Bar>>) leaves a '<' inside; the erasure is still
+        // just the outer name, so take it.
+        int lt = inner.indexOf('<');
+        if (lt >= 0) inner = inner.substring(0, lt);
+        return inner.isEmpty() ? null : inner;
+    }
+
+    /**
+     * Unwraps vanilla values that 1.21 started returning inside a {@code Holder}.
+     *
+     * The source half of the Holder boundary. A field read of {@code MobEffects.POISON} or a call
+     * to {@code MobEffectInstance.getEffect()} now yields a {@code Holder}; this retypes the
+     * reference and immediately unwraps, so what the mod's own bytecode receives is the
+     * {@code MobEffect} it was compiled against.
+     *
+     * Both cases leave the value on top of the stack, which is the whole reason this half is
+     * cheap: two instructions inserted directly after, no operand-stack analysis, no reordering.
+     * The sink half is not so lucky -- see {@link #applyWrapAdapters}.
+     *
+     * Deliberately driven by the platform index rather than by a list of wrapped types. Any
+     * member whose descriptor differs from the corpus's only by a {@code Holder} in the value
+     * position is one of these, and asking the platform means the set never needs updating when
+     * a later NeoForge build wraps something else.
+     */
+    private void applyHolderUnwrap(InsnList insns) {
+        if (targetMembers.isEmpty()) return;
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (insn instanceof FieldInsnNode fin) {
+                if (!fin.owner.startsWith("net/minecraft/")) continue;
+                if (fin.getOpcode() != Opcodes.GETSTATIC && fin.getOpcode() != Opcodes.GETFIELD) continue;
+                if (!fin.desc.startsWith("L") || fin.desc.equals(HOLDER_DESC)) continue;
+                Set<String> members = resolvedTargetMembers(fin.owner);
+                if (members.isEmpty()) continue;
+                if (members.contains(fin.name + " " + fin.desc)) continue;
+                if (!members.contains(fin.name + " " + HOLDER_DESC)) continue;
+                String valueType = unwrappedType(fin.owner, fin.name, fin.desc);
+                fin.desc = HOLDER_DESC;
+                insns.insert(fin, new TypeInsnNode(Opcodes.CHECKCAST, valueType));
+                insns.insert(fin, new MethodInsnNode(Opcodes.INVOKEINTERFACE, HOLDER,
+                        "value", "()Ljava/lang/Object;", true));
+                count(appliedCounts, "HOLDER_UNWRAP field " + fin.owner);
+            } else if (insn instanceof MethodInsnNode min) {
+                if (!min.owner.startsWith("net/minecraft/")) continue;
+                if (min.name.equals("<init>")) continue;
+                Type ret = Type.getReturnType(min.desc);
+                if (ret.getSort() != Type.OBJECT || ret.getInternalName().equals(HOLDER)) continue;
+                Set<String> members = resolvedTargetMembers(min.owner);
+                if (members.isEmpty()) continue;
+                if (members.contains(min.name + " " + min.desc)) continue;
+                String holderDesc = min.desc.substring(0, min.desc.indexOf(')') + 1) + HOLDER_DESC;
+                if (!members.contains(min.name + " " + holderDesc)) continue;
+                String valueType = unwrappedType(min.owner, min.name, ret.getDescriptor());
+                min.desc = holderDesc;
+                insns.insert(min, new TypeInsnNode(Opcodes.CHECKCAST, valueType));
+                insns.insert(min, new MethodInsnNode(Opcodes.INVOKEINTERFACE, HOLDER,
+                        "value", "()Ljava/lang/Object;", true));
+                count(appliedCounts, "HOLDER_UNWRAP return " + min.owner + "." + min.name);
+            }
+        }
+    }
+
+    /**
+     * Wraps mod values on their way into vanilla methods that now take a {@code Holder}.
+     *
+     * The sink half, and the awkward one. {@code new MobEffectInstance(effect, 100, 0)} needs the
+     * first of three arguments wrapped, and by the time the call executes that value is buried two
+     * slots down the operand stack. There is no instruction that reaches past the top.
+     *
+     * <h2>Spill and reload</h2>
+     *
+     * The arguments above the one being wrapped are stored into fresh locals, the wrap runs on
+     * what is now the top of the stack, and they are pushed back in order:
+     *
+     * <pre>
+     *   ..., effect, 100, 0        ISTORE d ; ISTORE c
+     *   ..., effect                INVOKESTATIC HolderBridge.wrap
+     *   ..., Holder                ILOAD c ; ILOAD d
+     *   ..., Holder, 100, 0        INVOKESPECIAL &lt;init&gt;(Holder,I,I)V
+     * </pre>
+     *
+     * Correct without any data-flow analysis, because the descriptor already says exactly what is
+     * on the stack and in what order. Slot sizes come from {@code Type.getSize()}, so a long or
+     * double argument spills and reloads as one value rather than being torn in half.
+     *
+     * <h2>Why not a generated adapter</h2>
+     *
+     * An earlier version redirected the call to a synthesised static method taking the arguments
+     * in their existing order, which needs no stack surgery at all. It is a genuinely neater
+     * rewrite and it cannot express the case that matters most: {@code super(...)}. geckolib's
+     * {@code WolfArmorItem} extends {@code ArmorItem} and calls its changed constructor with no
+     * NEW/DUP to redirect and an uninitialised {@code this} beneath the arguments. That is not an
+     * edge case -- subclassing a vanilla type whose constructor was rewrapped is the single
+     * commonest shape of this problem, and it is exactly what the previous approach to
+     * {@code ArmorMaterials} could not reach.
+     *
+     * <h2>Matching</h2>
+     *
+     * A platform member is a candidate when it has the same name and arity, every parameter either
+     * matches exactly or is a {@code Holder} where the corpus passes an object, and at least one
+     * parameter is such a substitution. <b>An ambiguous match is skipped and reported.</b> Vanilla
+     * overloads heavily, and guessing between two candidates produces a translation that links
+     * and calls the wrong method.
+     */
+    private void applyWrapAdapters(MethodNode method) {
+        if (targetMembers.isEmpty()) return;
+        InsnList insns = method.instructions;
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof MethodInsnNode min)) continue;
+            if (!min.owner.startsWith("net/minecraft/")) continue;
+            if (min.getOpcode() == Opcodes.INVOKEDYNAMIC) continue;
+            Set<String> members = resolvedTargetMembers(min.owner);
+            if (members.isEmpty()) continue;
+            if (members.contains(min.name + " " + min.desc)) continue;
+
+            String match = null;
+            int candidates = 0;
+            for (String m : members) {
+                int sp = m.indexOf(' ');
+                if (sp < 0 || sp != min.name.length() || !m.startsWith(min.name)) continue;
+                String cand = m.substring(sp + 1);
+                if (!cand.startsWith("(")) continue;              // a field of the same name
+                if (!wrapCompatible(min.desc, cand)) continue;
+                candidates++;
+                match = cand;
+            }
+            if (candidates == 0) continue;
+            if (candidates > 1) {
+                count(unresolved, "HOLDER_WRAP ambiguous: " + min.owner + "." + min.name + min.desc);
+                continue;
+            }
+
+            Type[] have = Type.getArgumentTypes(min.desc);
+            Type[] want = Type.getArgumentTypes(match);
+
+            // Highest-indexed argument needing a wrap. Everything above it must spill; everything
+            // below it never moves, so wrapping from the top down keeps each step's spill set as
+            // small as it can be.
+            for (int i = have.length - 1; i >= 0; i--) {
+                if (have[i].equals(want[i])) continue;
+                int base = method.maxLocals;
+                InsnList fix = new InsnList();
+                int slot = base;
+                for (int j = have.length - 1; j > i; j--) {
+                    fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ISTORE), slot));
+                    slot += have[j].getSize();
+                }
+                fix.add(new MethodInsnNode(Opcodes.INVOKESTATIC, HOLDER_BRIDGE, "wrap",
+                        "(Ljava/lang/Object;)" + HOLDER_DESC, false));
+                // Reload in the mirror order of the spill, so the operand stack is rebuilt
+                // exactly as it was rather than reversed.
+                for (int j = i + 1; j < have.length; j++) {
+                    slot -= have[j].getSize();
+                    fix.add(new VarInsnNode(have[j].getOpcode(Opcodes.ILOAD), slot));
+                }
+                insns.insertBefore(min, fix);
+                method.maxLocals = base + Arrays.stream(have, i + 1, have.length)
+                                               .mapToInt(Type::getSize).sum();
+                count(appliedCounts, "HOLDER_WRAP " + min.owner + "." + min.name);
+            }
+            min.desc = match;
+        }
+    }
+
+    /**
+     * Whether {@code target} is {@code called} with some object parameters wrapped in a Holder.
+     *
+     * Requires at least one actual substitution, so an unrelated overload that happens to differ
+     * only in return type is not treated as a match. Return types must agree exactly: a return
+     * that also changed is the {@link #applyHolderUnwrap} case, which runs first and would have
+     * handled it.
+     */
+    private static boolean wrapCompatible(String called, String target) {
+        Type[] a = Type.getArgumentTypes(called);
+        Type[] b = Type.getArgumentTypes(target);
+        if (a.length != b.length) return false;
+        if (!Type.getReturnType(called).equals(Type.getReturnType(target))) return false;
+        boolean substituted = false;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i].equals(b[i])) continue;
+            if (b[i].getSort() == Type.OBJECT && b[i].getInternalName().equals(HOLDER)
+                    && a[i].getSort() == Type.OBJECT) {
+                substituted = true;
+                continue;
+            }
+            return false;
+        }
+        return substituted;
     }
 
     // ---- resources ---------------------------------------------------------------------

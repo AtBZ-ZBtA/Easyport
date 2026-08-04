@@ -1,0 +1,33 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 32 classes, moved 4 resources
+
+Applied:
+     5  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     1  EBS_BUS FORGE -> GAME
+     1  EBS_STRIP (no @SubscribeEvent methods) com/hollingsworth/ars_creo/CreoConfig
+     1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     6  TYPE_PREFIX net/minecraftforge/client/event/
+     4  TYPE_PREFIX net/minecraftforge/common/Tags
+    48  TYPE_PREFIX net/minecraftforge/fluids/
+     1  TYPE_PREFIX net/minecraftforge/fml/util/
+     2  TYPE_PREFIX net/minecraftforge/items/
+     2  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     1  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
+     6  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
+     1  TYPE_RENAME net/minecraftforge/common/util/FakePlayerFactory
+     1  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
+     3  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     4  TYPE_RENAME net/minecraftforge/fml/common/Mod
+    11  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     6  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     8  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+     8  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     7  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
+     1  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid
+
+Wrote translated\ars_creo.jar
+      translated\ars_creo.report.tsv

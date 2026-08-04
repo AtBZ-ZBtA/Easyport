@@ -1,0 +1,49 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 153 classes, moved 1 resources
+
+Applied:
+    13  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     7  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  EBS_BUS FORGE -> GAME
+     2  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
+     1  HOLDER_WRAP net/minecraft/world/entity/LivingEntity.getAttribute
+     4  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+     1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     2  SRG_IN_TEXT
+    30  TYPE_PREFIX net/minecraftforge/client/event/
+    19  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
+     2  TYPE_PREFIX net/minecraftforge/energy/
+    41  TYPE_PREFIX net/minecraftforge/event/
+     2  TYPE_PREFIX net/minecraftforge/fml/event/
+     2  TYPE_PREFIX net/minecraftforge/forgespi/
+     9  TYPE_PREFIX net/minecraftforge/items/
+     1  TYPE_PREFIX net/minecraftforge/server/
+     1  TYPE_RENAME net/minecraft/world/level/storage/loot/Serializer
+     5  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     3  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
+     8  TYPE_RENAME net/minecraftforge/event/TickEvent
+    12  TYPE_RENAME net/minecraftforge/event/TickEvent$ClientTickEvent
+    20  TYPE_RENAME net/minecraftforge/event/TickEvent$Phase
+     8  TYPE_RENAME net/minecraftforge/event/TickEvent$PlayerTickEvent
+     5  TYPE_RENAME net/minecraftforge/event/TickEvent$ServerTickEvent
+     9  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+    13  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     1  TYPE_RENAME net/minecraftforge/fml/InterModComms
+    15  TYPE_RENAME net/minecraftforge/fml/ModContainer
+     4  TYPE_RENAME net/minecraftforge/fml/common/Mod
+    11  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     6  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     6  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     3  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+    34  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) LootTablesMixin
+     1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/shadowsoffire/placebo/loot/LootSystem
+     6  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
+     2  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
+     4  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
+
+Wrote translated\placebo.jar
+      translated\placebo.report.tsv

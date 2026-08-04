@@ -1,0 +1,7 @@
+botanypots.jar
+  71 classes, 496 methods analysed
+  1 classes with a verification error (1 methods)
+  19 other-mod classes absent from this classpath, not counted
+
+    1  [types] Error at instruction N: Expected I, but found .
+         first at  net/darkhax/botanypots/data/displaystate/AgingDisplayState.calculatePhases(Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/List;

@@ -1,0 +1,23 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 36 classes, moved 1 resources
+
+Applied:
+     2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     2  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+     2  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Loading#getConfig -> easyport/bridge/ConfigBridge#getConfig
+     3  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Reloading#getConfig -> easyport/bridge/ConfigBridge#getConfig
+    26  TYPE_PREFIX net/minecraftforge/client/event/
+    15  TYPE_PREFIX net/minecraftforge/fml/event/
+     3  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     6  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+     1  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
+     5  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+    11  TYPE_RENAME net/minecraftforge/fml/ModContainer
+     1  TYPE_RENAME net/minecraftforge/fml/common/Mod
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+  (none)
+
+Wrote translated\betteradvancements.jar
+      translated\betteradvancements.report.tsv

@@ -1,0 +1,6 @@
+yungsapi.jar
+  167 classes, 1120 methods analysed
+  1 classes with a verification error (2 methods)
+
+    2  [missing-platform-type] Error at instruction N: Type java.lang.ClassNotFoundException: net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance not present
+         first at  com/yungnickyoung/minecraft/yungsapi/criteria/SafeStructureLocationTrigger.createInstance(Lcom/google/gson/JsonObject;Lnet/minecraft/advancements/critereon/ContextAwarePredicate;Lnet/minecraft/advancements/critereon/DeserializationContext;)Lnet/minecraft/advancements/critereon/AbstractCriterionTriggerInstance;

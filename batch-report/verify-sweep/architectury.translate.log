@@ -1,0 +1,75 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 382 classes, moved 1 resources
+
+Applied:
+     4  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     3  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  HOLDER_WRAP net/minecraft/server/level/ServerLevel.gameEvent
+     3  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+     4  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     3  SRG_IN_TEXT
+   401  TYPE_PREFIX net/minecraftforge/client/event/
+    30  TYPE_PREFIX net/minecraftforge/client/extensions/
+   407  TYPE_PREFIX net/minecraftforge/event/
+   194  TYPE_PREFIX net/minecraftforge/fluids/
+     4  TYPE_PREFIX net/minecraftforge/fml/util/
+    52  TYPE_PREFIX net/minecraftforge/forgespi/
+     3  TYPE_PREFIX net/minecraftforge/server/
+   121  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+    89  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
+     4  TYPE_RENAME net/minecraftforge/client/event/TextureStitchEvent$Post
+     2  TYPE_RENAME net/minecraftforge/common/CreativeModeTabRegistry
+    12  TYPE_RENAME net/minecraftforge/common/SoundAction
+     4  TYPE_RENAME net/minecraftforge/common/SoundActions
+     1  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
+    25  TYPE_RENAME net/minecraftforge/common/util/MutableHashedLinkedMap
+    25  TYPE_RENAME net/minecraftforge/common/world/BiomeGenerationSettingsBuilder
+     4  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier
+    22  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier$Phase
+    18  TYPE_RENAME net/minecraftforge/common/world/BiomeSpecialEffectsBuilder
+    24  TYPE_RENAME net/minecraftforge/common/world/ClimateSettingsBuilder
+    29  TYPE_RENAME net/minecraftforge/common/world/MobSpawnSettingsBuilder
+     5  TYPE_RENAME net/minecraftforge/common/world/ModifiableBiomeInfo
+    15  TYPE_RENAME net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo
+    43  TYPE_RENAME net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder
+     6  TYPE_RENAME net/minecraftforge/event/TickEvent
+     6  TYPE_RENAME net/minecraftforge/event/TickEvent$ClientTickEvent
+     9  TYPE_RENAME net/minecraftforge/event/TickEvent$LevelTickEvent
+    28  TYPE_RENAME net/minecraftforge/event/TickEvent$Phase
+     8  TYPE_RENAME net/minecraftforge/event/TickEvent$PlayerTickEvent
+     6  TYPE_RENAME net/minecraftforge/event/TickEvent$ServerTickEvent
+     6  TYPE_RENAME net/minecraftforge/event/entity/SpawnPlacementRegisterEvent
+     5  TYPE_RENAME net/minecraftforge/event/entity/SpawnPlacementRegisterEvent$Operation
+     6  TYPE_RENAME net/minecraftforge/event/entity/living/LivingAttackEvent
+    12  TYPE_RENAME net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn
+     7  TYPE_RENAME net/minecraftforge/event/entity/player/EntityItemPickupEvent
+     7  TYPE_RENAME net/minecraftforge/event/entity/player/PlayerEvent$ItemPickupEvent
+    17  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+    96  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
+   110  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     5  TYPE_RENAME net/minecraftforge/fml/ModContainer
+     7  TYPE_RENAME net/minecraftforge/fml/common/Mod
+    21  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     9  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     2  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     2  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+     1  TYPE_RENAME net/minecraftforge/fml/loading/FMLLoader
+     4  TYPE_RENAME net/minecraftforge/fml/loading/moddiscovery/ModFileInfo
+     3  TYPE_RENAME net/minecraftforge/registries/NewRegistryEvent
+    34  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
+    16  TYPE_RENAME net/minecraftforge/registries/RegisterEvent$RegisterHelper
+    40  TYPE_RENAME net/minecraftforge/registries/RegistryBuilder
+     3  TYPE_RENAME net/minecraftforge/registries/RegistryManager
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) MixinLootDataManager
+     1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/architectury/event/forge/EventHandlerImplCommon
+     1  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
+     1  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/TextureStitchEvent
+    13  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/player/FillBucketEvent
+     3  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid
+    20  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Properties
+
+Wrote translated\architectury.jar
+      translated\architectury.report.tsv

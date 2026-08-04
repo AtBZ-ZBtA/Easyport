@@ -1,0 +1,62 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 399 classes, moved 32 resources
+
+Applied:
+    18  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     3  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  JARJAR_TRANSLATE (depth 1)
+     1  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+     1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Loading#getConfig -> easyport/bridge/ConfigBridge#getConfig
+     1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Reloading#getConfig -> easyport/bridge/ConfigBridge#getConfig
+     1  RENAME_METHOD net/neoforged/neoforge/items/ItemHandlerHelper#canItemStacksStack -> canItemStacksStack
+     1  SRG_IN_TEXT
+   434  TYPE_PREFIX net/minecraftforge/client/event/
+     5  TYPE_PREFIX net/minecraftforge/client/model/
+    79  TYPE_PREFIX net/minecraftforge/client/settings/
+     4  TYPE_PREFIX net/minecraftforge/energy/
+   247  TYPE_PREFIX net/minecraftforge/event/
+    39  TYPE_PREFIX net/minecraftforge/fluids/
+    16  TYPE_PREFIX net/minecraftforge/fml/event/
+    18  TYPE_PREFIX net/minecraftforge/forgespi/
+     7  TYPE_PREFIX net/minecraftforge/items/
+    47  TYPE_PREFIX net/minecraftforge/server/
+    13  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     9  TYPE_RENAME net/minecraftforge/client/ChunkRenderTypeSet
+     1  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
+     2  TYPE_RENAME net/minecraftforge/common/world/BiomeGenerationSettingsBuilder
+     5  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier
+    13  TYPE_RENAME net/minecraftforge/common/world/BiomeModifier$Phase
+     2  TYPE_RENAME net/minecraftforge/common/world/ModifiableBiomeInfo
+     6  TYPE_RENAME net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo
+    16  TYPE_RENAME net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder
+     8  TYPE_RENAME net/minecraftforge/event/TickEvent
+    29  TYPE_RENAME net/minecraftforge/event/TickEvent$ClientTickEvent
+    16  TYPE_RENAME net/minecraftforge/event/TickEvent$LevelTickEvent
+    39  TYPE_RENAME net/minecraftforge/event/TickEvent$Phase
+    16  TYPE_RENAME net/minecraftforge/event/TickEvent$PlayerTickEvent
+    12  TYPE_RENAME net/minecraftforge/event/TickEvent$ServerTickEvent
+     9  TYPE_RENAME net/minecraftforge/event/entity/living/LivingDamageEvent
+     9  TYPE_RENAME net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Post
+    10  TYPE_RENAME net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Pre
+     2  TYPE_RENAME net/minecraftforge/event/level/SaplingGrowTreeEvent
+     8  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+   126  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
+    16  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     1  TYPE_RENAME net/minecraftforge/fml/InterModComms
+    12  TYPE_RENAME net/minecraftforge/fml/ModContainer
+     2  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     9  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     3  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/InterModEnqueueEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     7  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent
+     8  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Post
+     9  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Pre
+     7  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
+     2  TYPE_PREFIX target missing: net/neoforged/neoforge/event/ForgeEventFactory
+     4  TYPE_PREFIX target missing: net/neoforged/neoforge/event/level/BlockEvent$CropGrowEvent
+
+Wrote translated\balm.jar
+      translated\balm.report.tsv

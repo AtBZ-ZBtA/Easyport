@@ -1,0 +1,34 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 42 classes, moved 34 resources
+
+Applied:
+    14  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     1  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
+     6  HOLDER_UNWRAP field net/minecraft/world/effect/MobEffects
+     3  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
+     6  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
+     2  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
+     4  TYPE_PREFIX net/minecraftforge/common/Tags
+    19  TYPE_PREFIX net/minecraftforge/event/
+   115  TYPE_PREFIX net/minecraftforge/items/
+     3  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     3  TYPE_RENAME net/minecraftforge/api/distmarker/OnlyIn
+     1  TYPE_RENAME net/minecraftforge/common/util/FakePlayer
+     5  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     1  TYPE_RENAME net/minecraftforge/fml/InterModComms
+     6  TYPE_RENAME net/minecraftforge/fml/common/Mod
+    16  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     2  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+     4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/InterModEnqueueEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     8  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
+     5  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
+     4  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
+    12  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
+
+Wrote translated\bhc.jar
+      translated\bhc.report.tsv

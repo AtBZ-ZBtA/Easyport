@@ -1,0 +1,51 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 31 classes, moved 5 resources
+
+Applied:
+    21  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     1  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  JARJAR_TRANSLATE (depth 1)
+     1  SRG_IN_TEXT
+    28  TYPE_PREFIX net/minecraftforge/client/event/
+     3  TYPE_PREFIX net/minecraftforge/client/extensions/
+   119  TYPE_PREFIX net/minecraftforge/client/model/
+     5  TYPE_PREFIX net/minecraftforge/common/Tags
+    10  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
+    62  TYPE_PREFIX net/minecraftforge/common/data/
+   117  TYPE_PREFIX net/minecraftforge/data/event/
+    21  TYPE_PREFIX net/minecraftforge/event/
+    97  TYPE_PREFIX net/minecraftforge/fluids/
+     2  TYPE_PREFIX net/minecraftforge/fml/event/
+     5  TYPE_PREFIX net/minecraftforge/fml/util/
+    12  TYPE_PREFIX net/minecraftforge/items/
+    27  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+     1  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
+    19  TYPE_RENAME net/minecraftforge/common/util/Lazy
+     1  TYPE_RENAME net/minecraftforge/data/loading/DatagenModLoader
+     3  TYPE_RENAME net/minecraftforge/eventbus/EventBus
+     2  TYPE_RENAME net/minecraftforge/eventbus/ListenerList
+    19  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+    24  TYPE_RENAME net/minecraftforge/eventbus/api/EventPriority
+     2  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     7  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+    23  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+    12  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+     6  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLLoadCompleteEvent
+     8  TYPE_RENAME net/minecraftforge/registries/DataPackRegistryEvent$NewRegistry
+     6  TYPE_RENAME net/minecraftforge/registries/NewRegistryEvent
+    28  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
+     7  TYPE_RENAME net/minecraftforge/registries/RegisterEvent$RegisterHelper
+     6  TYPE_RENAME net/minecraftforge/registries/RegistryBuilder
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     7  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
+    83  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid
+    37  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Flowing
+    74  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Properties
+     3  TYPE_PREFIX target missing: net/neoforged/neoforge/fluids/ForgeFlowingFluid$Source
+
+Wrote translated\ars_ocultas.jar
+      translated\ars_ocultas.report.tsv

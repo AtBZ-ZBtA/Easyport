@@ -1,0 +1,34 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 28 classes, moved 47 resources
+
+Applied:
+     1  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     3  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  EBS_BUS FORGE -> GAME
+     1  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
+     2  HOLDER_UNWRAP field net/minecraft/world/effect/MobEffects
+     3  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
+     2  HOLDER_UNWRAP return net/minecraft/world/effect/MobEffectInstance.getEffect
+     1  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
+     3  TYPE_PREFIX net/minecraftforge/client/extensions/
+     3  TYPE_PREFIX net/minecraftforge/client/model/
+    18  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
+    13  TYPE_PREFIX net/minecraftforge/common/data/
+    11  TYPE_PREFIX net/minecraftforge/data/event/
+    25  TYPE_PREFIX net/minecraftforge/event/
+     1  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
+    54  TYPE_RENAME net/minecraftforge/event/entity/living/LivingDamageEvent
+     1  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+     4  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     4  TYPE_RENAME net/minecraftforge/fml/ModContainer
+     3  TYPE_RENAME net/minecraftforge/fml/common/Mod
+     8  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     6  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     6  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+  (none)
+
+Wrote translated\allthearcanistgear.jar
+      translated\allthearcanistgear.report.tsv

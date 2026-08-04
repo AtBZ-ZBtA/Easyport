@@ -1,0 +1,34 @@
+Loaded 64225 SRG mappings, 157 type renames, 2 ctor rules, 4 removed-API entries
+
+Rewrote 261 classes, moved 1 resources
+
+Applied:
+    35  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  EBS_STRIP (no @SubscribeEvent methods) software/bernie/example/GeckoLibMod
+    10  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
+     8  HOLDER_UNWRAP field net/minecraft/world/item/ArmorMaterials
+     1  HOLDER_UNWRAP return net/minecraft/world/item/ArmorItem.getMaterial
+    10  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add
+     2  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
+     1  JARJAR_TRANSLATE (depth 1)
+    18  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+     2  SRG_IN_TEXT
+    16  TYPE_PREFIX net/minecraftforge/client/event/
+    21  TYPE_PREFIX net/minecraftforge/client/extensions/
+     3  TYPE_PREFIX net/minecraftforge/client/model/
+    10  TYPE_PREFIX net/minecraftforge/event/
+     7  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
+    30  TYPE_RENAME net/minecraftforge/eventbus/api/Event
+     3  TYPE_RENAME net/minecraftforge/eventbus/api/SubscribeEvent
+     4  TYPE_RENAME net/minecraftforge/fml/common/Mod
+    11  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber
+     6  TYPE_RENAME net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+     2  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+
+UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
+     2  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
+
+Wrote translated\geckolib.jar
+      translated\geckolib.report.tsv

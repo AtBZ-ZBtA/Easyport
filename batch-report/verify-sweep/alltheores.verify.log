@@ -1,0 +1,5 @@
+alltheores.jar
+  39 classes, 581 methods analysed
+  0 classes with a verification error (0 methods)
+  3 other-mod classes absent from this classpath, not counted
+  CLEAN - every method type-checks
