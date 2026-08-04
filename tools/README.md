@@ -219,7 +219,7 @@ Type renames are therefore an explicit allowlist in the rule file, **not** a bla
 | `TYPE_PREFIX_RENAME` | fromPrefix, toPrefix | A package moved wholesale |
 | `RENAME_METHOD` | owner, name, desc, newOwner, newName, newDesc | Same shape, different owner or name |
 | `METHOD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Instance call becomes static, receiver as first arg |
-| `FIELD_RETYPE` | owner, newFieldDesc | Every field on a holder class changed type |
+| `FIELD_RETYPE` | owner, newFieldDesc | Every field on a holder class changed type — **currently unused**, see below |
 | `FIELD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Deleted constant, value still computable |
 | `CTOR_TO_STATIC` | owner, ctorDesc, factoryName, factoryDesc, [factoryOwner] | Constructor became a static factory |
 | `CTOR_SWAP2` | owner, oldDesc, newDesc, [narrowTopTo] | Two constructor arguments reordered |
@@ -271,6 +271,13 @@ one call.
 - **`ARG_FILL`** supplies a parameter 1.21 added, at whichever position explains the new
   signature. An ambiguous position is refused and reported: inserting in the wrong one produces a
   call that links and hands every argument to the wrong parameter.
+
+`FIELD_RETYPE` is still implemented and deliberately has no uses left. It was how `ArmorMaterials`
+was handled before the Holder passes existed, and it is the mechanism this project decided against:
+it retypes the field read and lets the new type spread outward, which does not stop at the vanilla
+boundary. Adding one back for a type the Holder pass covers silently disables that pass, because a
+field already retyped no longer looks like a gap — `forward.rules.tsv` says so at the point where
+the old rules used to be.
 
 Three passes need no rules, because they read the answer off the platform:
 
