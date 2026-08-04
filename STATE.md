@@ -336,16 +336,29 @@ The eight highest-fan-in libraries (~70 dependents between them) all still fail,
 now blocked on a *different* subsystem rather than a shared shim gap. Six rounds moved every
 one of them forward through the load sequence:
 
-| Library | Dependents | Blocker was | Now |
+Verified state after this pass. Each of the five that were blocked on a missing class moved
+through three or four distinct blockers; none load yet.
+
+| Library | Dependents | Current blocker | Kind |
 |---|---|---|---|
-| `architectury` | 12 | `TextureStitchEvent` | renamed to `TextureAtlasStitchedEvent`; advanced to `EntityItemPickupEvent` |
-| `yungsapi` | 10 | mixin `InvalidAccessorException` | unchanged — Phase 7 |
-| `cyclopscore` | 10 | `NewRegistryEvent` | renamed; then `ModContainer`; now inherited-handler registration (fixed, unverified) |
-| `placebo` | 8 | `eventbus.api.GenericEvent` | shimmed; then networking; now `IModInfo` (fixed by the `forgespi` rule, unverified) |
-| `geckolib` | 8 | `network.NetworkRegistry` | shimmed; now a `VerifyError` on `ArmorMaterials` — see below |
-| `curios` | 8 | mixin apply | unchanged — Phase 7 |
-| `balm` | 6 | `common.world.BiomeModifier` | renamed; now `ICapabilityProvider` (fixed by the capabilities rule, unverified) |
-| `supermartijn642corelib` | 8 | mixin apply | unchanged — Phase 7 |
+| `architectury` | 12 | `FillBucketEvent` | removed event — needs a link-only shim |
+| `placebo` | 8 | `RegisterEvent.getForgeRegistry()` | member missing on rename target |
+| `balm` | 6 | `capabilities.CapabilityManager` | capabilities — the next design piece |
+| `geckolib` | 8 | `VerifyError` on `ArmorMaterials` | vanilla `Holder` wrapping, needs a field-descriptor rule |
+| `cyclopscore` | 10 | `IEnvironment$Keys.NAMING` | modlauncher API change |
+| `yungsapi` | 10 | mixin `InvalidAccessorException` | Phase 7 |
+| `curios` | 8 | mixin apply | Phase 7 |
+| `supermartijn642corelib` | 8 | mixin apply | Phase 7 |
+
+Blockers cleared this pass, in the order each library hit them: `GenericEvent`,
+`NewRegistryEvent`, `ModContainer`, `TextureStitchEvent`, `BiomeModifier`, `EntityItemPickupEvent`,
+the whole `NetworkRegistry`/`SimpleChannel` family, inherited `@SubscribeEvent` handlers, and
+access-transformer remapping.
+
+**No registry percentage has moved off zero.** Every library still fails before it registers
+anything, so the only measurement improving right now is how deep into the load sequence each
+one gets. Resource coverage (`placebo` 92.3%, `curios` 73.1%, `supermartijn642corelib` 71.4%)
+is measured without launching and is the only non-zero signal so far.
 
 **Every library that was blocked on a missing class has moved at least twice.** None load yet,
 but the failures are now deeper in the sequence — construction and verification rather than
