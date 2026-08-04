@@ -840,52 +840,24 @@ waiting to happen -- convert the rule to a shim, or drop it.
     1  net/minecraftforge/server/ServerLifecycleHooks.buildPackFinder
          -> net/neoforged/neoforge/server/ServerLifecycleHooks  has no  buildPackFinder (Ljava/util/Map;)Lnet/minecraft/server/packs/repository/RepositorySource;
 
-=== SHIM MISSING A CALLED MEMBER (163) ===
+=== SHIM MISSING A CALLED MEMBER (148) ===
 forge-compat supplies the class but not this member, or not with
 this descriptor. Every one is a NoSuchMethodError at a real call
 site -- the class resolves, so nothing fails until it is used.
   110  net/minecraftforge/eventbus/api/IEventBus.post
          shim lacks  post (Lnet/neoforged/bus/api/Event;)Z
-   72  net/minecraftforge/registries/DeferredRegister.getEntries
-         shim lacks  getEntries ()Ljava/util/Collection;
-   66  net/minecraftforge/fml/ModList.getModContainerById
-         shim lacks  getModContainerById (Ljava/lang/String;)Ljava/util/Optional;
    57  net/minecraftforge/registries/IForgeRegistry.tags
          shim lacks  tags ()Lnet/minecraftforge/registries/tags/ITagManager;
-   42  net/minecraftforge/registries/RegistryObject.getKey
-         shim lacks  getKey ()Lnet/minecraft/resources/ResourceKey;
-   34  net/minecraftforge/fml/config/ModConfig.getSpec
-         shim lacks  getSpec ()Lnet/minecraftforge/fml/config/IConfigSpec;
-   31  net/minecraftforge/registries/IForgeRegistry.register
-         shim lacks  register (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/Object;)V
    28  net/minecraftforge/fml/ModList.getModFileById
          shim lacks  getModFileById (Ljava/lang/String;)Lnet/neoforged/neoforgespi/language/IModFileInfo;
-   26  net/minecraftforge/registries/IForgeRegistry.getEntries
-         shim lacks  getEntries ()Ljava/util/Set;
-   25  net/minecraftforge/fml/config/ModConfig.getType
-         shim lacks  getType ()Lnet/minecraftforge/fml/config/ModConfig$Type;
-   25  net/minecraftforge/registries/IForgeRegistry.iterator
-         shim lacks  iterator ()Ljava/util/Iterator;
-   23  net/minecraftforge/registries/IForgeRegistry.getCodec
-         shim lacks  getCodec ()Lcom/mojang/serialization/Codec;
-   22  net/minecraftforge/registries/IForgeRegistry.getKeys
-         shim lacks  getKeys ()Ljava/util/Set;
    20  net/minecraftforge/fml/DistExecutor.unsafeRunForDist
          shim lacks  unsafeRunForDist (Ljava/util/function/Supplier;Ljava/util/function/Supplier;)Ljava/lang/Object;
    19  net/minecraftforge/common/ForgeConfigSpec.isLoaded
          shim lacks  isLoaded ()Z
-   19  net/minecraftforge/fml/ModList.getMods
-         shim lacks  getMods ()Ljava/util/List;
    18  net/minecraftforge/common/util/LazyOptional.addListener
          shim lacks  addListener (Lnet/minecraftforge/common/util/NonNullConsumer;)V
    17  net/minecraftforge/event/TickEvent$PlayerTickEvent.side
          shim lacks  side Lnet/minecraftforge/fml/LogicalSide;
-   17  net/minecraftforge/fml/ModList.getAllScanData
-         shim lacks  getAllScanData ()Ljava/util/List;
-   17  net/minecraftforge/fml/config/ModConfig.getModId
-         shim lacks  getModId ()Ljava/lang/String;
-   17  net/minecraftforge/registries/IForgeRegistry.getResourceKey
-         shim lacks  getResourceKey (Ljava/lang/Object;)Ljava/util/Optional;
    16  net/minecraftforge/event/TickEvent$ServerTickEvent.getServer
          shim lacks  getServer ()Lnet/minecraft/server/MinecraftServer;
    15  net/minecraftforge/event/TickEvent$LevelTickEvent.side
@@ -904,8 +876,6 @@ site -- the class resolves, so nothing fails until it is used.
          shim lacks  getRegistryName ()Lnet/minecraft/resources/ResourceLocation;
    11  net/minecraftforge/common/ForgeConfigSpec$Builder.defineListAllowEmpty
          shim lacks  defineListAllowEmpty (Ljava/util/List;Ljava/util/function/Supplier;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
-   11  net/minecraftforge/fml/config/ModConfig.getFileName
-         shim lacks  getFileName ()Ljava/lang/String;
    11  net/minecraftforge/registries/IForgeRegistry.getHolder
          shim lacks  getHolder (Ljava/lang/Object;)Ljava/util/Optional;
    10  net/minecraftforge/common/ForgeConfigSpec$Builder.define

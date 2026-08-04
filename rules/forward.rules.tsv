@@ -418,3 +418,17 @@ RENAME_METHOD	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/world/it
 # static, so a plain call-site rewrite covers them. Owners are post-rename. 47 and 39 jars.
 RENAME_METHOD	net/neoforged/neoforge/items/ItemHandlerHelper	canItemStacksStack	(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z	easyport/bridge/ItemBridge	canItemStacksStack	(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
 RENAME_METHOD	net/neoforged/neoforge/items/ItemHandlerHelper	copyStackWithSize	(Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;	easyport/bridge/ItemBridge	copyStackWithSize	(Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;
+
+# IEventBus.post returned boolean in Forge and returns the event in NeoForge. The shim extends
+# NeoForge s interface, so declaring both is a clashing-erasure compile error -- no shim and no
+# rename can express a return-type change on an inherited method. The call site moves instead.
+# 110 jars. Owner is the Forge name because IEventBus is shimmed, not renamed.
+METHOD_TO_STATIC	net/minecraftforge/eventbus/api/IEventBus	post	(Lnet/neoforged/bus/api/Event;)Z	easyport/bridge/EventBusBridge	post	(Lnet/neoforged/bus/api/IEventBus;Lnet/neoforged/bus/api/Event;)Z
+
+# ModConfigEvent is renamed (the mod bus dispatches on it), so its getConfig() returns NeoForge s
+# ModConfig where the mod expects Forge s. The class resolves and the call does not. The subclass
+# entries are separate because the owner in the bytecode is whichever type the listener declared.
+# 34 + 33 + 28 jars.
+METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
+METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent$Loading	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
+METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent$Reloading	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;

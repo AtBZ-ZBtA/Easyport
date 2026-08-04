@@ -49,6 +49,18 @@ public final class RegistryObject<T> implements Supplier<T> {
         return isPresent() ? Optional.of(get()).filter(predicate) : Optional.empty();
     }
 
+    /**
+     * The registry key for this entry, called by 42 corpus jars.
+     *
+     * Forge's returned {@code ResourceKey<T>} -- the key of the *entry*, not of the registry it
+     * lives in. NeoForge's DeferredHolder exposes the same thing under the same name, so this is
+     * a straight forward; the erased descriptor is {@code ResourceKey} either way.
+     */
+    @SuppressWarnings("unchecked")
+    public <R> net.minecraft.resources.ResourceKey<R> getKey() {
+        return (net.minecraft.resources.ResourceKey<R>) delegate.getKey();
+    }
+
     /** Some mods pass the holder onward to NeoForge APIs; expose it rather than re-wrapping. */
     public DeferredHolder<?, ?> unwrap() {
         return delegate;

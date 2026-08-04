@@ -54,6 +54,20 @@ public class DeferredRegister<T> {
         delegate.register(bus);
     }
 
+    /**
+     * Every entry registered so far, called by 72 corpus jars.
+     *
+     * Forge returned {@code Collection<RegistryObject<T>>}; the descriptor mods compiled against
+     * is the erased {@code Collection}, so wrapping NeoForge's holders on the way out costs
+     * nothing at the call site. Rebuilt on each call rather than cached, because a mod may add
+     * entries after the first read and Forge's view was live.
+     */
+    public java.util.Collection<RegistryObject<T>> getEntries() {
+        java.util.List<RegistryObject<T>> out = new java.util.ArrayList<>();
+        for (var holder : delegate.getEntries()) out.add(RegistryObject.of(holder));
+        return out;
+    }
+
     /** For shim code that has to hand the real object onward. */
     public net.neoforged.neoforge.registries.DeferredRegister<T> unwrap() {
         return delegate;
