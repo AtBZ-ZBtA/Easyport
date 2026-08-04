@@ -27,6 +27,15 @@ public class DistExecutor {
         if (FMLEnvironment.dist == dist) toRun.get().run();
     }
 
+    /** The plain variant, which cyclopscore and balm both use in preference to the unsafe one. */
+    public static void runWhenOn(Dist dist, Supplier<Runnable> toRun) {
+        unsafeRunWhenOn(dist, toRun);
+    }
+
+    public static <T> T callWhenOn(Dist dist, Supplier<Supplier<T>> toRun) {
+        return unsafeCallWhenOn(dist, toRun);
+    }
+
     public static void safeRunWhenOn(Dist dist, Supplier<Runnable> toRun) {
         unsafeRunWhenOn(dist, toRun);
     }

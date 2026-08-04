@@ -157,7 +157,8 @@ CTOR_SWAP2	net/minecraft/world/level/block/DropExperienceBlock	(Lnet/minecraft/w
 # These block the eight highest-fan-in library mods in the corpus, which together have ~70
 # dependents. Fixing a library is worth many tail mods.
 TYPE_RENAME	net/minecraftforge/fml/loading/FMLLoader	net/neoforged/fml/loading/FMLLoader
-TYPE_RENAME	net/minecraftforge/fml/ModLoader	net/neoforged/fml/ModLoader
+# ModLoader removed from this list: renaming resolved the class and then failed on
+# isDataGenRunning(), which NeoForge does not have. It is a shim in forge-compat instead.
 TYPE_RENAME	net/minecraftforge/common/crafting/CraftingHelper	net/neoforged/neoforge/common/crafting/CraftingHelper
 TYPE_RENAME	net/minecraftforge/data/loading/DatagenModLoader	net/neoforged/neoforge/data/loading/DatagenModLoader
 TYPE_RENAME	net/minecraftforge/registries/GameData	net/neoforged/neoforge/registries/GameData
