@@ -115,6 +115,16 @@ RENAME_METHOD	net/minecraft/world/item/Item$Properties	defaultDurability	(I)Lnet
 # would be noise, and any that got missed would fail silently by simply never firing.
 #
 # Exact TYPE_RENAME entries above still win: they are checked first.
+# TickEvent is bridged in forge-compat rather than renamed: NeoForge split one phase-carrying
+# class into Pre/Post, and renaming ClientTickEvent to ClientTickEvent$Post would silently
+# misfire every START-phase listener. Exact renames are checked before prefixes, so an explicit
+# no-op entry keeps the prefix rule from touching it.
+TYPE_RENAME	net/minecraftforge/event/TickEvent	net/minecraftforge/event/TickEvent
+TYPE_RENAME	net/minecraftforge/event/TickEvent$Phase	net/minecraftforge/event/TickEvent$Phase
+TYPE_RENAME	net/minecraftforge/event/TickEvent$ClientTickEvent	net/minecraftforge/event/TickEvent$ClientTickEvent
+TYPE_RENAME	net/minecraftforge/event/TickEvent$ServerTickEvent	net/minecraftforge/event/TickEvent$ServerTickEvent
+TYPE_RENAME	net/minecraftforge/event/TickEvent$LevelTickEvent	net/minecraftforge/event/TickEvent$LevelTickEvent
+TYPE_RENAME	net/minecraftforge/event/TickEvent$PlayerTickEvent	net/minecraftforge/event/TickEvent$PlayerTickEvent
 TYPE_PREFIX_RENAME	net/minecraftforge/event/	net/neoforged/neoforge/event/
 TYPE_PREFIX_RENAME	net/minecraftforge/client/event/	net/neoforged/neoforge/client/event/
 TYPE_PREFIX_RENAME	net/minecraftforge/data/event/	net/neoforged/neoforge/data/event/
