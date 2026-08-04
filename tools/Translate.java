@@ -95,8 +95,42 @@ public class Translate {
                              + "<inputJar> <outputJar> <srg2official.tsv> <rules.tsv>");
             System.exit(2);
         }
-        new Translate().run(Paths.get(args[0]), Paths.get(args[1]),
-                            Paths.get(args[2]), Paths.get(args[3]));
+        Translate t = new Translate();
+        // Optional trailing arguments are target-platform jars. With them, mixins whose target
+        // class no longer exists can be identified and dropped; without them that check is
+        // skipped entirely rather than guessed at.
+        if (args.length > 4) {
+            t.loadTargetIndex(java.util.Arrays.copyOfRange(args, 4, args.length));
+        }
+        t.run(Paths.get(args[0]), Paths.get(args[1]), Paths.get(args[2]), Paths.get(args[3]));
+    }
+
+    /**
+     * Every class the target platform provides, used to decide whether a mixin can still apply.
+     *
+     * Empty when no platform jars are supplied, in which case mixin stripping is skipped
+     * entirely — guessing that a target is absent would silently delete working mixins.
+     */
+    private final Set<String> targetClasses = new HashSet<>();
+
+    /** Mixin classes to drop from their configs because their target no longer exists. */
+    private final Set<String> deadMixins = new LinkedHashSet<>();
+
+    private void loadTargetIndex(String[] jars) {
+        for (String j : jars) {
+            Path p = Paths.get(j);
+            if (!Files.isRegularFile(p)) continue;
+            try (ZipFile zip = new ZipFile(p.toFile())) {
+                Enumeration<? extends ZipEntry> e = zip.entries();
+                while (e.hasMoreElements()) {
+                    String n = e.nextElement().getName();
+                    if (n.endsWith(".class")) targetClasses.add(n.substring(0, n.length() - 6));
+                }
+            } catch (IOException ignored) {
+                // A missing or unreadable platform jar just means a smaller index; the guard in
+                // stripDeadMixins keeps that from being interpreted as "target absent".
+            }
+        }
     }
 
     private void run(Path in, Path out, Path mappings, Path rules) throws Exception {
@@ -108,6 +142,8 @@ public class Translate {
         Files.createDirectories(out.toAbsolutePath().getParent());
         try (ZipFile zip = new ZipFile(in.toFile());
              ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(out))) {
+
+            findDeadMixins(zip);
 
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
@@ -156,6 +192,7 @@ public class Translate {
                     // *outer* mod -- so create.jar reads as corrupt when the real cause is a
                     // stale index entry for a library that was deliberately removed.
                     if (name.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
+                    if (isMixinConfig(name) && !deadMixins.isEmpty()) data = stripDeadMixins(data);
                 }
                 // Signatures cover the pre-translation bytes and cannot survive rewriting; a
                 // stale signature file makes the jar fail verification outright.
@@ -418,6 +455,99 @@ public class Translate {
     }
 
     // ---- resources ---------------------------------------------------------------------
+
+    private static boolean isMixinConfig(String name) {
+        return name.endsWith(".json") && name.contains("mixins") && !name.contains("/");
+    }
+
+    /**
+     * Finds mixins whose target class no longer exists in the target version.
+     *
+     * A mixin naming a deleted vanilla class can never apply — architectury's
+     * MixinLootDataManager targets {@code LootDataManager}, which 1.21 removed when loot
+     * handling moved to registries. Unlike an ordinary class reference this cannot be fixed by
+     * relocating a stub: mixins are applied to the real loaded class, so a stand-in in another
+     * package is not the thing being patched.
+     *
+     * Dropping the mixin is the honest outcome. It removes a behaviour the mod intended, so it
+     * is reported rather than done quietly — but the alternative is the whole mod failing to
+     * load, taking every one of its dependents with it. architectury alone has 12.
+     *
+     * Only skips a mixin when the target is confidently known to be absent: the target must
+     * live in {@code net/minecraft/} and the platform index must be populated. Anything else is
+     * left alone, since wrongly deleting a working mixin is far worse than leaving a dead one.
+     */
+    private void findDeadMixins(ZipFile zip) {
+        if (targetClasses.isEmpty()) return;
+
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry e = entries.nextElement();
+            if (!isMixinConfig(e.getName())) continue;
+            try {
+                String json = new String(read(zip, e), StandardCharsets.UTF_8);
+                java.util.regex.Matcher pm = java.util.regex.Pattern
+                        .compile("\"package\"\\s*:\\s*\"([^\"]+)\"").matcher(json);
+                if (!pm.find()) continue;
+                String pkg = pm.group(1).replace('.', '/');
+
+                java.util.regex.Matcher cm = java.util.regex.Pattern
+                        .compile("\"([A-Za-z0-9_$.]+)\"").matcher(json);
+                while (cm.find()) {
+                    String simple = cm.group(1);
+                    if (simple.contains(" ") || simple.startsWith("net.")) continue;
+                    ZipEntry mixinEntry = zip.getEntry(pkg + "/" + simple.replace('.', '/') + ".class");
+                    if (mixinEntry == null) continue;
+                    for (String target : mixinTargets(read(zip, mixinEntry))) {
+                        if (target.startsWith("net/minecraft/") && !targetClasses.contains(target)) {
+                            deadMixins.add(simple);
+                            count(unresolved, "MIXIN_DROP (target gone: " + target + ") " + simple);
+                        }
+                    }
+                }
+            } catch (Exception ignored) {
+                // A config we cannot parse is left untouched rather than guessed at.
+            }
+        }
+    }
+
+    /** Reads the class names a mixin declares in its {@code @Mixin} annotation. */
+    private static List<String> mixinTargets(byte[] classBytes) {
+        List<String> targets = new ArrayList<>();
+        ClassNode node = new ClassNode();
+        new ClassReader(classBytes).accept(node, ClassReader.SKIP_CODE);
+
+        // @Mixin has CLASS retention, so ASM files it under invisibleAnnotations. Checking only
+        // visibleAnnotations finds nothing and silently concludes every mixin is fine.
+        List<org.objectweb.asm.tree.AnnotationNode> all = new ArrayList<>();
+        if (node.visibleAnnotations != null) all.addAll(node.visibleAnnotations);
+        if (node.invisibleAnnotations != null) all.addAll(node.invisibleAnnotations);
+
+        for (var ann : all) {
+            if (!"Lorg/spongepowered/asm/mixin/Mixin;".equals(ann.desc) || ann.values == null) continue;
+            for (int i = 1; i < ann.values.size(); i += 2) {
+                if (ann.values.get(i) instanceof List<?> list) {
+                    for (Object o : list) {
+                        // value = Class[]; targets = String[] of fully-qualified names.
+                        if (o instanceof org.objectweb.asm.Type t) targets.add(t.getInternalName());
+                        else if (o instanceof String s) targets.add(s.replace('.', '/'));
+                    }
+                }
+            }
+        }
+        return targets;
+    }
+
+    /** Removes dead mixin entries from a config's class lists. */
+    private byte[] stripDeadMixins(byte[] data) {
+        String json = new String(data, StandardCharsets.UTF_8);
+        for (String dead : deadMixins) {
+            json = json.replaceAll("\\s*\"" + java.util.regex.Pattern.quote(dead) + "\"\\s*,", "")
+                       .replaceAll(",\\s*\"" + java.util.regex.Pattern.quote(dead) + "\"\\s*", "")
+                       .replaceAll("\"" + java.util.regex.Pattern.quote(dead) + "\"", "");
+        }
+        return json.getBytes(StandardCharsets.UTF_8);
+    }
 
     /** Bundled jars can bundle their own; stop before a malformed or hostile jar recurses forever. */
     private static final int MAX_NESTING = 3;

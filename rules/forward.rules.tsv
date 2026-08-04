@@ -143,3 +143,26 @@ TYPE_RENAME	net/minecraft/world/level/storage/loot/Serializer	easyport/vanilla/L
 # Same shape as TorchBlock: 1.21 moved the Properties argument last. No narrowing needed here,
 # both arguments are already the right types.
 CTOR_SWAP2	net/minecraft/world/level/block/DropExperienceBlock	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/util/valueproviders/IntProvider;)V	(Lnet/minecraft/util/valueproviders/IntProvider;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+
+# --- Loader utilities that map 1:1 --------------------------------------------------------
+#
+# Shim-first exists because most Forge APIs do not map cleanly onto NeoForge. These do: same
+# class, same name, different namespace. Renaming is cheaper than writing and maintaining a
+# shim that would only forward every call verbatim.
+#
+# The risk is that a signature differs somewhere inside one of them, which shows up as
+# NoSuchMethodError rather than ClassNotFoundException. If that happens, convert that specific
+# entry to a shim -- a shim can adapt a signature where a rename cannot.
+#
+# These block the eight highest-fan-in library mods in the corpus, which together have ~70
+# dependents. Fixing a library is worth many tail mods.
+TYPE_RENAME	net/minecraftforge/fml/loading/FMLLoader	net/neoforged/fml/loading/FMLLoader
+TYPE_RENAME	net/minecraftforge/fml/ModLoader	net/neoforged/fml/ModLoader
+TYPE_RENAME	net/minecraftforge/common/crafting/CraftingHelper	net/neoforged/neoforge/common/crafting/CraftingHelper
+TYPE_RENAME	net/minecraftforge/data/loading/DatagenModLoader	net/neoforged/neoforge/data/loading/DatagenModLoader
+TYPE_RENAME	net/minecraftforge/registries/GameData	net/neoforged/neoforge/registries/GameData
+
+# RegisterEvent is dispatched by identity like every other event, so it must be renamed
+# regardless of whether a shim would have been possible.
+TYPE_RENAME	net/minecraftforge/registries/RegisterEvent	net/neoforged/neoforge/registries/RegisterEvent
+TYPE_RENAME	net/minecraftforge/registries/RegisterEvent$RegisterHelper	net/neoforged/neoforge/registries/RegisterEvent$RegisterHelper

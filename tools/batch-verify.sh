@@ -19,6 +19,8 @@ A9="scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods"
 A10="scrapyard/forge 1.21.1 modpacks/All the Mods 10 - ATM10/mods"
 CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar"
 SUPPORT="testkit/inspector/inspector.jar,forge-compat/forge-compat.jar"
+# Target-platform jar, so the transformer can tell which mixin targets still exist.
+PLATFORM="devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar"
 OUT="batch-report"
 RESULTS="$OUT/batch-results.tsv"
 
@@ -34,7 +36,7 @@ while IFS=$'\t' read -r modId src tgt; do
   echo "=== $modId ==="
 
   if ! java -cp "$CP" tools/Translate.java "$A9/$src" "translated/$modId.jar" \
-        mappings/srg2official.tsv rules/forward.rules.tsv > "$OUT/$modId.translate.log" 2>&1; then
+        mappings/srg2official.tsv rules/forward.rules.tsv "$PLATFORM" > "$OUT/$modId.translate.log" 2>&1; then
     echo "  TRANSLATE_FAILED (see $OUT/$modId.translate.log)"
     printf '%s\t0\t0\tTRANSLATE_FAILED\n' "$modId" >> "$RESULTS"
     continue
@@ -52,7 +54,7 @@ while IFS=$'\t' read -r modId src tgt; do
     [ -z "${dep:-}" ] && continue
     if [ ! -f "translated/$dep.jar" ]; then
       java -cp "$CP" tools/Translate.java "$A9/$depSrc" "translated/$dep.jar" \
-           mappings/srg2official.tsv rules/forward.rules.tsv > "$OUT/$dep.dep-translate.log" 2>&1 \
+           mappings/srg2official.tsv rules/forward.rules.tsv "$PLATFORM" > "$OUT/$dep.dep-translate.log" 2>&1 \
         || { echo "  (dependency $dep failed to translate)"; continue; }
     fi
     modSupport="$modSupport,translated/$dep.jar"
