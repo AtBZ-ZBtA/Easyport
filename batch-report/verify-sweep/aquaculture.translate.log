@@ -15,6 +15,7 @@ Applied:
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveAdditional
      2  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveToItem
      4  COERCE easyport/vanilla/ArmorMaterial -> net/minecraft/world/item/ArmorMaterial
+     2  COERCE field net/minecraft/world/level/storage/loot/BuiltInLootTables.FISHING -> net/minecraft/resources/ResourceLocation
      6  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
     41  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      6  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse

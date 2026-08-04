@@ -6,6 +6,7 @@ Applied:
      1  ARG_DROP java/util/function/Function from net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.create
      2  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.saveAdditional
      2  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/storage/loot/functions/EnchantWithLevelsFunction.enchantWithLevels
+     2  COERCE field net/minecraft/world/level/block/state/BlockBehaviour$Properties.drops -> net/minecraft/resources/ResourceLocation
      1  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
      2  COERCE return of net/minecraft/world/level/block/Block.getLootTable -> net/minecraft/resources/ResourceLocation
     76  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
