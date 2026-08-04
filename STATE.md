@@ -482,9 +482,20 @@ frontier:
 - `alltheores` — `DropExperienceBlock` constructor changed
 - `aquaculture` — `IncompatibleClassChangeError` on its armor material class, the same
   `ArmorMaterials`-became-`Holder` change that blocks geckolib
-- `blockui` — `EventBusSubscriber` method signature
+- `blockui` — `OutOfJarResourceLocation` cannot extend `ResourceLocation`, which became a final
+  record in 1.21
 
 The `ArmorMaterials` pattern now blocks two of eight sampled mods and one library.
+
+`blockui` is the one worth remembering, because it was *not* vanilla when the sample first ran.
+It failed on `EventBusSubscriber$Bus.bus()`, then on `Bus.FORGE` — both genuine Phase 3 gaps.
+The enum must be renamed (the loader scans the annotation, so a shimmed one would never be
+found), and NeoForge dropped the accessor and renamed the constant to `GAME`; both are
+redirected to `BusBridge` now. Only then did the real blocker appear.
+
+**Do not read a mod's current failure as its only failure.** Each is a stack, and the top of it
+is whatever the JVM happened to reach first. Phase 3 could not be signed off on the *first*
+sample run for exactly this reason.
 
 #### The `Holder` wrapping goes deeper than a field descriptor
 

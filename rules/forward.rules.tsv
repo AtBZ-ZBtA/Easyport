@@ -555,3 +555,8 @@ TYPE_RENAME	net/minecraftforge/registries/holdersets/AnyHolderSet	net/neoforged/
 TYPE_RENAME	net/minecraftforge/registries/holdersets/CompositeHolderSet	net/neoforged/neoforge/registries/holdersets/CompositeHolderSet
 TYPE_RENAME	net/minecraftforge/registries/holdersets/HolderSetType	net/neoforged/neoforge/registries/holdersets/HolderSetType
 TYPE_RENAME	net/minecraftforge/registries/holdersets/ICustomHolderSet	net/neoforged/neoforge/registries/holdersets/ICustomHolderSet
+
+# EventBusSubscriber.Bus must be renamed -- the loader scans the annotation, so a shimmed enum
+# would never be found -- and NeoForge dropped its bus() accessor. The accessor moves to a static.
+METHOD_TO_STATIC	net/neoforged/fml/common/EventBusSubscriber$Bus	bus	()Ljava/util/function/Supplier;	easyport/bridge/BusBridge	bus	(Lnet/neoforged/fml/common/EventBusSubscriber$Bus;)Ljava/util/function/Supplier;
+FIELD_TO_STATIC	net/neoforged/fml/common/EventBusSubscriber$Bus	FORGE	Lnet/neoforged/fml/common/EventBusSubscriber$Bus;	easyport/bridge/BusBridge	forge	()Lnet/neoforged/fml/common/EventBusSubscriber$Bus;
