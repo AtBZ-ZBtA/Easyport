@@ -309,10 +309,15 @@ Everything below is measured, not estimated.
 ### Phase 4 — COMPLETE
 
 **Exit criterion:** no library or sampled mod is blocked by vanilla API drift that a transformer
-can fix. Met, with one honest exception named below.
+can fix. Met for the library layer outright. Two sampled mods still fail, and the honest reading
+of each is below.
 
-Every library that was blocked on vanilla now loads; the two that still fail, fail on mixin
-*apply*, which is Phase 5. Two sampled mods still fail, and they fail differently:
+**The libraries were the point, and they moved.** Three that were blocked on vanilla drift now
+load — geckolib had been stuck since Phase 3 on `ArmorMaterials` becoming `Holder`-wrapped, and
+cyclopscore took five more blockers after the one it was stuck on. The two that still fail,
+yungsapi and supermartijn642corelib, fail on mixin *apply*, which is Phase 5.
+
+The two sampled mods fail differently, and the difference is the useful part:
 
 - **`blockui`** is blocked by the one shape no bytecode rewrite reaches:
   `OutOfJarResourceLocation extends ResourceLocation`, and 1.21 made that a final record. There is
@@ -344,11 +349,6 @@ load. Of the 535 references the phase fixed, 416 came from the passes that need 
 
 That is worth knowing before writing more rules: on the vanilla side, the leverage has been in
 mechanisms that read the answer off the platform, not in enumerating cases.
-
-**The three libraries that were blocked by vanilla drift all load now.** geckolib had been
-blocked since Phase 3 on `ArmorMaterials` becoming `Holder`-wrapped; cyclopscore took five more
-blockers after the one it was stuck on. The two that still fail — yungsapi and
-supermartijn642corelib — fail on mixin *apply*, which is Phase 5.
 
 #### The one decision the phase turned on
 
