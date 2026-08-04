@@ -4,7 +4,7 @@ Dense re-entry point. If you are picking this up cold (fresh context, new contri
 read this file and nothing else until you need depth. [ROADMAP.md](ROADMAP.md) has the full
 plan; this has where things actually stand.
 
-**Last updated:** 2026-08-03, end of Phase 1.
+**Last updated:** 2026-08-03, mid Phase 3 (forge-compat expansion).
 
 ---
 
@@ -203,6 +203,78 @@ failures were mods needing *other* mods (`ars_nouveau`, `mekanism`, `create`, `c
 failure, and lumping it in with real failures would misdirect all the work that follows.
 `batch-verify.sh` now classifies it.
 
+#### Techniques established — these are the reusable part
+
+Five, in rough order of how much they unlock. Each came from a failure that no amount of
+shim-writing would have reached:
+
+1. **Relocate, then rename** — for vanilla types 1.21 deleted. A mod jar cannot supply a class
+   under `net.minecraft.*` (module resolution refuses it, proven in
+   `testkit/vanilla-package-probe`), so the stand-in lives in `easyport.vanilla` and references
+   are rewritten to it. No structural surgery needed.
+2. **Remap SRG inside text** — refmaps, `@At(target=...)`, `@Accessor(...)`. The bytecode
+   remapper only reaches real member references; mixins address targets as *strings*. Curios
+   carried 22 stale SRG names, yungsapi 38, and every injection point pointed at a member that
+   no longer existed. This is why mixin-heavy mods translated cleanly and then died at apply
+   time.
+3. **Event bridging** — for events NeoForge restructured. The bus dispatches by the posted
+   object's exact class, so a mod listening for a Forge event type is unreachable unless
+   something posts that type. forge-compat subscribes to the NeoForge event and re-posts the
+   Forge shape. Generalises to the whole event layer.
+4. **Mixin stripping** — drop mixins whose target class no longer exists. They can never apply,
+   and leaving them fails the entire mod. Reported, never silent.
+5. **Dependency resolution** — transitive, with bundled jars translated recursively and
+   platform-provided libraries dropped.
+
+#### Rename or shim? The rule, learned the expensive way
+
+**A class existing at the same path in NeoForge is not sufficient reason to rename to it.**
+`ModLoader` does exist there — the rename resolved cleanly and then failed on
+`isDataGenRunning()`, which NeoForge moved elsewhere. Worse, it was a *regression*: before the
+rename geckolib loaded, because the unresolved class sat on a path that never ran. Renaming
+made the class resolve, so the call was reached and the mod died on the method.
+
+- **Rename** when the loader looks the type up or dispatches by it (annotations, events), or
+  when the whole surface is verified identical.
+- **Shim** otherwise. A rename fixes a class and cannot fix a signature; a shim adapts.
+
+#### Validation must be conservative about its own knowledge
+
+Rename targets are checked against a platform class index. That check regressed the library set
+twice by being confidently wrong — first the FML loader jar was unindexed so `@Mod` was
+rejected, then distmarker was unindexed so `OnlyIn` was rejected 105 times.
+
+A target is now only declared absent when the index **demonstrably covers its package**. An
+unindexed package degrades to "assume present", i.e. to the behaviour before validation
+existed, rather than silently disabling correct renames.
+
+
+#### Library layer — current standing
+
+The eight highest-fan-in libraries (~70 dependents between them) all still fail, but each is
+now blocked on a *different* subsystem rather than a shared shim gap. Six rounds moved every
+one of them forward through the load sequence:
+
+| Library | Dependents | Current blocker |
+|---|---|---|
+| `architectury` | 12 | `client.event.TextureStitchEvent` (removed in 1.21) |
+| `yungsapi` | 10 | mixin `InvalidAccessorException` |
+| `cyclopscore` | 10 | `registries.NewRegistryEvent` |
+| `placebo` | 8 | `eventbus.api.GenericEvent` |
+| `geckolib` | 8 | `network.NetworkRegistry` |
+| `curios` | 8 | mixin apply |
+| `balm` | 6 | `common.world.BiomeModifier` |
+| `supermartijn642corelib` | 8 | mixin apply |
+
+**The head of the distribution is exhausted.** Early rounds cleared many mods per fix because
+the same few classes blocked everything; these eight now need seven different subsystems —
+client events, mixin accessors, registry events, generic events, networking, world-gen. Expect
+roughly one library per fix from here.
+
+Two of the eight are blocked on mixin *apply* rather than a missing class, which is the hard
+Phase 7 problem: the target exists and the injection point inside it does not match. Refmap
+remapping fixed the easy half of that; what remains is injection points into methods whose
+bodies changed.
 #### Dependency resolution — built, and it changed the priorities
 
 `tools/Deps.java` resolves a mod's **transitive** required dependencies; `batch-verify.sh`
