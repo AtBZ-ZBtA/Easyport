@@ -1,8 +1,9 @@
 # api-report — what the corpus actually calls
 
 Measured surface of the Forge 1.20.1 API across all 433 jars in All the Mods 9. These files are
-the work queue for Phase 3: they say which shims are worth writing, in what order, and — for a
-subsystem being ported — exactly which members have to exist.
+the standing work queue: they say what is worth writing, in what order, and -- for a subsystem
+being ported -- exactly which members have to exist. Written during Phase 3; still the right
+starting point for Phase 4, since vanilla drift surfaces through Forge types too.
 
 Regenerate with:
 
@@ -16,9 +17,9 @@ java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scr
 |---|---|
 | `forge-api-usage.txt` | Every `net.minecraftforge` type and member the corpus references, ranked by how many jars use it |
 | `network-usage.txt` | The same, narrowed to `net.minecraftforge.network` — the input to the networking shims |
-| `unresolved-types.txt` | Output of `RenameGaps`: what nothing resolves, plus three classes of *wrong* resolution |
+| `unresolved-types.txt` | Output of `RenameGaps`: what nothing resolves, plus four classes of *wrong* resolution |
 
-## The three silent-failure checks
+## The silent-failure checks
 
 `unresolved-types.txt` leads with warnings, not gaps, because a rule that resolves incorrectly
 is worse than a missing one — the gap report stops mentioning it, and the failure moves to
@@ -58,40 +59,30 @@ late, geckolib-shaped problem; the scan put `SimpleChannel` in 162 of 433 jars a
 the front. Conversely `create` felt like the high-value target for a long time and turns out to
 be barely referenced by anything.
 
-## Ranked state of the top of the queue
+## Ranked state
 
-As of the scan. "Done" means a shim or rename exists, not that it is complete.
+Regenerate `unresolved-types.txt` rather than trusting a table here — it goes stale. As of
+Phase 3 sign-off:
 
-| Jars | Type | State |
-|---|---|---|
-| 365 | `eventbus.api.IEventBus` | done |
-| 360 | `fml.javafmlmod.FMLJavaModLoadingContext` | done |
-| 291 | `common.MinecraftForge` | done |
-| 268 | `registries.ForgeRegistries` | done |
-| 252 | `fml.ModLoadingContext` | done |
-| 234 | `registries.RegistryObject` | done |
-| 219 | `common.ForgeConfigSpec$Builder` | done |
-| 218 | `fml.ModList` | done |
-| 213 | `registries.DeferredRegister` | done |
-| 210 | `api.distmarker.Dist` | renamed |
-| 207 | `common.util.LazyOptional` | done |
-| 205 | `fml.config.ModConfig$Type` | done |
-| 166 | `network.NetworkEvent$Context` | done |
-| **164** | **`common.capabilities.ForgeCapabilities`** | **not started** |
-| 162 | `network.simple.SimpleChannel` | done |
-| 148 | `fml.DistExecutor` | done |
-| 134 | `network.NetworkHooks` | done |
-| **130** | **`common.Tags$Items`** | **not started** |
-| 129 | `data.event.GatherDataEvent` | datagen only; no runtime impact |
-| **124** | **`fluids.FluidStack`** | **not started** |
-| **118** | **`items.IItemHandler`** | **not started** |
-| **106** | **`common.capabilities.ICapabilityProvider`** | **not started** |
-| **91** | **`common.ForgeHooks`** | **not started** |
+| | |
+|---|---|
+| Referenced Forge types | 792 |
+| Resolved by forge-compat | 71 |
+| Resolved by a rule | 581 |
+| **Unresolved** | **140** |
+| Unresolved, weighted by jars using them | ~1,400 of 17,771 — **92% resolved** |
 
-The next cluster is **capabilities and the handlers built on them** —
-`ForgeCapabilities` + `ICapabilityProvider` + `CapabilityManager` + `CapabilityToken` +
-`IItemHandler` + `FluidStack` together cover most of what remains above 90 jars, and they are
-one design problem rather than six. NeoForge replaced Forge's capability model outright
-(`BlockCapability`/`ItemCapability`, resolved by lookup rather than attached per-object), so
-this is the first item on the queue that a delegating shim cannot cover — the roadmap has always
-flagged capabilities as a lifecycle change rather than a rename.
+The head of the distribution is done: the event bus, mod-loading context, registries, config,
+networking, capabilities, item/fluid/energy handlers and the tag layer are all shimmed or
+renamed.
+
+What remains splits three ways, and only the first is really shim work:
+
+1. **Split helper classes** — `ForgeHooks` (91 jars) and `ForgeEventFactory` (80) were divided
+   across NeoForge's `EventHooks` and `CommonHooks`. Needs per-method rules, not a type rename.
+2. **Restructured events** — the `LivingEvent` family. NeoForge renamed the accessors along with
+   the events, so a type rename cannot follow; these need the shim-and-bridge shape used for
+   `TickEvent`.
+3. **Vanilla drift wearing a Forge hat** — the bulk of the 426 rename-target member mismatches
+   are the 1.20.5 NBT-to-components migration surfacing through Forge types (`FluidStack.getTag`,
+   `ItemStackHandler.serializeNBT`). Phase 4.

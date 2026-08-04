@@ -3,7 +3,7 @@ referenced Forge types: 792
   resolved by a rule:       581
   UNRESOLVED:               140
 
-=== RENAME TARGET MISSING A CALLED MEMBER (427) ===
+=== RENAME TARGET MISSING A CALLED MEMBER (426) ===
 The rule resolves, but the target does not have what the corpus
 calls on it. Each is a NoSuchMethodError or AbstractMethodError
 waiting to happen -- convert the rule to a shim, or drop it.
@@ -105,8 +105,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_HELMETS Lnet/minecraft/tags/TagKey;
    13  net/minecraftforge/common/Tags$Items.SAND
          -> net/neoforged/neoforge/common/Tags$Items  has no  SAND Lnet/minecraft/tags/TagKey;
-   13  net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus.bus
-         -> net/neoforged/fml/common/EventBusSubscriber$Bus  has no  bus ()Ljava/util/function/Supplier;
    12  net/minecraftforge/common/Tags$Items.ARMORS_CHESTPLATES
          -> net/neoforged/neoforge/common/Tags$Items  has no  ARMORS_CHESTPLATES Lnet/minecraft/tags/TagKey;
    12  net/minecraftforge/common/Tags$Items.ARMORS_LEGGINGS

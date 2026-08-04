@@ -11,12 +11,43 @@ Two things get built:
    `/mods-from-other-version` gets translated into `/mods` automatically, renamed so you
    can tell what was translated.
 
-**Status:** early. Nothing user-facing works yet. See [ROADMAP.md](ROADMAP.md) for the
-plan and current progress.
+**Status:** the translator works on real mods; nothing user-facing is ready. There is no
+one-click tool and no in-game mod yet, and only the Forge → NeoForge direction exists — the
+reverse is not started. See [STATE.md](STATE.md) for exactly where things stand and
+[ROADMAP.md](ROADMAP.md) for the plan.
 
 ---
 
 ## What works right now
+
+### The translator
+
+Rewrites a Forge 1.20.1 mod jar to run on NeoForge 1.21.1 — bytecode, resources, mixin
+metadata and access transformers. Translated mods load into a real NeoForge instance and
+register their content.
+
+```bash
+java -cp "<asm>;<asm-tree>;<asm-commons>" tools/Translate.java \
+    <input.jar> <output.jar> mappings/srg2official.tsv rules/forward.rules.tsv <platform-jars...>
+```
+
+**How well it works, measured rather than claimed.** Every translated mod is launched next to
+the author's own 1.21.1 port and compared on what each registers into the game:
+
+| | |
+|---|---|
+| `additional_lights` | 100% of registry entries, 100% of resources |
+| 4 of the 8 most-depended-on libraries | load and register content |
+| Everything still failing | fails on *vanilla* API changes or mixin application, not on Forge API |
+
+That last row is the real state of things. The Forge-to-NeoForge half is largely handled; what
+remains is Minecraft's own 1.20.1 → 1.21.1 changes, which is the harder of the two migrations
+stacked inside this project.
+
+Anything it cannot translate is **reported, never guessed**. Each run writes a report naming
+exactly what was left unresolved. A jar that loads while quietly doing the wrong thing is worse
+than one that refuses, and that is not a hypothetical — inventing plausible targets for removed
+APIs was measured at 5 false positives out of 26 symbols during early testing.
 
 ### Corpus analyzer
 

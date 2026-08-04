@@ -216,10 +216,24 @@ Type renames are therefore an explicit allowlist in the rule file, **not** a bla
 | Kind | Fields | Use |
 |---|---|---|
 | `TYPE_RENAME` | from, to | Loader-scanned annotations and dispatched event classes |
+| `TYPE_PREFIX_RENAME` | fromPrefix, toPrefix | A package moved wholesale |
 | `RENAME_METHOD` | owner, name, desc, newOwner, newName, newDesc | Same shape, different owner or name |
+| `METHOD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Instance call becomes static, receiver as first arg |
+| `FIELD_RETYPE` | owner, newFieldDesc | Every field on a holder class changed type |
+| `FIELD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Deleted constant, value still computable |
 | `CTOR_TO_STATIC` | owner, ctorDesc, factoryName, factoryDesc | Constructor became a static factory |
 | `CTOR_SWAP2` | owner, oldDesc, newDesc, [narrowTopTo] | Two constructor arguments reordered |
 | `REMOVED` | symbol | No replacement — reported, never rewritten |
+
+`METHOD_TO_STATIC` and `FIELD_TO_STATIC` exist for the case neither a rename nor a shim can
+reach: a type that *must* be renamed, because the loader dispatches on it and a shimmed copy
+would never fire, whose replacement is missing something the corpus uses. Both are cheap because
+the stack already suits them — INVOKEVIRTUAL leaves the receiver exactly where INVOKESTATIC
+reads its first argument, and GETSTATIC and a no-arg INVOKESTATIC each push one value.
+
+**Rule owners for these three are written POST-rename.** They run after the type remapper, so
+the owner is already `net/neoforged/...` even though the mod was compiled against
+`net/minecraftforge/...`.
 
 `CTOR_TO_STATIC` removes the `NEW`/`DUP` pair and switches `INVOKESPECIAL` to `INVOKESTATIC`.
 `CTOR_SWAP2` inserts a `SWAP` (and a `CHECKCAST` first, if the new signature also narrows a
@@ -370,3 +384,77 @@ tool reports the two separately and why the loader rules are usable today.
 
 Vanilla mining stays blocked until the source side is remapped SRG → Mojang first. That
 remapper is the project's critical path.
+
+---
+
+## The offline analysis tools — **start here**
+
+`UsageScan`, `MemberScan` and `RenameGaps` answer, without launching the game, what the
+transformer still cannot translate. They replaced the loop that found missing classes by
+launching, reading the first `ClassNotFoundException`, fixing it and launching again — about ten
+minutes per class, strictly one at a time because the JVM stops at the first. Architectury alone
+walked through nine blockers that way.
+
+Every input to that answer is static. The first `RenameGaps` run resolved 196 types in one edit.
+
+### UsageScan — how many jars reference a symbol
+
+```bash
+java tools/UsageScan.java "<corpus-dir>" "net/minecraftforge/network/NetworkRegistry" "addGenericListener"
+```
+
+Searches raw class bytes for the symbol as a substring. Crude on purpose: every class name,
+method name and descriptor a class references lives in its constant pool as plain bytes, so a
+substring search has no false negatives for the thing being asked about, and a false positive
+would need a string literal that happens to contain an internal name.
+
+Counts **jars, not call sites** — one mod calling something forty times is one mod's worth of
+evidence.
+
+### MemberScan — which members of a package the corpus calls
+
+```bash
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "<corpus-dir>" "net/minecraftforge/" > api-report/forge-api-usage.txt
+```
+
+The input to every shim. Writing a shim from memory of an API covers the methods that come to
+mind and misses the ones that do not; the corpus then fails on the difference, one verify cycle
+at a time. This turns a shim from a guess into a transcription.
+
+Includes `invokedynamic` bootstrap arguments, so method references — `Foo::decode` passed as a
+decoder, the dominant idiom in networking — are not missed. They are constant-pool handles rather
+than instructions, and an opcode-only walk would silently under-report exactly the members most
+worth knowing about.
+
+### RenameGaps — what is still unresolved, and what is resolved *wrongly*
+
+```bash
+java -cp "devenv/spi/asm.jar" tools/RenameGaps.java \
+    api-report/forge-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
+    forge-compat/forge-compat.jar \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar \
+    > api-report/unresolved-types.txt
+```
+
+**Read the warning sections before the gap list.** A rule that resolves incorrectly is worse than
+a missing one: the gap report stops mentioning it and the failure moves to runtime.
+
+| Section | Catches |
+|---|---|
+| `RENAME TARGET MISSING A CALLED MEMBER` | The rule resolves; the target lacks what the corpus calls. Caught `ICapabilityProvider` — same name, incompatible shape, 106 jars implement it |
+| `SHIM MISSING A CALLED MEMBER` | Same question asked of forge-compat. Caught `LazyOptional` taking `java.util.function` types where Forge declared its own `NonNull*` — different methods to the JVM |
+| `RENAMES ONTO AN ABSTRACT TYPE` | NeoForge split a concrete event and kept the name as an abstract parent. Caught `LivingDamageEvent`, where 24 jars would have registered listeners that never fire |
+| `SHIMS SHADOWED BY A RULE` | A broad prefix rule quietly disabling a shim |
+
+It mirrors `Translate` exactly, and getting that wrong made it useless twice:
+
+- Rules are tested **before** shims, because that is the order `Translate` uses.
+- A rename is only counted when the target **exists** — `Translate` refuses one that does not.
+- Member names are mapped **SRG → official** first. Skipping that compared `m_246326_` against a
+  class declaring `addPotionTab`: 90 of 495 findings were noise.
+- Members already redirected by `RENAME_METHOD` / `METHOD_TO_STATIC` are skipped, or the report
+  re-accuses work already done.
+
+Narrow beats complete. Flagging *every* abstract target produced 91 hits, nearly all correct
+interfaces like `IItemHandler`; a warning list that size gets skimmed and ignored.

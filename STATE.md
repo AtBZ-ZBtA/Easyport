@@ -73,17 +73,25 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
     devenv/neoforge-1.21.1/run/failed-<modid>.log | head -2
 ```
 
-**Three hard rules, each learned by breaking something:**
+**Four hard rules, each learned by breaking something:**
 
 - **Never chain a build into a backgrounded batch and read only the tail.** A compile error
   scrolled past once and ten minutes of verification ran against a one-class forge-compat,
   reporting every mod broken including one that was at 100%.
-- Editing `tools/*.java` or `rules/forward.rules.tsv` mid-run is now safe — `batch-verify.sh`
-  snapshots both at start. Tool edits corrupted three runs before that existed.
+- Editing `tools/*.java`, `rules/forward.rules.tsv` or rebuilding `forge-compat.jar` mid-run is
+  now safe — `batch-verify.sh` snapshots all three at start and runs from the copies. Tool edits
+  corrupted three runs before that existed, and a mid-run rebuild split one results table across
+  two shim layers.
 - **A batch that reports the same failures as last time may not have run.** It skips mods
-  already in `batch-results.tsv` so a long run can resume. It now discards that file
-  automatically when the rules, forge-compat or `Translate.java` are newer — but one full
-  batch was read as "both fixes changed nothing" when in fact nothing was re-tested.
+  already in `batch-results.tsv` so a long run can resume. It discards that file automatically
+  when the rules, forge-compat or `Translate.java` are newer — but the check is mtime-based, so
+  a rebuild that happens *during* a run leaves the results looking fresh. `rm
+  batch-report/batch-results.tsv` to force. One full batch was read as "both fixes changed
+  nothing" when in fact nothing was re-tested.
+- **A mod's current failure is the top of a stack, not the whole of it.** The JVM stops at the
+  first problem, so fixing it reveals the next. blockui looked like a vanilla failure and had two
+  more Phase 3 gaps underneath — that nearly produced a wrong phase sign-off. Never conclude
+  "everything left is Phase N+1" from a single run.
 
 **Immediate next work: Phase 4, the vanilla bridge.** Phase 3 is signed off below. Everything
 still failing fails on vanilla, not on Forge API.
