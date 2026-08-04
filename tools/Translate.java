@@ -118,15 +118,41 @@ public class Translate {
     /** Mixin classes to drop from their configs because their target no longer exists. */
     private final Set<String> deadMixins = new LinkedHashSet<>();
 
+    /** Target classes that are interfaces, for detecting a mixin whose target changed kind. */
+    private final Set<String> targetInterfaces = new HashSet<>();
+
+    /** Target class -> its declared fields as "name desc", for validating {@code @Shadow}. */
+    private final Map<String, Set<String>> targetFields = new HashMap<>();
+
     private void loadTargetIndex(String[] jars) {
         for (String j : jars) {
             Path p = Paths.get(j);
             if (!Files.isRegularFile(p)) continue;
             try (ZipFile zip = new ZipFile(p.toFile())) {
-                Enumeration<? extends ZipEntry> e = zip.entries();
-                while (e.hasMoreElements()) {
-                    String n = e.nextElement().getName();
-                    if (n.endsWith(".class")) targetClasses.add(n.substring(0, n.length() - 6));
+                Enumeration<? extends ZipEntry> entries = zip.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry e = entries.nextElement();
+                    String n = e.getName();
+                    if (!n.endsWith(".class")) continue;
+                    String internal = n.substring(0, n.length() - 6);
+                    targetClasses.add(internal);
+                    // Only vanilla is worth indexing in detail -- mixins target net.minecraft,
+                    // and reading every field of every platform class would triple the cost of
+                    // a scan that runs once per mod.
+                    if (!internal.startsWith("net/minecraft/")) continue;
+                    try {
+                        ClassNode node = new ClassNode();
+                        new ClassReader(read(zip, e)).accept(node,
+                                ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG);
+                        if ((node.access & Opcodes.ACC_INTERFACE) != 0) targetInterfaces.add(internal);
+                        Set<String> fields = new HashSet<>();
+                        if (node.fields != null) {
+                            for (var f : node.fields) fields.add(f.name + " " + f.desc);
+                        }
+                        targetFields.put(internal, fields);
+                    } catch (Exception ignored) {
+                        // Unparseable class: it still counts as present, just not inspectable.
+                    }
                 }
             } catch (IOException ignored) {
                 // A missing or unreadable platform jar just means a smaller index; the guard in
@@ -714,10 +740,41 @@ public class Translate {
                     if (simple.contains(" ") || simple.startsWith("net.")) continue;
                     ZipEntry mixinEntry = zip.getEntry(pkg + "/" + simple.replace('.', '/') + ".class");
                     if (mixinEntry == null) continue;
-                    for (String target : mixinTargets(read(zip, mixinEntry))) {
-                        if (target.startsWith("net/minecraft/") && !targetClasses.contains(target)) {
+                    byte[] mixinBytes = read(zip, mixinEntry);
+                    for (String target : mixinTargets(mixinBytes)) {
+                        if (!target.startsWith("net/minecraft/")) continue;
+
+                        if (!targetClasses.contains(target)) {
                             deadMixins.add(simple);
                             count(unresolved, "MIXIN_DROP (target gone: " + target + ") " + simple);
+                            continue;
+                        }
+
+                        // A target that became an interface. Mixin refuses to apply a
+                        // class-mixin to an interface target and aborts the whole launch --
+                        // supermartijn642corelib dies on SpriteResourceLoader, which was a class
+                        // in 1.20.1 and is an interface in 1.21. Applying it properly means
+                        // rewriting the mixin as an interface mixin with default methods, which
+                        // is real surgery; dropping keeps the mod loading and is reported.
+                        if (targetInterfaces.contains(target) && !isInterface(mixinBytes)) {
+                            deadMixins.add(simple);
+                            count(unresolved, "MIXIN_DROP (target became an interface: "
+                                              + target + ") " + simple);
+                            continue;
+                        }
+
+                        // A @Shadow field whose descriptor no longer matches. Mixin looks these
+                        // up by name *and* descriptor, so a field that merely changed type reads
+                        // as absent and aborts the launch -- curios dies on
+                        // ApplyBonusCount.enchantment, which is still there and is now
+                        // Holder<Enchantment> rather than Enchantment. Same 1.21 Holder wrapping
+                        // that FIELD_RETYPE handles for ordinary code.
+                        Set<String> declared = targetFields.get(target);
+                        if (declared == null || declared.isEmpty()) continue;
+                        for (String missing : unresolvableShadows(mixinBytes, declared)) {
+                            deadMixins.add(simple);
+                            count(unresolved, "MIXIN_DROP (@Shadow field not found: " + target
+                                              + "#" + missing + ") " + simple);
                         }
                     }
                 }
@@ -803,6 +860,49 @@ public class Translate {
         if (node.superName != null) out.add(node.superName);
         if (node.interfaces != null) out.addAll(node.interfaces);
         return out;
+    }
+
+    private static boolean isInterface(byte[] classBytes) {
+        ClassNode node = new ClassNode();
+        new ClassReader(classBytes).accept(node, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG);
+        return (node.access & Opcodes.ACC_INTERFACE) != 0;
+    }
+
+    /**
+     * {@code @Shadow} fields the target class no longer declares with that exact descriptor.
+     *
+     * Shadows are resolved by name and descriptor together, so a field whose *type* changed is
+     * as unresolvable as one that was deleted -- and fails the same way, by aborting the launch
+     * rather than the single mixin.
+     *
+     * Names are compared post-SRG. The mixin's field is named for the 1.20.1 SRG member at this
+     * point in the pipeline only if the remapper has not run yet, so the SRG table is applied
+     * here rather than assumed.
+     */
+    private List<String> unresolvableShadows(byte[] classBytes, Set<String> targetDeclared) {
+        List<String> missing = new ArrayList<>();
+        ClassNode node = new ClassNode();
+        new ClassReader(classBytes).accept(node, ClassReader.SKIP_CODE);
+        if (node.fields == null) return missing;
+
+        for (var field : node.fields) {
+            if (!hasShadowAnnotation(field.visibleAnnotations)
+                    && !hasShadowAnnotation(field.invisibleAnnotations)) continue;
+            String name = srgToOfficial.getOrDefault(field.name, field.name);
+            if (targetDeclared.contains(name + " " + field.desc)) continue;
+            // Present under a different descriptor is the interesting case and the one worth
+            // naming; absent entirely is reported the same way but means something else.
+            missing.add(name);
+        }
+        return missing;
+    }
+
+    private static boolean hasShadowAnnotation(List<org.objectweb.asm.tree.AnnotationNode> anns) {
+        if (anns == null) return false;
+        for (var a : anns) {
+            if (a.desc != null && a.desc.endsWith("/Shadow;")) return true;
+        }
+        return false;
     }
 
     /** Reads the class names a mixin declares in its {@code @Mixin} annotation. */

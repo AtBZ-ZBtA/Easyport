@@ -432,3 +432,4 @@ METHOD_TO_STATIC	net/minecraftforge/eventbus/api/IEventBus	post	(Lnet/neoforged/
 METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
 METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent$Loading	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
 METHOD_TO_STATIC	net/neoforged/fml/event/config/ModConfigEvent$Reloading	getConfig	()Lnet/minecraftforge/fml/config/ModConfig;	easyport/bridge/ConfigBridge	getConfig	(Lnet/neoforged/fml/event/config/ModConfigEvent;)Lnet/minecraftforge/fml/config/ModConfig;
+
