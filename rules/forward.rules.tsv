@@ -351,3 +351,23 @@ TYPE_RENAME	net/minecraftforge/event/entity/player/PlayerSleepInBedEvent	net/neo
 #   AttachCapabilitiesEvent (86)  capabilities are no longer attached to objects
 #   FillBucketEvent (6)           replaced by fluid capability interactions
 #   LootingLevelEvent (7)         removed by the 1.21 enchantment rework
+
+# --- Instance calls that must become static ---------------------------------------------------
+#
+# METHOD_TO_STATIC  owner <TAB> name <TAB> desc <TAB> newOwner <TAB> newName <TAB> newDesc
+#
+# For the case neither a rename nor a shim can reach: a type that MUST be renamed, because the
+# loader dispatches on it and a shimmed copy would never fire, whose replacement is missing a
+# method the corpus calls. RegisterEvent is the first instance -- placebo calls
+# getForgeRegistry() on it, and NeoForge dropped that method.
+#
+# The rewrite is cheap because the stack already suits it: when INVOKEVIRTUAL runs, the receiver
+# sits below the arguments in exactly the slot INVOKESTATIC reads its first parameter from. So
+# the owner becomes the first descriptor argument and nothing has to be shuffled.
+#
+# Owners here are written POST-rename -- these rules run after the type remapper, so the owner
+# is already net/neoforged/... even though the mod was compiled against net/minecraftforge/...
+#
+# This is the shape for the rest of the "rename target missing a called member" list in
+# api-report/unresolved-types.txt, which currently runs to several hundred entries.
+METHOD_TO_STATIC	net/neoforged/neoforge/registries/RegisterEvent	getForgeRegistry	()Lnet/minecraftforge/registries/IForgeRegistry;	easyport/bridge/RegistryBridge	getForgeRegistry	(Lnet/neoforged/neoforge/registries/RegisterEvent;)Lnet/minecraftforge/registries/IForgeRegistry;

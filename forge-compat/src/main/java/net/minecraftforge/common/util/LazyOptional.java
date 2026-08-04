@@ -47,7 +47,7 @@ public class LazyOptional<T> {
         return (LazyOptional<T>) EMPTY;
     }
 
-    private T resolve() {
+    private T value() {
         if (!valid) return null;
         if (!resolvedOnce) {
             resolvedOnce = true;
@@ -57,41 +57,63 @@ public class LazyOptional<T> {
     }
 
     public boolean isPresent() {
-        return valid && supplier != null && resolve() != null;
+        return valid && supplier != null && value() != null;
     }
 
-    public void ifPresent(Consumer<? super T> consumer) {
-        T value = resolve();
+    public void ifPresent(NonNullConsumer<? super T> consumer) {
+        T value = value();
         if (value != null) consumer.accept(value);
     }
 
-    public <U> Optional<U> map(Function<? super T, ? extends U> mapper) {
-        T value = resolve();
+    public <U> Optional<U> map(NonNullFunction<? super T, ? extends U> mapper) {
+        T value = value();
         return value == null ? Optional.empty() : Optional.ofNullable(mapper.apply(value));
     }
 
+    /**
+     * Forge's public accessor, called by 72 corpus jars.
+     *
+     * The private resolver it shadows is now {@code value()}. Forge had both: a package-private
+     * {@code getValue()} returning the object, and this returning an Optional. The shim
+     * originally had only the former, under this name -- so every mod calling {@code resolve()}
+     * would have found a method with the right name and the wrong return type.
+     */
+    public Optional<T> resolve() {
+        return Optional.ofNullable(value());
+    }
+
     public Optional<T> resolveOptional() {
-        return Optional.ofNullable(resolve());
+        return resolve();
+    }
+
+    /** Forge's lazy variants, which defer the mapper until the result is itself resolved. */
+    public <U> LazyOptional<U> lazyMap(NonNullFunction<? super T, ? extends U> mapper) {
+        return isPresent() ? LazyOptional.of(() -> mapper.apply(value())) : LazyOptional.empty();
+    }
+
+    public Optional<T> filter(NonNullPredicate<? super T> predicate) {
+        T v = value();
+        return v != null && predicate.test(v) ? Optional.of(v) : Optional.empty();
     }
 
     public T orElse(T other) {
-        T value = resolve();
+        T value = value();
         return value != null ? value : other;
     }
 
     public T orElseGet(Supplier<? extends T> other) {
-        T value = resolve();
+        T value = value();
         return value != null ? value : other.get();
     }
 
-    public <X extends Throwable> T orElseThrow(Supplier<? extends X> exceptionSupplier) throws X {
-        T value = resolve();
+    public <X extends Throwable> T orElseThrow(NonNullSupplier<? extends X> exceptionSupplier) throws X {
+        T value = value();
         if (value == null) throw exceptionSupplier.get();
         return value;
     }
 
     public T getValueUnsafe() {
-        T value = resolve();
+        T value = value();
         if (value == null) throw new NoSuchElementException("LazyOptional is empty or invalidated");
         return value;
     }

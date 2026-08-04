@@ -1,14 +1,12 @@
 referenced Forge types: 792
-  resolved by forge-compat: 50
-  resolved by a rule:       495
-  UNRESOLVED:               247
+  resolved by forge-compat: 56
+  resolved by a rule:       492
+  UNRESOLVED:               244
 
-=== RENAME TARGET MISSING A CALLED MEMBER (499) ===
+=== RENAME TARGET MISSING A CALLED MEMBER (495) ===
 The rule resolves, but the target does not have what the corpus
 calls on it. Each is a NoSuchMethodError or AbstractMethodError
 waiting to happen -- convert the rule to a shim, or drop it.
-   68  net/minecraftforge/common/capabilities/RegisterCapabilitiesEvent.register
-         -> net/neoforged/neoforge/capabilities/RegisterCapabilitiesEvent  has no  register (Ljava/lang/Class;)V
    49  net/minecraftforge/fluids/FluidStack.getTag
          -> net/neoforged/neoforge/fluids/FluidStack  has no  getTag ()Lnet/minecraft/nbt/CompoundTag;
    49  net/minecraftforge/items/ItemStackHandler.deserializeNBT
@@ -21,8 +19,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforge/client/event/ModelEvent$RegisterGeometryLoaders  has no  register (Ljava/lang/String;Lnet/neoforged/neoforge/client/model/geometry/IGeometryLoader;)V
    42  net/minecraftforge/items/ItemStackHandler.serializeNBT
          -> net/neoforged/neoforge/items/ItemStackHandler  has no  serializeNBT ()Lnet/minecraft/nbt/CompoundTag;
-   41  net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent.getEntity
-         -> net/neoforged/neoforge/event/tick/EntityTickEvent$Pre  has no  getEntity ()Lnet/minecraft/world/entity/LivingEntity;
    39  net/minecraftforge/items/ItemHandlerHelper.copyStackWithSize
          -> net/neoforged/neoforge/items/ItemHandlerHelper  has no  copyStackWithSize (Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;
    37  net/minecraftforge/fluids/FluidStack.loadFluidStackFromNBT
@@ -36,7 +32,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
    34  net/minecraftforge/fml/event/config/ModConfigEvent.getConfig
          -> net/neoforged/fml/event/config/ModConfigEvent  has no  getConfig ()Lnet/minecraftforge/fml/config/ModConfig;
    33  net/minecraftforge/common/crafting/CraftingHelper.register
-         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  register (Lnet/neoforged/neoforge/common/conditions/IConditionSerializer;)Lnet/neoforged/neoforge/common/conditions/IConditionSerializer;
+         -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  register (Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;)Lnet/minecraftforge/common/crafting/conditions/IConditionSerializer;
    33  net/minecraftforge/fml/event/config/ModConfigEvent$Reloading.getConfig
          -> net/neoforged/fml/event/config/ModConfigEvent$Reloading  has no  getConfig ()Lnet/minecraftforge/fml/config/ModConfig;
    31  net/minecraftforge/common/crafting/CraftingHelper.register
@@ -74,9 +70,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
    21  net/minecraftforge/event/BuildCreativeModeTabContentsEvent.accept
          -> net/neoforged/neoforge/event/BuildCreativeModeTabContentsEvent  has no  accept (Ljava/util/function/Supplier;)V
    21  net/minecraftforge/fluids/FluidUtil.getFluidHandler
-         -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/item/ItemStack;)Lnet/neoforged/neoforge/common/util/LazyOptional;
-   20  net/minecraftforge/common/capabilities/ICapabilityProvider.getCapability
-         -> net/neoforged/neoforge/capabilities/ICapabilityProvider  has no  getCapability (Lnet/neoforged/neoforge/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+         -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraftforge/common/util/LazyOptional;
    20  net/minecraftforge/common/crafting/CraftingHelper.getItemStack
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  getItemStack (Lcom/google/gson/JsonObject;Z)Lnet/minecraft/world/item/ItemStack;
    20  net/minecraftforge/event/entity/living/LivingDamageEvent.getAmount
@@ -161,8 +155,6 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/fml/ModContainer  has no  addConfig (Lnet/minecraftforge/fml/config/ModConfig;)V
    11  net/minecraftforge/common/Tags$Items.SANDSTONE
          -> net/neoforged/neoforge/common/Tags$Items  has no  SANDSTONE Lnet/minecraft/tags/TagKey;
-   11  net/minecraftforge/common/capabilities/ICapabilityProvider.getCapability
-         -> net/neoforged/neoforge/capabilities/ICapabilityProvider  has no  getCapability (Lnet/neoforged/neoforge/capabilities/Capability;)Lnet/neoforged/neoforge/common/util/LazyOptional;
    11  net/minecraftforge/common/crafting/CraftingHelper.processConditions
          -> net/neoforged/neoforge/common/crafting/CraftingHelper  has no  processConditions (Lcom/google/gson/JsonObject;Ljava/lang/String;Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;)Z
    11  net/minecraftforge/event/entity/player/PlayerInteractEvent$RightClickBlock.setUseBlock
@@ -172,7 +164,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
    11  net/minecraftforge/fluids/FluidStack.getOrCreateTag
          -> net/neoforged/neoforge/fluids/FluidStack  has no  getOrCreateTag ()Lnet/minecraft/nbt/CompoundTag;
    11  net/minecraftforge/fluids/FluidUtil.getFluidHandler
-         -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+         -> net/neoforged/neoforge/fluids/FluidUtil  has no  getFluidHandler (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Lnet/minecraftforge/common/util/LazyOptional;
    11  net/minecraftforge/fml/loading/FMLLoader.getLoadingModList
          -> net/neoforged/fml/loading/FMLLoader  has no  getLoadingModList ()Lnet/minecraftforge/fml/loading/LoadingModList;
    11  net/minecraftforge/items/SlotItemHandler.m_5852_
@@ -234,7 +226,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     8  net/minecraftforge/items/SlotItemHandler.m_6201_
          -> net/neoforged/neoforge/items/SlotItemHandler  has no  m_6201_ (I)Lnet/minecraft/world/item/ItemStack;
     8  net/minecraftforge/items/wrapper/SidedInvWrapper.create
-         -> net/neoforged/neoforge/items/wrapper/SidedInvWrapper  has no  create (Lnet/minecraft/world/WorldlyContainer;[Lnet/minecraft/core/Direction;)[Lnet/neoforged/neoforge/common/util/LazyOptional;
+         -> net/neoforged/neoforge/items/wrapper/SidedInvWrapper  has no  create (Lnet/minecraft/world/WorldlyContainer;[Lnet/minecraft/core/Direction;)[Lnet/minecraftforge/common/util/LazyOptional;
     8  net/minecraftforge/registries/NewRegistryEvent.create
          -> net/neoforged/neoforge/registries/NewRegistryEvent  has no  create (Lnet/minecraftforge/registries/RegistryBuilder;)Ljava/util/function/Supplier;
     7  net/minecraftforge/common/Tags$Blocks.COBBLESTONE
@@ -500,7 +492,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     2  net/minecraftforge/client/model/ElementsModel.bake
          -> net/neoforged/neoforge/client/model/ElementsModel  has no  bake (Lnet/neoforged/neoforge/client/model/geometry/IGeometryBakingContext;Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/BakedModel;
     2  net/minecraftforge/client/model/data/MultipartModelData.builder
-         -> net/neoforged/neoforge/client/model/data/MultipartModelData  has no  builder ()Lnet/neoforged/neoforge/client/model/data/MultipartModelData$Builder;
+         -> net/neoforged/neoforge/client/model/data/MultipartModelData  has no  builder ()Lnet/minecraftforge/client/model/data/MultipartModelData$Builder;
     2  net/minecraftforge/client/model/geometry/IUnbakedGeometry.bake
          -> net/neoforged/neoforge/client/model/geometry/IUnbakedGeometry  has no  bake (Lnet/neoforged/neoforge/client/model/geometry/IGeometryBakingContext;Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/BakedModel;
     2  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.bakeElementFace
@@ -564,7 +556,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     2  net/minecraftforge/event/entity/EntityEvent$Size.setNewEyeHeight
          -> net/neoforged/neoforge/event/entity/EntityEvent$Size  has no  setNewEyeHeight (F)V
     2  net/minecraftforge/event/entity/ProjectileImpactEvent.setImpactResult
-         -> net/neoforged/neoforge/event/entity/ProjectileImpactEvent  has no  setImpactResult (Lnet/neoforged/neoforge/event/entity/ProjectileImpactEvent$ImpactResult;)V
+         -> net/neoforged/neoforge/event/entity/ProjectileImpactEvent  has no  setImpactResult (Lnet/minecraftforge/event/entity/ProjectileImpactEvent$ImpactResult;)V
     2  net/minecraftforge/event/entity/living/LivingDamageEvent.isCanceled
          -> net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post  has no  isCanceled ()Z
     2  net/minecraftforge/event/entity/living/MobSpawnEvent$PositionCheck.getResult
@@ -786,7 +778,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     1  net/minecraftforge/client/model/generators/ModelBuilder$FaceRotation.ordinal
          -> net/neoforged/neoforge/client/model/generators/ModelBuilder$FaceRotation  has no  ordinal ()I
     1  net/minecraftforge/client/model/geometry/UnbakedGeometryHelper.createUnbakedItemElements
-         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemElements (ILnet/minecraft/client/renderer/texture/SpriteContents;Lnet/neoforged/neoforge/client/model/ForgeFaceData;)Ljava/util/List;
+         -> net/neoforged/neoforge/client/model/geometry/UnbakedGeometryHelper  has no  createUnbakedItemElements (ILnet/minecraft/client/renderer/texture/SpriteContents;Lnet/minecraftforge/client/model/ForgeFaceData;)Ljava/util/List;
     1  net/minecraftforge/client/model/obj/ObjModel.bake
          -> net/neoforged/neoforge/client/model/obj/ObjModel  has no  bake (Lnet/neoforged/neoforge/client/model/geometry/IGeometryBakingContext;Lnet/minecraft/client/resources/model/ModelBaker;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/ItemOverrides;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/resources/model/BakedModel;
     1  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer.m_141991_
@@ -990,7 +982,7 @@ waiting to happen -- convert the rule to a shim, or drop it.
     1  net/minecraftforge/fluids/capability/IFluidHandler$FluidAction.ordinal
          -> net/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction  has no  ordinal ()I
     1  net/minecraftforge/fluids/capability/templates/FluidHandlerItemStack.getCapability
-         -> net/neoforged/neoforge/fluids/capability/templates/FluidHandlerItemStack  has no  getCapability (Lnet/neoforged/neoforge/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/neoforged/neoforge/common/util/LazyOptional;
+         -> net/neoforged/neoforge/fluids/capability/templates/FluidHandlerItemStack  has no  getCapability (Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/minecraftforge/common/util/LazyOptional;
     1  net/minecraftforge/fml/ModContainer.dispatchConfigEvent
          -> net/neoforged/fml/ModContainer  has no  dispatchConfigEvent (Lnet/minecraftforge/fml/config/IConfigEvent;)V
     1  net/minecraftforge/fml/ModContainer.getMod
@@ -1005,6 +997,369 @@ waiting to happen -- convert the rule to a shim, or drop it.
          -> net/neoforged/neoforgespi/language/ModFileScanData  has no  getTargets ()Ljava/util/Map;
     1  net/minecraftforge/server/ServerLifecycleHooks.buildPackFinder
          -> net/neoforged/neoforge/server/ServerLifecycleHooks  has no  buildPackFinder (Ljava/util/Map;)Lnet/minecraft/server/packs/repository/RepositorySource;
+
+=== SHIM MISSING A CALLED MEMBER (179) ===
+forge-compat supplies the class but not this member, or not with
+this descriptor. Every one is a NoSuchMethodError at a real call
+site -- the class resolves, so nothing fails until it is used.
+  121  net/minecraftforge/common/util/LazyOptional.ifPresent
+         shim lacks  ifPresent (Lnet/minecraftforge/common/util/NonNullConsumer;)V
+  110  net/minecraftforge/eventbus/api/IEventBus.post
+         shim lacks  post (Lnet/neoforged/bus/api/Event;)Z
+   82  net/minecraftforge/common/util/LazyOptional.map
+         shim lacks  map (Lnet/minecraftforge/common/util/NonNullFunction;)Ljava/util/Optional;
+   72  net/minecraftforge/common/util/LazyOptional.resolve
+         shim lacks  resolve ()Ljava/util/Optional;
+   72  net/minecraftforge/registries/DeferredRegister.getEntries
+         shim lacks  getEntries ()Ljava/util/Collection;
+   66  net/minecraftforge/fml/ModList.getModContainerById
+         shim lacks  getModContainerById (Ljava/lang/String;)Ljava/util/Optional;
+   57  net/minecraftforge/registries/IForgeRegistry.tags
+         shim lacks  tags ()Lnet/minecraftforge/registries/tags/ITagManager;
+   43  net/minecraftforge/common/util/LazyOptional.orElseThrow
+         shim lacks  orElseThrow (Lnet/minecraftforge/common/util/NonNullSupplier;)Ljava/lang/Object;
+   42  net/minecraftforge/registries/RegistryObject.getKey
+         shim lacks  getKey ()Lnet/minecraft/resources/ResourceKey;
+   34  net/minecraftforge/fml/config/ModConfig.getSpec
+         shim lacks  getSpec ()Lnet/minecraftforge/fml/config/IConfigSpec;
+   31  net/minecraftforge/registries/ForgeRegistries.POTIONS
+         shim lacks  POTIONS Lnet/minecraftforge/registries/IForgeRegistry;
+   31  net/minecraftforge/registries/IForgeRegistry.register
+         shim lacks  register (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/Object;)V
+   28  net/minecraftforge/registries/ForgeRegistries.FEATURES
+         shim lacks  FEATURES Lnet/minecraftforge/registries/IForgeRegistry;
+   28  net/minecraftforge/fml/ModList.getModFileById
+         shim lacks  getModFileById (Ljava/lang/String;)Lnet/neoforged/neoforgespi/language/IModFileInfo;
+   26  net/minecraftforge/registries/IForgeRegistry.getEntries
+         shim lacks  getEntries ()Ljava/util/Set;
+   25  net/minecraftforge/fml/config/ModConfig.getType
+         shim lacks  getType ()Lnet/minecraftforge/fml/config/ModConfig$Type;
+   25  net/minecraftforge/registries/IForgeRegistry.iterator
+         shim lacks  iterator ()Ljava/util/Iterator;
+   23  net/minecraftforge/registries/IForgeRegistry.getCodec
+         shim lacks  getCodec ()Lcom/mojang/serialization/Codec;
+   22  net/minecraftforge/registries/IForgeRegistry.getKeys
+         shim lacks  getKeys ()Ljava/util/Set;
+   21  net/minecraftforge/registries/ForgeRegistries.POI_TYPES
+         shim lacks  POI_TYPES Lnet/minecraftforge/registries/IForgeRegistry;
+   20  net/minecraftforge/fml/DistExecutor.unsafeRunForDist
+         shim lacks  unsafeRunForDist (Ljava/util/function/Supplier;Ljava/util/function/Supplier;)Ljava/lang/Object;
+   19  net/minecraftforge/common/ForgeConfigSpec.isLoaded
+         shim lacks  isLoaded ()Z
+   19  net/minecraftforge/fml/ModList.getMods
+         shim lacks  getMods ()Ljava/util/List;
+   18  net/minecraftforge/common/util/LazyOptional.addListener
+         shim lacks  addListener (Lnet/minecraftforge/common/util/NonNullConsumer;)V
+   17  net/minecraftforge/event/TickEvent$PlayerTickEvent.side
+         shim lacks  side Lnet/minecraftforge/fml/LogicalSide;
+   17  net/minecraftforge/fml/ModList.getAllScanData
+         shim lacks  getAllScanData ()Ljava/util/List;
+   17  net/minecraftforge/fml/config/ModConfig.getModId
+         shim lacks  getModId ()Ljava/lang/String;
+   17  net/minecraftforge/registries/IForgeRegistry.getResourceKey
+         shim lacks  getResourceKey (Ljava/lang/Object;)Ljava/util/Optional;
+   16  net/minecraftforge/event/TickEvent$ServerTickEvent.getServer
+         shim lacks  getServer ()Lnet/minecraft/server/MinecraftServer;
+   15  net/minecraftforge/event/TickEvent$LevelTickEvent.side
+         shim lacks  side Lnet/minecraftforge/fml/LogicalSide;
+   15  net/minecraftforge/registries/ForgeRegistries.VILLAGER_PROFESSIONS
+         shim lacks  VILLAGER_PROFESSIONS Lnet/minecraftforge/registries/IForgeRegistry;
+   15  net/minecraftforge/common/util/LazyOptional.filter
+         shim lacks  filter (Lnet/minecraftforge/common/util/NonNullPredicate;)Ljava/util/Optional;
+   15  net/minecraftforge/registries/DeferredRegister.makeRegistry
+         shim lacks  makeRegistry (Ljava/util/function/Supplier;)Ljava/util/function/Supplier;
+   14  net/minecraftforge/common/util/LazyOptional.lazyMap
+         shim lacks  lazyMap (Lnet/minecraftforge/common/util/NonNullFunction;)Lnet/minecraftforge/common/util/LazyOptional;
+   14  net/minecraftforge/common/util/LazyOptional.orElseGet
+         shim lacks  orElseGet (Lnet/minecraftforge/common/util/NonNullSupplier;)Ljava/lang/Object;
+   14  net/minecraftforge/registries/RegistryObject.getHolder
+         shim lacks  getHolder ()Ljava/util/Optional;
+   13  net/minecraftforge/registries/ForgeRegistries.BIOMES
+         shim lacks  BIOMES Lnet/minecraftforge/registries/IForgeRegistry;
+   13  net/minecraftforge/registries/RegistryObject.create
+         shim lacks  create (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraftforge/registries/IForgeRegistry;)Lnet/minecraftforge/registries/RegistryObject;
+   12  net/minecraftforge/registries/IForgeRegistry.getDelegateOrThrow
+         shim lacks  getDelegateOrThrow (Ljava/lang/Object;)Lnet/minecraft/core/Holder$Reference;
+   12  net/minecraftforge/registries/IForgeRegistry.getRegistryName
+         shim lacks  getRegistryName ()Lnet/minecraft/resources/ResourceLocation;
+   11  net/minecraftforge/common/ForgeConfigSpec$Builder.defineListAllowEmpty
+         shim lacks  defineListAllowEmpty (Ljava/util/List;Ljava/util/function/Supplier;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
+   11  net/minecraftforge/fml/config/ModConfig.getFileName
+         shim lacks  getFileName ()Ljava/lang/String;
+   11  net/minecraftforge/registries/IForgeRegistry.getHolder
+         shim lacks  getHolder (Ljava/lang/Object;)Ljava/util/Optional;
+   10  net/minecraftforge/common/ForgeConfigSpec$Builder.define
+         shim lacks  define (Ljava/lang/String;Ljava/lang/Object;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
+   10  net/minecraftforge/common/ForgeConfigSpec.save
+         shim lacks  save ()V
+   10  net/minecraftforge/fml/config/ModConfig.getConfigData
+         shim lacks  getConfigData ()Lcom/electronwill/nightconfig/core/CommentedConfig;
+   10  net/minecraftforge/network/NetworkDirection.buildPacket
+         shim lacks  buildPacket (Lorg/apache/commons/lang3/tuple/Pair;Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraftforge/network/ICustomPacket;
+   10  net/minecraftforge/registries/IForgeRegistry.containsValue
+         shim lacks  containsValue (Ljava/lang/Object;)Z
+    9  net/minecraftforge/network/simple/SimpleChannel.toVanillaPacket
+         shim lacks  toVanillaPacket (Ljava/lang/Object;Lnet/minecraftforge/network/NetworkDirection;)Lnet/minecraft/network/protocol/Packet;
+    8  net/minecraftforge/fml/ModLoader.postEvent
+         shim lacks  postEvent (Lnet/neoforged/bus/api/Event;)V
+    8  net/minecraftforge/network/simple/SimpleChannel.reply
+         shim lacks  reply (Ljava/lang/Object;Lnet/minecraftforge/network/NetworkEvent$Context;)V
+    8  net/minecraftforge/registries/RegistryObject.create
+         shim lacks  create (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceKey;Ljava/lang/String;)Lnet/minecraftforge/registries/RegistryObject;
+    7  net/minecraftforge/registries/ForgeRegistries.PAINTING_VARIANTS
+         shim lacks  PAINTING_VARIANTS Lnet/minecraftforge/registries/IForgeRegistry;
+    7  net/minecraftforge/common/ForgeConfigSpec$Builder.defineList
+         shim lacks  defineList (Ljava/lang/String;Ljava/util/function/Supplier;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
+    7  net/minecraftforge/common/ForgeConfigSpec$ConfigValue.getDefault
+         shim lacks  getDefault ()Ljava/lang/Object;
+    7  net/minecraftforge/fml/ModLoader.isLoadingStateValid
+         shim lacks  isLoadingStateValid ()Z
+    7  net/minecraftforge/network/NetworkEvent$ClientCustomPayloadEvent.getSource
+         shim lacks  getSource ()Ljava/util/function/Supplier;
+    7  net/minecraftforge/network/NetworkEvent$ServerCustomPayloadEvent.getSource
+         shim lacks  getSource ()Ljava/util/function/Supplier;
+    7  net/minecraftforge/registries/IForgeRegistry.getHolder
+         shim lacks  getHolder (Lnet/minecraft/resources/ResourceKey;)Ljava/util/Optional;
+    7  net/minecraftforge/registries/IForgeRegistry.getHolder
+         shim lacks  getHolder (Lnet/minecraft/resources/ResourceLocation;)Ljava/util/Optional;
+    7  net/minecraftforge/registries/RegistryObject.ifPresent
+         shim lacks  ifPresent (Ljava/util/function/Consumer;)V
+    6  net/minecraftforge/registries/ForgeRegistries.FLUID_TYPES
+         shim lacks  FLUID_TYPES Ljava/util/function/Supplier;
+    6  net/minecraftforge/common/ForgeConfigSpec$Builder.defineListAllowEmpty
+         shim lacks  defineListAllowEmpty (Ljava/lang/String;Ljava/util/List;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
+    6  net/minecraftforge/common/ForgeConfigSpec$ConfigValue.save
+         shim lacks  save ()V
+    6  net/minecraftforge/network/NetworkEvent$Context.getNetworkManager
+         shim lacks  getNetworkManager ()Lnet/minecraft/network/Connection;
+    6  net/minecraftforge/network/PacketDistributor$PacketTarget.send
+         shim lacks  send (Lnet/minecraft/network/protocol/Packet;)V
+    6  net/minecraftforge/registries/IForgeRegistry.register
+         shim lacks  register (Ljava/lang/String;Ljava/lang/Object;)V
+    5  net/minecraftforge/registries/ForgeRegistries.COMMAND_ARGUMENT_TYPES
+         shim lacks  COMMAND_ARGUMENT_TYPES Lnet/minecraftforge/registries/IForgeRegistry;
+    5  net/minecraftforge/registries/ForgeRegistries.TREE_DECORATOR_TYPES
+         shim lacks  TREE_DECORATOR_TYPES Lnet/minecraftforge/registries/IForgeRegistry;
+    5  net/minecraftforge/eventbus/api/Event$Result.equals
+         shim lacks  equals (Ljava/lang/Object;)Z
+    5  net/minecraftforge/fml/LogicalSide.equals
+         shim lacks  equals (Ljava/lang/Object;)Z
+    5  net/minecraftforge/fml/ModList.getModFiles
+         shim lacks  getModFiles ()Ljava/util/List;
+    5  net/minecraftforge/fml/config/ModConfig$Type.extension
+         shim lacks  extension ()Ljava/lang/String;
+    5  net/minecraftforge/network/NetworkHooks.getConnectionData
+         shim lacks  getConnectionData (Lnet/minecraft/network/Connection;)Lnet/minecraftforge/network/ConnectionData;
+    5  net/minecraftforge/network/PacketDistributor$TargetPoint.p
+         shim lacks  p (DDDDLnet/minecraft/resources/ResourceKey;)Ljava/util/function/Supplier;
+    5  net/minecraftforge/network/simple/SimpleChannel.isRemotePresent
+         shim lacks  isRemotePresent (Lnet/minecraft/network/Connection;)Z
+    5  net/minecraftforge/registries/IForgeRegistry.getDelegate
+         shim lacks  getDelegate (Lnet/minecraft/resources/ResourceLocation;)Ljava/util/Optional;
+    4  net/minecraftforge/registries/ForgeRegistries.FOLIAGE_PLACER_TYPES
+         shim lacks  FOLIAGE_PLACER_TYPES Lnet/minecraftforge/registries/IForgeRegistry;
+    4  net/minecraftforge/common/ForgeConfigSpec$BooleanValue.save
+         shim lacks  save ()V
+    4  net/minecraftforge/event/TickEvent$Phase.ordinal
+         shim lacks  ordinal ()I
+    4  net/minecraftforge/fml/config/ModConfig.save
+         shim lacks  save ()V
+    4  net/minecraftforge/network/NetworkDirection.ordinal
+         shim lacks  ordinal ()I
+    4  net/minecraftforge/network/PacketDistributor$PacketTarget.getDirection
+         shim lacks  getDirection ()Lnet/minecraftforge/network/NetworkDirection;
+    4  net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.consumerNetworkThread
+         shim lacks  consumerNetworkThread (Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder$ToBooleanBiFunction;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    4  net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.loginIndex
+         shim lacks  loginIndex (Ljava/util/function/Function;Ljava/util/function/BiConsumer;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    4  net/minecraftforge/registries/IForgeRegistry.forEach
+         shim lacks  forEach (Ljava/util/function/Consumer;)V
+    3  net/minecraftforge/event/TickEvent$ServerTickEvent.side
+         shim lacks  side Lnet/minecraftforge/fml/LogicalSide;
+    3  net/minecraftforge/registries/ForgeRegistries.GLOBAL_LOOT_MODIFIER_SERIALIZERS
+         shim lacks  GLOBAL_LOOT_MODIFIER_SERIALIZERS Ljava/util/function/Supplier;
+    3  net/minecraftforge/registries/ForgeRegistries.WORLD_CARVERS
+         shim lacks  WORLD_CARVERS Lnet/minecraftforge/registries/IForgeRegistry;
+    3  net/minecraftforge/common/ForgeConfigSpec$Builder.define
+         shim lacks  define (Ljava/lang/String;Ljava/util/function/Supplier;)Lnet/minecraftforge/common/ForgeConfigSpec$BooleanValue;
+    3  net/minecraftforge/common/ForgeConfigSpec$IntValue.getDefault
+         shim lacks  getDefault ()Ljava/lang/Object;
+    3  net/minecraftforge/event/TickEvent$Phase.equals
+         shim lacks  equals (Ljava/lang/Object;)Z
+    3  net/minecraftforge/eventbus/api/Event$Result.ordinal
+         shim lacks  ordinal ()I
+    3  net/minecraftforge/fml/LogicalSide.ordinal
+         shim lacks  ordinal ()I
+    3  net/minecraftforge/fml/ModList.forEachModContainer
+         shim lacks  forEachModContainer (Ljava/util/function/BiConsumer;)V
+    3  net/minecraftforge/fml/ModLoader.addWarning
+         shim lacks  addWarning (Lnet/minecraftforge/fml/ModLoadingWarning;)V
+    3  net/minecraftforge/fml/config/ModConfig.getHandler
+         shim lacks  getHandler ()Lnet/minecraftforge/fml/config/ConfigFileTypeHandler;
+    3  net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.markAsLoginPacket
+         shim lacks  markAsLoginPacket ()Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    3  net/minecraftforge/network/simple/SimpleChannel.encodeMessage
+         shim lacks  encodeMessage (Ljava/lang/Object;Lnet/minecraft/network/FriendlyByteBuf;)I
+    3  net/minecraftforge/registries/DeferredRegister.getRegistryKey
+         shim lacks  getRegistryKey ()Lnet/minecraft/resources/ResourceKey;
+    3  net/minecraftforge/registries/RegistryObject.orElse
+         shim lacks  orElse (Ljava/lang/Object;)Ljava/lang/Object;
+    2  net/minecraftforge/event/TickEvent.side
+         shim lacks  side Lnet/minecraftforge/fml/LogicalSide;
+    2  net/minecraftforge/network/NetworkRegistry.ABSENT
+         shim lacks  ABSENT Lnet/minecraftforge/network/ServerStatusPing$ChannelData;
+    2  net/minecraftforge/network/NetworkRegistry.ACCEPTVANILLA
+         shim lacks  ACCEPTVANILLA Ljava/lang/String;
+    2  net/minecraftforge/registries/ForgeRegistries$Keys.FEATURES
+         shim lacks  FEATURES Lnet/minecraft/resources/ResourceKey;
+    2  net/minecraftforge/registries/ForgeRegistries$Keys.POI_TYPES
+         shim lacks  POI_TYPES Lnet/minecraft/resources/ResourceKey;
+    2  net/minecraftforge/registries/ForgeRegistries$Keys.SENSOR_TYPES
+         shim lacks  SENSOR_TYPES Lnet/minecraft/resources/ResourceKey;
+    2  net/minecraftforge/registries/ForgeRegistries.BIOME_MODIFIER_SERIALIZERS
+         shim lacks  BIOME_MODIFIER_SERIALIZERS Ljava/util/function/Supplier;
+    2  net/minecraftforge/registries/ForgeRegistries.BLOCK_STATE_PROVIDER_TYPES
+         shim lacks  BLOCK_STATE_PROVIDER_TYPES Lnet/minecraftforge/registries/IForgeRegistry;
+    2  net/minecraftforge/registries/ForgeRegistries.DISPLAY_CONTEXTS
+         shim lacks  DISPLAY_CONTEXTS Ljava/util/function/Supplier;
+    2  net/minecraftforge/registries/ForgeRegistries.STAT_TYPES
+         shim lacks  STAT_TYPES Lnet/minecraftforge/registries/IForgeRegistry;
+    2  net/minecraftforge/common/ForgeConfigSpec$Builder.defineEnum
+         shim lacks  defineEnum (Ljava/lang/String;Ljava/lang/Enum;[Ljava/lang/Enum;)Lnet/minecraftforge/common/ForgeConfigSpec$EnumValue;
+    2  net/minecraftforge/common/ForgeConfigSpec$IntValue.save
+         shim lacks  save ()V
+    2  net/minecraftforge/common/ForgeConfigSpec.getSpec
+         shim lacks  getSpec ()Lcom/electronwill/nightconfig/core/UnmodifiableConfig;
+    2  net/minecraftforge/common/ForgeConfigSpec.getValues
+         shim lacks  getValues ()Lcom/electronwill/nightconfig/core/UnmodifiableConfig;
+    2  net/minecraftforge/event/TickEvent$Type.equals
+         shim lacks  equals (Ljava/lang/Object;)Z
+    2  net/minecraftforge/fml/ModList.forEachModFile
+         shim lacks  forEachModFile (Ljava/util/function/Consumer;)V
+    2  net/minecraftforge/fml/ModList.getModObjectById
+         shim lacks  getModObjectById (Ljava/lang/String;)Ljava/util/Optional;
+    2  net/minecraftforge/fml/ModLoader.postEventWithWrapInModOrder
+         shim lacks  postEventWithWrapInModOrder (Lnet/neoforged/bus/api/Event;Ljava/util/function/BiConsumer;Ljava/util/function/BiConsumer;)V
+    2  net/minecraftforge/fml/ModLoader.runEventGenerator
+         shim lacks  runEventGenerator (Ljava/util/function/Function;)V
+    2  net/minecraftforge/fml/ModLoadingContext.setActiveContainer
+         shim lacks  setActiveContainer (Lnet/neoforged/fml/ModContainer;)V
+    2  net/minecraftforge/network/NetworkRegistry.acceptMissingOr
+         shim lacks  acceptMissingOr (Ljava/lang/String;)Ljava/util/function/Predicate;
+    2  net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.buildLoginPacketList
+         shim lacks  buildLoginPacketList (Ljava/util/function/Function;)Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    2  net/minecraftforge/network/simple/SimpleChannel$MessageBuilder.noResponse
+         shim lacks  noResponse ()Lnet/minecraftforge/network/simple/SimpleChannel$MessageBuilder;
+    2  net/minecraftforge/registries/DeferredRegister.createOptional
+         shim lacks  createOptional (Lnet/minecraft/resources/ResourceKey;Ljava/lang/String;)Lnet/minecraftforge/registries/DeferredRegister;
+    2  net/minecraftforge/registries/IForgeRegistry.getDelegateOrThrow
+         shim lacks  getDelegateOrThrow (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/core/Holder$Reference;
+    2  net/minecraftforge/registries/IForgeRegistry.spliterator
+         shim lacks  spliterator ()Ljava/util/Spliterator;
+    2  net/minecraftforge/registries/RegistryObject.lazyMap
+         shim lacks  lazyMap (Ljava/util/function/Function;)Ljava/util/function/Supplier;
+    2  net/minecraftforge/registries/RegistryObject.stream
+         shim lacks  stream ()Ljava/util/stream/Stream;
+    1  net/minecraftforge/event/TickEvent$ClientTickEvent.side
+         shim lacks  side Lnet/minecraftforge/fml/LogicalSide;
+    1  net/minecraftforge/registries/ForgeRegistries$Keys.ACTIVITIES
+         shim lacks  ACTIVITIES Lnet/minecraft/resources/ResourceKey;
+    1  net/minecraftforge/registries/ForgeRegistries$Keys.DISPLAY_CONTEXTS
+         shim lacks  DISPLAY_CONTEXTS Lnet/minecraft/resources/ResourceKey;
+    1  net/minecraftforge/registries/ForgeRegistries$Keys.WORLD_CARVERS
+         shim lacks  WORLD_CARVERS Lnet/minecraft/resources/ResourceKey;
+    1  net/minecraftforge/common/ForgeConfigSpec$BooleanValue.getDefault
+         shim lacks  getDefault ()Ljava/lang/Object;
+    1  net/minecraftforge/common/ForgeConfigSpec$Builder.define
+         shim lacks  define (Ljava/util/List;Ljava/util/function/Supplier;Ljava/util/function/Predicate;Ljava/lang/Class;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
+    1  net/minecraftforge/common/ForgeConfigSpec$Builder.defineEnum
+         shim lacks  defineEnum (Ljava/lang/String;Ljava/lang/Enum;Lcom/electronwill/nightconfig/core/EnumGetMethod;)Lnet/minecraftforge/common/ForgeConfigSpec$EnumValue;
+    1  net/minecraftforge/common/ForgeConfigSpec$Builder.defineInRange
+         shim lacks  defineInRange (Ljava/lang/String;Ljava/util/function/Supplier;DD)Lnet/minecraftforge/common/ForgeConfigSpec$DoubleValue;
+    1  net/minecraftforge/common/ForgeConfigSpec$Builder.defineInRange
+         shim lacks  defineInRange (Ljava/lang/String;Ljava/util/function/Supplier;II)Lnet/minecraftforge/common/ForgeConfigSpec$IntValue;
+    1  net/minecraftforge/common/ForgeConfigSpec$Builder.defineListAllowEmpty
+         shim lacks  defineListAllowEmpty (Ljava/lang/String;Ljava/util/function/Supplier;Ljava/util/function/Predicate;)Lnet/minecraftforge/common/ForgeConfigSpec$ConfigValue;
+    1  net/minecraftforge/common/ForgeConfigSpec$Builder.push
+         shim lacks  push (Ljava/util/List;)Lnet/minecraftforge/common/ForgeConfigSpec$Builder;
+    1  net/minecraftforge/common/ForgeConfigSpec$EnumValue.getDefault
+         shim lacks  getDefault ()Ljava/lang/Object;
+    1  net/minecraftforge/common/ForgeConfigSpec$EnumValue.save
+         shim lacks  save ()V
+    1  net/minecraftforge/common/ForgeConfigSpec$LongValue.getDefault
+         shim lacks  getDefault ()Ljava/lang/Object;
+    1  net/minecraftforge/common/ForgeConfigSpec$LongValue.save
+         shim lacks  save ()V
+    1  net/minecraftforge/common/ForgeConfigSpec.acceptConfig
+         shim lacks  acceptConfig (Lcom/electronwill/nightconfig/core/CommentedConfig;)V
+    1  net/minecraftforge/common/ForgeConfigSpec.correct
+         shim lacks  correct (Lcom/electronwill/nightconfig/core/CommentedConfig;)I
+    1  net/minecraftforge/common/ForgeConfigSpec.getLevelComment
+         shim lacks  getLevelComment (Ljava/util/List;)Ljava/lang/String;
+    1  net/minecraftforge/common/ForgeConfigSpec.getLevelTranslationKey
+         shim lacks  getLevelTranslationKey (Ljava/util/List;)Ljava/lang/String;
+    1  net/minecraftforge/common/ForgeConfigSpec.isCorrect
+         shim lacks  isCorrect (Lcom/electronwill/nightconfig/core/CommentedConfig;)Z
+    1  net/minecraftforge/common/util/LazyOptional.hashCode
+         shim lacks  hashCode ()I
+    1  net/minecraftforge/common/util/LazyOptional.removeListener
+         shim lacks  removeListener (Lnet/minecraftforge/common/util/NonNullConsumer;)V
+    1  net/minecraftforge/event/TickEvent$ServerTickEvent.haveTime
+         shim lacks  haveTime ()Z
+    1  net/minecraftforge/event/entity/player/FillBucketEvent.isCancelable
+         shim lacks  isCancelable ()Z
+    1  net/minecraftforge/eventbus/api/GenericEvent.isCancelable
+         shim lacks  isCancelable ()Z
+    1  net/minecraftforge/eventbus/api/GenericEvent.setCanceled
+         shim lacks  setCanceled (Z)V
+    1  net/minecraftforge/fml/DistExecutor$SafeRunnable.run
+         shim lacks  run ()V
+    1  net/minecraftforge/fml/ModList.applyForEachModContainer
+         shim lacks  applyForEachModContainer (Ljava/util/function/Function;)Ljava/util/stream/Stream;
+    1  net/minecraftforge/fml/ModList.getModContainerByObject
+         shim lacks  getModContainerByObject (Ljava/lang/Object;)Ljava/util/Optional;
+    1  net/minecraftforge/fml/ModLoader.hasCompletedState
+         shim lacks  hasCompletedState (Ljava/lang/String;)Z
+    1  net/minecraftforge/fml/config/IConfigSpec.get
+         shim lacks  get (Ljava/util/List;)Ljava/lang/Object;
+    1  net/minecraftforge/fml/config/ModConfig$Type.name
+         shim lacks  name ()Ljava/lang/String;
+    1  net/minecraftforge/fml/config/ModConfig$Type.ordinal
+         shim lacks  ordinal ()I
+    1  net/minecraftforge/fml/config/ModConfig.acceptSyncedConfig
+         shim lacks  acceptSyncedConfig ([B)V
+    1  net/minecraftforge/network/NetworkEvent$Context.getPacketDispatcher
+         shim lacks  getPacketDispatcher ()Lnet/minecraftforge/network/NetworkEvent$PacketDispatcher;
+    1  net/minecraftforge/network/NetworkEvent$Context.getPacketHandled
+         shim lacks  getPacketHandled ()Z
+    1  net/minecraftforge/network/NetworkEvent.getPayload
+         shim lacks  getPayload ()Lnet/minecraft/network/FriendlyByteBuf;
+    1  net/minecraftforge/network/NetworkEvent.getSource
+         shim lacks  getSource ()Ljava/util/function/Supplier;
+    1  net/minecraftforge/registries/DeferredRegister.createOptional
+         shim lacks  createOptional (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/String;)Lnet/minecraftforge/registries/DeferredRegister;
+    1  net/minecraftforge/registries/DeferredRegister.createTagKey
+         shim lacks  createTagKey (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/tags/TagKey;
+    1  net/minecraftforge/registries/IForgeRegistry.getDelegate
+         shim lacks  getDelegate (Ljava/lang/Object;)Ljava/util/Optional;
+    1  net/minecraftforge/registries/IForgeRegistry.getDelegateOrThrow
+         shim lacks  getDelegateOrThrow (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
+    1  net/minecraftforge/registries/IForgeRegistry.getSlaveMap
+         shim lacks  getSlaveMap (Lnet/minecraft/resources/ResourceLocation;Ljava/lang/Class;)Ljava/lang/Object;
+    1  net/minecraftforge/registries/RegistryObject.createOptional
+         shim lacks  createOptional (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceKey;Ljava/lang/String;)Lnet/minecraftforge/registries/RegistryObject;
+    1  net/minecraftforge/registries/RegistryObject.equals
+         shim lacks  equals (Ljava/lang/Object;)Z
+    1  net/minecraftforge/registries/RegistryObject.filter
+         shim lacks  filter (Ljava/util/function/Predicate;)Lnet/minecraftforge/registries/RegistryObject;
+    1  net/minecraftforge/registries/RegistryObject.flatMap
+         shim lacks  flatMap (Ljava/util/function/Function;)Ljava/util/Optional;
+    1  net/minecraftforge/registries/RegistryObject.map
+         shim lacks  map (Ljava/util/function/Function;)Ljava/util/Optional;
+    1  net/minecraftforge/registries/RegistryObject.orElseGet
+         shim lacks  orElseGet (Ljava/util/function/Supplier;)Ljava/lang/Object;
+    1  net/minecraftforge/registries/RegistryObject.orElseThrow
+         shim lacks  orElseThrow (Ljava/util/function/Supplier;)Ljava/lang/Object;
 
 === RENAMES ONTO AN ABSTRACT TYPE (11) ===
 These resolve and then do nothing if the type is an event: the bus
@@ -1023,23 +1378,24 @@ each against the Pre/Post pair that replaced it.
     1  net/minecraftforge/event/entity/living/LivingConversionEvent  -> net/neoforged/neoforge/event/entity/living/LivingConversionEvent  (has Pre/Post)
 
 === UNRESOLVED ===
-  164  net/minecraftforge/common/capabilities/ForgeCapabilities                  rule -> net/neoforged/neoforge/capabilities/ForgeCapabilities (MISSING)
-  105  net/minecraftforge/registries/ForgeRegistries$Keys                        no shim, no rule
-   92  net/minecraftforge/common/capabilities/CapabilityManager                  rule -> net/neoforged/neoforge/capabilities/CapabilityManager (MISSING)
+  164  net/minecraftforge/common/capabilities/ForgeCapabilities                  no shim, no rule
+  106  net/minecraftforge/common/capabilities/ICapabilityProvider                no shim, no rule  ?= net/neoforged/neoforge/capabilities/ICapabilityProvider
+   92  net/minecraftforge/common/capabilities/CapabilityManager                  no shim, no rule
    91  net/minecraftforge/common/ForgeHooks                                      no shim, no rule
    89  net/minecraftforge/common/extensions/IForgeMenuType                       no shim, no rule
    86  net/minecraftforge/event/AttachCapabilitiesEvent                          rule -> net/neoforged/neoforge/event/AttachCapabilitiesEvent (MISSING)
    80  net/minecraftforge/event/ForgeEventFactory                                rule -> net/neoforged/neoforge/event/ForgeEventFactory (MISSING)
-   75  net/minecraftforge/common/capabilities/Capability                         rule -> net/neoforged/neoforge/capabilities/Capability (MISSING)
-   72  net/minecraftforge/eventbus/api/Event$Result                              no shim, no rule
+   75  net/minecraftforge/common/capabilities/Capability                         no shim, no rule
    71  net/minecraftforge/common/ForgeMod                                        no shim, no rule
    71  net/minecraftforge/fml/InterModComms                                      no shim, no rule  ?= net/neoforged/fml/InterModComms
    69  net/minecraftforge/common/ToolActions                                     no shim, no rule
+   68  net/minecraftforge/common/capabilities/RegisterCapabilitiesEvent          no shim, no rule  ?= net/neoforged/neoforge/capabilities/RegisterCapabilitiesEvent
    60  net/minecraftforge/client/ChunkRenderTypeSet                              no shim, no rule  ?= net/neoforged/neoforge/client/ChunkRenderTypeSet
    58  net/minecraftforge/registries/tags/ITagManager                            no shim, no rule
    53  net/minecraftforge/registries/tags/ITag                                   no shim, no rule
    48  net/minecraftforge/client/gui/overlay/VanillaGuiOverlay                   no shim, no rule
-   40  net/minecraftforge/common/capabilities/ICapabilitySerializable            rule -> net/neoforged/neoforge/capabilities/ICapabilitySerializable (MISSING)
+   41  net/minecraftforge/event/entity/living/LivingEvent$LivingTickEvent        rule -> net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent (MISSING)
+   40  net/minecraftforge/common/capabilities/ICapabilitySerializable            no shim, no rule
    39  net/minecraftforge/client/ForgeHooksClient                                no shim, no rule
    38  net/minecraftforge/client/event/RegisterGuiOverlaysEvent                  rule -> net/neoforged/neoforge/client/event/RegisterGuiOverlaysEvent (MISSING)
    37  net/minecraftforge/common/IPlantable                                      no shim, no rule
@@ -1107,7 +1463,6 @@ each against the Pre/Post pair that replaced it.
     9  net/minecraftforge/common/extensions/IForgeBlock                          no shim, no rule
     8  net/minecraftforge/common/world/MobSpawnSettingsBuilder                   no shim, no rule  ?= net/neoforged/neoforge/common/world/MobSpawnSettingsBuilder
     8  net/minecraftforge/fml/loading/moddiscovery/ModFileInfo                   no shim, no rule  ?= net/neoforged/fml/loading/moddiscovery/ModFileInfo
-    8  net/minecraftforge/network/event/EventNetworkChannel                      no shim, no rule
     7  net/minecraftforge/client/ForgeRenderTypes                                no shim, no rule
     7  net/minecraftforge/client/RenderTypeHelper                                no shim, no rule  ?= net/neoforged/neoforge/client/RenderTypeHelper
     7  net/minecraftforge/common/world/ForgeBiomeModifiers$AddSpawnsBiomeModifier  no shim, no rule
@@ -1116,18 +1471,15 @@ each against the Pre/Post pair that replaced it.
     7  net/minecraftforge/fml/VersionChecker$Status                              no shim, no rule  ?= net/neoforged/fml/VersionChecker$Status
     7  net/minecraftforge/fml/config/ConfigFileTypeHandler                       no shim, no rule
     7  net/minecraftforge/fml/loading/targets/CommonLaunchHandler                no shim, no rule  ?= net/neoforged/fml/loading/targets/CommonLaunchHandler
-    7  net/minecraftforge/network/NetworkEvent$ClientCustomPayloadEvent          no shim, no rule
-    7  net/minecraftforge/network/NetworkEvent$ServerCustomPayloadEvent          no shim, no rule
     6  net/minecraftforge/client/gui/widget/ScrollPanel                          no shim, no rule  ?= net/neoforged/neoforge/client/gui/widget/ScrollPanel
     6  net/minecraftforge/common/FarmlandWaterManager                            no shim, no rule  ?= net/neoforged/neoforge/common/FarmlandWaterManager
     6  net/minecraftforge/common/extensions/IForgeFriendlyByteBuf                no shim, no rule
-    6  net/minecraftforge/event/entity/player/FillBucketEvent                    rule -> net/neoforged/neoforge/event/entity/player/FillBucketEvent (MISSING)
     6  net/minecraftforge/network/IContainerFactory                              no shim, no rule  ?= net/neoforged/neoforge/network/IContainerFactory
     6  net/minecraftforge/resource/ResourcePackLoader                            no shim, no rule  ?= net/neoforged/neoforge/resource/ResourcePackLoader
     5  net/minecraftforge/client/IItemDecorator                                  no shim, no rule  ?= net/neoforged/neoforge/client/IItemDecorator
     5  net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer$Buffered  rule -> net/neoforged/neoforge/client/model/pipeline/QuadBakingVertexConsumer$Buffered (MISSING)
     5  net/minecraftforge/common/CreativeModeTabRegistry                         no shim, no rule  ?= net/neoforged/neoforge/common/CreativeModeTabRegistry
-    5  net/minecraftforge/common/capabilities/CapabilityProvider                 rule -> net/neoforged/neoforge/capabilities/CapabilityProvider (MISSING)
+    5  net/minecraftforge/common/capabilities/CapabilityProvider                 no shim, no rule
     5  net/minecraftforge/common/extensions/IForgeBlockEntity                    no shim, no rule
     5  net/minecraftforge/fml/VersionChecker$CheckResult                         no shim, no rule  ?= net/neoforged/fml/VersionChecker$CheckResult
     5  net/minecraftforge/fml/loading/FMLConfig                                  no shim, no rule  ?= net/neoforged/fml/loading/FMLConfig
@@ -1153,7 +1505,7 @@ each against the Pre/Post pair that replaced it.
     3  net/minecraftforge/common/ForgeConfig$Client                              no shim, no rule
     3  net/minecraftforge/common/ForgeConfigSpec$ValueSpec                       no shim, no rule
     3  net/minecraftforge/common/brewing/VanillaBrewingRecipe                    no shim, no rule
-    3  net/minecraftforge/common/capabilities/CapabilityDispatcher               rule -> net/neoforged/neoforge/capabilities/CapabilityDispatcher (MISSING)
+    3  net/minecraftforge/common/capabilities/CapabilityDispatcher               no shim, no rule
     3  net/minecraftforge/common/crafting/DifferenceIngredient                   no shim, no rule  ?= net/neoforged/neoforge/common/crafting/DifferenceIngredient
     3  net/minecraftforge/common/crafting/IntersectionIngredient                 no shim, no rule  ?= net/neoforged/neoforge/common/crafting/IntersectionIngredient
     3  net/minecraftforge/common/extensions/IForgeAbstractMinecart               no shim, no rule

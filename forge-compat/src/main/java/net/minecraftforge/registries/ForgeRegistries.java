@@ -47,6 +47,38 @@ public final class ForgeRegistries {
     public static final IForgeRegistry<net.minecraft.core.particles.ParticleType<?>> PARTICLE_TYPES =
             new IForgeRegistry<>(Registries.PARTICLE_TYPE);
 
+    // The tail, added from the shim audit rather than one launch failure at a time. Each of
+    // these is a NoSuchFieldError the moment a mod touches it, and the class resolving fine
+    // means nothing catches it earlier. Counts are corpus jars: POTIONS 31, FEATURES 28.
+    public static final IForgeRegistry<net.minecraft.world.item.alchemy.Potion> POTIONS =
+            new IForgeRegistry<>(Registries.POTION);
+    public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.Feature<?>> FEATURES =
+            new IForgeRegistry<>(Registries.FEATURE);
+    public static final IForgeRegistry<net.minecraft.world.level.biome.Biome> BIOMES =
+            new IForgeRegistry<>(Registries.BIOME);
+    public static final IForgeRegistry<net.minecraft.world.entity.npc.VillagerProfession> VILLAGER_PROFESSIONS =
+            new IForgeRegistry<>(Registries.VILLAGER_PROFESSION);
+    public static final IForgeRegistry<net.minecraft.world.entity.ai.village.poi.PoiType> POI_TYPES =
+            new IForgeRegistry<>(Registries.POINT_OF_INTEREST_TYPE);
+    public static final IForgeRegistry<net.minecraft.stats.StatType<?>> STAT_TYPES =
+            new IForgeRegistry<>(Registries.STAT_TYPE);
+    public static final IForgeRegistry<net.minecraft.world.entity.decoration.PaintingVariant> PAINTING_VARIANTS =
+            new IForgeRegistry<>(Registries.PAINTING_VARIANT);
+    public static final IForgeRegistry<net.minecraft.world.level.levelgen.carver.WorldCarver<?>> WORLD_CARVERS =
+            new IForgeRegistry<>(Registries.CARVER);
+    public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType<?>>
+            FOLIAGE_PLACER_TYPES = new IForgeRegistry<>(Registries.FOLIAGE_PLACER_TYPE);
+    public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType<?>>
+            TREE_DECORATOR_TYPES = new IForgeRegistry<>(Registries.TREE_DECORATOR_TYPE);
+    public static final IForgeRegistry<net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType<?>>
+            BLOCK_STATE_PROVIDER_TYPES = new IForgeRegistry<>(Registries.BLOCK_STATE_PROVIDER_TYPE);
+    // Typed over vanilla's element type rather than Forge's. Forge declared this constant over
+    // brigadier's ArgumentType; vanilla's registry actually holds ArgumentTypeInfo. Mods name
+    // only the erased IForgeRegistry in their descriptors, so the distinction never reaches
+    // them -- and brigadier is not on this module's compile classpath anyway.
+    public static final IForgeRegistry<net.minecraft.commands.synchronization.ArgumentTypeInfo<?, ?>>
+            COMMAND_ARGUMENT_TYPES = new IForgeRegistry<>(Registries.COMMAND_ARGUMENT_TYPE);
+
     /**
      * Registry *keys*, as distinct from the registries above. 105 corpus jars.
      *

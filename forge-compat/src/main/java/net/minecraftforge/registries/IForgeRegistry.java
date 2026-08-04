@@ -23,6 +23,17 @@ public final class IForgeRegistry<T> {
         this.key = key;
     }
 
+    /**
+     * Public factory, for bridge code outside this package.
+     *
+     * The constructor stays package-private because mods never call it -- they read the
+     * constants on {@link ForgeRegistries}. This exists for {@code easyport.bridge}, which has
+     * to build one from a registry key recovered at runtime.
+     */
+    public static <T> IForgeRegistry<T> of(ResourceKey<? extends Registry<T>> key) {
+        return new IForgeRegistry<>(key);
+    }
+
     public ResourceKey<? extends Registry<T>> getRegistryKey() {
         return key;
     }

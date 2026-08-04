@@ -81,6 +81,7 @@ public class Translate {
     private final List<CtorRule> ctorRules = new ArrayList<>();
     private final List<SwapRule> swapRules = new ArrayList<>();
     private final List<RenameRule> renameRules = new ArrayList<>();
+    private final List<RenameRule> methodToStaticRules = new ArrayList<>();
     private final Set<String> removed = new LinkedHashSet<>();
     private final Map<String, String> typeRenames = new LinkedHashMap<>();
     private final Map<String, String> prefixRenames = new LinkedHashMap<>();
@@ -291,6 +292,7 @@ public class Translate {
         for (MethodNode m : node.methods) {
             if (m.instructions == null) continue;
             applyRenameRules(m.instructions);
+            applyMethodToStaticRules(m.instructions);
             applyCtorRules(m.instructions);
             applySwapRules(m.instructions);
             recordRemoved(m.instructions);
@@ -410,6 +412,40 @@ public class Translate {
                 min.desc = r.newDesc();
                 count(appliedCounts, "RENAME_METHOD " + r.owner() + "#" + r.name()
                                      + " -> " + r.newName());
+                break;
+            }
+        }
+    }
+
+    /**
+     * Rewrites an instance call into a static one that takes the receiver as its first argument.
+     *
+     * The case this exists for: a type that *must* be renamed -- because the loader dispatches
+     * on it, so a shim would be a different class and never fire -- whose replacement is missing
+     * a method the corpus calls. {@code RegisterEvent} is the first instance. Neither a rename
+     * nor a shim can fix it alone; the call site has to move to a helper.
+     *
+     * No stack manipulation is required, which is what makes this cheap. When INVOKEVIRTUAL
+     * executes, the receiver is already below the arguments in exactly the position
+     * INVOKESTATIC reads its first parameter from. Changing the opcode and prepending the
+     * receiver type to the descriptor is the whole transformation.
+     *
+     * Distinct from RENAME_METHOD, which preserves the opcode and therefore needs the new owner
+     * to declare a matching *instance* method.
+     */
+    private void applyMethodToStaticRules(InsnList insns) {
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof MethodInsnNode min)) continue;
+            if (min.getOpcode() != Opcodes.INVOKEVIRTUAL
+                    && min.getOpcode() != Opcodes.INVOKEINTERFACE) continue;
+            for (RenameRule r : methodToStaticRules) {
+                if (!r.owner().equals(min.owner) || !r.name().equals(min.name)
+                        || !r.desc().equals(min.desc)) continue;
+                MethodInsnNode replacement = new MethodInsnNode(
+                        Opcodes.INVOKESTATIC, r.newOwner(), r.newName(), r.newDesc(), false);
+                insns.set(min, replacement);
+                count(appliedCounts, "METHOD_TO_STATIC " + r.owner() + "#" + r.name()
+                                     + " -> " + r.newOwner() + "#" + r.newName());
                 break;
             }
         }
@@ -944,6 +980,9 @@ public class Translate {
                 }
                 case "RENAME_METHOD" -> {
                     if (c.length >= 7) renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                }
+                case "METHOD_TO_STATIC" -> {
+                    if (c.length >= 7) methodToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
                 }
                 case "CTOR_SWAP2" -> {
                     if (c.length >= 4) swapRules.add(new SwapRule(c[1], c[2], c[3],

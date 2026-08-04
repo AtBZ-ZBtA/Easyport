@@ -135,13 +135,38 @@ public class RenameGaps {
         // Checking every member the corpus calls against the target's real member set turns that
         // into a static finding rather than an AbstractMethodError or NoSuchMethodError reached
         // only when the code path runs, which for capabilities may be a long way into a game.
+        // The same question asked of forge-compat: does the shim that will resolve this call
+        // actually declare it? Shims are hand-written from the Forge API, so a parameter type
+        // recalled slightly wrong -- Consumer where Forge had NonNullConsumer -- produces a class
+        // that compiles, loads, and throws NoSuchMethodError at every real call site.
+        // forge-compat plus the platform, so inheritance resolves. The shims are deliberately thin:
+        // IEventBus extends NeoForge's interface and inherits most of its methods, so indexing
+        // forge-compat alone reported 327 jars calling an addListener that is right there on the
+        // supertype.
+        List<Path> shimIndex = new ArrayList<>();
+        shimIndex.add(Path.of(args[2]));
+        shimIndex.addAll(platformJars);
+        Map<String, Set<String>> shimMembers = declaredMembers(shimIndex);
+        List<String> shimGaps = new ArrayList<>();
+
         List<String> mismatched = new ArrayList<>();
         for (MemberRef ref : readMembers(Path.of(args[0]))) {
             String target = rules.apply(ref.owner());
+
+            if ((target == null || !platform.contains(target)) && shimmed.contains(ref.owner())) {
+                Set<String> declared = shimMembers.get(ref.owner());
+                String want = ref.name() + " " + remapDescriptor(ref.desc(), rules, platform);
+                if (declared != null && !declared.contains(want) && !ref.name().equals("<init>")) {
+                    shimGaps.add(String.format("%5d  %s.%s%n         shim lacks  %s",
+                            ref.jars(), ref.owner(), ref.name(), want));
+                }
+                continue;
+            }
+
             if (target == null || !platform.contains(target)) continue;
             Set<String> members = platformMembers.get(target);
             if (members == null) continue;
-            String wanted = ref.name() + " " + remapDescriptor(ref.desc(), rules);
+            String wanted = ref.name() + " " + remapDescriptor(ref.desc(), rules, platform);
             if (members.contains(wanted)) continue;
             // Constructors of a renamed type are a different question -- shapes routinely change
             // and CTOR rules exist for that -- so they are left to the ctor rules to report.
@@ -158,6 +183,17 @@ public class RenameGaps {
             System.out.println("calls on it. Each is a NoSuchMethodError or AbstractMethodError");
             System.out.println("waiting to happen -- convert the rule to a shim, or drop it.");
             mismatched.forEach(System.out::println);
+        }
+
+        shimGaps.sort((a, b) -> Integer.parseInt(b.substring(0, 5).trim())
+                              - Integer.parseInt(a.substring(0, 5).trim()));
+        if (!shimGaps.isEmpty()) {
+            System.out.println();
+            System.out.println("=== SHIM MISSING A CALLED MEMBER (" + shimGaps.size() + ") ===");
+            System.out.println("forge-compat supplies the class but not this member, or not with");
+            System.out.println("this descriptor. Every one is a NoSuchMethodError at a real call");
+            System.out.println("site -- the class resolves, so nothing fails until it is used.");
+            shimGaps.forEach(System.out::println);
         }
 
         if (!abstractTargets.isEmpty()) {
@@ -296,8 +332,17 @@ public class RenameGaps {
         return resolved;
     }
 
-    /** Rewrites every type inside a descriptor through the rules. */
-    private static String remapDescriptor(String desc, Rules rules) {
+    /**
+     * Rewrites every type inside a descriptor exactly as Translate would.
+     *
+     * "Exactly as Translate would" is the whole point, and getting it wrong made this report
+     * useless once already. Translate refuses a rename whose target does not exist in the
+     * platform and leaves the original name in place; a version of this that applied rules
+     * unconditionally produced descriptors naming classes that never appear in a translated jar
+     * -- reporting, for instance, that LazyOptional.of takes a NeoForge NonNullSupplier when
+     * NeoForge has no such type and the Forge name survives untouched.
+     */
+    private static String remapDescriptor(String desc, Rules rules, Set<String> platform) {
         StringBuilder sb = new StringBuilder();
         int i = 0;
         while (i < desc.length()) {
@@ -307,7 +352,8 @@ public class RenameGaps {
                 if (end < 0) { sb.append(desc.substring(i)); break; }
                 String type = desc.substring(i + 1, end);
                 String mapped = rules.apply(type);
-                sb.append('L').append(mapped != null ? mapped : type).append(';');
+                boolean applies = mapped != null && platform.contains(mapped);
+                sb.append('L').append(applies ? mapped : type).append(';');
                 i = end + 1;
             } else {
                 sb.append(ch);
