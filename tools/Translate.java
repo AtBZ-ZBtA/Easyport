@@ -692,6 +692,84 @@ public class Translate {
                 // A config we cannot parse is left untouched rather than guessed at.
             }
         }
+        if (!deadMixins.isEmpty()) reportOrphanedByDeadMixins(zip);
+    }
+
+    /**
+     * Reports classes that only the dropped mixins referenced.
+     *
+     * Stripping a dead mixin keeps the mod loading, which is what it is for. It can also delete
+     * content, silently, and that took a full trace through placebo to notice:
+     *
+     * <pre>
+     *   LootTablesMixin  (dropped: LootDataManager removed in 1.21)
+     *     -> LootSystem            referenced by nothing else in the jar
+     *          -> StackLootEntry   static initialiser
+     *               -> Registry.register(LOOT_POOL_ENTRY_TYPE, ...)
+     * </pre>
+     *
+     * The registration sits in a static initialiser, so it only runs when something touches the
+     * class, and the mixin was the only path in. Placebo translated cleanly, loaded cleanly, and
+     * registered nothing -- no error anywhere.
+     *
+     * So: after deciding what to drop, walk what those mixins referenced and report anything the
+     * rest of the jar never mentions. Not a proof of lost content -- a class can be reached
+     * reflectively, or genuinely be mixin-only support code -- but it is the difference between
+     * a warning and finding this by hand, once, per mod.
+     */
+    private void reportOrphanedByDeadMixins(ZipFile zip) {
+        Set<String> referencedByDead = new LinkedHashSet<>();
+        Set<String> referencedByLiving = new HashSet<>();
+        Set<String> ownClasses = new HashSet<>();
+
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry e = entries.nextElement();
+            if (!e.getName().endsWith(".class")) continue;
+            String internal = e.getName().substring(0, e.getName().length() - 6);
+            ownClasses.add(internal);
+            String simple = internal.substring(internal.lastIndexOf('/') + 1);
+            try {
+                Set<String> refs = referencedClasses(read(zip, e));
+                if (deadMixins.contains(simple)) {
+                    referencedByDead.addAll(refs);
+                } else {
+                    // Self-references do not make a class reachable. Every class mentions itself
+                    // -- its own methods, its own fields -- so counting those marked everything
+                    // as live and the check reported nothing at all on the very mod it was
+                    // written from.
+                    refs.remove(internal);
+                    referencedByLiving.addAll(refs);
+                }
+            } catch (Exception ignored) {
+                // Unreadable class: cannot contribute either way.
+            }
+        }
+
+        for (String orphan : referencedByDead) {
+            if (!ownClasses.contains(orphan)) continue;          // not this mod's code
+            if (referencedByLiving.contains(orphan)) continue;   // still reachable
+            String simple = orphan.substring(orphan.lastIndexOf('/') + 1);
+            if (deadMixins.contains(simple)) continue;           // a dropped mixin itself
+            count(unresolved, "MIXIN_ORPHAN (only a dropped mixin referenced it) " + orphan);
+        }
+    }
+
+    /** Every class this class file mentions anywhere in its constant pool. */
+    private static Set<String> referencedClasses(byte[] classBytes) {
+        Set<String> out = new LinkedHashSet<>();
+        ClassNode node = new ClassNode();
+        new ClassReader(classBytes).accept(node, ClassReader.SKIP_FRAMES);
+        for (MethodNode m : node.methods) {
+            for (AbstractInsnNode insn : m.instructions.toArray()) {
+                if (insn instanceof MethodInsnNode min) out.add(min.owner);
+                else if (insn instanceof TypeInsnNode tin) out.add(tin.desc);
+                else if (insn instanceof org.objectweb.asm.tree.FieldInsnNode fin) out.add(fin.owner);
+            }
+        }
+        if (node.superName != null) out.add(node.superName);
+        if (node.interfaces != null) out.addAll(node.interfaces);
+        return out;
     }
 
     /** Reads the class names a mixin declares in its {@code @Mixin} annotation. */

@@ -377,12 +377,33 @@ which is a separate unexplained gap worth a look.
 each register a single biome modifier serializer, and their reference ports register one too.
 Fair comparisons, tiny samples. What is proven is the end-to-end path, not completeness.
 
-**`placebo` is the case to look at next.** It loads cleanly and registers *nothing*, where the
-reference registers one loot pool entry type. That is the failure mode this project cares most
-about — no error, no missing class, just absent content. Its translation report is clean apart
-from six `ItemStack#getTag` calls (Phase 4 data components) and one dropped mixin,
-`LootTablesMixin`, whose target `LootDataManager` was removed in 1.21. The dropped mixin is the
-first suspect.
+### Dropping a dead mixin can silently delete registrations
+
+`placebo` loads cleanly and registers *nothing*, where the reference registers one loot pool
+entry type. Traced, and the cause is our own mitigation:
+
+```
+LootTablesMixin  (dropped: target LootDataManager removed in 1.21)
+  └─> LootSystem            referenced by nothing else in the jar
+        └─> StackLootEntry  static initialiser
+              └─> Registry.register(BuiltInRegistries.LOOT_POOL_ENTRY_TYPE, ...)
+```
+
+The registration lives in a static initialiser, which only runs when something touches the
+class. The dropped mixin was the only path in. Stripping it kept the mod loading — that is what
+mixin-stripping is for — and converted a crash into a mod that loads and quietly does less.
+
+**This is the failure mode the project most wants to avoid, produced by the fix for a different
+one.** Generalise the suspicion: every stripped mixin may be the sole entry point to a code
+path, and the translate report's `MIXIN_DROP` line is the only warning.
+
+Worth building: after computing `deadMixins`, report which classes become unreachable — a class
+referenced only from dropped mixins is a strong signal that content will silently disappear.
+That is a static reachability walk over the jar, cheap, and it turns this from a thing found by
+tracing one mod into a thing the report says up front.
+
+The proper fix for placebo specifically is retargeting the mixin: 1.21 restructured loot table
+loading rather than deleting it. Phase 7.
 
 Resource coverage is measured without launching: `placebo` 92.3%, `curios` 73.1%,
 `supermartijn642corelib` 71.4%, `cyclopscore` 43.2%, `balm` 16.7%.
