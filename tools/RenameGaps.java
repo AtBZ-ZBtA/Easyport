@@ -39,19 +39,27 @@ import java.util.zip.ZipFile;
 public class RenameGaps {
 
     public static void main(String[] args) throws IOException {
-        if (args.length < 4) {
-            System.err.println("usage: RenameGaps <scan.txt> <rules.tsv> <forge-compat.jar> <platform.jar>...");
+        if (args.length < 5) {
+            System.err.println("usage: RenameGaps <scan.txt> <rules.tsv> <srg2official.tsv> "
+                             + "<forge-compat.jar> <platform.jar>...");
             System.exit(2);
         }
 
         Map<String, Integer> referenced = readScan(Path.of(args[0]));
         Rules rules = readRules(Path.of(args[1]));
 
-        Set<String> shimmed = classesIn(Path.of(args[2]));
+        // The corpus is Forge 1.20.1, which runs SRG member names; the platform runs official
+        // Mojang names. Translate applies this mapping before anything else, so a report that
+        // skips it compares m_246326_ against a class that only ever declares addPotionTab and
+        // concludes the member is missing. That was 90 of 495 findings -- 18% noise, all of it
+        // in the part of the report meant to be trusted most.
+        Map<String, String> srg = readSrg(Path.of(args[2]));
+
+        Set<String> shimmed = classesIn(Path.of(args[3]));
         Set<String> platform = new HashSet<>();
         Set<String> abstractTypes = new HashSet<>();
         List<Path> platformJars = new ArrayList<>();
-        for (int i = 3; i < args.length; i++) {
+        for (int i = 4; i < args.length; i++) {
             Path jar = Path.of(args[i]);
             platformJars.add(jar);
             platform.addAll(classesIn(jar));
@@ -144,7 +152,7 @@ public class RenameGaps {
         // forge-compat alone reported 327 jars calling an addListener that is right there on the
         // supertype.
         List<Path> shimIndex = new ArrayList<>();
-        shimIndex.add(Path.of(args[2]));
+        shimIndex.add(Path.of(args[3]));
         shimIndex.addAll(platformJars);
         Map<String, Set<String>> shimMembers = declaredMembers(shimIndex);
         List<String> shimGaps = new ArrayList<>();
@@ -155,7 +163,7 @@ public class RenameGaps {
 
             if ((target == null || !platform.contains(target)) && shimmed.contains(ref.owner())) {
                 Set<String> declared = shimMembers.get(ref.owner());
-                String want = ref.name() + " " + remapDescriptor(ref.desc(), rules, platform);
+                String want = official(ref.name(), srg) + " " + remapDescriptor(ref.desc(), rules, platform);
                 if (declared != null && !declared.contains(want) && !ref.name().equals("<init>")) {
                     shimGaps.add(String.format("%5d  %s.%s%n         shim lacks  %s",
                             ref.jars(), ref.owner(), ref.name(), want));
@@ -166,13 +174,13 @@ public class RenameGaps {
             if (target == null || !platform.contains(target)) continue;
             Set<String> members = platformMembers.get(target);
             if (members == null) continue;
-            String wanted = ref.name() + " " + remapDescriptor(ref.desc(), rules, platform);
+            String wanted = official(ref.name(), srg) + " " + remapDescriptor(ref.desc(), rules, platform);
             if (members.contains(wanted)) continue;
             // Constructors of a renamed type are a different question -- shapes routinely change
             // and CTOR rules exist for that -- so they are left to the ctor rules to report.
             if (ref.name().equals("<init>")) continue;
             mismatched.add(String.format("%5d  %s.%s%n         -> %s  has no  %s",
-                    ref.jars(), ref.owner(), ref.name(), target, wanted));
+                    ref.jars(), ref.owner(), official(ref.name(), srg), target, wanted));
         }
         mismatched.sort((a, b) -> Integer.parseInt(b.substring(0, 5).trim())
                                 - Integer.parseInt(a.substring(0, 5).trim()));
@@ -361,6 +369,30 @@ public class RenameGaps {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * The official name for an SRG member, or the name unchanged.
+     *
+     * Unchanged is the common case and the right default: Forge's SRG namespace only obfuscates
+     * members Mojang obfuscated, so anything Forge or a mod declared itself already reads as its
+     * real name and must pass through untouched.
+     */
+    private static String official(String name, Map<String, String> srg) {
+        String mapped = srg.get(name);
+        return mapped != null ? mapped : name;
+    }
+
+    /** SRG member name -> official name, from the composed table in mappings/. */
+    private static Map<String, String> readSrg(Path p) throws IOException {
+        Map<String, String> out = new java.util.HashMap<>();
+        if (!Files.isRegularFile(p)) return out;
+        for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
+            int tab = line.indexOf('\t');
+            if (tab <= 0) continue;
+            out.put(line.substring(0, tab), line.substring(tab + 1).trim());
+        }
+        return out;
     }
 
     /** Pulls the "<count>  <internal/name>" lines out of a MemberScan TYPES section. */

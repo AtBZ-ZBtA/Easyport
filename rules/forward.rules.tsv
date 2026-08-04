@@ -412,3 +412,9 @@ FIELD_RETYPE	net/minecraft/world/item/ArmorMaterials	Lnet/minecraft/core/Holder;
 # The consuming constructor. Argument order is unchanged, so this is a plain call-site rewrite
 # and RENAME_METHOD covers it -- INVOKESPECIAL is preserved and only the descriptor moves.
 RENAME_METHOD	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/world/item/ArmorMaterial;Lnet/minecraft/world/item/ArmorItem$Type;Lnet/minecraft/world/item/Item$Properties;)V	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/core/Holder;Lnet/minecraft/world/item/ArmorItem$Type;Lnet/minecraft/world/item/Item$Properties;)V
+
+# ItemHandlerHelper kept most of its class in NeoForge but lost these two, both of which
+# vanilla absorbed in 1.20.5 when component comparison replaced NBT comparison. Static to
+# static, so a plain call-site rewrite covers them. Owners are post-rename. 47 and 39 jars.
+RENAME_METHOD	net/neoforged/neoforge/items/ItemHandlerHelper	canItemStacksStack	(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z	easyport/bridge/ItemBridge	canItemStacksStack	(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z
+RENAME_METHOD	net/neoforged/neoforge/items/ItemHandlerHelper	copyStackWithSize	(Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;	easyport/bridge/ItemBridge	copyStackWithSize	(Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;

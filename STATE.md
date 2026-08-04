@@ -16,7 +16,7 @@ how this project is worked on, so it comes first.
 ```bash
 # The whole remaining work queue, ranked, offline, in about a minute.
 java -cp "devenv/spi/asm.jar" tools/RenameGaps.java \
-    api-report/forge-api-usage.txt rules/forward.rules.tsv \
+    api-report/forge-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
     forge-compat/forge-compat.jar \
     devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
     devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar \
