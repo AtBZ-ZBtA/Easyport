@@ -84,7 +84,14 @@ public class VerifyHarness {
         // The baseline depends only on the support jars, so batch runs would otherwise pay a
         // full launch per mod to recompute an identical result. Cached beside the report and
         // reused; delete the file to force a rebuild after changing forge-compat.
-        Path baselineCache = out.resolve("baseline.json");
+        // Keyed by the support set, not a single fixed name. Once dependencies are loaded
+        // alongside a candidate they register content of their own, so the baseline has to
+        // include them or their entries land in the candidate's delta and inflate it. Mods
+        // sharing a dependency set still share a cached baseline.
+        StringBuilder key = new StringBuilder();
+        support.stream().map(p -> p.getFileName().toString()).sorted().forEach(key::append);
+        Path baselineCache = out.resolve("baseline-"
+                + Integer.toHexString(key.toString().hashCode()) + ".json");
         Run baseline;
         if (Files.exists(baselineCache)) {
             String body = Files.readString(baselineCache, StandardCharsets.UTF_8);

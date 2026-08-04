@@ -203,7 +203,39 @@ failures were mods needing *other* mods (`ars_nouveau`, `mekanism`, `create`, `c
 failure, and lumping it in with real failures would misdirect all the work that follows.
 `batch-verify.sh` now classifies it.
 
-#### The harness caps out at 44% of the corpus
+#### Dependency resolution — built, and it changed the priorities
+
+`tools/Deps.java` resolves a mod's **transitive** required dependencies; `batch-verify.sh`
+translates and loads them alongside the candidate. Direct dependencies were not enough:
+`ars_creo` needs `create`, which needs `flywheel`, `ponder` and more.
+
+Three problems surfaced only once dependencies were actually loaded, and none of them are
+things a single-jar harness would ever have shown:
+
+1. **Bundled libraries collide.** Mods ship dependencies under `META-INF/jarjar/`. Two mods
+   bundling the same library — or NeoForge already carrying it — become separate modules
+   exporting one package, and the layer refuses to resolve: *"Modules MixinExtras and
+   mixinextras.neoforge export package com.llamalad7.mixinextras"*. That kills the entire
+   launch, so it reads as the candidate mod failing rather than as a conflict between its
+   dependencies. Platform-provided libraries are now dropped.
+2. **Dropping a bundled jar corrupts the jarjar index.** `META-INF/jarjar/metadata.json` lists
+   every bundled jar by path; a stale entry surfaces as `Invalid paths argument` and an
+   IOException naming the *outer* mod, so `create.jar` reads as corrupt. The index is pruned
+   to match. (Regex is the wrong tool here — entries contain nested objects, and a
+   character-class pattern matched nothing and emitted an empty index, which is worse than the
+   stale one. Brace-depth scan instead.)
+3. **Bundled mods were shipped untranslated.** They are ordinary Forge jars carrying
+   `mods.toml`, so NeoForge rejects them and the outer mod fails on a dependency that is
+   physically inside it — `create` bundles `flywheel` and `ponder` and still reported both
+   "not installed". Nested jars are now translated recursively, to a depth of 3.
+
+**The priority this changes: high-fan-in dependencies are worth far more than tail mods.**
+`create`, `curios`, `geckolib` and `ars_nouveau` each block many dependents. Fixing one mod in
+the tail buys one mod; fixing `create` buys everything that depends on it. `create` currently
+fails on genuine vanilla API changes (`ChunkRenderDispatcher`,
+`AbstractProjectileDispenseBehaviour`) — Nightmare tier, and squarely Phase 4 work.
+
+#### The harness caps out at 44% of the corpus — now being lifted
 
 Measured across all 288 paired mods: **161 of them (56%) declare inter-mod dependencies.** The
 harness loads only the candidate plus support jars, so those can never load regardless of how

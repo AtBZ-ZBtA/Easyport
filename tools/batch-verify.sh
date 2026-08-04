@@ -40,8 +40,37 @@ while IFS=$'\t' read -r modId src tgt; do
     continue
   fi
 
-  java tools/VerifyHarness.java devenv/neoforge-1.21.1 "$SUPPORT" \
-      "translated/$modId.jar" "$A10/$tgt" "$OUT" > "$OUT/$modId.verify.log" 2>&1
+  # Translate and load this mod's required dependencies too. Without this, 56% of the corpus
+  # can never load and every coverage figure comes from a skewed dependency-free sample.
+  # Dependencies are translated with the same rules, so a broken one is a real finding rather
+  # than a harness artefact.
+  # Transitive, not just direct: ars_creo needs create, and create needs its own. A partial
+  # graph fails at load in a way that looks like a translation bug.
+  modSupport="$SUPPORT"
+  ndeps=0
+  while IFS=$'\t' read -r dep depSrc; do
+    [ -z "${dep:-}" ] && continue
+    if [ ! -f "translated/$dep.jar" ]; then
+      java -cp "$CP" tools/Translate.java "$A9/$depSrc" "translated/$dep.jar" \
+           mappings/srg2official.tsv rules/forward.rules.tsv > "$OUT/$dep.dep-translate.log" 2>&1 \
+        || { echo "  (dependency $dep failed to translate)"; continue; }
+    fi
+    modSupport="$modSupport,translated/$dep.jar"
+    ndeps=$((ndeps+1))
+  done < <(java tools/Deps.java "$A9/$src" "$A9" corpus-report/corpus-manifest.tsv 2>/dev/null | tr -d '\r')
+  [ "$ndeps" -gt 0 ] && echo "  + $ndeps translated dependencies"
+
+  # VerifyHarness exits non-zero when the baseline itself will not boot. With dependencies
+  # loaded that means one of *them* does not translate well enough to load yet -- which says
+  # nothing about this mod, so it is recorded distinctly rather than blamed on the candidate.
+  if ! java tools/VerifyHarness.java devenv/neoforge-1.21.1 "$modSupport" \
+      "translated/$modId.jar" "$A10/$tgt" "$OUT" > "$OUT/$modId.verify.log" 2>&1; then
+    if [ "$ndeps" -gt 0 ]; then
+      echo "  DEPS_UNTRANSLATABLE (a dependency will not load)"
+      printf '%s\t0\t0\tDEPS_UNTRANSLATABLE\n' "$modId" >> "$RESULTS"
+      continue
+    fi
+  fi
 
   reg=$(grep -oE "reproduced = [0-9.]+%" "$OUT/$modId.verify.log" | grep -oE "[0-9.]+" | head -1)
   res=$(grep -oE "resources present = [0-9.]+%" "$OUT/$modId.verify.log" | grep -oE "[0-9.]+" | head -1)
@@ -73,3 +102,6 @@ done
 #                  coverage or the translator looks far worse than it is
 #   NOT_LOADED     loaded nothing; the jar was rejected
 #   LAUNCH_FAILED  the run died; see the per-mod log for the missing class
+#   DEPS_UNTRANSLATABLE  a required dependency was found and translated but will not load, so
+#                        this mod cannot be verified yet. Distinct from DEPS_MISSING (absent
+#                        from the corpus) and from a failure of this mod's own translation.

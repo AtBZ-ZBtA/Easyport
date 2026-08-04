@@ -116,6 +116,33 @@ public class Translate {
                 byte[] data = read(zip, e);
                 String name = e.getName();
 
+                // Bundled libraries the target platform already provides must be dropped, not
+                // copied. Mods ship dependencies under META-INF/jarjar/, and when two mods
+                // bundle the same library -- or NeoForge already carries it -- the duplicates
+                // become separate modules exporting one package and the layer refuses to
+                // resolve:
+                //   Modules MixinExtras and mixinextras.neoforge export package
+                //   com.llamalad7.mixinextras to ...
+                // That kills the whole launch, so it reads as the candidate mod failing rather
+                // than as a packaging conflict between its dependencies.
+                if (name.startsWith("META-INF/jarjar/") && shouldDropBundled(name)) {
+                    count(appliedCounts, "JARJAR_DROP " + name.substring(name.lastIndexOf('/') + 1));
+                    continue;
+                }
+
+                // Bundled mods must be translated too, not copied. They are ordinary Forge
+                // 1.20.1 jars carrying META-INF/mods.toml, so NeoForge rejects them outright
+                // and the outer mod then fails on a dependency that is physically present --
+                // create ships flywheel and ponder inside itself and still reports both as
+                // "not installed".
+                if (name.startsWith("META-INF/jarjar/") && name.endsWith(".jar")) {
+                    data = transformNestedJar(data, name, 1);
+                    zos.putNextEntry(new ZipEntry(name));
+                    zos.write(data);
+                    zos.closeEntry();
+                    continue;
+                }
+
                 if (name.endsWith(".class")) {
                     data = transformClass(data);
                     classesRewritten++;
@@ -123,6 +150,12 @@ public class Translate {
                     String moved = renamePath(name);
                     if (!moved.equals(name)) { resourcesMoved++; name = moved; }
                     if (name.equals("META-INF/neoforge.mods.toml")) data = migrateDescriptor(data);
+                    // The jarjar index lists every bundled jar by path. Dropping a jar without
+                    // removing its entry leaves FML resolving a path that is no longer there,
+                    // which surfaces as "Invalid paths argument" and an IOException naming the
+                    // *outer* mod -- so create.jar reads as corrupt when the real cause is a
+                    // stale index entry for a library that was deliberately removed.
+                    if (name.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
                 }
                 // Signatures cover the pre-translation bytes and cannot survive rewriting; a
                 // stale signature file makes the jar fail verification outright.
@@ -385,6 +418,123 @@ public class Translate {
     }
 
     // ---- resources ---------------------------------------------------------------------
+
+    /** Bundled jars can bundle their own; stop before a malformed or hostile jar recurses forever. */
+    private static final int MAX_NESTING = 3;
+
+    /**
+     * Translates a bundled jar in place, in memory.
+     *
+     * Applies the same passes as the outer jar — class rewriting, descriptor migration,
+     * resource renames — so a bundled mod ends up as loadable as a top-level one. Anything it
+     * bundles in turn is translated too, up to {@link #MAX_NESTING}.
+     *
+     * Failures are swallowed and the original bytes returned. A bundled jar that will not parse
+     * is usually a plain library rather than a mod, and losing it outright is worse than
+     * shipping it untranslated: the outer mod may not need it rewritten at all.
+     */
+    private byte[] transformNestedJar(byte[] jarBytes, String name, int depth) {
+        if (depth > MAX_NESTING) return jarBytes;
+        try {
+            Path tmp = Files.createTempFile("easyport-nested", ".jar");
+            Files.write(tmp, jarBytes);
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+
+            try (ZipFile zip = new ZipFile(tmp.toFile());
+                 ZipOutputStream zos = new ZipOutputStream(out)) {
+                Enumeration<? extends ZipEntry> entries = zip.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry e = entries.nextElement();
+                    if (e.isDirectory()) continue;
+                    byte[] data = read(zip, e);
+                    String entryName = e.getName();
+
+                    if (entryName.startsWith("META-INF/jarjar/") && shouldDropBundled(entryName)) continue;
+                    if (entryName.startsWith("META-INF/") &&
+                        (entryName.endsWith(".SF") || entryName.endsWith(".RSA")
+                         || entryName.endsWith(".DSA"))) continue;
+
+                    if (entryName.startsWith("META-INF/jarjar/") && entryName.endsWith(".jar")) {
+                        data = transformNestedJar(data, entryName, depth + 1);
+                    } else if (entryName.endsWith(".class")) {
+                        data = transformClass(data);
+                    } else {
+                        String moved = renamePath(entryName);
+                        if (!moved.equals(entryName)) entryName = moved;
+                        if (entryName.equals("META-INF/neoforge.mods.toml")) data = migrateDescriptor(data);
+                        if (entryName.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
+                    }
+                    zos.putNextEntry(new ZipEntry(entryName));
+                    zos.write(data);
+                    zos.closeEntry();
+                }
+            }
+            Files.deleteIfExists(tmp);
+            count(appliedCounts, "JARJAR_TRANSLATE (depth " + depth + ")");
+            return out.toByteArray();
+        } catch (Exception e) {
+            count(unresolved, "JARJAR_TRANSLATE failed, shipped as-is: " + name);
+            return jarBytes;
+        }
+    }
+
+    /**
+     * True if a bundled library should be dropped rather than carried into the output.
+     *
+     * Matched on filename prefix because bundled jars carry their version in the name and
+     * every mod bundles a different one — mixinextras-forge-0.2.0-beta.8 in ars_nouveau,
+     * mixinextras-forge-0.4.1 in create.
+     *
+     * Only libraries NeoForge itself provides belong here. Dropping anything else would remove
+     * a dependency nothing replaces.
+     *
+     * Note what this does *not* fix: bundled jars that stay are copied through untranslated, so
+     * they still contain Forge 1.20.1 bytecode. Translating them recursively is the real fix
+     * and is not done yet.
+     */
+    private static boolean shouldDropBundled(String path) {
+        String file = path.substring(path.lastIndexOf('/') + 1).toLowerCase();
+        return file.startsWith("mixinextras");
+    }
+
+    /**
+     * Removes entries for bundled jars that {@link #shouldDropBundled} discarded.
+     *
+     * Splits the "jars" array by brace depth rather than by regex. Each entry contains nested
+     * "identifier" and "version" objects, so a character-class pattern cannot span one — an
+     * earlier attempt matched nothing and emitted an empty index, which is strictly worse than
+     * the stale index it was meant to fix.
+     */
+    private byte[] pruneJarJarIndex(byte[] data) {
+        String json = new String(data, StandardCharsets.UTF_8);
+        int arrayStart = json.indexOf('[', json.indexOf("\"jars\""));
+        if (arrayStart < 0) return data;
+
+        List<String> kept = new ArrayList<>();
+        int depth = 0, entryStart = -1;
+        for (int i = arrayStart; i < json.length(); i++) {
+            char c = json.charAt(i);
+            if (c == '{') {
+                if (depth == 0) entryStart = i;
+                depth++;
+            } else if (c == '}') {
+                depth--;
+                if (depth == 0 && entryStart >= 0) {
+                    String entry = json.substring(entryStart, i + 1);
+                    java.util.regex.Matcher pm = java.util.regex.Pattern
+                            .compile("\"path\"\\s*:\\s*\"([^\"]+)\"").matcher(entry);
+                    boolean drop = pm.find() && shouldDropBundled(pm.group(1));
+                    if (drop) count(appliedCounts, "JARJAR_INDEX_PRUNE");
+                    else kept.add(entry.replaceAll("(?m)^", "    ").strip());
+                    entryStart = -1;
+                }
+            } else if (c == ']' && depth == 0) {
+                break;
+            }
+        }
+        return ("{\n  \"jars\": [\n    " + String.join(",\n    ", kept) + "\n  ]\n}\n")
+                .getBytes(StandardCharsets.UTF_8);
+    }
 
     /** Applies the descriptor rename and the 1.21 datapack directory singularisation. */
     private static String renamePath(String path) {
