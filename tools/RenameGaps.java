@@ -216,10 +216,18 @@ public class RenameGaps {
 
         if (!abstractTargets.isEmpty()) {
             System.out.println();
-            System.out.println("=== RENAMES ONTO AN ABSTRACT TYPE (" + abstractTargets.size() + ") ===");
-            System.out.println("These resolve and then do nothing if the type is an event: the bus");
-            System.out.println("dispatches by exact class and nothing posts an abstract one. Check");
-            System.out.println("each against the Pre/Post pair that replaced it.");
+            System.out.println("=== RENAMES ONTO AN ABSTRACT TYPE ("
+                             + abstractTargets.size() + ") -- HANDLED, listed for reference ===");
+            System.out.println("A listener whose parameter is one of these is split automatically:");
+            System.out.println("Translate#splitAbstractListeners keeps the mod's method as the body");
+            System.out.println("and generates one annotated dispatcher per concrete subclass, which");
+            System.out.println("reproduces Forge's behaviour of firing for both phases.");
+            System.out.println();
+            System.out.println("This was a warning section until that pass existed, and it is kept");
+            System.out.println("as information rather than deleted: a rename onto an abstract event");
+            System.out.println("is still worth seeing, and the split only covers @SubscribeEvent");
+            System.out.println("parameters -- a mod holding one of these in a *variable* is not");
+            System.out.println("something any static check here can distinguish.");
             abstractTargets.forEach(System.out::println);
         }
         System.out.println();

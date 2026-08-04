@@ -252,7 +252,25 @@ TYPE_PREFIX_RENAME	net/minecraftforge/common/Tags	net/neoforged/neoforge/common/
 # Renamed packages, where the target path is not a mechanical substitution of the source.
 TYPE_PREFIX_RENAME	net/minecraftforge/forgespi/	net/neoforged/neoforgespi/
 TYPE_PREFIX_RENAME	net/minecraftforge/fml/util/	net/neoforged/fml/util/
-TYPE_PREFIX_RENAME	net/minecraftforge/common/crafting/conditions/	net/neoforged/neoforge/common/conditions/
+# The conditions package moved, and this was a prefix rule until the shadowed-shim check caught
+# what that did to ICondition: 1.20.5 added a second abstract method, codec(), which no mod
+# compiled against 1.20.1 can have implemented. The rename resolved cleanly and left every custom
+# condition one AbstractMethodError away from failing the first time a recipe used it.
+#
+# Enumerated rather than excluded, because a prefix rule cannot say "all of these but one" and
+# the alternatives all rely on rule-precedence subtleties that would not survive being read later.
+# ICondition and IConditionSerializer stay shimmed; everything else here is shape-identical in
+# NeoForge and renames. Counts are corpus jars.
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/ModLoadedCondition	net/neoforged/neoforge/common/conditions/ModLoadedCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/IConditionBuilder	net/neoforged/neoforge/common/conditions/IConditionBuilder
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/NotCondition	net/neoforged/neoforge/common/conditions/NotCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/TagEmptyCondition	net/neoforged/neoforge/common/conditions/TagEmptyCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/OrCondition	net/neoforged/neoforge/common/conditions/OrCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/AndCondition	net/neoforged/neoforge/common/conditions/AndCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/TrueCondition	net/neoforged/neoforge/common/conditions/TrueCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/FalseCondition	net/neoforged/neoforge/common/conditions/FalseCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/ItemExistsCondition	net/neoforged/neoforge/common/conditions/ItemExistsCondition
+TYPE_RENAME	net/minecraftforge/common/crafting/conditions/ConditionContext	net/neoforged/neoforge/common/conditions/ConditionContext
 
 # Capabilities: deliberately NOT renamed. This rule existed briefly and was wrong.
 #
@@ -709,3 +727,13 @@ ARG_FILL	net/minecraft/network/codec/StreamCodec	easyport/bridge/CodecBridge	par
 # changed type and one was added, so this needs both a COERCE and an ARG_FILL -- which is the
 # point of having them as separate mechanisms that compose.
 COERCE	easyport/vanilla/ParticleOptionsDeserializer	com/mojang/serialization/MapCodec	easyport/bridge/CodecBridge	particleCodecFrom
+
+# DropExperienceBlock lost its one-argument constructor; the surviving form takes an IntProvider.
+# Constant zero is exactly what the old one meant, so nothing is lost. Blocks alltheores.
+ARG_FILL	net/minecraft/util/valueproviders/IntProvider	easyport/bridge/VanillaBridge	noExperience
+
+# AttributeModifier.Operation constants renamed, same meanings. A field read cannot be renamed by
+# the type remapper -- that rewrites owners, not member names -- so each becomes a bridge call.
+FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation	ADDITION	Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;	easyport/bridge/VanillaBridge	addValue	()Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;
+FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation	MULTIPLY_BASE	Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;	easyport/bridge/VanillaBridge	multiplyBase	()Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;
+FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation	MULTIPLY_TOTAL	Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;	easyport/bridge/VanillaBridge	multiplyTotal	()Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;

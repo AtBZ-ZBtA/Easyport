@@ -26,6 +26,36 @@ public final class VanillaBridge {
      * because the callee only ever wanted the location; a caller that wanted the variant would
      * have taken a model location.
      */
+    /**
+     * The xp an ore block drops, for the DropExperienceBlock constructor 1.21 removed.
+     *
+     * 1.20.1 had a one-argument constructor meaning "no xp"; 1.21 kept only the form that takes
+     * an IntProvider. Constant zero *is* what the old constructor meant, so this is one of the
+     * few fillers that loses nothing.
+     */
+    public static net.minecraft.util.valueproviders.IntProvider noExperience() {
+        return net.minecraft.util.valueproviders.ConstantInt.of(0);
+    }
+
+    /**
+     * AttributeModifier.Operation constants, renamed in 1.21 with the same meanings.
+     *
+     * ADDITION -> ADD_VALUE, MULTIPLY_BASE -> ADD_MULTIPLIED_BASE, MULTIPLY_TOTAL ->
+     * ADD_MULTIPLIED_TOTAL. A field read cannot be renamed by the type remapper -- it rewrites
+     * owners, not member names -- so each goes through FIELD_TO_STATIC to one of these.
+     */
+    public static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation addValue() {
+        return net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
+    }
+
+    public static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation multiplyBase() {
+        return net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE;
+    }
+
+    public static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation multiplyTotal() {
+        return net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
+    }
+
     public static ResourceLocation modelId(ModelResourceLocation mrl) {
         return mrl == null ? null : mrl.id();
     }

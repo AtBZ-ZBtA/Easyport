@@ -107,7 +107,7 @@ public class VanillaGaps {
         List<Finding> signatureChanged = new ArrayList<>();
         List<Finding> memberGone = new ArrayList<>();
         int srgResidue = 0, checked = 0, ok = 0, skippedByRule = 0, ownerMissing = 0;
-        int holderHandled = 0;
+        int holderHandled = 0, arityHandled = 0;
 
         for (MemberRef ref : readMembers(Path.of(args[0]))) {
             String owner = ref.owner();
@@ -134,6 +134,7 @@ public class VanillaGaps {
 
             Set<String> sameName = index.descriptorsOf(effectiveOwner, name);
             if (holderAdapted(desc, sameName)) { holderHandled++; ok++; continue; }
+            if (arityAdapted(desc, sameName, rules.argFillTypes())) { arityHandled++; ok++; continue; }
             if (!sameName.isEmpty()) {
                 // Printing the platform's real descriptors is most of the fix for this class of
                 // finding: the change is usually one parameter, and seeing the two side by side
@@ -169,6 +170,8 @@ public class VanillaGaps {
         System.out.println();
         System.out.printf("resolved by Holder adaptation %d  (of the \"still resolve\" figure)%n",
                 holderHandled);
+        System.out.printf("resolved by ARG_FILL / ARG_DROP  %d  (of the \"still resolve\" figure)%n",
+                arityHandled);
         System.out.printf("skipped, a rule handles them  %d%n", skippedByRule);
         System.out.printf("skipped, owner type is gone   %d%n", ownerMissing);
         System.out.printf("skipped, name still reads SRG %d  <- mapping health; want 0%n", srgResidue);
@@ -278,6 +281,46 @@ public class VanillaGaps {
                     && wantRet.getSort() == Type.OBJECT) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * Whether an {@code ARG_FILL} or an argument drop already handles this mismatch.
+     *
+     * The counterpart to {@link #holderAdapted}, and needed for the same reason: the transformer
+     * inserts a parameter 1.21 added, or removes one it dropped, and a report that only knows
+     * about type-level rules keeps listing those calls as work. The heaviest cluster in this
+     * report -- the serialization family that grew a {@code HolderLookup.Provider} -- is exactly
+     * that shape.
+     *
+     * Only a single added or removed parameter counts, matching what the transformer will attempt.
+     * An added parameter must have a filler declared, because without one it cannot be supplied.
+     */
+    private static boolean arityAdapted(String called, Set<String> platformDescriptors,
+                                        Set<String> fillable) {
+        if (!called.startsWith("(")) return false;
+        Type[] a = Type.getArgumentTypes(called);
+        for (String candidate : platformDescriptors) {
+            if (!candidate.startsWith("(")) continue;
+            if (!Type.getReturnType(candidate).equals(Type.getReturnType(called))) continue;
+            Type[] b = Type.getArgumentTypes(candidate);
+            if (a.length + 1 == b.length && alignsSkipping(a, b, fillable)) return true;
+            if (a.length == b.length + 1 && alignsSkipping(b, a, null)) return true;
+        }
+        return false;
+    }
+
+    /** Whether {@code shorter} matches {@code longer} with exactly one position skipped. */
+    private static boolean alignsSkipping(Type[] shorter, Type[] longer, Set<String> mustFill) {
+        for (int k = 0; k < longer.length; k++) {
+            if (mustFill != null && !mustFill.contains(longer[k].getInternalName())) continue;
+            boolean matches = true;
+            for (int i = 0, j = 0; i < shorter.length && matches; i++, j++) {
+                if (j == k) j++;
+                matches = j < longer.length && shorter[i].equals(longer[j]);
+            }
+            if (matches) return true;
         }
         return false;
     }
@@ -426,7 +469,8 @@ public class VanillaGaps {
 
     private record Rules(Map<String, String> exact, Map<String, String> prefix,
                          Set<String> redirectedMembers, Set<String> removedSymbols,
-                         Map<String, String> fieldRetypes, Set<String> ctorOwners) {
+                         Map<String, String> fieldRetypes, Set<String> ctorOwners,
+                         Set<String> argFillTypes) {
 
         String rename(String type) {
             String hit = exact.get(type);
@@ -468,6 +512,7 @@ public class VanillaGaps {
             Set<String> removed = new HashSet<>();
             Map<String, String> retypes = new LinkedHashMap<>();
             Set<String> ctorOwners = new HashSet<>();
+            Set<String> fillable = new HashSet<>();
             for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
                 String t = line.trim();
                 if (t.isEmpty() || t.startsWith("#")) continue;
@@ -478,13 +523,14 @@ public class VanillaGaps {
                     case "REMOVED" -> { if (c.length >= 2) removed.add(c[1]); }
                     case "FIELD_RETYPE" -> { if (c.length >= 3) retypes.put(c[1], c[2]); }
                     case "CTOR_TO_STATIC", "CTOR_SWAP2" -> { if (c.length >= 2) ctorOwners.add(c[1]); }
+                    case "ARG_FILL" -> { if (c.length >= 2) fillable.add(c[1]); }
                     case "RENAME_METHOD", "METHOD_TO_STATIC", "FIELD_TO_STATIC" -> {
                         if (c.length >= 4) redirected.add(c[1] + "\t" + c[2] + "\t" + c[3]);
                     }
                     default -> { }
                 }
             }
-            return new Rules(exact, prefix, redirected, removed, retypes, ctorOwners);
+            return new Rules(exact, prefix, redirected, removed, retypes, ctorOwners, fillable);
         }
     }
 
