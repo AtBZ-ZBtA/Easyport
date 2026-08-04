@@ -2,14 +2,15 @@
 
 referenced vanilla types      3106
 member references checked     25288
-  still resolve               23230  (91.9%)
-  SIGNATURE CHANGED           1044
+  still resolve               23320  (92.2%)
+  SIGNATURE CHANGED           954
   MEMBER GONE                 1014
 TYPE GONE                     114
 
 resolved by Holder adaptation 234  (of the "still resolve" figure)
 resolved by ARG_FILL / ARG_DROP  182  (of the "still resolve" figure)
 resolved by an explicit rule  29  (of the "still resolve" figure)
+resolved by a COERCE conversion 90  (of the "still resolve" figure)
 REMOVED, reported not rewritten 0  (excluded from both)
 skipped, owner type is gone   432
 skipped, name still reads SRG 1  <- mapping health; want 0
@@ -17,7 +18,7 @@ skipped, name still reads SRG 1  <- mapping health; want 0
 Jar counts, not call sites. One mod calling something forty times is
 one mod's worth of evidence.
 
-=== SIGNATURE CHANGED (1044) ===
+=== SIGNATURE CHANGED (954) ===
 The member is still there and takes something else. This is Phase 4's central
 problem -- a vanilla type changed shape underneath the signature. Read the two
 descriptors together; the difference names the type that moved.
@@ -178,9 +179,6 @@ descriptors together; the difference names the type that moved.
    26  net/minecraft/data/recipes/SimpleCookingRecipeBuilder.save
        calls (Ljava/util/function/Consumer;Lnet/minecraft/resources/ResourceLocation;)V
          has  (Lnet/minecraft/data/recipes/RecipeOutput;Ljava/lang/String;)V  |  (Lnet/minecraft/data/recipes/RecipeOutput;Lnet/minecraft/resources/ResourceLocation;)V  |  (Lnet/minecraft/data/recipes/RecipeOutput;)V
-   26  net/minecraft/world/level/block/Block.getLootTable
-       calls ()Lnet/minecraft/resources/ResourceLocation;
-         has  ()Lnet/minecraft/resources/ResourceKey;
    26  net/minecraft/world/level/block/LiquidBlock.<init>
        calls (Ljava/util/function/Supplier;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
          has  (Lnet/minecraft/world/level/material/FlowingFluid;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
@@ -295,9 +293,6 @@ descriptors together; the difference names the type that moved.
    19  net/minecraft/world/item/crafting/RecipeManager.getRecipesFor
        calls (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/Container;Lnet/minecraft/world/level/Level;)Ljava/util/List;
          has  (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Ljava/util/List;
-   19  net/minecraft/world/level/storage/loot/BuiltInLootTables.SIMPLE_DUNGEON
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
    18  net/minecraft/advancements/Advancement$Builder.display
        calls (Lnet/minecraft/world/level/ItemLike;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/advancements/FrameType;ZZZ)Lnet/minecraft/advancements/Advancement$Builder;
          has  (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/advancements/AdvancementType;ZZZ)Lnet/minecraft/advancements/Advancement$Builder;  |  (Lnet/minecraft/world/level/ItemLike;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/advancements/AdvancementType;ZZZ)Lnet/minecraft/advancements/Advancement$Builder;  |  Ljava/util/Optional;
@@ -394,9 +389,6 @@ descriptors together; the difference names the type that moved.
    14  net/minecraft/data/recipes/SmithingTransformRecipeBuilder.save
        calls (Ljava/util/function/Consumer;Lnet/minecraft/resources/ResourceLocation;)V
          has  (Lnet/minecraft/data/recipes/RecipeOutput;Lnet/minecraft/resources/ResourceLocation;)V  |  (Lnet/minecraft/data/recipes/RecipeOutput;Ljava/lang/String;)V
-   14  net/minecraft/world/entity/EntityType.getDefaultLootTable
-       calls ()Lnet/minecraft/resources/ResourceLocation;
-         has  ()Lnet/minecraft/resources/ResourceKey;
    14  net/minecraft/world/item/ItemStack.equals
        calls (Lnet/minecraft/world/item/ItemStack;Z)Z
          has  (Ljava/lang/Object;)Z
@@ -493,12 +485,6 @@ descriptors together; the difference names the type that moved.
    12  net/minecraft/world/level/gameevent/GameEvent.FLUID_PLACE
        calls Lnet/minecraft/world/level/gameevent/GameEvent;
          has  Lnet/minecraft/core/Holder$Reference;
-   12  net/minecraft/world/level/storage/loot/BuiltInLootTables.ABANDONED_MINESHAFT
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-   12  net/minecraft/world/level/storage/loot/BuiltInLootTables.EMPTY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
    11  net/minecraft/client/gui/components/ImageButton.<init>
        calls (IIIIIIILnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/gui/components/Button$OnPress;)V
          has  (IIIILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;)V  |  (IILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;)V  |  (IIIILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;)V
@@ -541,12 +527,6 @@ descriptors together; the difference names the type that moved.
    11  net/minecraft/world/level/Explosion.<init>
        calls (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;Lnet/minecraft/world/level/ExplosionDamageCalculator;DDDFZLnet/minecraft/world/level/Explosion$BlockInteraction;)V
          has  (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;DDDFZLnet/minecraft/world/level/Explosion$BlockInteraction;)V  |  (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;DDDFZLnet/minecraft/world/level/Explosion$BlockInteraction;Ljava/util/List;)V  |  (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;DDDFLjava/util/List;Lnet/minecraft/world/level/Explosion$BlockInteraction;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/particles/ParticleOptions;Lnet/minecraft/core/Holder;)V
-   11  net/minecraft/world/level/storage/loot/BuiltInLootTables.DESERT_PYRAMID
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-   11  net/minecraft/world/level/storage/loot/BuiltInLootTables.JUNGLE_TEMPLE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
    11  net/minecraft/world/level/storage/loot/LootContext.getResolver
        calls ()Lnet/minecraft/world/level/storage/loot/LootDataResolver;
          has  ()Lnet/minecraft/core/HolderGetter$Provider;
@@ -583,9 +563,6 @@ descriptors together; the difference names the type that moved.
    10  net/minecraft/world/level/block/BaseEntityBlock.playerWillDestroy
        calls (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/player/Player;)V
          has  (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/level/block/state/BlockState;
-   10  net/minecraft/world/level/storage/loot/BuiltInLootTables.NETHER_BRIDGE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
    10  net/minecraft/world/level/storage/loot/LootContext$Builder.create
        calls (Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/world/level/storage/loot/LootContext;
          has  (Ljava/util/Optional;)Lnet/minecraft/world/level/storage/loot/LootContext;
@@ -655,15 +632,6 @@ descriptors together; the difference names the type that moved.
     9  net/minecraft/world/level/levelgen/feature/trunkplacers/TrunkPlacerType.<init>
        calls (Lcom/mojang/serialization/Codec;)V
          has  (Lcom/mojang/serialization/MapCodec;)V
-    9  net/minecraft/world/level/storage/loot/BuiltInLootTables.END_CITY_TREASURE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    9  net/minecraft/world/level/storage/loot/BuiltInLootTables.STRONGHOLD_CROSSING
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    9  net/minecraft/world/level/storage/loot/BuiltInLootTables.WOODLAND_MANSION
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     9  net/minecraft/world/level/storage/loot/entries/LootPoolEntryType.<init>
        calls (Lnet/minecraft/world/level/storage/loot/Serializer;)V
          has  (Lcom/mojang/serialization/MapCodec;)V
@@ -727,12 +695,6 @@ descriptors together; the difference names the type that moved.
     8  net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement.addPieces
        calls (Lnet/minecraft/world/level/levelgen/structure/Structure$GenerationContext;Lnet/minecraft/core/Holder;Ljava/util/Optional;ILnet/minecraft/core/BlockPos;ZLjava/util/Optional;I)Ljava/util/Optional;
          has  (Lnet/minecraft/world/level/levelgen/structure/Structure$GenerationContext;Lnet/minecraft/core/Holder;Ljava/util/Optional;ILnet/minecraft/core/BlockPos;ZLjava/util/Optional;ILnet/minecraft/world/level/levelgen/structure/pools/alias/PoolAliasLookup;Lnet/minecraft/world/level/levelgen/structure/pools/DimensionPadding;Lnet/minecraft/world/level/levelgen/structure/templatesystem/LiquidSettings;)Ljava/util/Optional;  |  (Lnet/minecraft/world/level/levelgen/RandomState;IZLnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/Registry;Lnet/minecraft/world/level/levelgen/structure/PoolElementStructurePiece;Ljava/util/List;Lnet/minecraft/world/phys/shapes/VoxelShape;Lnet/minecraft/world/level/levelgen/structure/pools/alias/PoolAliasLookup;Lnet/minecraft/world/level/levelgen/structure/templatesystem/LiquidSettings;)V
-    8  net/minecraft/world/level/storage/loot/BuiltInLootTables.STRONGHOLD_CORRIDOR
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    8  net/minecraft/world/level/storage/loot/BuiltInLootTables.STRONGHOLD_LIBRARY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     8  net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer.<init>
        calls (II[Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition;[Lnet/minecraft/world/level/storage/loot/functions/LootItemFunction;)V
          has  (IILjava/util/List;Ljava/util/List;)V
@@ -829,9 +791,6 @@ descriptors together; the difference names the type that moved.
     7  net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement.<init>
        calls (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
          has  (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;Ljava/util/Optional;)V
-    7  net/minecraft/world/level/storage/loot/BuiltInLootTables.BASTION_TREASURE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     7  net/minecraft/world/level/storage/loot/ValidationContext.enterElement
        calls (Ljava/lang/String;Lnet/minecraft/world/level/storage/loot/LootDataId;)Lnet/minecraft/world/level/storage/loot/ValidationContext;
          has  (Ljava/lang/String;Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/world/level/storage/loot/ValidationContext;
@@ -949,21 +908,6 @@ descriptors together; the difference names the type that moved.
     6  net/minecraft/world/level/gameevent/GameEvent.TELEPORT
        calls Lnet/minecraft/world/level/gameevent/GameEvent;
          has  Lnet/minecraft/core/Holder$Reference;
-    6  net/minecraft/world/level/storage/loot/BuiltInLootTables.DESERT_WELL_ARCHAEOLOGY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    6  net/minecraft/world/level/storage/loot/BuiltInLootTables.IGLOO_CHEST
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    6  net/minecraft/world/level/storage/loot/BuiltInLootTables.SHIPWRECK_TREASURE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    6  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_ARMORER
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    6  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_WEAPONSMITH
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     6  net/minecraft/world/level/storage/loot/functions/SetContainerContents.setContents
        calls (Lnet/minecraft/world/level/block/entity/BlockEntityType;)Lnet/minecraft/world/level/storage/loot/functions/SetContainerContents$Builder;
          has  (Lnet/minecraft/world/level/storage/loot/ContainerComponentManipulator;)Lnet/minecraft/world/level/storage/loot/functions/SetContainerContents$Builder;
@@ -1033,9 +977,6 @@ descriptors together; the difference names the type that moved.
     5  net/minecraft/world/entity/FlyingMob.defineSynchedData
        calls ()V
          has  (Lnet/minecraft/network/syncher/SynchedEntityData$Builder;)V
-    5  net/minecraft/world/entity/LivingEntity.getLootTable
-       calls ()Lnet/minecraft/resources/ResourceLocation;
-         has  ()Lnet/minecraft/resources/ResourceKey;
     5  net/minecraft/world/entity/Mob.defineSynchedData
        calls ()V
          has  (Lnet/minecraft/network/syncher/SynchedEntityData$Builder;)V
@@ -1105,21 +1046,6 @@ descriptors together; the difference names the type that moved.
     5  net/minecraft/world/level/storage/DimensionDataStorage.get
        calls (Ljava/util/function/Function;Ljava/lang/String;)Lnet/minecraft/world/level/saveddata/SavedData;
          has  (Lnet/minecraft/world/level/saveddata/SavedData$Factory;Ljava/lang/String;)Lnet/minecraft/world/level/saveddata/SavedData;
-    5  net/minecraft/world/level/storage/loot/BuiltInLootTables.BASTION_OTHER
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    5  net/minecraft/world/level/storage/loot/BuiltInLootTables.DESERT_PYRAMID_ARCHAEOLOGY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    5  net/minecraft/world/level/storage/loot/BuiltInLootTables.FISHING
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    5  net/minecraft/world/level/storage/loot/BuiltInLootTables.FISHING_TREASURE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    5  net/minecraft/world/level/storage/loot/BuiltInLootTables.PILLAGER_OUTPOST
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     4  net/minecraft/CrashReport.getFriendlyReport
        calls ()Ljava/lang/String;
          has  (Lnet/minecraft/ReportType;)Ljava/lang/String;  |  (Lnet/minecraft/ReportType;Ljava/util/List;)Ljava/lang/String;
@@ -1294,42 +1220,6 @@ descriptors together; the difference names the type that moved.
     4  net/minecraft/world/level/gameevent/GameEvent.ITEM_INTERACT_START
        calls Lnet/minecraft/world/level/gameevent/GameEvent;
          has  Lnet/minecraft/core/Holder$Reference;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.ANCIENT_CITY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.BASTION_BRIDGE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.BURIED_TREASURE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.RUINED_PORTAL
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.SHIPWRECK_SUPPLY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.SPAWN_BONUS_CHEST
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_RARE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.UNDERWATER_RUIN_BIG
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_CARTOGRAPHER
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    4  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_PLAINS_HOUSE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     4  net/minecraft/world/level/storage/loot/LootPool.entries
        calls [Lnet/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer;
          has  Ljava/util/List;
@@ -1420,9 +1310,6 @@ descriptors together; the difference names the type that moved.
     3  net/minecraft/world/entity/LivingEntity.getTeam
        calls ()Lnet/minecraft/world/scores/Team;
          has  ()Lnet/minecraft/world/scores/PlayerTeam;
-    3  net/minecraft/world/entity/Mob.getLootTable
-       calls ()Lnet/minecraft/resources/ResourceLocation;
-         has  ()Lnet/minecraft/resources/ResourceKey;
     3  net/minecraft/world/entity/PathfinderMob.getPathfindingMalus
        calls (Lnet/minecraft/world/level/pathfinder/BlockPathTypes;)F
          has  (Lnet/minecraft/world/level/pathfinder/PathType;)F
@@ -1546,9 +1433,6 @@ descriptors together; the difference names the type that moved.
     3  net/minecraft/world/level/block/entity/BannerBlockEntity.getPatterns
        calls ()Ljava/util/List;
          has  ()Lnet/minecraft/world/level/block/entity/BannerPatternLayers;
-    3  net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity.lootTable
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     3  net/minecraft/world/level/block/state/BlockState.getBeaconColorMultiplier
        calls (Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)[F
          has  (Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)Ljava/lang/Integer;
@@ -1579,51 +1463,6 @@ descriptors together; the difference names the type that moved.
     3  net/minecraft/world/level/pathfinder/Node.type
        calls Lnet/minecraft/world/level/pathfinder/BlockPathTypes;
          has  Lnet/minecraft/world/level/pathfinder/PathType;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.ANCIENT_CITY_ICE_BOX
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.BASTION_HOGLIN_STABLE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.FISHING_FISH
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.FISHING_JUNK
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.SNIFFER_DIGGING
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.TRAIL_RUINS_ARCHAEOLOGY_COMMON
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.UNDERWATER_RUIN_SMALL
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_BUTCHER
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_DESERT_HOUSE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_SAVANNA_HOUSE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_SNOWY_HOUSE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_TAIGA_HOUSE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_TANNERY
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_TEMPLE
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
-    3  net/minecraft/world/level/storage/loot/BuiltInLootTables.VILLAGE_TOOLSMITH
-       calls Lnet/minecraft/resources/ResourceLocation;
-         has  Lnet/minecraft/resources/ResourceKey;
     3  net/minecraft/world/level/storage/loot/ValidationContext.<init>
        calls (Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;Lnet/minecraft/world/level/storage/loot/LootDataResolver;)V
          has  (Lnet/minecraft/util/ProblemReporter;Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;Lnet/minecraft/core/HolderGetter$Provider;)V  |  (Lnet/minecraft/util/ProblemReporter;Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;)V  |  (Lnet/minecraft/util/ProblemReporter;Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;Ljava/util/Optional;Ljava/util/Set;)V
@@ -1631,7 +1470,7 @@ descriptors together; the difference names the type that moved.
        calls (Ljava/lang/String;Lnet/minecraft/world/scores/Objective;)Lnet/minecraft/world/scores/Score;
          has  (Lnet/minecraft/world/scores/ScoreHolder;Lnet/minecraft/world/scores/Objective;Z)Lnet/minecraft/world/scores/ScoreAccess;  |  (Lnet/minecraft/world/scores/ScoreHolder;Lnet/minecraft/world/scores/Objective;)Lnet/minecraft/world/scores/ScoreAccess;
 
-       ... and 508 more used by fewer than 3 jars
+       ... and 472 more used by fewer than 3 jars
 
 === MEMBER GONE (1014) ===
 No member of that name survives on the owner. Needs a rename rule, a bridge, or
@@ -2581,7 +2420,6 @@ head of this list, not the head of the lists above.
      492     28     11  net/minecraft/world/item/enchantment/Enchantments
      349      0     18  net/minecraft/world/item/crafting/Ingredient
      312      0      9  net/minecraft/world/level/block/entity/BlockEntity
-     304     73      0  net/minecraft/world/level/storage/loot/BuiltInLootTables
      281      8     24  net/minecraft/world/item/enchantment/EnchantmentHelper
      236     37      4  net/minecraft/world/level/gameevent/GameEvent
      233      4      0  net/minecraft/data/recipes/ShapedRecipeBuilder
@@ -2591,14 +2429,14 @@ head of this list, not the head of the lists above.
      210      9      4  net/minecraft/advancements/Advancement$Builder
      199      7     24  net/minecraft/world/entity/Entity
      179      4      0  net/minecraft/data/recipes/ShapelessRecipeBuilder
-     171     12      7  net/minecraft/world/level/block/Block
-     162      9      8  net/minecraft/world/entity/LivingEntity
+     157      8      8  net/minecraft/world/entity/LivingEntity
      155      2     17  net/minecraft/world/item/enchantment/Enchantment
+     145     11      7  net/minecraft/world/level/block/Block
      137      4      1  net/minecraft/world/item/crafting/Recipe
      130      2      2  net/minecraft/nbt/NbtUtils
      123      8      1  net/minecraft/world/item/crafting/RecipeManager
      115      4      1  net/minecraft/world/item/crafting/CraftingRecipe
-     108      1      2  net/minecraft/world/level/block/state/BlockBehaviour$Properties
+     106      0      2  net/minecraft/world/level/block/state/BlockBehaviour$Properties
      100      9      6  net/minecraft/world/level/block/state/BlockState
       95      4      0  net/minecraft/data/recipes/RecipeProvider
       93      2      0  net/minecraft/client/renderer/texture/TextureAtlasSprite
@@ -2626,15 +2464,14 @@ head of this list, not the head of the lists above.
       48      1      0  net/minecraft/client/model/geom/ModelPart
       47      1      5  net/minecraft/core/registries/BuiltInRegistries
       47      1      1  net/minecraft/world/level/block/LiquidBlock
-      46      3      4  net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity
       44      0      4  net/minecraft/core/Holder$Reference
+      43      2      4  net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity
       42      5      8  net/minecraft/world/item/ArmorItem
       42      6      1  net/minecraft/world/item/trading/MerchantOffer
       41      0      3  net/minecraft/core/Holder
       41      8      0  net/minecraft/core/cauldron/CauldronInteraction
       41      5      0  net/minecraft/data/recipes/SingleItemRecipeBuilder
       41      0      8  net/minecraft/world/item/ArmorMaterial
-      40      9      6  net/minecraft/world/entity/Mob
       40      4      1  net/minecraft/world/level/block/DoorBlock
       40      1      0  net/minecraft/world/level/block/StairBlock
       39      3      0  net/minecraft/data/recipes/RecipeBuilder
@@ -2642,6 +2479,7 @@ head of this list, not the head of the lists above.
       38      7     12  net/minecraft/server/level/ServerPlayer
       37      3      0  net/minecraft/data/recipes/SpecialRecipeBuilder
       37      2      1  net/minecraft/world/level/block/TrapDoorBlock
+      36      7      6  net/minecraft/world/entity/Mob
       35      2      0  net/minecraft/client/renderer/MultiBufferSource
       34      1      1  net/minecraft/advancements/CriteriaTriggers
       34      2      4  net/minecraft/world/effect/MobEffectInstance
@@ -2656,7 +2494,6 @@ head of this list, not the head of the lists above.
       31      1      1  net/minecraft/world/level/block/FenceGateBlock
       31      1      0  net/minecraft/world/level/storage/loot/functions/LootItemFunctionType
       30      3      0  net/minecraft/server/PlayerAdvancements
-      30      3      2  net/minecraft/world/entity/EntityType
       30      0      2  net/minecraft/world/item/EnchantedBookItem
       30      1      0  net/minecraft/world/level/storage/loot/functions/LootItemConditionalFunction
       29      0      6  net/minecraft/client/player/AbstractClientPlayer
@@ -2724,6 +2561,7 @@ head of this list, not the head of the lists above.
       17      2      2  net/minecraft/world/level/block/entity/SkullBlockEntity
       17      0      2  net/minecraft/world/level/chunk/ChunkAccess
       16      3      0  net/minecraft/client/gui/screens/inventory/InventoryScreen
+      16      2      2  net/minecraft/world/entity/EntityType
       16      2      3  net/minecraft/world/entity/projectile/AbstractHurtingProjectile
       16      2      2  net/minecraft/world/item/DiggerItem
       16      2      2  net/minecraft/world/level/block/FlowerBlock
@@ -2755,16 +2593,15 @@ head of this list, not the head of the lists above.
       12      1      0  net/minecraft/client/model/EntityModel
       12      2      7  net/minecraft/client/renderer/LevelRenderer
       12      2      0  net/minecraft/data/worldgen/features/FeatureUtils
-      12      3      2  net/minecraft/world/entity/monster/Monster
       12      0      2  net/minecraft/world/item/Tier
-      12      3      1  net/minecraft/world/level/block/CropBlock
-      12      2      4  net/minecraft/world/level/block/entity/ChestBlockEntity
       12      0      5  net/minecraft/world/level/block/entity/DispenserBlockEntity
       12      2      1  net/minecraft/world/level/storage/loot/ValidationContext
       11      5      0  net/minecraft/world/entity/vehicle/AbstractMinecart
       11      2      2  net/minecraft/world/item/PickaxeItem
       11      2      0  net/minecraft/world/item/SmithingTemplateItem
       11      1      0  net/minecraft/world/item/crafting/CraftingBookCategory
+      11      2      1  net/minecraft/world/level/block/CropBlock
+      11      1      4  net/minecraft/world/level/block/entity/ChestBlockEntity
       11      3      0  net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement
       11      0      1  net/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings
       10      0      1  net/minecraft/advancements/CriterionTrigger$Listener
@@ -2777,6 +2614,7 @@ head of this list, not the head of the lists above.
       10      1      0  net/minecraft/server/packs/PathPackResources
       10      1      0  net/minecraft/util/StringUtil
       10      0      3  net/minecraft/world/entity/AreaEffectCloud
+      10      2      2  net/minecraft/world/entity/monster/Monster
       10      1      3  net/minecraft/world/item/MapItem
       10      1      0  net/minecraft/world/item/crafting/RecipeManager$CachedCheck
       10      4      1  net/minecraft/world/item/crafting/SmithingRecipe

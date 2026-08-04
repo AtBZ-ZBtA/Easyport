@@ -95,10 +95,11 @@ sign-off:
 | Vanilla side | |
 |---|---|
 | Member references checked | 25,288 |
-| **Still resolve** | **23,230 — 91.9%** |
+| **Still resolve** | **23,320 — 92.2%** |
 | of which, by Holder adaptation | 234 |
 | of which, by `ARG_FILL` / `ARG_DROP` | 182 |
-| Signature changed | 1,044 |
+| of which, by a `COERCE` conversion | 90 |
+| Signature changed | 954 |
 | Member gone | 1,014 |
 | Types deleted outright | 114 |
 
@@ -126,7 +127,7 @@ On the vanilla side, ranked by the `BY OWNING TYPE` rollup:
 | `Enchantments` | 492 | Enchantments became data-driven; the constants are `ResourceKey`s now, which need a registry lookup rather than a wrap |
 | `Ingredient` | 349 | Final in 1.21; custom ingredients go through `ICustomIngredient` |
 | `BlockEntity` | 312 | **Only the override half.** `ARG_FILL` handles the call sites |
-| `BuiltInLootTables` | 304 | `ResourceKey` wrapping; `register` itself is bridged |
+| `EnchantmentHelper` | 281 | Follows the `Enchantments` change |
 
 `BlockEntity` names the one shape none of the seven Phase 4 mechanisms reaches. They all adapt
 *call sites*, and a mod that declares `saveAdditional(CompoundTag)` is not calling anything — it

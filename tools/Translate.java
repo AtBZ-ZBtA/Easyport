@@ -1187,13 +1187,36 @@ public class Translate {
                 Set<String> members = resolvedTargetMembers(fin.owner);
                 if (members.isEmpty()) continue;
                 if (members.contains(fin.name + " " + fin.desc)) continue;
-                if (!members.contains(fin.name + " " + HOLDER_DESC)) continue;
-                String valueType = unwrappedType(fin.owner, fin.name, fin.desc);
-                fin.desc = HOLDER_DESC;
-                insns.insert(fin, new TypeInsnNode(Opcodes.CHECKCAST, valueType));
-                insns.insert(fin, new MethodInsnNode(Opcodes.INVOKEINTERFACE, HOLDER,
-                        "value", "()Ljava/lang/Object;", true));
-                count(appliedCounts, "HOLDER_UNWRAP field " + fin.owner);
+                if (members.contains(fin.name + " " + HOLDER_DESC)) {
+                    String valueType = unwrappedType(fin.owner, fin.name, fin.desc);
+                    fin.desc = HOLDER_DESC;
+                    insns.insert(fin, new TypeInsnNode(Opcodes.CHECKCAST, valueType));
+                    insns.insert(fin, new MethodInsnNode(Opcodes.INVOKEINTERFACE, HOLDER,
+                            "value", "()Ljava/lang/Object;", true));
+                    count(appliedCounts, "HOLDER_UNWRAP field " + fin.owner);
+                    continue;
+                }
+
+                // Any other declared conversion, same as for returns. 1.21 re-typed whole
+                // families of constants without wrapping them in a Holder --
+                // BuiltInLootTables went from ResourceLocation to ResourceKey -- and the fix is
+                // the same shape: read the new type, convert back to what the mod expects.
+                String want = fin.desc.substring(1, fin.desc.length() - 1);
+                for (String candidate : members) {
+                    int sp = candidate.indexOf(' ');
+                    if (sp != fin.name.length() || !candidate.startsWith(fin.name)) continue;
+                    String actual = candidate.substring(sp + 1);
+                    if (!actual.startsWith("L") || !actual.endsWith(";")) continue;
+                    RenameRule via = declaredCoercion(
+                            actual.substring(1, actual.length() - 1), want);
+                    if (via == null) continue;
+                    fin.desc = actual;
+                    insns.insert(fin, new MethodInsnNode(Opcodes.INVOKESTATIC,
+                            via.newOwner(), via.newName(), via.newDesc(), false));
+                    count(appliedCounts, "COERCE field " + fin.owner + "." + fin.name
+                                        + " -> " + want);
+                    break;
+                }
             } else if (insn instanceof MethodInsnNode min) {
                 if (!min.owner.startsWith("net/minecraft/")) continue;
                 if (min.name.equals("<init>")) continue;

@@ -107,7 +107,7 @@ public class VanillaGaps {
         List<Finding> signatureChanged = new ArrayList<>();
         List<Finding> memberGone = new ArrayList<>();
         int srgResidue = 0, checked = 0, ok = 0, skippedByRule = 0, ownerMissing = 0;
-        int holderHandled = 0, arityHandled = 0, reportedRemoved = 0;
+        int holderHandled = 0, arityHandled = 0, reportedRemoved = 0, coerceHandled = 0;
 
         for (MemberRef ref : readMembers(Path.of(args[0]))) {
             String owner = ref.owner();
@@ -157,6 +157,7 @@ public class VanillaGaps {
                                         : index.descriptorsOf(effectiveOwner, name);
             if (holderAdapted(desc, sameName)) { holderHandled++; ok++; continue; }
             if (arityAdapted(desc, sameName, rules.argFillTypes())) { arityHandled++; ok++; continue; }
+            if (coerceAdapted(desc, sameName, rules.coercePairs())) { coerceHandled++; ok++; continue; }
             if (!sameName.isEmpty()) {
                 // Printing the platform's real descriptors is most of the fix for this class of
                 // finding: the change is usually one parameter, and seeing the two side by side
@@ -196,6 +197,8 @@ public class VanillaGaps {
                 arityHandled);
         System.out.printf("resolved by an explicit rule  %d  (of the \"still resolve\" figure)%n",
                 skippedByRule);
+        System.out.printf("resolved by a COERCE conversion %d  (of the \"still resolve\" figure)%n",
+                coerceHandled);
         System.out.printf("REMOVED, reported not rewritten %d  (excluded from both)%n",
                 reportedRemoved);
         System.out.printf("skipped, owner type is gone   %d%n", ownerMissing);
@@ -332,6 +335,40 @@ public class VanillaGaps {
             Type[] b = Type.getArgumentTypes(candidate);
             if (a.length + 1 == b.length && alignsSkipping(a, b, fillable)) return true;
             if (a.length == b.length + 1 && alignsSkipping(b, a, null)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Whether a declared {@code COERCE} conversion already handles this mismatch.
+     *
+     * Covers the two positions the transformer converts without a descriptor telling it to: a
+     * field whose type changed, and a return that changed. 1.21 re-typed whole families of
+     * constants without wrapping them -- {@code BuiltInLootTables} went from
+     * {@code ResourceLocation} to {@code ResourceKey} -- and a report that did not know about the
+     * conversion kept listing 304 jar-weight of finished work.
+     */
+    private static boolean coerceAdapted(String called, Set<String> platformDescriptors,
+                                         Set<String> coercions) {
+        if (coercions.isEmpty()) return false;
+        boolean isField = !called.startsWith("(");
+        String want = isField ? called : Type.getReturnType(called).getDescriptor();
+        if (!want.startsWith("L")) return false;
+        String wantType = want.substring(1, want.length() - 1);
+        String args = isField ? null : called.substring(0, called.indexOf(')') + 1);
+
+        for (String candidate : platformDescriptors) {
+            String actual;
+            if (isField) {
+                actual = candidate;
+            } else {
+                if (!candidate.startsWith(args)) continue;
+                actual = Type.getReturnType(candidate).getDescriptor();
+            }
+            if (!actual.startsWith("L") || !actual.endsWith(";")) continue;
+            if (coercions.contains(actual.substring(1, actual.length() - 1) + "\t" + wantType)) {
+                return true;
+            }
         }
         return false;
     }
@@ -508,7 +545,7 @@ public class VanillaGaps {
     private record Rules(Map<String, String> exact, Map<String, String> prefix,
                          Set<String> redirectedMembers, Set<String> removedSymbols,
                          Map<String, String> fieldRetypes, Set<String> ctorOwners,
-                         Set<String> argFillTypes) {
+                         Set<String> argFillTypes, Set<String> coercePairs) {
 
         String rename(String type) {
             String hit = exact.get(type);
@@ -551,6 +588,7 @@ public class VanillaGaps {
             Map<String, String> retypes = new LinkedHashMap<>();
             Set<String> ctorOwners = new HashSet<>();
             Set<String> fillable = new HashSet<>();
+            Set<String> coerce = new HashSet<>();
             for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
                 String t = line.trim();
                 if (t.isEmpty() || t.startsWith("#")) continue;
@@ -562,13 +600,15 @@ public class VanillaGaps {
                     case "FIELD_RETYPE" -> { if (c.length >= 3) retypes.put(c[1], c[2]); }
                     case "CTOR_TO_STATIC", "CTOR_SWAP2" -> { if (c.length >= 2) ctorOwners.add(c[1]); }
                     case "ARG_FILL" -> { if (c.length >= 2) fillable.add(c[1]); }
+                    case "COERCE" -> { if (c.length >= 3) coerce.add(c[1] + "	" + c[2]); }
                     case "RENAME_METHOD", "METHOD_TO_STATIC", "FIELD_TO_STATIC" -> {
                         if (c.length >= 4) redirected.add(c[1] + "\t" + c[2] + "\t" + c[3]);
                     }
                     default -> { }
                 }
             }
-            return new Rules(exact, prefix, redirected, removed, retypes, ctorOwners, fillable);
+            return new Rules(exact, prefix, redirected, removed, retypes, ctorOwners, fillable,
+                             coerce);
         }
     }
 
