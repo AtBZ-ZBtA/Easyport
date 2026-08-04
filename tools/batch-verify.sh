@@ -23,7 +23,7 @@ SUPPORT="testkit/inspector/inspector.jar,forge-compat/forge-compat.jar"
 # All platform jars, not just neoforge. FML classes (@Mod, FMLLoader, ModLoader) live in the
 # loader jar, and validating against a partial index silently rejects correct renames -- which
 # for @Mod would mean the mod is never discovered at all.
-PLATFORM_JARS=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar)
+PLATFORM_JARS=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar)
 OUT="batch-report"
 RESULTS="$OUT/batch-results.tsv"
 

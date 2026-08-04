@@ -499,13 +499,31 @@ public class Translate {
      */
     private boolean renameTargetExists(String internalName) {
         if (targetClasses.isEmpty()) return true;
-        // Only vouch for the platform's own namespaces; forge-compat classes are not in the
-        // index and must not be rejected.
-        if (!internalName.startsWith("net/neoforged/") && !internalName.startsWith("net/minecraft/")) {
-            return true;
-        }
-        return targetClasses.contains(internalName);
+        if (targetClasses.contains(internalName)) return true;
+
+        // Only claim a class is absent when the index demonstrably covers its package. An
+        // index is never guaranteed complete -- platform classes are spread across several
+        // jars, and a forgotten one makes every rename into it look invalid.
+        //
+        // This has now caused two regressions. First the FML loader jar was missing, so @Mod
+        // was rejected. Then distmarker was missing, so OnlyIn was rejected 105 times and every
+        // library that had been loading stopped. In both cases the check was confidently wrong
+        // about classes that existed.
+        //
+        // Requiring a sibling in the same package makes the failure mode safe: an unindexed
+        // package yields "assume present" and the rename proceeds as it did before validation
+        // existed, while a package we genuinely know still catches invented targets like
+        // neoforge/event/TickEvent$ClientTickEvent.
+        int lastSlash = internalName.lastIndexOf('/');
+        if (lastSlash < 0) return true;
+        String pkg = internalName.substring(0, lastSlash + 1);
+        boolean packageKnown = knownPackages.computeIfAbsent(pkg, p ->
+                targetClasses.stream().anyMatch(c -> c.startsWith(p)));
+        return !packageKnown;
     }
+
+    /** Cached per-package answers; the scan over targetClasses is otherwise repeated constantly. */
+    private final Map<String, Boolean> knownPackages = new HashMap<>();
 
     /** SRG member names appearing inside text: refmaps, @At targets, @Accessor names. */
     private static final java.util.regex.Pattern SRG_TOKEN =
