@@ -4,7 +4,42 @@ Dense re-entry point. If you are picking this up cold (fresh context, new contri
 read this file and nothing else until you need depth. [ROADMAP.md](ROADMAP.md) has the full
 plan; this has where things actually stand.
 
-**Last updated:** 2026-08-03, mid Phase 3 (forge-compat expansion).
+**Last updated:** 2026-08-04, mid Phase 3 (forge-compat expansion).
+
+---
+
+## Resume here
+
+**The loop.** Translate a sample, run each mod, read the failure logs, fix what they name,
+repeat. The logs *are* the work queue — each failure names the exact missing class or method.
+
+```bash
+bash tools/build-forge-compat.sh          # after ANY forge-compat change; clears the baseline
+bash tools/batch-verify.sh < batch-report/libs.tsv     # 8 highest-fan-in libraries
+bash tools/batch-verify.sh < batch-report/sample.tsv   # 14 mixed mods
+
+# what blocked each mod (these logs self-clear on success, so they are always live)
+grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50}" \
+    devenv/neoforge-1.21.1/run/failed-<modid>.log | head -2
+```
+
+**Two hard rules, each learned by breaking something:**
+
+- **Never chain a build into a backgrounded batch and read only the tail.** A compile error
+  scrolled past once and ten minutes of verification ran against a one-class forge-compat,
+  reporting every mod broken including one that was at 100%.
+- Editing `tools/*.java` mid-run is now safe — `batch-verify.sh` snapshots them at start. It
+  corrupted three runs before that existed.
+
+**Immediate next work:** the eight libraries are each blocked on a *different* subsystem now
+(see "Library layer" below). Highest leverage remaining is probably `GenericEvent` and
+`NewRegistryEvent` — both loader-side and likely plain shims. `NetworkRegistry` needs the
+networking design sketched in ROADMAP Phase 3. The two mixin-apply failures are the hard
+Phase 7 problem and should be left until last.
+
+**Not started:** backward direction (1.21.1 → 1.20.1). Only `rules/forward.rules.tsv` exists.
+The locked decision is omnidirectional, and everything so far reads as forward progress — do
+not mistake that for being halfway.
 
 ---
 
