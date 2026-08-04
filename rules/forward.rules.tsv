@@ -391,3 +391,24 @@ TYPE_RENAME	net/minecraftforge/common/util/ITeleporter	net/neoforged/neoforge/co
 TYPE_RENAME	net/minecraftforge/common/util/BlockSnapshot	net/neoforged/neoforge/common/util/BlockSnapshot
 TYPE_RENAME	net/minecraftforge/common/util/MutableHashedLinkedMap	net/neoforged/neoforge/common/util/MutableHashedLinkedMap
 TYPE_RENAME	net/minecraftforge/common/util/LogicalSidedProvider	net/neoforged/neoforge/common/util/LogicalSidedProvider
+
+# --- Vanilla constants wrapped in Holder ------------------------------------------------------
+#
+# FIELD_RETYPE  owner <TAB> newFieldDescriptor
+#
+# 1.21 turned several holder classes from enums implementing the thing they described into plain
+# carriers of Holder<T> constants. ArmorMaterials.IRON went from an ArmorMaterials enum constant
+# implementing ArmorMaterial to a Holder<ArmorMaterial>, and ArmorItem's constructor changed to
+# match.
+#
+# The field names did not change, so neither the SRG mapping nor any type rename touches this.
+# Only the descriptor moved -- and the verifier reads descriptors, so this fails before the code
+# runs, as a VerifyError rather than a NoSuchFieldError. geckolib and aquaculture both die here.
+#
+# Per-owner rather than per-field: the wrapping was wholesale, so enumerating the constants would
+# be one chance per constant to miss one, and a missed one fails identically.
+FIELD_RETYPE	net/minecraft/world/item/ArmorMaterials	Lnet/minecraft/core/Holder;
+
+# The consuming constructor. Argument order is unchanged, so this is a plain call-site rewrite
+# and RENAME_METHOD covers it -- INVOKESPECIAL is preserved and only the descriptor moves.
+RENAME_METHOD	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/world/item/ArmorMaterial;Lnet/minecraft/world/item/ArmorItem$Type;Lnet/minecraft/world/item/Item$Properties;)V	net/minecraft/world/item/ArmorItem	<init>	(Lnet/minecraft/core/Holder;Lnet/minecraft/world/item/ArmorItem$Type;Lnet/minecraft/world/item/Item$Properties;)V

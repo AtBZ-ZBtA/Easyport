@@ -82,6 +82,7 @@ public class Translate {
     private final List<SwapRule> swapRules = new ArrayList<>();
     private final List<RenameRule> renameRules = new ArrayList<>();
     private final List<RenameRule> methodToStaticRules = new ArrayList<>();
+    private final Map<String, String> fieldRetypes = new LinkedHashMap<>();
     private final Set<String> removed = new LinkedHashSet<>();
     private final Map<String, String> typeRenames = new LinkedHashMap<>();
     private final Map<String, String> prefixRenames = new LinkedHashMap<>();
@@ -293,6 +294,7 @@ public class Translate {
             if (m.instructions == null) continue;
             applyRenameRules(m.instructions);
             applyMethodToStaticRules(m.instructions);
+            applyFieldRetypeRules(m.instructions);
             applyCtorRules(m.instructions);
             applySwapRules(m.instructions);
             recordRemoved(m.instructions);
@@ -414,6 +416,37 @@ public class Translate {
                                      + " -> " + r.newName());
                 break;
             }
+        }
+    }
+
+    /**
+     * Retypes every field read on a holder class whose constants were wrapped in {@code Holder}.
+     *
+     * 1.21 turned classes like {@code ArmorMaterials} from enums implementing the thing they
+     * described into plain holders of {@code Holder<ArmorMaterial>} constants. The field names
+     * did not change, so nothing in the SRG mapping or the type renames touches this -- but the
+     * *descriptor* on every GETSTATIC did, and the verifier reads descriptors.
+     *
+     * That makes it fail before the code ever runs, with a VerifyError rather than a
+     * NoSuchFieldError: the verifier sees {@code ArmorMaterials} pushed where
+     * {@code ArmorMaterial} is required, and in 1.21 the former no longer implements the latter.
+     * geckolib and aquaculture both die on exactly this.
+     *
+     * Written per-owner rather than per-field deliberately. The change was wholesale -- every
+     * constant on the class was wrapped at once -- so enumerating twenty fields would be twenty
+     * chances to miss one, and a missed one fails the same way.
+     *
+     * The constructor that consumes the value needs its own rule; RENAME_METHOD handles that,
+     * since a constructor whose descriptor changed but whose argument order did not is just a
+     * call-site rewrite.
+     */
+    private void applyFieldRetypeRules(InsnList insns) {
+        for (AbstractInsnNode insn : insns.toArray()) {
+            if (!(insn instanceof org.objectweb.asm.tree.FieldInsnNode fin)) continue;
+            String newDesc = fieldRetypes.get(fin.owner);
+            if (newDesc == null || newDesc.equals(fin.desc)) continue;
+            fin.desc = newDesc;
+            count(appliedCounts, "FIELD_RETYPE " + fin.owner + " -> " + newDesc);
         }
     }
 
@@ -1058,6 +1091,9 @@ public class Translate {
                 }
                 case "RENAME_METHOD" -> {
                     if (c.length >= 7) renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                }
+                case "FIELD_RETYPE" -> {
+                    if (c.length >= 3) fieldRetypes.put(c[1], c[2]);
                 }
                 case "METHOD_TO_STATIC" -> {
                     if (c.length >= 7) methodToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));

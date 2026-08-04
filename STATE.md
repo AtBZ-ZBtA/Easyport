@@ -431,8 +431,33 @@ frontier:
   `ArmorMaterials`-became-`Holder` change that blocks geckolib
 - `blockui` — `EventBusSubscriber` method signature
 
-The `ArmorMaterials` pattern now blocks two of eight sampled mods and one library. That makes
-the missing field-descriptor rule kind the highest-value single item left, ahead of more shims.
+The `ArmorMaterials` pattern now blocks two of eight sampled mods and one library.
+
+#### The `Holder` wrapping goes deeper than a field descriptor
+
+`FIELD_RETYPE` is implemented and works — `ArmorMaterials.IRON` now reads as `Holder`, and
+`ArmorItem`'s constructor is retyped to match. geckolib still fails, one layer further in:
+
+```
+Type 'net/minecraft/core/Holder' is not assignable to 'net/minecraft/world/item/ArmorMaterial'
+```
+
+The remaining mismatch is in geckolib's **own** class. `WolfArmorItem` declares a constructor
+taking `ArmorMaterial`, and the call site now passes a `Holder`. The vanilla type change
+propagates through mod signatures, so fixing the vanilla side is necessary and not sufficient.
+
+Three options, none free:
+
+1. `TYPE_RENAME ArmorMaterial -> Holder`. One line, rewrites mod signatures too. Wrong for any
+   mod that calls methods *on* an `ArmorMaterial`, which would then be called on a `Holder`.
+2. Propagate the retype through mod signatures by data flow — retype a parameter when every
+   caller now passes the new type. Correct, and a real analysis pass.
+3. Leave it. Two mods in the sample plus geckolib.
+
+Worth knowing before picking: this is the same shape as the 1.20.5 `Codec`/`MapCodec` split and
+the data-component rewrite. A vanilla type changing under mod signatures is Phase 4's central
+problem, not a special case — so option 2 is probably the real answer and should be designed
+once for all three.
 
 **Every library that was blocked on a missing class has moved at least twice.** None load yet,
 but the failures are now deeper in the sequence — construction and verification rather than
