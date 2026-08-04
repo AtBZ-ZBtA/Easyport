@@ -404,6 +404,23 @@ serializer, the bridge returns something inert and the report names it. The trad
 same way round — the type registers and everything registered beside it survives, while the
 specific thing 1.21 added does not work. The alternative is a mod that fails to load at all.
 
+**Extending a now-final vanilla class — deliberately not built, and here is the design.** Three
+classes hit it: `OutOfJarResourceLocation extends ResourceLocation`, `GradientColor extends
+TextColor`, `DataIngredient extends Ingredient`. The mechanism would mirror
+`INTERFACE_SUBSTITUTE` exactly — a `SUPERCLASS_SUBSTITUTE` rule pointing the mod's class at a
+shim base, plus a `COERCE` converting one back at the vanilla boundary — and all the machinery
+already exists.
+
+It was not built because the trade runs the wrong way here. Every other placeholder in this phase
+gives up something 1.21 *added*, while the mod keeps doing what it was written to do. These three
+classes exist *because of* what they override — reading a resource from outside the jar, blending
+a colour — and converting one to a plain vanilla value throws away the only reason the class is
+there. That turns "this mod does not load, and the report says why" into "this mod loads and
+quietly does not work", which is the failure this project has spent most of its checks avoiding.
+
+Worth revisiting if a mod turns up where the subclass adds state rather than behaviour. Do not
+revisit it to make a number go up.
+
 **The ranked remainder** is in [api-report/README.md](api-report/README.md): `ItemStack`
 (1,207 jar-weight -- its four commonest NBT methods are bridged onto the CUSTOM_DATA component,
 and the weight is the rest of the type), `FriendlyByteBuf` and `StreamCodec` (684), data-driven
