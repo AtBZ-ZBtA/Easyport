@@ -12,7 +12,9 @@ auto-translates a `/mods-from-other-version` folder into `/mods`.
 **Audience:** end users, not developers. A mod that doesn't port is a failure, not an
 edge case.
 
-**Status:** Phase 0 in progress. Corpus analyzer built and verified.
+**Status:** Phases 0–4 done. The transformer translates real mods that load and register content;
+what remains is mixins (Phase 5) and packaging (Phases 6–7). See the per-phase sign-off blocks
+below, and [STATE.md](STATE.md) for measured current state.
 
 ---
 
@@ -576,7 +578,7 @@ It was found by building an offline verifier, not by launching.
 type-checking replaced a loop that cost one launch per broken method.
 
 The remaining vanilla work is enumerated in [api-report/README.md](api-report/README.md), ranked
-by owning type, and one shape stands outside all five mechanisms: an *override*. They adapt call
+by owning type, and one shape stands outside all six mechanisms: an *override*. They adapt call
 sites, and a mod declaring `saveAdditional(CompoundTag)` is not calling anything — it is failing
 to override something.
 

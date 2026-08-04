@@ -145,7 +145,8 @@ propagating a retype through mod signatures by data flow — a whole-program pro
 
 **Easyport does the opposite: adapt at every vanilla boundary and leave mod code's worldview
 exactly as its author compiled it.** Every adaptation is then local to one instruction, and
-nothing has to be inferred about the mod. Five mechanisms fall out of it, and they compose:
+nothing has to be inferred about the mod. Six mechanisms fall out of it, and they compose —
+`ParticleType` needed a `COERCE`, an argument drop and two stubs in one constructor:
 
 | Mechanism | For | Needs rules? |
 |---|---|---|
@@ -154,6 +155,7 @@ nothing has to be inferred about the mod. Five mechanisms fall out of it, and th
 | `COERCE` | A type that stopped being assignable to what replaced it | Yes |
 | `INTERFACE_SUBSTITUTE` | A vanilla interface that became a record | Yes |
 | Abstract stub | Abstract methods 1.21 *added* to a class the mod extends | No |
+| Final-override rename | An override of a method 1.21 made final | No |
 
 Two of those need explaining, because they look wrong until you hit the case:
 
