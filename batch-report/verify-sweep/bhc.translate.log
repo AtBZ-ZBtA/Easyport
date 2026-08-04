@@ -1,10 +1,12 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 42 classes, moved 34 resources
 
 Applied:
      1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/world/item/crafting/ShapelessRecipe.<init>
     14  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     2  CTOR_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier#attributeModifier
+     2  FIELD_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation#ADDITION -> easyport/bridge/VanillaBridge#addValue
      1  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
      6  HOLDER_UNWRAP field net/minecraft/world/effect/MobEffects
      3  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes

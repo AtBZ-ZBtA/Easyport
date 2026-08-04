@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 589 classes, moved 2 resources
 
@@ -22,7 +22,6 @@ Applied:
     76  TYPE_PREFIX net/minecraftforge/client/event/
     24  TYPE_PREFIX net/minecraftforge/client/extensions/
     30  TYPE_PREFIX net/minecraftforge/client/model/
-     2  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
      6  TYPE_PREFIX net/minecraftforge/common/loot/
    145  TYPE_PREFIX net/minecraftforge/event/
    583  TYPE_PREFIX net/minecraftforge/fluids/
@@ -79,7 +78,6 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      5  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
      3  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
      3  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
-    17  TYPE_PREFIX target missing: net/neoforged/neoforge/common/conditions/IConditionSerializer
     38  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
      1  TYPE_PREFIX target missing: net/neoforged/neoforge/event/ForgeEventFactory
      5  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent

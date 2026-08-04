@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 153 classes, moved 1 resources
 
@@ -7,6 +7,7 @@ Applied:
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/network/chat/Component$Serializer.toJson
     13  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      7  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     3  CTOR_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier#attributeModifier
      1  EBS_BUS FORGE -> GAME
      2  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
      1  HOLDER_WRAP net/minecraft/world/entity/LivingEntity.getAttribute
@@ -14,7 +15,6 @@ Applied:
      1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
      2  SRG_IN_TEXT
     30  TYPE_PREFIX net/minecraftforge/client/event/
-     2  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
      2  TYPE_PREFIX net/minecraftforge/energy/
     41  TYPE_PREFIX net/minecraftforge/event/
      2  TYPE_PREFIX net/minecraftforge/fml/event/

@@ -4,36 +4,62 @@ Dense re-entry point. If you are picking this up cold (fresh context, new contri
 read this file and nothing else until you need depth. [ROADMAP.md](ROADMAP.md) has the full
 plan; this has where things actually stand.
 
-**Last updated:** 2026-08-04. Phase 3 complete; Phase 4 (vanilla bridge) is next.
+**Last updated:** 2026-08-04. See the phase sign-off blocks below for status.
 
 ---
 
 ## Resume here
 
-**Work from the gap report, not from the launch logs.** This is the single biggest change to
-how this project is worked on, so it comes first.
+**Work offline first. Launch only for what offline cannot answer.** This is the single biggest
+change to how this project is worked on, so it comes first.
 
 ```bash
-# The whole remaining work queue, ranked, offline, in about a minute.
+# Will these classes load? Whole list, translated and type-checked, in about a minute each.
+bash tools/verify-sweep.sh < batch-report/phase4.tsv
+
+# What does the corpus still use that nothing resolves? Two reports, two questions.
 java -cp "devenv/spi/asm.jar" tools/RenameGaps.java \
     api-report/forge-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
     forge-compat/forge-compat.jar \
     devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
     devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar \
     > api-report/unresolved-types.txt
+
+java -cp "devenv/spi/asm.jar" tools/VanillaGaps.java \
+    api-report/vanilla-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    > api-report/vanilla-gaps.txt
 ```
 
-It lists every Forge type the 433-jar corpus references that neither a shim nor a rule
-resolves, ranked by how many jars each one blocks, with a suggested rename target where the
-platform has a class of the same name.
+`RenameGaps` lists every **Forge** type the corpus references that neither a shim nor a rule
+resolves. `VanillaGaps` asks a deliberately different question of **vanilla**, because "does this
+type resolve" is the wrong one there — 1.21 mostly kept type names and changed what is inside
+them, so the body of that report is members that no longer exist on types that do. Read its
+`BY OWNING TYPE` rollup first: it says which *subsystem* to fix.
 
-**Read its warning sections before its gap list.** A rule that resolves *incorrectly* is worse
-than a missing one, because the gap report stops mentioning it and the failure moves to
+`verify-sweep` answers something neither report can, and it is where Phase 4's failures actually
+showed up. It runs the JVM's own type checks over each translated jar, so it catches a
+`VerifyError` — the most expensive failure this project produces, because a launch reports one
+method and then stops. It is also the only thing that sees an **illegal class hierarchy**: a mod
+extending something 1.21 made final, or implementing something that stopped being an interface.
+
+**A clean sweep means the classes will load. It does not mean the mod works.** The two are not
+substitutes; `batch-verify.sh` is what answers the second.
+
+**Read `RenameGaps`' warning sections before its gap list.** A rule that resolves *incorrectly* is
+worse than a missing one, because the gap report stops mentioning it and the failure moves to
 runtime. The checks caught `ICapabilityProvider` (same name, incompatible shape, 106 jars),
-`LivingDamageEvent` (renamed onto an abstract parent nothing posts, 24 jars), and withdrew a
-rule written the same hour — `LivingTickEvent` → `EntityTickEvent$Pre`, right event, but
-`getEntity()` narrowed its return type and all 41 callers would have broken. See
+`LivingDamageEvent` (renamed onto an abstract parent nothing posts, 24 jars), a prefix rule
+quietly overriding the `ICondition` shim and putting back the `AbstractMethodError` it exists to
+prevent, and withdrew a rule written the same hour — `LivingTickEvent` → `EntityTickEvent$Pre`,
+right event, but `getEntity()` narrowed its return type and all 41 callers would have broken. See
 [api-report/README.md](api-report/README.md).
+
+**Both reports know what the automatic passes handle, and that has to stay true.** The Holder,
+`ARG_FILL` and `ARG_DROP` passes discover their targets from the platform's own descriptors
+rather than from rules, so nothing in `forward.rules.tsv` marks that work done. Before the reports
+were taught about them they showed roughly 1,600 jar-references of *completed* work at the head of
+the queue. If you add a pass that needs no rules, teach the reports about it in the same change.
 
 **Two rules of thumb this produced, for events:**
 
@@ -73,7 +99,7 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
     devenv/neoforge-1.21.1/run/failed-<modid>.log | head -2
 ```
 
-**Four hard rules, each learned by breaking something:**
+**Eight hard rules, each learned by breaking something:**
 
 - **Never chain a build into a backgrounded batch and read only the tail.** A compile error
   scrolled past once and ten minutes of verification ran against a one-class forge-compat,
@@ -91,24 +117,69 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
 - **A mod's current failure is the top of a stack, not the whole of it.** The JVM stops at the
   first problem, so fixing it reveals the next. blockui looked like a vanilla failure and had two
   more Phase 3 gaps underneath — that nearly produced a wrong phase sign-off. Never conclude
-  "everything left is Phase N+1" from a single run.
+  "everything left is Phase N+1" from a single run. cyclopscore then proved it again, taking five
+  more blockers after the one that had been blocking it since Phase 3.
+- **A new way of matching can take away a match that worked.** Teaching the transformer to match
+  overloads that add or drop a parameter made `AttributeSupplier$Builder.add(Attribute, double)`
+  ambiguous — it now also matched `add(Holder)` by dropping the `double`, so the call was
+  correctly refused and geckolib went from loading to `NoSuchMethodError`. The ambiguity check
+  worked; the *fix* silently subtracted. **Re-run the whole batch after any matching change, not
+  just the mod you were fixing.** Same-arity overloads now win outright.
+- **`verify-sweep.sh` and `batch-verify.sh` both write `translated/`.** Running them at the same
+  time has one overwriting jars the other is about to launch. Nothing detects it.
+- **Check a results file is newer than the run before believing it.** A stale
+  `sample-results.tsv` from two hours earlier was read as the current run, and three fixes that
+  had in fact applied looked like they had done nothing. `ls -la --time-style=+%H:%M` before
+  drawing a conclusion from any batch output.
 
-**Immediate next work: Phase 4, the vanilla bridge.** Phase 3 is signed off below. Everything
-still failing fails on vanilla, not on Forge API.
+**The Phase 4 architecture, and the one idea behind all of it.** Phase 4 built the vanilla bridge
+and is signed off below. The whole phase turned on a single decision that is worth understanding
+before touching any of it, because the obvious alternative was tried first and does not work.
 
-The central Phase 4 problem, which three separate symptoms turn out to share: **a vanilla type
-changed shape underneath mod signatures.**
+1.21 changed the *shape* of vanilla types that mod signatures are written in terms of. The
+tempting fix is to let the new shape spread: retype the field, rename the type, follow it
+outward. That fails at the mod's own boundary. `ArmorMaterials.IRON` becoming a
+`Holder<ArmorMaterial>` was handled that way for a while, and geckolib still failed one layer in,
+because its own `WolfArmorItem` constructor declares `ArmorMaterial`. Chasing that means
+propagating a retype through mod signatures by data flow — a whole-program problem.
 
-- `Holder` wrapping — `ArmorMaterials.IRON` went from an enum constant to
-  `Holder<ArmorMaterial>`. `FIELD_RETYPE` fixes the field read and the vanilla constructor, and
-  geckolib *still* fails because its own `WolfArmorItem` constructor declares the old type.
-- `Codec` → `MapCodec` — same shape, hits `BiomeModifier.codec()` and the loot/biome serializers.
-- NBT → data components — the largest cluster in the member-mismatch report (`FluidStack.getTag`,
-  `ItemStackHandler.serializeNBT`, `ItemStack#getOrCreateTag`).
+**Easyport does the opposite: adapt at every vanilla boundary and leave mod code's worldview
+exactly as its author compiled it.** Every adaptation is then local to one instruction, and
+nothing has to be inferred about the mod. Five mechanisms fall out of it, and they compose:
 
-Do **not** solve these three separately. The honest fix is one pass that propagates a retype
-through mod signatures by data flow; a blanket `ArmorMaterial → Holder` rename would fix two
-mods and break every mod that calls a method *on* an `ArmorMaterial`.
+| Mechanism | For | Needs rules? |
+|---|---|---|
+| Holder unwrap / wrap | 1.21 wrapping a registry constant | No — read off the platform |
+| `ARG_FILL` / `ARG_DROP` | A parameter added or removed | Filler needs one |
+| `COERCE` | A type that stopped being assignable to what replaced it | Yes |
+| `INTERFACE_SUBSTITUTE` | A vanilla interface that became a record | Yes |
+| Abstract stub | Abstract methods 1.21 *added* to a class the mod extends | No |
+
+Two of those need explaining, because they look wrong until you hit the case:
+
+- **`COERCE` cannot be triggered by a descriptor.** `ModelResourceLocation` stopped being a
+  `ResourceLocation` while every call site kept saying `ResourceLocation` — nothing about the
+  instruction is wrong, only the value arriving at it. That pass runs a real type analysis and
+  inserts the conversion at the argument, return, or *branch* that disagrees. It has to be a
+  branch sometimes: `cond ? new Custom(..) : vanilla()` has nothing at the return to convert,
+  because one side is already right.
+- **Substitution is never a `TYPE_RENAME`.** Rewriting `implements ArmorMaterial` is right;
+  rewriting every mention of `ArmorMaterial` is not, because the mod also *reads vanilla's own
+  constants*, which are real records rather than implementations of the substitute.
+
+Where a conversion cannot be reconstructed — a codec that would have to be derived from a mod's
+hand-written serializer — the bridge returns a placeholder and the report names it. That trade is
+deliberate and always the same way round: the type registers, everything registered beside it
+survives, and the specific thing 1.21 added does not work. The alternative is a mod that fails to
+load at all, taking its blocks and items with it.
+
+**What remains, ranked by `api-report/vanilla-gaps.txt`:** `ItemStack` NBT→components (1,207
+jar-weight, the four main methods already `REMOVED`-reported), `FriendlyByteBuf` and the
+`StreamCodec` migration (684), data-driven `Enchantments` which became `ResourceKey`s (492),
+`Ingredient` (349), and `BlockEntity` (312) — that last one is now *only* the override-declaration
+half, since `ARG_FILL` handles its call sites. Overrides are the one shape none of the five
+mechanisms reaches: a mod declaring `saveAdditional(CompoundTag)` no longer overrides anything, so
+it links, loads, and is never called.
 
 Also outstanding, smaller: `ForgeHooks` (91 jars) and `ForgeEventFactory` (80) were split across
 NeoForge's `EventHooks` and `CommonHooks` and need per-method rules rather than a type rename.
@@ -730,6 +801,15 @@ public download.
     that had been at 100%. The script fails loudly, refuses to package an obviously incomplete
     build, and clears the cached baseline. **Never chain a build and a long test run into one
     backgrounded command and then read only the tail.**
+
+14. **Constructors are not inherited — never resolve one through the class hierarchy.** Both
+    offline tools fold supertype members in, which is right for every member except this one.
+    `DropExperienceBlock(Properties)` was removed in 1.21 and looked present because `Block`
+    declares a constructor of the same shape, so the call was judged fine, reported as fine, and
+    failed at load with `NoSuchMethodError`. It survived several rounds because everything about
+    it looked correct: the rule existed, the tool ran, the report said nothing. Constructors are
+    now checked against what the owning type itself declares, in `Translate#applyWrapAdapters`
+    and `VanillaGaps`.
 
 13. **A sealed interface cannot be implemented, not even by a named class.**
     `IConfigSpec.ILoadedConfig` permits only `net.neoforged.fml.config.LoadedConfig`, so the

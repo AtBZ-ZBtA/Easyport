@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 181 classes, moved 8 resources
 
@@ -17,7 +17,6 @@ Applied:
     49  TYPE_PREFIX net/minecraftforge/client/event/
      6  TYPE_PREFIX net/minecraftforge/client/extensions/
      4  TYPE_PREFIX net/minecraftforge/client/model/
-   104  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
     50  TYPE_PREFIX net/minecraftforge/common/data/
     11  TYPE_PREFIX net/minecraftforge/data/event/
     20  TYPE_PREFIX net/minecraftforge/event/
@@ -46,7 +45,6 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
     34  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
     16  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
      2  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
-   112  TYPE_PREFIX target missing: net/neoforged/neoforge/common/conditions/IConditionSerializer
 
 Wrote translated\supermartijn642corelib.jar
       translated\supermartijn642corelib.report.tsv

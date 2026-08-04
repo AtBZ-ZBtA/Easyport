@@ -737,3 +737,8 @@ ARG_FILL	net/minecraft/util/valueproviders/IntProvider	easyport/bridge/VanillaBr
 FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation	ADDITION	Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;	easyport/bridge/VanillaBridge	addValue	()Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;
 FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation	MULTIPLY_BASE	Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;	easyport/bridge/VanillaBridge	multiplyBase	()Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;
 FIELD_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation	MULTIPLY_TOTAL	Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;	easyport/bridge/VanillaBridge	multiplyTotal	()Lnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;
+
+# AttributeModifier(UUID, String, double, Operation) became (ResourceLocation, double, Operation):
+# the id and the display name collapsed into one identifier. Two parameters becoming one is past
+# what ARG_DROP or a coercion can express, so the construction moves to a factory. 193 jar-weight.
+CTOR_TO_STATIC	net/minecraft/world/entity/ai/attributes/AttributeModifier	(Ljava/util/UUID;Ljava/lang/String;DLnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;)V	attributeModifier	(Ljava/util/UUID;Ljava/lang/String;DLnet/minecraft/world/entity/ai/attributes/AttributeModifier$Operation;)Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;	easyport/bridge/VanillaBridge

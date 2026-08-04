@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 31 classes, moved 5 resources
 
@@ -14,7 +14,6 @@ Applied:
      3  TYPE_PREFIX net/minecraftforge/client/extensions/
    119  TYPE_PREFIX net/minecraftforge/client/model/
      5  TYPE_PREFIX net/minecraftforge/common/Tags
-    10  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
     62  TYPE_PREFIX net/minecraftforge/common/data/
    117  TYPE_PREFIX net/minecraftforge/data/event/
     21  TYPE_PREFIX net/minecraftforge/event/
@@ -26,6 +25,7 @@ Applied:
     27  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      5  TYPE_RENAME net/minecraftforge/common/ForgeSpawnEggItem
      1  TYPE_RENAME net/minecraftforge/common/crafting/CraftingHelper
+     4  TYPE_RENAME net/minecraftforge/common/crafting/conditions/ModLoadedCondition
     19  TYPE_RENAME net/minecraftforge/common/util/Lazy
      1  TYPE_RENAME net/minecraftforge/data/loading/DatagenModLoader
      3  TYPE_RENAME net/minecraftforge/eventbus/EventBus

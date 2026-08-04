@@ -129,10 +129,18 @@ public class VanillaGaps {
             }
 
             checked++;
-            Set<String> members = index.membersOf(effectiveOwner);
+            // Constructors are not inherited, so they are judged against what the type itself
+            // declares. Resolving them through the hierarchy reports a removed constructor as
+            // present whenever a supertype happens to declare one of the same shape --
+            // DropExperienceBlock(Properties) looked fine because Block declares it, and the
+            // failure only appeared at load.
+            boolean ctor = name.equals("<init>");
+            Set<String> members = ctor ? index.declaredMembersOf(effectiveOwner)
+                                       : index.membersOf(effectiveOwner);
             if (members.contains(name + " " + desc)) { ok++; continue; }
 
-            Set<String> sameName = index.descriptorsOf(effectiveOwner, name);
+            Set<String> sameName = ctor ? index.declaredDescriptorsOf(effectiveOwner, name)
+                                        : index.descriptorsOf(effectiveOwner, name);
             if (holderAdapted(desc, sameName)) { holderHandled++; ok++; continue; }
             if (arityAdapted(desc, sameName, rules.argFillTypes())) { arityHandled++; ok++; continue; }
             if (!sameName.isEmpty()) {
@@ -456,9 +464,22 @@ public class VanillaGaps {
 
         /** Every descriptor the platform declares for this member name on this type. */
         Set<String> descriptorsOf(String cls, String name) {
+            return descriptors(membersOf(cls), name);
+        }
+
+        /** What the class itself declares, without folding in supertypes. For constructors. */
+        Set<String> declaredMembersOf(String cls) {
+            return declared.getOrDefault(cls, Set.of());
+        }
+
+        Set<String> declaredDescriptorsOf(String cls, String name) {
+            return descriptors(declaredMembersOf(cls), name);
+        }
+
+        private static Set<String> descriptors(Set<String> members, String name) {
             Set<String> out = new java.util.LinkedHashSet<>();
             String prefix = name + " ";
-            for (String m : membersOf(cls)) {
+            for (String m : members) {
                 if (m.startsWith(prefix)) out.add(m.substring(prefix.length()));
             }
             return out;

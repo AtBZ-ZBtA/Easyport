@@ -1,10 +1,14 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 143 classes, moved 1 resources
 
 Applied:
     28  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
     12  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     6  CTOR_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier#attributeModifier
+     7  FIELD_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation#ADDITION -> easyport/bridge/VanillaBridge#addValue
+     4  FIELD_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation#MULTIPLY_BASE -> easyport/bridge/VanillaBridge#multiplyBase
+     4  FIELD_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation#MULTIPLY_TOTAL -> easyport/bridge/VanillaBridge#multiplyTotal
      2  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
      3  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
@@ -13,7 +17,6 @@ Applied:
      9  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      2  SRG_IN_TEXT
     54  TYPE_PREFIX net/minecraftforge/client/event/
-    27  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
      8  TYPE_PREFIX net/minecraftforge/common/data/
    190  TYPE_PREFIX net/minecraftforge/event/
     52  TYPE_PREFIX net/minecraftforge/items/

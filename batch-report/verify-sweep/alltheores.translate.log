@@ -1,9 +1,10 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 39 classes, moved 1205 resources
 
 Applied:
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/data/loot/packs/VanillaBlockLoot.<init>
+     3  ARG_FILL net/minecraft/util/valueproviders/IntProvider into net/minecraft/world/level/block/DropExperienceBlock.<init>
     11  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  EBS_BUS FORGE -> GAME

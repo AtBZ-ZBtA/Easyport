@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 178 type renames, 2 ctor rules, 4 removed-API entries
+Loaded 64225 SRG mappings, 188 type renames, 3 ctor rules, 4 removed-API entries
 
 Rewrote 120 classes, moved 217 resources
 
@@ -13,13 +13,16 @@ Applied:
      6  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
     41  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      6  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     3  CTOR_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier#attributeModifier
      1  EBS_STRIP (no @SubscribeEvent methods) com/teammetallurgy/aquaculture/api/fishing/Hooks
+     3  FIELD_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier$Operation#ADDITION -> easyport/bridge/VanillaBridge#addValue
      1  HIERARCHY interface substituted: net/minecraft/world/item/ArmorMaterial -> easyport/vanilla/ArmorMaterial
      1  HOLDER_UNWRAP field net/minecraft/sounds/SoundEvents
      2  HOLDER_UNWRAP field net/minecraft/world/effect/MobEffects
      5  HOLDER_UNWRAP field net/minecraft/world/entity/ai/attributes/Attributes
     11  HOLDER_UNWRAP field net/minecraft/world/item/alchemy/Potions
      2  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
+     3  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add
      2  HOLDER_WRAP net/minecraft/world/entity/player/Player.gameEvent
      1  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
      1  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
@@ -30,7 +33,6 @@ Applied:
     37  TYPE_PREFIX net/minecraftforge/client/event/
      3  TYPE_PREFIX net/minecraftforge/client/extensions/
      4  TYPE_PREFIX net/minecraftforge/common/Tags
-    10  TYPE_PREFIX net/minecraftforge/common/crafting/conditions/
     56  TYPE_PREFIX net/minecraftforge/event/
      4  TYPE_PREFIX net/minecraftforge/fluids/
      1  TYPE_PREFIX net/minecraftforge/fml/util/
@@ -77,12 +79,10 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/AquaFishEntity.getDimensions(Lnet/minecraft/world/entity/Pose;)Lnet/minecraft/world/entity/EntityDimensions; (final on net/minecraft/world/entity/LivingEntity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/FishMountEntity.recalculateBoundingBox()V (final on net/minecraft/world/entity/decoration/HangingEntity)
      1  HIERARCHY override of a now-final method dropped: com/teammetallurgy/aquaculture/entity/TurtleLandEntity.canBreatheUnderwater()Z (final on net/minecraft/world/entity/LivingEntity)
-     3  HOLDER_WRAP ambiguous: net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add(Lnet/minecraft/world/entity/ai/attributes/Attribute;D)Lnet/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder;
      4  REMOVED net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
     32  REMOVED net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
      8  REMOVED net/minecraft/world/item/ItemStack#hasTag()Z
      3  REMOVED net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
-     8  TYPE_PREFIX target missing: net/neoforged/neoforge/common/conditions/IConditionSerializer
 
 Wrote translated\aquaculture.jar
       translated\aquaculture.report.tsv

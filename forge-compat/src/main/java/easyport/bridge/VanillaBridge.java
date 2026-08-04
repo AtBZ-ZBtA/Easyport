@@ -56,6 +56,26 @@ public final class VanillaBridge {
         return net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
     }
 
+    /**
+     * AttributeModifier's constructor, which 1.21 rebuilt around a ResourceLocation.
+     *
+     * (UUID, String, double, Operation) became (ResourceLocation, double, Operation): the id and
+     * the display name collapsed into one namespaced identifier. Too big a change for ARG_DROP or
+     * a coercion -- two parameters became one -- so the whole construction moves to a factory.
+     *
+     * The identifier is derived from the UUID rather than the name, because the UUID is what
+     * vanilla used to deduplicate modifiers and two modifiers sharing a display name were always
+     * allowed. A UUID prints as lowercase hex and dashes, which is a legal resource path.
+     */
+    public static net.minecraft.world.entity.ai.attributes.AttributeModifier attributeModifier(
+            java.util.UUID id, String name, double amount,
+            net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation operation) {
+        ResourceLocation key = id != null
+                ? ResourceLocation.fromNamespaceAndPath("easyport", id.toString())
+                : ResourceLocation.fromNamespaceAndPath("easyport", "modifier");
+        return new net.minecraft.world.entity.ai.attributes.AttributeModifier(key, amount, operation);
+    }
+
     public static ResourceLocation modelId(ModelResourceLocation mrl) {
         return mrl == null ? null : mrl.id();
     }

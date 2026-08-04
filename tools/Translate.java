@@ -72,7 +72,17 @@ public class Translate {
         TAG_RENAMES.put("game_events", "game_event");
     }
 
-    record CtorRule(String owner, String ctorDesc, String factoryName, String factoryDesc) {}
+    /**
+     * A constructor that became a static factory.
+     *
+     * {@code factoryOwner} is usually the class itself -- ResourceLocation gained
+     * fromNamespaceAndPath alongside its privatised constructor. It is separate because some
+     * constructors have no vanilla replacement at all and have to land on a bridge:
+     * AttributeModifier collapsed a UUID and a display name into one identifier, which is past
+     * what any argument-level rule can express.
+     */
+    record CtorRule(String owner, String ctorDesc, String factoryName, String factoryDesc,
+                    String factoryOwner) {}
 
     /** A constructor whose two arguments were reordered, optionally narrowing the new first one. */
     record SwapRule(String owner, String oldDesc, String newDesc, String castTop) {}
@@ -478,6 +488,7 @@ public class Translate {
             insns.remove(dup);
 
             min.setOpcode(Opcodes.INVOKESTATIC);
+            min.owner = rule.factoryOwner();
             min.name = rule.factoryName();
             min.desc = rule.factoryDesc();
             min.itf = false;
@@ -1205,20 +1216,40 @@ public class Translate {
             if (!(insn instanceof MethodInsnNode min)) continue;
             if (!min.owner.startsWith("net/minecraft/")) continue;
             if (min.getOpcode() == Opcodes.INVOKEDYNAMIC) continue;
-            Set<String> members = resolvedTargetMembers(min.owner);
+            // Constructors are not inherited, so they must be judged against what the owner
+            // itself declares. Folding supertypes in made DropExperienceBlock(Properties) look
+            // resolvable -- Block declares that constructor -- so the call was skipped as fine
+            // and failed at load with NoSuchMethodError. Every other member resolves through the
+            // hierarchy and must keep doing so.
+            boolean ctor = min.name.equals("<init>");
+            Set<String> members = ctor ? targetMembers.getOrDefault(min.owner, Set.of())
+                                       : resolvedTargetMembers(min.owner);
             if (members.isEmpty()) continue;
             if (members.contains(min.name + " " + min.desc)) continue;
 
+            // Same arity wins outright over an overload that adds or drops a parameter.
+            //
+            // Without that precedence, AttributeSupplier$Builder.add(Attribute, double) matched
+            // both add(Holder, double) -- the obvious answer -- and add(Holder), by dropping the
+            // double. Two candidates is ambiguous, so the call was correctly refused and geckolib
+            // regressed from loading to NoSuchMethodError. Adding arity matching quietly took
+            // something away that had been working, which is the shape of regression this project
+            // has to re-run the whole batch to catch.
+            int arity = Type.getArgumentTypes(min.desc).length;
             String match = null;
             int candidates = 0;
-            for (String m : members) {
-                int sp = m.indexOf(' ');
-                if (sp < 0 || sp != min.name.length() || !m.startsWith(min.name)) continue;
-                String cand = m.substring(sp + 1);
-                if (!cand.startsWith("(")) continue;              // a field of the same name
-                if (!wrapCompatible(min.desc, cand)) continue;
-                candidates++;
-                match = cand;
+            for (int pass = 0; pass < 2 && candidates == 0; pass++) {
+                for (String m : members) {
+                    int sp = m.indexOf(' ');
+                    if (sp < 0 || sp != min.name.length() || !m.startsWith(min.name)) continue;
+                    String cand = m.substring(sp + 1);
+                    if (!cand.startsWith("(")) continue;          // a field of the same name
+                    boolean sameArity = Type.getArgumentTypes(cand).length == arity;
+                    if (sameArity != (pass == 0)) continue;
+                    if (!wrapCompatible(min.desc, cand)) continue;
+                    candidates++;
+                    match = cand;
+                }
             }
             if (candidates == 0) continue;
             if (candidates > 1) {
@@ -2471,7 +2502,12 @@ public class Translate {
             String[] c = t.split("\t");
             switch (c[0]) {
                 case "CTOR_TO_STATIC" -> {
-                    if (c.length >= 5) ctorRules.add(new CtorRule(c[1], c[2], c[3], c[4]));
+                    // Optional 5th field: the class the factory lives on, when it is not the
+                    // constructor's own class.
+                    if (c.length >= 5) {
+                        ctorRules.add(new CtorRule(c[1], c[2], c[3], c[4],
+                                                   c.length > 5 ? c[5] : c[1]));
+                    }
                 }
                 case "RENAME_METHOD" -> {
                     if (c.length >= 7) renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
