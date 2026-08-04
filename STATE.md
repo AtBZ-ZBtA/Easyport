@@ -408,6 +408,32 @@ loading rather than deleting it. Phase 7.
 Resource coverage is measured without launching: `placebo` 92.3%, `curios` 73.1%,
 `supermartijn642corelib` 71.4%, `cyclopscore` 43.2%, `balm` 16.7%.
 
+#### Sample layer — 14 mixed mods
+
+Run with everything above in place. `batch-report/libs-results.tsv` holds the library run.
+
+| Status | Count | Meaning |
+|---|---|---|
+| `OK` | 1 | `additional_lights` — 100% registry, 100% resource |
+| `NO_CONTENT` | 3 | behaviour-only mods; the reference registers nothing either, so coverage is undefined rather than zero |
+| `DEPS_UNTRANSLATABLE` | 5 | a required library loads but fails |
+| `DEPS_MISSING` | 2 | dependency absent from the harness, not a translation failure |
+| `LAUNCH_FAILED` | 3 | real blockers |
+
+**Half the sample is gated on the library layer**, which is the argument for continuing to work
+libraries before tail mods. Those five will move as geckolib, curios and cyclopscore do.
+
+The three real failures are all *vanilla*-side, not loader-side — the shim work has moved the
+frontier:
+
+- `alltheores` — `DropExperienceBlock` constructor changed
+- `aquaculture` — `IncompatibleClassChangeError` on its armor material class, the same
+  `ArmorMaterials`-became-`Holder` change that blocks geckolib
+- `blockui` — `EventBusSubscriber` method signature
+
+The `ArmorMaterials` pattern now blocks two of eight sampled mods and one library. That makes
+the missing field-descriptor rule kind the highest-value single item left, ahead of more shims.
+
 **Every library that was blocked on a missing class has moved at least twice.** None load yet,
 but the failures are now deeper in the sequence — construction and verification rather than
 linking — which is what progress looks like here.
