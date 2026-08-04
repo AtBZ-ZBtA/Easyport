@@ -501,9 +501,9 @@ which is a separate unexplained gap worth a look.
 | `placebo` | 8 | **OK, 0%** | loads, registers nothing | see below |
 | `geckolib` | 8 | fails | `VerifyError` on `ArmorMaterials` | vanilla `Holder` wrapping; needs a field-descriptor rule |
 | `cyclopscore` | 10 | fails | `IEnvironment$Keys.NAMING` | modlauncher API change |
-| `yungsapi` | 10 | fails | mixin `InvalidAccessorException` | Phase 7 |
-| `curios` | 8 | fails | mixin apply | Phase 7 |
-| `supermartijn642corelib` | 8 | fails | mixin apply | Phase 7 |
+| `yungsapi` | 10 | fails | mixin `InvalidAccessorException` | Phase 5 |
+| `curios` | 8 | fails | mixin apply | Phase 5 |
+| `supermartijn642corelib` | 8 | fails | mixin apply | Phase 5 |
 
 **Three of eight now load.** Both 100% figures have a denominator of 1 — architectury and balm
 each register a single biome modifier serializer, and their reference ports register one too.
@@ -535,7 +535,7 @@ That is a static reachability walk over the jar, cheap, and it turns this from a
 tracing one mod into a thing the report says up front.
 
 The proper fix for placebo specifically is retargeting the mixin: 1.21 restructured loot table
-loading rather than deleting it. Phase 7.
+loading rather than deleting it. Phase 5.
 
 Resource coverage is measured without launching: `placebo` 92.3%, `curios` 73.1%,
 `supermartijn642corelib` 71.4%, `cyclopscore` 43.2%, `balm` 16.7%.
@@ -615,7 +615,7 @@ exist — the current kinds are `TYPE_RENAME`, `TYPE_PREFIX_RENAME`, `RENAME_MET
 Phase 4 (vanilla bridge) work, and it will not be the only instance of the pattern.
 
 Two of the eight are blocked on mixin *apply* rather than a missing class, which is the hard
-Phase 7 problem: the target exists and the injection point inside it does not match. Refmap
+Phase 5 problem: the target exists and the injection point inside it does not match. Refmap
 remapping fixed the easy half of that; what remains is injection points into methods whose
 bodies changed.
 #### Dependency resolution — built, and it changed the priorities

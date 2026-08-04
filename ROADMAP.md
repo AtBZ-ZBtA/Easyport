@@ -549,10 +549,36 @@ distinct missing symbols.
    `@EventBusSubscriber`, which it cannot, because FML does that registration itself and the
    shim is never in the path. That one is fixed in the transformer instead.
 
-### Phase 4 — `vanilla-bridge` + `runtime-shim` · 2–4 weeks · *gated by: subtlety*
-Data components, attributes, enchantment dispatch, recipes, potions, reflection
-interception. The slowest authoring phase — component semantics are genuinely subtle and
-the failure mode is silent wrong behavior, not a crash. **Parallelizes with Phase 3.**
+### Phase 4 — `vanilla-bridge` + `runtime-shim` — **DONE**
+
+Planned as "the slowest authoring phase" on the grounds that component semantics are subtle and
+the failure mode is silent wrong behaviour rather than a crash. Half right, and wrong about the
+shape of the work.
+
+**What the plan got wrong.** It read as a list of subsystems to port by hand — data components,
+attributes, enchantment dispatch, recipes, potions. Measured, they are not separate problems.
+`VanillaGaps` put 25,272 vanilla member references in front of the question and the same cause
+was under most of them: *a vanilla type changed shape underneath code compiled against the old
+one*. Attributes and potions turned out to be one mechanism (`Holder` wrapping), and that
+mechanism needs no rules at all — it reads the family off the platform's own descriptors.
+
+**What it got right.** The failure mode really is silence. Every conversion that cannot be
+reconstructed — a codec that would have to be derived from a mod's hand-written serializer —
+returns a placeholder and is named in the report, because a mod that loads and quietly does less
+is the thing this project most wants to avoid.
+
+**What the plan missed entirely:** a mod's *class hierarchy* becoming illegal. 1.21 made
+`ResourceLocation` and `Ingredient` final, turned `ArmorMaterial` into a record, and made several
+methods final. No call-site rewrite reaches any of that, and nothing in the plan anticipated it.
+It was found by building an offline verifier, not by launching.
+
+**Also learned:** the biggest single lever in the phase was not a mechanism but a tool. Offline
+type-checking replaced a loop that cost one launch per broken method.
+
+The remaining vanilla work is enumerated in [api-report/README.md](api-report/README.md), ranked
+by owning type, and one shape stands outside all five mechanisms: an *override*. They adapt call
+sites, and a mod declaring `saveAdditional(CompoundTag)` is not calling anything — it is failing
+to override something.
 
 ### Phase 5 — Mixin & coremod handling · 1–3 months · **PROMOTED from last to core**
 *Gated by: per-mod bespoke work. Runs parallel with Phases 3–4.*
