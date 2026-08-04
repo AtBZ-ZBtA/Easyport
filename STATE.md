@@ -312,12 +312,20 @@ Everything below is measured, not estimated.
 can fix. Met, with one honest exception named below.
 
 Every library that was blocked on vanilla now loads; the two that still fail, fail on mixin
-*apply*, which is Phase 5. In the sample, one mod — `blockui` — is still blocked by a vanilla
-change, and it is the one shape no bytecode rewrite reaches: `OutOfJarResourceLocation extends
-ResourceLocation`, and 1.21 made that a final record. There is no version of that class the mod
-can be. It is now **reported at translate time** rather than discovered at launch, which is the
-deliverable — the transformer identifies what it cannot do instead of producing something that
-half-works.
+*apply*, which is Phase 5. Two sampled mods still fail, and they fail differently:
+
+- **`blockui`** is blocked by the one shape no bytecode rewrite reaches:
+  `OutOfJarResourceLocation extends ResourceLocation`, and 1.21 made that a final record. There is
+  no version of that class the mod can be. It is **reported at translate time** now rather than
+  discovered at launch, which is the deliverable — the transformer names what it cannot do instead
+  of producing something that half-works. See the note below on why the obvious fix is a trap.
+- **`aquaculture`** is not blocked by anything structural. It is a long chain of individually
+  small 1.21 changes, and working it produced eleven general fixes before this sign-off — tool
+  constructors, attribute-modifier ids, inherited static fields, the food builder — each of which
+  applies to any mod doing the same ordinary thing. It is still peeling. That is what the
+  remaining tail looks like, and it is enumerated rather than mysterious.
+
+**The distinction matters more than the count.** One is a wall; the other is a queue.
 
 Evidence, all reproducible:
 
