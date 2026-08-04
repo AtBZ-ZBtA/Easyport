@@ -221,7 +221,7 @@ Type renames are therefore an explicit allowlist in the rule file, **not** a bla
 | `METHOD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Instance call becomes static, receiver as first arg |
 | `FIELD_RETYPE` | owner, newFieldDesc | Every field on a holder class changed type |
 | `FIELD_TO_STATIC` | owner, name, desc, newOwner, newName, newDesc | Deleted constant, value still computable |
-| `CTOR_TO_STATIC` | owner, ctorDesc, factoryName, factoryDesc | Constructor became a static factory |
+| `CTOR_TO_STATIC` | owner, ctorDesc, factoryName, factoryDesc, [factoryOwner] | Constructor became a static factory |
 | `CTOR_SWAP2` | owner, oldDesc, newDesc, [narrowTopTo] | Two constructor arguments reordered |
 | `COERCE` | from, to, bridgeOwner, bridgeName | A type stopped being assignable to what replaced it |
 | `INTERFACE_SUBSTITUTE` | platformType, substitute | A vanilla interface became a record |
@@ -238,7 +238,12 @@ reads its first argument, and GETSTATIC and a no-arg INVOKESTATIC each push one 
 the owner is already `net/neoforged/...` even though the mod was compiled against
 `net/minecraftforge/...`.
 
-`CTOR_TO_STATIC` removes the `NEW`/`DUP` pair and switches `INVOKESPECIAL` to `INVOKESTATIC`.
+`CTOR_TO_STATIC` removes the `NEW`/`DUP` pair and switches `INVOKESPECIAL` to `INVOKESTATIC`. Its
+optional fifth field names the class the factory lives on — usually the constructor's own class,
+because vanilla supplied the replacement itself (`ResourceLocation.fromNamespaceAndPath`), but
+sometimes a bridge, because there is no replacement. `AttributeModifier` collapsed a UUID and a
+display name into a single `ResourceLocation`: two parameters into one, which no argument-level
+rule can express.
 `CTOR_SWAP2` inserts a `SWAP` (and a `CHECKCAST` first, if the new signature also narrows a
 type — after the swap that value is buried). It refuses wide arguments, since `long` and
 `double` occupy two stack slots and `SWAP` would corrupt them.
