@@ -226,6 +226,7 @@ Type renames are therefore an explicit allowlist in the rule file, **not** a bla
 | `COERCE` | from, to, bridgeOwner, bridgeName | A type stopped being assignable to what replaced it |
 | `INTERFACE_SUBSTITUTE` | platformType, substitute | A vanilla interface became a record |
 | `ARG_FILL` | paramType, bridgeOwner, bridgeName | 1.21 added a parameter the call site cannot supply |
+| `ARG_COLLAPSE` | owner, name, oldDesc, newDesc, bridgeOwner, bridgeName | Several parameters folded into one |
 | `REMOVED` | symbol | No replacement — reported, never rewritten |
 
 `METHOD_TO_STATIC` and `FIELD_TO_STATIC` exist for the case neither a rename nor a shim can
@@ -271,6 +272,13 @@ one call.
 - **`ARG_FILL`** supplies a parameter 1.21 added, at whichever position explains the new
   signature. An ambiguous position is refused and reported: inserting in the wrong one produces a
   call that links and hands every argument to the wrong parameter.
+- **`ARG_COLLAPSE`** exists because two cheaper mechanisms both miss the same case.
+  `PickaxeItem(Tier, int, float, Properties)` became `PickaxeItem(Tier, Properties)`, and four
+  parameters becoming two is past `ARG_DROP` — which handles one at a time — while
+  `CTOR_TO_STATIC` needs a `NEW`/`DUP` pair and finds none, because a mod's own tool class calls
+  this as `super(...)`. It spills every argument, reloads the unchanged leading ones, then calls
+  the bridge with *all* the originals. Reloading after spilling is the point: the bridge needs the
+  `Tier` that the constructor also still needs, and no value can be read twice off the stack.
 
 `FIELD_RETYPE` is still implemented and deliberately has no uses left. It was how `ArmorMaterials`
 was handled before the Holder passes existed, and it is the mechanism this project decided against:

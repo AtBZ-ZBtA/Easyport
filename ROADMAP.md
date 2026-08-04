@@ -578,7 +578,7 @@ It was found by building an offline verifier, not by launching.
 type-checking replaced a loop that cost one launch per broken method.
 
 The remaining vanilla work is enumerated in [api-report/README.md](api-report/README.md), ranked
-by owning type, and one shape stands outside all six mechanisms: an *override*. They adapt call
+by owning type, and one shape stands outside all seven mechanisms: an *override*. They adapt call
 sites, and a mod declaring `saveAdditional(CompoundTag)` is not calling anything — it is failing
 to override something.
 

@@ -145,13 +145,14 @@ propagating a retype through mod signatures by data flow — a whole-program pro
 
 **Easyport does the opposite: adapt at every vanilla boundary and leave mod code's worldview
 exactly as its author compiled it.** Every adaptation is then local to one instruction, and
-nothing has to be inferred about the mod. Six mechanisms fall out of it, and they compose —
+nothing has to be inferred about the mod. Seven mechanisms fall out of it, and they compose —
 `ParticleType` needed a `COERCE`, an argument drop and two stubs in one constructor:
 
 | Mechanism | For | Needs rules? |
 |---|---|---|
 | Holder unwrap / wrap | 1.21 wrapping a registry constant | No — read off the platform |
 | `ARG_FILL` / `ARG_DROP` | A parameter added or removed | Filler needs one |
+| `ARG_COLLAPSE` | Several parameters folded into one | Yes |
 | `COERCE` | A type that stopped being assignable to what replaced it | Yes |
 | `INTERFACE_SUBSTITUTE` | A vanilla interface that became a record | Yes |
 | Abstract stub | Abstract methods 1.21 *added* to a class the mod extends | No |
@@ -354,7 +355,7 @@ geckolib still failed one layer in, because its own `WolfArmorItem` constructor 
 exactly as its author compiled it.** Every adaptation is then local to one instruction, and
 nothing has to be inferred about the mod's own types.
 
-Six mechanisms fall out of that, and three need no rules at all because they read the answer off
+Seven mechanisms fall out of that, and three need no rules at all because they read the answer off
 the platform. See the Resume-here section above for the table and for the two that look wrong
 until you hit the case.
 
@@ -393,7 +394,7 @@ something away. Same-arity overloads now win outright, and the lesson is in the 
 
 #### Known-incomplete inside Phase 4, deliberately
 
-**Overrides.** All six mechanisms adapt *call sites*. A mod that declares
+**Overrides.** All seven mechanisms adapt *call sites*. A mod that declares
 `saveAdditional(CompoundTag)` is not calling anything — it is failing to override something,
 because 1.21 added a parameter. The method links, the class loads, and vanilla never calls it.
 This is the largest remaining shape and it needs a different kind of pass: rewriting the mod's own

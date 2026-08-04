@@ -128,7 +128,7 @@ On the vanilla side, ranked by the `BY OWNING TYPE` rollup:
 | `BlockEntity` | 312 | **Only the override half.** `ARG_FILL` handles the call sites |
 | `BuiltInLootTables` | 304 | `ResourceKey` wrapping; `register` itself is bridged |
 
-`BlockEntity` names the one shape none of the six Phase 4 mechanisms reaches. They all adapt
+`BlockEntity` names the one shape none of the seven Phase 4 mechanisms reaches. They all adapt
 *call sites*, and a mod that declares `saveAdditional(CompoundTag)` is not calling anything — it
 is failing to override something. The method links, the class loads, and vanilla never calls it.
 Fixing it means rewriting the mod's own method signature and adapting its body, which is a
