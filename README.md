@@ -13,7 +13,8 @@ Two things get built:
 
 **Status:** the translator works on real mods; nothing user-facing is ready. There is no
 one-click tool and no in-game mod yet, and only the Forge → NeoForge direction exists — the
-reverse is not started. See [STATE.md](STATE.md) for exactly where things stand and
+reverse is not started. Both halves of the API migration are largely handled; what is left is
+mixins, which is its own phase. See [STATE.md](STATE.md) for exactly where things stand and
 [ROADMAP.md](ROADMAP.md) for the plan.
 
 ---
@@ -37,17 +38,27 @@ the author's own 1.21.1 port and compared on what each registers into the game:
 | | |
 |---|---|
 | `additional_lights` | 100% of registry entries, 100% of resources |
-| 4 of the 8 most-depended-on libraries | load and register content |
-| Everything still failing | fails on *vanilla* API changes or mixin application, not on Forge API |
+| 6 of the 8 most-depended-on libraries | load and register content |
+| 22 of 22 libraries and sampled mods | pass a full bytecode type-check |
+| Vanilla API the corpus calls | 92% still resolves after translation |
+| Everything still failing | fails on *mixin application*, not on Forge or vanilla API |
 
-That last row is the real state of things. The Forge-to-NeoForge half is largely handled; what
-remains is Minecraft's own 1.20.1 → 1.21.1 changes, which is the harder of the two migrations
-stacked inside this project.
+That last row is the real state of things, and it moved during the vanilla-bridge work: the
+loader migration and Minecraft's own 1.20.1 → 1.21.1 changes are both largely handled, and what
+remains is mixins — mods that patch Minecraft's own methods, where the target still exists and
+the code inside it has changed.
 
 Anything it cannot translate is **reported, never guessed**. Each run writes a report naming
 exactly what was left unresolved. A jar that loads while quietly doing the wrong thing is worse
 than one that refuses, and that is not a hypothetical — inventing plausible targets for removed
 APIs was measured at 5 false positives out of 26 symbols during early testing.
+
+The same principle governs the places where a faithful translation is impossible. 1.21 moved
+several things onto serialization codecs that would have to be reconstructed from a mod's own
+hand-written reader, and there is no honest way to do that automatically. Rather than refuse the
+whole mod — which would lose every block and item it also registers — those get an inert
+placeholder and a named line in the report. **A clean translation report is not the same as a
+clean port, and the report is where the difference shows up.**
 
 ### Corpus analyzer
 
