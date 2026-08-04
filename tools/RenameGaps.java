@@ -161,6 +161,16 @@ public class RenameGaps {
         for (MemberRef ref : readMembers(Path.of(args[0]))) {
             String target = rules.apply(ref.owner());
 
+            String refName = official(ref.name(), srg);
+
+
+            String refDesc = remapDescriptor(ref.desc(), rules, platform);
+
+
+            if (rules.redirects(ref.owner(), target, refName, refDesc)) continue;
+
+
+
             if ((target == null || !platform.contains(target)) && shimmed.contains(ref.owner())) {
                 Set<String> declared = shimMembers.get(ref.owner());
                 String want = official(ref.name(), srg) + " " + remapDescriptor(ref.desc(), rules, platform);
@@ -417,7 +427,24 @@ public class RenameGaps {
     }
 
     private record Rules(Map<String, String> exact, Map<String, String> prefix,
-                         Set<String> removed) {
+                         Set<String> removed, Set<String> redirectedMembers) {
+
+        /**
+         * True if a method-level rule already moves this call somewhere else.
+         *
+         * Without this the report re-accuses every member that RENAME_METHOD or
+         * METHOD_TO_STATIC has already fixed -- IEventBus.post kept appearing as the largest
+         * shim gap at 110 jars long after it was redirected to a bridge. A work queue that
+         * lists completed work is worse than a shorter one, because the top of it stops being
+         * where to look.
+         *
+         * Rule owners are written post-rename, so both forms are tested.
+         */
+        boolean redirects(String owner, String renamedOwner, String name, String desc) {
+            return redirectedMembers.contains(owner + "\t" + name + "\t" + desc)
+                || (renamedOwner != null
+                    && redirectedMembers.contains(renamedOwner + "\t" + name + "\t" + desc));
+        }
         /** The rewritten name, or null when no rule applies. */
         String apply(String type) {
             if (removed.contains(type)) return null;
@@ -436,6 +463,7 @@ public class RenameGaps {
         Map<String, String> exact = new LinkedHashMap<>();
         Map<String, String> prefix = new LinkedHashMap<>();
         Set<String> removed = new HashSet<>();
+        Set<String> redirected = new HashSet<>();
         for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
             if (line.isBlank() || line.startsWith("#")) continue;
             String[] c = line.split("\t");
@@ -444,10 +472,13 @@ public class RenameGaps {
                 case "TYPE_RENAME" -> { if (c.length >= 3) exact.put(c[1], c[2]); }
                 case "TYPE_PREFIX_RENAME" -> { if (c.length >= 3) prefix.put(c[1], c[2]); }
                 case "REMOVED" -> removed.add(c[1]);
+                case "RENAME_METHOD", "METHOD_TO_STATIC" -> {
+                    if (c.length >= 4) redirected.add(c[1] + "	" + c[2] + "	" + c[3]);
+                }
                 default -> { }
             }
         }
-        return new Rules(exact, prefix, removed);
+        return new Rules(exact, prefix, removed, redirected);
     }
 
     /**

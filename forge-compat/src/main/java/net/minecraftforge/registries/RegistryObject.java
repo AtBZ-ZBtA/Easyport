@@ -62,6 +62,30 @@ public final class RegistryObject<T> implements Supplier<T> {
     }
 
     /** Some mods pass the holder onward to NeoForge APIs; expose it rather than re-wrapping. */
+    /**
+     * The vanilla holder, 14 corpus jars.
+     *
+     * Forge returned {@code Optional<Holder<T>>} and mods use it to build tag entries and
+     * ingredients. Empty rather than a holder that is not yet bound, which is what Forge did.
+     */
+    @SuppressWarnings("unchecked")
+    public Optional<net.minecraft.core.Holder<T>> getHolder() {
+        return delegate.isBound()
+                ? Optional.of((net.minecraft.core.Holder<T>) delegate)
+                : Optional.empty();
+    }
+
+    /**
+     * Forge's direct factory, 13 corpus jars.
+     *
+     * Built a RegistryObject for an entry that may not exist yet, without going through a
+     * DeferredRegister -- typically to reference another mod's content. Reproduced with a
+     * DeferredHolder over the same key, which is lazily bound in exactly the same way.
+     */
+    public static <T> RegistryObject<T> create(ResourceLocation name, IForgeRegistry<T> registry) {
+        return of(DeferredHolder.create(registry.getRegistryKey(), name));
+    }
+
     public DeferredHolder<?, ?> unwrap() {
         return delegate;
     }

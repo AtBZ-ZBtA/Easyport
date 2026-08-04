@@ -34,6 +34,14 @@ public abstract class TickEvent extends Event {
     public final Type type;
     public final Phase phase;
 
+    /**
+     * Forge exposed the logical side as a public field on the level and player variants, read by
+     * 17 and 15 corpus jars. Declared on the base class so both inherit it -- Forge declared it
+     * per-subclass, but the field descriptor a mod reads is the same either way and one
+     * declaration cannot go stale against the other.
+     */
+    public net.minecraftforge.fml.LogicalSide side = net.minecraftforge.fml.LogicalSide.SERVER;
+
     protected TickEvent(Type type, Phase phase) {
         this.type = type;
         this.phase = phase;
@@ -48,6 +56,11 @@ public abstract class TickEvent extends Event {
     public static class ServerTickEvent extends TickEvent {
         public ServerTickEvent(Phase phase) {
             super(Type.SERVER, phase);
+        }
+
+        /** 16 corpus jars. The running server, or null off-thread. */
+        public net.minecraft.server.MinecraftServer getServer() {
+            return net.neoforged.neoforge.server.ServerLifecycleHooks.getCurrentServer();
         }
     }
 

@@ -101,6 +101,25 @@ public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpe
             return new ConfigValue<>(delegate.defineList(path, defaultValue, elementValidator));
         }
 
+        /**
+         * The list variant that tolerates an empty list, 11 corpus jars.
+         *
+         * NeoForge folded the distinction into defineListAllowEmpty with a supplier default;
+         * the path arrives as a List<String> here because that is the overload mods call.
+         */
+        public <T> ConfigValue<java.util.List<? extends T>> defineListAllowEmpty(
+                java.util.List<String> path, java.util.function.Supplier<java.util.List<? extends T>> defaultSupplier,
+                java.util.function.Predicate<Object> elementValidator) {
+            return new ConfigValue<>(
+                    delegate.defineListAllowEmpty(path, defaultSupplier, elementValidator));
+        }
+
+        /** Validated single value, 10 jars. */
+        public <T> ConfigValue<T> define(String path, T defaultValue,
+                                         java.util.function.Predicate<Object> validator) {
+            return new ConfigValue<>(delegate.define(path, defaultValue, validator));
+        }
+
         public <V extends Enum<V>> EnumValue<V> defineEnum(String path, V defaultValue) {
             return new EnumValue<>(delegate.defineEnum(path, defaultValue));
         }
@@ -253,7 +272,26 @@ public class ForgeConfigSpec implements net.minecraftforge.fml.config.IConfigSpe
      * write. A config attached this way is read-only in practice, which matches how it behaved
      * on Forge.
      */
+    /**
+     * Whether a config file has been attached, 19 corpus jars.
+     *
+     * Mods gate startup work on this -- reading a spec value before the file loads throws, so the
+     * check is load-bearing rather than defensive. Tracked here because NeoForge exposes no
+     * equivalent on the spec itself.
+     */
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    /** No-op; see the note on setConfig. 10 jars. */
+    public void save() {
+        // intentionally empty
+    }
+
+    private boolean loaded = false;
+
     public void setConfig(com.electronwill.nightconfig.core.CommentedConfig config) {
+        loaded = config != null;
         // ILoadedConfig is sealed, permitting only net.neoforged.fml.config.LoadedConfig, so
         // the wrapper this obviously wants cannot be written -- not by an anonymous class and
         // not by a named one either.

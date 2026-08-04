@@ -60,6 +60,12 @@ public class DistExecutor {
         return runForDist(clientTarget, serverTarget);
     }
 
+    /** The unsafe variant, 20 corpus jars. Same check; see the class javadoc. */
+    public static <T> T unsafeRunForDist(Supplier<Supplier<T>> clientTarget,
+                                         Supplier<Supplier<T>> serverTarget) {
+        return runForDist(clientTarget, serverTarget);
+    }
+
     /**
      * Forge's serializable supplier variants.
      *

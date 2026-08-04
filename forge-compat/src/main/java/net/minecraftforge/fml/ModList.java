@@ -51,9 +51,9 @@ public class ModList {
         return java.util.Optional.ofNullable(list.getModContainerById(modId).orElse(null));
     }
 
-    public java.util.Optional<net.neoforged.neoforgespi.language.IModFileInfo> getModFileById(String modId) {
+    public net.neoforged.neoforgespi.language.IModFileInfo getModFileById(String modId) {
         net.neoforged.fml.ModList list = delegate();
-        return java.util.Optional.ofNullable(list == null ? null : list.getModFileById(modId));
+        return list == null ? null : list.getModFileById(modId);
     }
 
     public java.util.List<net.neoforged.neoforgespi.language.IModInfo> getMods() {

@@ -18,7 +18,7 @@ cd "$(dirname "$0")/.." || exit 1
 A9="scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods"
 A10="scrapyard/forge 1.21.1 modpacks/All the Mods 10 - ATM10/mods"
 CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar"
-SUPPORT="testkit/inspector/inspector.jar,forge-compat/forge-compat.jar"
+SUPPORT_SRC="testkit/inspector/inspector.jar forge-compat/forge-compat.jar"
 # Target-platform jar, so the transformer can tell which mixin targets still exist.
 # All platform jars, not just neoforge. FML classes (@Mod, FMLLoader, ModLoader) live in the
 # loader jar, and validating against a partial index silently rejects correct renames -- which
@@ -70,6 +70,16 @@ rm -rf "$SNAP" && mkdir -p "$SNAP"
 cp tools/*.java "$SNAP"/
 cp rules/forward.rules.tsv "$SNAP"/
 RULES="$SNAP/forward.rules.tsv"
+
+# forge-compat.jar too. It is loaded by every launch, so rebuilding it mid-run splits the results
+# table between two different shim layers with nothing to say which row came from which -- the
+# same hole that tool and rule edits used to leave, and one this session fell into.
+SUPPORT=""
+for jar in $SUPPORT_SRC; do
+  cp "$jar" "$SNAP"/
+  base=$(basename "$jar")
+  SUPPORT="${SUPPORT:+$SUPPORT,}$SNAP/$base"
+done
 echo "tools and rules snapshotted to $SNAP (edits during this run will not affect it)"
 
 while IFS=$'\t' read -r modId src tgt; do

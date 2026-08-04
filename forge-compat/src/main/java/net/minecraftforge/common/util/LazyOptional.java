@@ -32,7 +32,7 @@ public class LazyOptional<T> {
     private T resolved;
     private boolean resolvedOnce;
     private boolean valid = true;
-    private final java.util.List<Consumer<LazyOptional<T>>> listeners = new java.util.ArrayList<>();
+    private final java.util.List<NonNullConsumer<LazyOptional<T>>> listeners = new java.util.ArrayList<>();
 
     private LazyOptional(Supplier<T> supplier) {
         this.supplier = supplier;
@@ -101,7 +101,7 @@ public class LazyOptional<T> {
         return value != null ? value : other;
     }
 
-    public T orElseGet(Supplier<? extends T> other) {
+    public T orElseGet(NonNullSupplier<? extends T> other) {
         T value = value();
         return value != null ? value : other.get();
     }
@@ -129,14 +129,14 @@ public class LazyOptional<T> {
         return (LazyOptional<X>) this;
     }
 
-    public void addListener(Consumer<LazyOptional<T>> listener) {
+    public void addListener(NonNullConsumer<LazyOptional<T>> listener) {
         if (valid) listeners.add(listener); else listener.accept(this);
     }
 
     public void invalidate() {
         if (!valid) return;
         valid = false;
-        for (Consumer<LazyOptional<T>> listener : listeners) listener.accept(this);
+        for (NonNullConsumer<LazyOptional<T>> listener : listeners) listener.accept(this);
         listeners.clear();
     }
 }
