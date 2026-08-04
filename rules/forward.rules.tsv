@@ -66,14 +66,20 @@ CTOR_TO_STATIC	net/minecraft/resources/ResourceLocation	(Ljava/lang/String;Ljava
 CTOR_TO_STATIC	net/minecraft/resources/ResourceLocation	(Ljava/lang/String;)V	parse	(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;
 
 # --- ItemStack NBT -> data components -----------------------------------------------------
-# 135 / 111 / 105 / 97 mods. These are NOT renames: the whole idiom changed, and a call-site
-# rewrite cannot express getOrCreateTag() returning a mutable tag backed by the stack.
-# Recorded as REMOVED so the transformer reports them instead of guessing. The vanilla bridge
-# (Phase 4) is what actually resolves these.
-REMOVED	net/minecraft/world/item/ItemStack#getOrCreateTag()Lnet/minecraft/nbt/CompoundTag;
-REMOVED	net/minecraft/world/item/ItemStack#getTag()Lnet/minecraft/nbt/CompoundTag;
-REMOVED	net/minecraft/world/item/ItemStack#setTag(Lnet/minecraft/nbt/CompoundTag;)V
-REMOVED	net/minecraft/world/item/ItemStack#hasTag()Z
+# 135 / 111 / 105 / 97 mods, and the heaviest single cluster in the vanilla drift report.
+#
+# These were REMOVED entries -- reported, never rewritten -- on the reasoning that a call-site
+# rewrite could not express getOrCreateTag() returning a tag that is *backed by the stack*, so
+# that mutating it in place sticks. That reasoning was right about the requirement and wrong
+# about it being impossible: 1.20.5 kept one component carrying an arbitrary CompoundTag, and
+# CustomData#getUnsafe hands back the real internal tag rather than a copy.
+#
+# So they are ordinary call-site rewrites after all. See ItemBridge for the one place this is
+# not exact -- setTag stored the caller's tag by reference in Forge, and the component copies.
+METHOD_TO_STATIC	net/minecraft/world/item/ItemStack	getOrCreateTag	()Lnet/minecraft/nbt/CompoundTag;	easyport/bridge/ItemBridge	getOrCreateTag	(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/nbt/CompoundTag;
+METHOD_TO_STATIC	net/minecraft/world/item/ItemStack	getTag	()Lnet/minecraft/nbt/CompoundTag;	easyport/bridge/ItemBridge	getTag	(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/nbt/CompoundTag;
+METHOD_TO_STATIC	net/minecraft/world/item/ItemStack	setTag	(Lnet/minecraft/nbt/CompoundTag;)V	easyport/bridge/ItemBridge	setTag	(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/nbt/CompoundTag;)V
+METHOD_TO_STATIC	net/minecraft/world/item/ItemStack	hasTag	()Z	easyport/bridge/ItemBridge	hasTag	(Lnet/minecraft/world/item/ItemStack;)Z
 
 # --- Formerly listed as removed; both are now shimmed ------------------------------------
 # FMLJavaModLoadingContext#get and ModLoadingContext#get were recorded here as having no

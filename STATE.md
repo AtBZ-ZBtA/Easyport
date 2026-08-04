@@ -323,9 +323,19 @@ Evidence, all reproducible:
 | Measure | Start of phase | Now |
 |---|---|---|
 | Libraries loading | 4 / 8 | **6 / 8** |
-| Vanilla member references that resolve | 89.3% | **92.0%** |
 | Libraries + sampled mods that type-check clean | 5 / 22 | **22 / 22** |
+| Vanilla member references that resolve | 89.3% | **91.8%** |
 | Vanilla types deleted with no stand-in | 126 | 114 |
+
+**Read the percentage last, not first.** It moved 2.5 points and that understates the phase badly,
+because it is dominated by the enormous majority of references that never broke. The rows above
+it are the ones that mean anything: what actually changed is that mods which could not load now
+load. Of the 436 references the phase fixed, 416 came from the passes that need no rules at all
+(`Holder` 234, arity 182) and only 20 from explicit rules — running the current transformer
+against the *Phase 3* rule set still scores 91.5%.
+
+That is worth knowing before writing more rules: on the vanilla side, the leverage has been in
+mechanisms that read the answer off the platform, not in enumerating cases.
 
 **The three libraries that were blocked by vanilla drift all load now.** geckolib had been
 blocked since Phase 3 on `ArmorMaterials` becoming `Holder`-wrapped; cyclopscore took five more
@@ -395,7 +405,8 @@ same way round — the type registers and everything registered beside it surviv
 specific thing 1.21 added does not work. The alternative is a mod that fails to load at all.
 
 **The ranked remainder** is in [api-report/README.md](api-report/README.md): `ItemStack`
-NBT→components (1,207 jar-weight), `FriendlyByteBuf` and `StreamCodec` (684), data-driven
+(1,207 jar-weight -- its four commonest NBT methods are bridged onto the CUSTOM_DATA component,
+and the weight is the rest of the type), `FriendlyByteBuf` and `StreamCodec` (684), data-driven
 `Enchantments` (492), `Ingredient` (349), `BlockEntity` overrides (312).
 
 ### Phase 3 — COMPLETE

@@ -94,11 +94,11 @@ sign-off:
 
 | Vanilla side | |
 |---|---|
-| Member references checked | 25,272 |
-| **Still resolve** | **23,246 — 92.0%** |
+| Member references checked | 25,288 |
+| **Still resolve** | **23,221 — 91.8%** |
 | of which, by Holder adaptation | 234 |
-| of which, by `ARG_FILL` / `ARG_DROP` | 218 |
-| Signature changed | 1,008 |
+| of which, by `ARG_FILL` / `ARG_DROP` | 182 |
+| Signature changed | 1,049 |
 | Member gone | 1,018 |
 | Types deleted outright | 114 |
 
@@ -121,14 +121,14 @@ On the vanilla side, ranked by the `BY OWNING TYPE` rollup:
 
 | Owner | Weight | What it is |
 |---|---|---|
-| `ItemStack` | 1,207 | NBT → data components. The four main methods are `REMOVED`-reported rather than guessed |
+| `ItemStack` | 1,207 | NBT → data components. The four commonest -- getTag, getOrCreateTag, setTag, hasTag -- are now bridged onto CUSTOM_DATA; the weight is the rest of the type |
 | `FriendlyByteBuf` | 684 | The `StreamCodec` migration |
 | `Enchantments` | 492 | Enchantments became data-driven; the constants are `ResourceKey`s now, which need a registry lookup rather than a wrap |
 | `Ingredient` | 349 | Final in 1.21; custom ingredients go through `ICustomIngredient` |
 | `BlockEntity` | 312 | **Only the override half.** `ARG_FILL` handles the call sites |
-| `BuiltInLootTables` | 305 | `ResourceKey` wrapping |
+| `BuiltInLootTables` | 304 | `ResourceKey` wrapping; `register` itself is bridged |
 
-`BlockEntity` names the one shape none of the five Phase 4 mechanisms reaches. They all adapt
+`BlockEntity` names the one shape none of the six Phase 4 mechanisms reaches. They all adapt
 *call sites*, and a mod that declares `saveAdditional(CompoundTag)` is not calling anything — it
 is failing to override something. The method links, the class loads, and vanilla never calls it.
 Fixing it means rewriting the mod's own method signature and adapting its body, which is a

@@ -107,7 +107,7 @@ public class VanillaGaps {
         List<Finding> signatureChanged = new ArrayList<>();
         List<Finding> memberGone = new ArrayList<>();
         int srgResidue = 0, checked = 0, ok = 0, skippedByRule = 0, ownerMissing = 0;
-        int holderHandled = 0, arityHandled = 0;
+        int holderHandled = 0, arityHandled = 0, reportedRemoved = 0;
 
         for (MemberRef ref : readMembers(Path.of(args[0]))) {
             String owner = ref.owner();
@@ -122,9 +122,23 @@ public class VanillaGaps {
             if (looksSrg(name)) { srgResidue++; continue; }
 
             String desc = remapDescriptor(ref.desc(), rules, index.classes);
-            if (rules.redirects(owner, effectiveOwner, name, desc)) { skippedByRule++; continue; }
-            if (rules.removedMember(owner, ref.name(), name, ref.desc(), desc)) {
+
+            // A member a rule rewrites counts as checked *and* resolved, rather than being
+            // excluded from both. Excluding it makes the headline percentage move the wrong way:
+            // converting the four ItemStack NBT methods from REMOVED entries into real bridges
+            // improved the translation and dropped the figure, because those references left the
+            // denominator. A measure that falls when the thing it measures improves is worse than
+            // no measure.
+            if (rules.redirects(owner, effectiveOwner, name, desc)) {
+                checked++;
+                ok++;
                 skippedByRule++;
+                continue;
+            }
+            // REMOVED is the exception, and stays excluded on purpose: it means "reported, never
+            // rewritten". Counting it as resolved would claim credit for naming a problem.
+            if (rules.removedMember(owner, ref.name(), name, ref.desc(), desc)) {
+                reportedRemoved++;
                 continue;
             }
 
@@ -180,7 +194,10 @@ public class VanillaGaps {
                 holderHandled);
         System.out.printf("resolved by ARG_FILL / ARG_DROP  %d  (of the \"still resolve\" figure)%n",
                 arityHandled);
-        System.out.printf("skipped, a rule handles them  %d%n", skippedByRule);
+        System.out.printf("resolved by an explicit rule  %d  (of the \"still resolve\" figure)%n",
+                skippedByRule);
+        System.out.printf("REMOVED, reported not rewritten %d  (excluded from both)%n",
+                reportedRemoved);
         System.out.printf("skipped, owner type is gone   %d%n", ownerMissing);
         System.out.printf("skipped, name still reads SRG %d  <- mapping health; want 0%n", srgResidue);
         System.out.println();
