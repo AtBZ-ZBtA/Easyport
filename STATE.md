@@ -545,16 +545,67 @@ here can; it would take a production launch.
 |---|---|
 | Backward vanilla references that resolve | **88.2%** of 27,060 (forward is 92.2%) |
 | NeoForge types the corpus references | 861 |
-| Resolved by a rename | 35 |
-| **Needing `neoforge-compat`** | **826**, ranked in `api-report-backward/unresolved-types.txt` |
-| `neoforge-compat` classes | 12 |
-| Mods that load on Forge 1.20.1 | 1 |
+| Resolved by a rename | **440** |
+| Needing `neoforge-compat` | 147 with a differing surface, plus what has no counterpart at all |
+| `neoforge-compat` classes | 24 |
+| **Sampled mods measured at 100% / 99%** | **2 of 4 measurable** |
 
-The shim layer covers the head of the list by call weight — `DeferredRegister` (250 jars),
-`DeferredHolder` (220), the block and item specialisations, the event bus and the mod container.
-`DeferredRegister.createDataComponents` is deliberately absent: data components do not exist in
-1.20.1 in any form, so a shim would accept registrations and drop them, which is the
-silent-success failure this project refuses. 36 jars call it and are named in the report.
+#### Two ways to earn a rename, and both are mechanical
+
+The rename set was built twice, and the first attempt was wrong in a way worth keeping written
+down. **Inverting `forward.rules.tsv` is the wrong source**: it only covers types the *forward*
+direction needed a rule for, which is not the set this direction references. `GatherDataEvent` is
+a mod-bus event named by 163 ATM10 jars, had no forward rule, and was therefore missing — so every
+mod using it failed on a class that should never have been shimmed.
+
+Re-derived from all 861 referenced types, using the two justifications the rules files allow:
+
+- **The loader dispatches by it** — annotation, enum, or subclass of `Event`, read out of the
+  NeoForge jar. 263 qualify, all with targets that exist in Forge 1.20.1.
+- **The surface is verified identical** — `tools/SurfaceMatch.java` compares both types' public
+  and protected members, descriptors included, with the two loaders' package prefixes collapsed.
+  138 of the remaining 285 match exactly.
+
+`IItemHandler` is the case that prompted the second: six methods, byte-identical on both sides,
+and it was about to be hand-written as a shim because a launch happened to name it. One type at a
+time, that is 138 launches. The rejections carry as much information as the promotions —
+`IEventBus` differs 13 members to 14, which is exactly why it has a hand-written shim.
+
+The shim layer therefore covers only what genuinely differs: `DeferredRegister` (250 jars),
+`DeferredHolder` (220), `ModConfigSpec` and its builder (212), `ModList` (256), the event bus, the
+mod container.
+
+#### Three things left out on purpose, each for the same reason
+
+`DeferredRegister.createDataComponents` (36 jars), `NeoForgeRegistries.ATTACHMENT_TYPES` (38), and
+`NeoForgeRegistries`' live `Registry` fields (24). Data components and data attachments do not
+exist in 1.20.1 in any form — a shim would accept registrations and drop them. The `Registry`
+fields fail differently and are worth the note: Forge only publishes its registries' vanilla view
+during `NewRegistryEvent`, *after* mod construction, so a field initialised eagerly is null exactly
+when a mod's static initialiser reads it. The first version shipped that, and the NPE surfaced
+inside the shim pointing at the wrong file. Absent, the mod gets a `NoSuchFieldError` naming the
+field.
+
+#### Where the sample stands, and the one wall in it
+
+| Status | n | Meaning |
+|---|---|---|
+| `OK` | 2 | `additional_lights` 100.0%, `allthecompressed` 99.1% |
+| `LOADED_NOTHING` | 2 | `alltheores`, `aquaculture` |
+| `DEPS_MISSING` | 5 | the **reference** will not load either — harness limit, not translation |
+| `NO_CONTENT` | 5 | neither side registers anything |
+
+**2 of 4 measurable**, which is the honest denominator. `allthecompressed` reports 822 *extra*
+entries alongside its 9 missing, and that is feature drift rather than translation: its 4.4.0
+NeoForge build registers far more than the 3.0.2 Forge reference. Missing and extra are separate
+columns precisely so a percentage cannot be inflated or deflated by it.
+
+**`aquaculture` is a wall, not a queue item.** It registers a custom armor material, and 1.21 made
+armor materials a *registry* — `Registries.ARMOR_MATERIAL` exists in 1.21.1 and does not exist in
+1.20.1 at all. There is no registry to register into and no shim that can invent one; 1.20.1's
+armor system reads an enum. This is the backward mirror of `OutOfJarResourceLocation extends
+ResourceLocation`: forward, the hard cases are things 1.21 added that a 1.20.1 mod cannot know
+about; backward, they are things 1.21 added that a 1.20.1 *game* cannot represent.
 
 #### Known-incomplete, deliberately
 

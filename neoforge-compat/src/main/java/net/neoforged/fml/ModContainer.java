@@ -37,4 +37,26 @@ public class ModContainer {
     public String getNamespace() {
         return delegate.getNamespace();
     }
+
+    /**
+     * Registers a config, unwrapping the shim spec into the Forge one at the boundary.
+     *
+     * 162 corpus jars call this, and it is the reason the {@code IConfigSpec} shim exists at all:
+     * the argument type has to be the one the mod's bytecode names, while the thing Forge needs
+     * is its own {@code ForgeConfigSpec}. Adapting here keeps that conversion in one place rather
+     * than in every mod.
+     *
+     * The {@code ModConfig.Type} is already Forge's — it is an enum the loader reads out of
+     * annotations, so it is renamed rather than shimmed.
+     */
+    public void registerConfig(net.minecraftforge.fml.config.ModConfig.Type type,
+                               net.neoforged.fml.config.IConfigSpec spec) {
+        net.minecraftforge.fml.ModLoadingContext.get().registerConfig(type, spec.forgeSpec());
+    }
+
+    public void registerConfig(net.minecraftforge.fml.config.ModConfig.Type type,
+                               net.neoforged.fml.config.IConfigSpec spec, String fileName) {
+        net.minecraftforge.fml.ModLoadingContext.get()
+                .registerConfig(type, spec.forgeSpec(), fileName);
+    }
 }

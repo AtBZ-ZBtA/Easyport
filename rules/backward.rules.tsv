@@ -640,3 +640,160 @@ TYPE_RENAME	net/neoforged/neoforge/event/village/WandererTradesEvent	net/minecra
 TYPE_RENAME	net/neoforged/neoforge/fluids/capability/IFluidHandler$FluidAction	net/minecraftforge/fluids/capability/IFluidHandler$FluidAction
 TYPE_RENAME	net/neoforged/neoforge/network/connection/ConnectionType	net/minecraftforge/network/ConnectionType
 TYPE_RENAME	net/neoforged/neoforge/server/permission/events/PermissionGatherEvent$Nodes	net/minecraftforge/server/permission/events/PermissionGatherEvent$Nodes
+
+# 1.21 renamed Properties.copy to ofFullCopy and added a shallower copyOf beside it. Same shape,
+# same static, so a plain call-site rewrite. Found by allthecompressed at registration.
+RENAME_METHOD	net/minecraft/world/level/block/state/BlockBehaviour$Properties	ofFullCopy	(Lnet/minecraft/world/level/block/state/BlockBehaviour;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;	net/minecraft/world/level/block/state/BlockBehaviour$Properties	copy	(Lnet/minecraft/world/level/block/state/BlockBehaviour;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+
+# --- Renames justified by a verified-identical surface -----------------------------------------
+#
+# The second justification, applied mechanically instead of one launch at a time. For each of the
+# 285 candidates the loader-scanning test did *not* claim, both types were read out of their
+# platform jars and their public and protected member sets compared -- names and descriptors, with
+# the two loaders' package prefixes collapsed so that a method returning IItemHandler matches the
+# one returning IItemHandler. 138 are identical; the other 147 genuinely differ and stay shim work.
+#
+# IItemHandler is the example that prompted this: six methods, byte-identical on both sides, and it
+# was about to be hand-written as a shim because a launch happened to name it. Discovering that one
+# type at a time would have taken 138 launches.
+#
+# The rejections are as informative as the promotions -- IEventBus differs 13 members to 14, which
+# is exactly why it is hand-shimmed above.
+TYPE_RENAME	net/neoforged/fml/InterModComms	net/minecraftforge/fml/InterModComms
+TYPE_RENAME	net/neoforged/fml/InterModComms$IMCMessage	net/minecraftforge/fml/InterModComms$IMCMessage
+TYPE_RENAME	net/neoforged/fml/Logging	net/minecraftforge/fml/Logging
+TYPE_RENAME	net/neoforged/fml/VersionChecker	net/minecraftforge/fml/VersionChecker
+TYPE_RENAME	net/neoforged/fml/VersionChecker$CheckResult	net/minecraftforge/fml/VersionChecker$CheckResult
+TYPE_RENAME	net/neoforged/fml/loading/StringUtils	net/minecraftforge/fml/loading/StringUtils
+TYPE_RENAME	net/neoforged/fml/loading/TracingPrintStream	net/minecraftforge/fml/loading/TracingPrintStream
+TYPE_RENAME	net/neoforged/fml/loading/modscan/Scanner	net/minecraftforge/fml/loading/moddiscovery/Scanner
+TYPE_RENAME	net/neoforged/fml/loading/progress/ProgressMeter	net/minecraftforge/fml/loading/progress/ProgressMeter
+TYPE_RENAME	net/neoforged/fml/util/ObfuscationReflectionHelper$UnableToFindMethodException	net/minecraftforge/fml/util/ObfuscationReflectionHelper$UnableToFindMethodException
+TYPE_RENAME	net/neoforged/fml/util/thread/EffectiveSide	net/minecraftforge/fml/util/thread/EffectiveSide
+TYPE_RENAME	net/neoforged/fml/util/thread/SidedThreadGroups	net/minecraftforge/fml/util/thread/SidedThreadGroups
+TYPE_RENAME	net/neoforged/neoforge/client/ChunkRenderTypeSet	net/minecraftforge/client/ChunkRenderTypeSet
+TYPE_RENAME	net/neoforged/neoforge/client/ClientCommandHandler	net/minecraftforge/client/ClientCommandHandler
+TYPE_RENAME	net/neoforged/neoforge/client/DimensionSpecialEffectsManager	net/minecraftforge/client/DimensionSpecialEffectsManager
+TYPE_RENAME	net/neoforged/neoforge/client/IArmPoseTransformer	net/minecraftforge/client/IArmPoseTransformer
+TYPE_RENAME	net/neoforged/neoforge/client/IItemDecorator	net/minecraftforge/client/IItemDecorator
+TYPE_RENAME	net/neoforged/neoforge/client/ItemDecoratorHandler	net/minecraftforge/client/ItemDecoratorHandler
+TYPE_RENAME	net/neoforged/neoforge/client/NamedRenderTypeManager	net/minecraftforge/client/NamedRenderTypeManager
+TYPE_RENAME	net/neoforged/neoforge/client/RenderTypeGroup	net/minecraftforge/client/RenderTypeGroup
+TYPE_RENAME	net/neoforged/neoforge/client/RenderTypeHelper	net/minecraftforge/client/RenderTypeHelper
+TYPE_RENAME	net/neoforged/neoforge/client/event/RenderLevelStageEvent$Stage	net/minecraftforge/client/event/RenderLevelStageEvent$Stage
+TYPE_RENAME	net/neoforged/neoforge/client/extensions/common/IClientMobEffectExtensions	net/minecraftforge/client/extensions/common/IClientMobEffectExtensions
+TYPE_RENAME	net/neoforged/neoforge/client/gui/widget/ExtendedButton	net/minecraftforge/client/gui/widget/ExtendedButton
+TYPE_RENAME	net/neoforged/neoforge/client/model/CompositeModel$Baked	net/minecraftforge/client/model/CompositeModel$Baked
+TYPE_RENAME	net/neoforged/neoforge/client/model/DynamicFluidContainerModel$Colors	net/minecraftforge/client/model/DynamicFluidContainerModel$Colors
+TYPE_RENAME	net/neoforged/neoforge/client/model/DynamicFluidContainerModel$Loader	net/minecraftforge/client/model/DynamicFluidContainerModel$Loader
+TYPE_RENAME	net/neoforged/neoforge/client/model/ElementsModel$Loader	net/minecraftforge/client/model/ElementsModel$Loader
+TYPE_RENAME	net/neoforged/neoforge/client/model/ExtendedBlockModelDeserializer	net/minecraftforge/client/model/ExtendedBlockModelDeserializer
+TYPE_RENAME	net/neoforged/neoforge/client/model/IDynamicBakedModel	net/minecraftforge/client/model/IDynamicBakedModel
+TYPE_RENAME	net/neoforged/neoforge/client/model/IQuadTransformer	net/minecraftforge/client/model/IQuadTransformer
+TYPE_RENAME	net/neoforged/neoforge/client/model/QuadTransformers	net/minecraftforge/client/model/QuadTransformers
+TYPE_RENAME	net/neoforged/neoforge/client/model/SeparateTransformsModel$Baked	net/minecraftforge/client/model/SeparateTransformsModel$Baked
+TYPE_RENAME	net/neoforged/neoforge/client/model/SimpleModelState	net/minecraftforge/client/model/SimpleModelState
+TYPE_RENAME	net/neoforged/neoforge/client/model/data/ModelData$Builder	net/minecraftforge/client/model/data/ModelData$Builder
+TYPE_RENAME	net/neoforged/neoforge/client/model/data/ModelProperty	net/minecraftforge/client/model/data/ModelProperty
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/BlockModelBuilder	net/minecraftforge/client/model/generators/BlockModelBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/BlockModelProvider	net/minecraftforge/client/model/generators/BlockModelProvider
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ConfiguredModel	net/minecraftforge/client/model/generators/ConfiguredModel
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ConfiguredModel$Builder	net/minecraftforge/client/model/generators/ConfiguredModel$Builder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/IGeneratedBlockState	net/minecraftforge/client/model/generators/IGeneratedBlockState
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ItemModelBuilder	net/minecraftforge/client/model/generators/ItemModelBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ItemModelBuilder$OverrideBuilder	net/minecraftforge/client/model/generators/ItemModelBuilder$OverrideBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ModelBuilder$ElementBuilder$RotationBuilder	net/minecraftforge/client/model/generators/ModelBuilder$ElementBuilder$RotationBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ModelBuilder$TransformsBuilder	net/minecraftforge/client/model/generators/ModelBuilder$TransformsBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ModelBuilder$TransformsBuilder$TransformVecBuilder	net/minecraftforge/client/model/generators/ModelBuilder$TransformsBuilder$TransformVecBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ModelFile	net/minecraftforge/client/model/generators/ModelFile
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ModelFile$ExistingModelFile	net/minecraftforge/client/model/generators/ModelFile$ExistingModelFile
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/ModelFile$UncheckedModelFile	net/minecraftforge/client/model/generators/ModelFile$UncheckedModelFile
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/MultiPartBlockStateBuilder	net/minecraftforge/client/model/generators/MultiPartBlockStateBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/MultiPartBlockStateBuilder$PartBuilder	net/minecraftforge/client/model/generators/MultiPartBlockStateBuilder$PartBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/MultiPartBlockStateBuilder$PartBuilder$ConditionGroup	net/minecraftforge/client/model/generators/MultiPartBlockStateBuilder$PartBuilder$ConditionGroup
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/VariantBlockStateBuilder	net/minecraftforge/client/model/generators/VariantBlockStateBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/VariantBlockStateBuilder$PartialBlockstate	net/minecraftforge/client/model/generators/VariantBlockStateBuilder$PartialBlockstate
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/loaders/CompositeModelBuilder	net/minecraftforge/client/model/generators/loaders/CompositeModelBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/loaders/DynamicFluidContainerModelBuilder	net/minecraftforge/client/model/generators/loaders/DynamicFluidContainerModelBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/generators/loaders/SeparateTransformsModelBuilder	net/minecraftforge/client/model/generators/loaders/SeparateTransformsModelBuilder
+TYPE_RENAME	net/neoforged/neoforge/client/model/geometry/IGeometryLoader	net/minecraftforge/client/model/geometry/IGeometryLoader
+TYPE_RENAME	net/neoforged/neoforge/client/model/obj/ObjLoader	net/minecraftforge/client/model/obj/ObjLoader
+TYPE_RENAME	net/neoforged/neoforge/client/model/obj/ObjModel$ModelSettings	net/minecraftforge/client/model/obj/ObjModel$ModelSettings
+TYPE_RENAME	net/neoforged/neoforge/client/model/renderable/BakedModelRenderable$Context	net/minecraftforge/client/model/renderable/BakedModelRenderable$Context
+TYPE_RENAME	net/neoforged/neoforge/client/model/renderable/CompositeRenderable	net/minecraftforge/client/model/renderable/CompositeRenderable
+TYPE_RENAME	net/neoforged/neoforge/client/model/renderable/CompositeRenderable$Transforms	net/minecraftforge/client/model/renderable/CompositeRenderable$Transforms
+TYPE_RENAME	net/neoforged/neoforge/client/settings/IKeyConflictContext	net/minecraftforge/client/settings/IKeyConflictContext
+TYPE_RENAME	net/neoforged/neoforge/common/BasicItemListing	net/minecraftforge/common/BasicItemListing
+TYPE_RENAME	net/neoforged/neoforge/common/CreativeModeTabRegistry	net/minecraftforge/common/CreativeModeTabRegistry
+TYPE_RENAME	net/neoforged/neoforge/common/FarmlandWaterManager	net/minecraftforge/common/FarmlandWaterManager
+TYPE_RENAME	net/neoforged/neoforge/common/IMinecartCollisionHandler	net/minecraftforge/common/IMinecartCollisionHandler
+TYPE_RENAME	net/neoforged/neoforge/common/LenientUnboundedMapCodec	net/minecraftforge/common/LenientUnboundedMapCodec
+TYPE_RENAME	net/neoforged/neoforge/common/SoundAction	net/minecraftforge/common/SoundAction
+TYPE_RENAME	net/neoforged/neoforge/common/UsernameCache	net/minecraftforge/common/UsernameCache
+TYPE_RENAME	net/neoforged/neoforge/common/WorldWorkerManager	net/minecraftforge/common/WorldWorkerManager
+TYPE_RENAME	net/neoforged/neoforge/common/WorldWorkerManager$IWorker	net/minecraftforge/common/WorldWorkerManager$IWorker
+TYPE_RENAME	net/neoforged/neoforge/common/brewing/BrewingRecipe	net/minecraftforge/common/brewing/BrewingRecipe
+TYPE_RENAME	net/neoforged/neoforge/common/brewing/IBrewingRecipe	net/minecraftforge/common/brewing/IBrewingRecipe
+TYPE_RENAME	net/neoforged/neoforge/common/conditions/ConditionContext	net/minecraftforge/common/crafting/conditions/ConditionContext
+TYPE_RENAME	net/neoforged/neoforge/common/data/BlockTagsProvider	net/minecraftforge/common/data/BlockTagsProvider
+TYPE_RENAME	net/neoforged/neoforge/common/data/ExistingFileHelper	net/minecraftforge/common/data/ExistingFileHelper
+TYPE_RENAME	net/neoforged/neoforge/common/data/ExistingFileHelper$ResourceType	net/minecraftforge/common/data/ExistingFileHelper$ResourceType
+TYPE_RENAME	net/neoforged/neoforge/common/data/ParticleDescriptionProvider	net/minecraftforge/common/data/ParticleDescriptionProvider
+TYPE_RENAME	net/neoforged/neoforge/common/data/SoundDefinition	net/minecraftforge/common/data/SoundDefinition
+TYPE_RENAME	net/neoforged/neoforge/common/data/SoundDefinition$Sound	net/minecraftforge/common/data/SoundDefinition$Sound
+TYPE_RENAME	net/neoforged/neoforge/common/data/SoundDefinitionsProvider	net/minecraftforge/common/data/SoundDefinitionsProvider
+TYPE_RENAME	net/neoforged/neoforge/common/loot/LootModifier	net/minecraftforge/common/loot/LootModifier
+TYPE_RENAME	net/neoforged/neoforge/common/loot/LootTableIdCondition$Builder	net/minecraftforge/common/loot/LootTableIdCondition$Builder
+TYPE_RENAME	net/neoforged/neoforge/common/ticket/AABBTicket	net/minecraftforge/common/ticket/AABBTicket
+TYPE_RENAME	net/neoforged/neoforge/common/util/ConcatenatedListView	net/minecraftforge/common/util/ConcatenatedListView
+TYPE_RENAME	net/neoforged/neoforge/common/util/FakePlayerFactory	net/minecraftforge/common/util/FakePlayerFactory
+TYPE_RENAME	net/neoforged/neoforge/common/util/ItemStackMap	net/minecraftforge/common/util/ItemStackMap
+TYPE_RENAME	net/neoforged/neoforge/common/util/LogicalSidedProvider	net/minecraftforge/common/util/LogicalSidedProvider
+TYPE_RENAME	net/neoforged/neoforge/common/util/RecipeMatcher	net/minecraftforge/common/util/RecipeMatcher
+TYPE_RENAME	net/neoforged/neoforge/common/util/Size2i	net/minecraftforge/common/util/Size2i
+TYPE_RENAME	net/neoforged/neoforge/common/util/TransformationHelper	net/minecraftforge/common/util/TransformationHelper
+TYPE_RENAME	net/neoforged/neoforge/common/util/TriPredicate	net/minecraftforge/common/util/TriPredicate
+TYPE_RENAME	net/neoforged/neoforge/common/world/BiomeGenerationSettingsBuilder	net/minecraftforge/common/world/BiomeGenerationSettingsBuilder
+TYPE_RENAME	net/neoforged/neoforge/common/world/BiomeSpecialEffectsBuilder	net/minecraftforge/common/world/BiomeSpecialEffectsBuilder
+TYPE_RENAME	net/neoforged/neoforge/common/world/ClimateSettingsBuilder	net/minecraftforge/common/world/ClimateSettingsBuilder
+TYPE_RENAME	net/neoforged/neoforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder	net/minecraftforge/common/world/ModifiableBiomeInfo$BiomeInfo$Builder
+TYPE_RENAME	net/neoforged/neoforge/common/world/ModifiableStructureInfo	net/minecraftforge/common/world/ModifiableStructureInfo
+TYPE_RENAME	net/neoforged/neoforge/common/world/ModifiableStructureInfo$StructureInfo	net/minecraftforge/common/world/ModifiableStructureInfo$StructureInfo
+TYPE_RENAME	net/neoforged/neoforge/common/world/ModifiableStructureInfo$StructureInfo$Builder	net/minecraftforge/common/world/ModifiableStructureInfo$StructureInfo$Builder
+TYPE_RENAME	net/neoforged/neoforge/common/world/PieceBeardifierModifier	net/minecraftforge/common/world/PieceBeardifierModifier
+TYPE_RENAME	net/neoforged/neoforge/common/world/StructureSettingsBuilder	net/minecraftforge/common/world/StructureSettingsBuilder
+TYPE_RENAME	net/neoforged/neoforge/data/loading/DatagenModLoader	net/minecraftforge/data/loading/DatagenModLoader
+TYPE_RENAME	net/neoforged/neoforge/energy/EmptyEnergyStorage	net/minecraftforge/energy/EmptyEnergyStorage
+TYPE_RENAME	net/neoforged/neoforge/energy/IEnergyStorage	net/minecraftforge/energy/IEnergyStorage
+TYPE_RENAME	net/neoforged/neoforge/fluids/FluidActionResult	net/minecraftforge/fluids/FluidActionResult
+TYPE_RENAME	net/neoforged/neoforge/fluids/FluidInteractionRegistry	net/minecraftforge/fluids/FluidInteractionRegistry
+TYPE_RENAME	net/neoforged/neoforge/fluids/FluidInteractionRegistry$FluidInteraction	net/minecraftforge/fluids/FluidInteractionRegistry$FluidInteraction
+TYPE_RENAME	net/neoforged/neoforge/fluids/FluidInteractionRegistry$HasFluidInteraction	net/minecraftforge/fluids/FluidInteractionRegistry$HasFluidInteraction
+TYPE_RENAME	net/neoforged/neoforge/fluids/FluidInteractionRegistry$InteractionInformation	net/minecraftforge/fluids/FluidInteractionRegistry$InteractionInformation
+TYPE_RENAME	net/neoforged/neoforge/fluids/IFluidTank	net/minecraftforge/fluids/IFluidTank
+TYPE_RENAME	net/neoforged/neoforge/fluids/capability/IFluidHandler	net/minecraftforge/fluids/capability/IFluidHandler
+TYPE_RENAME	net/neoforged/neoforge/fluids/capability/IFluidHandlerItem	net/minecraftforge/fluids/capability/IFluidHandlerItem
+TYPE_RENAME	net/neoforged/neoforge/fluids/capability/templates/EmptyFluidHandler	net/minecraftforge/fluids/capability/templates/EmptyFluidHandler
+TYPE_RENAME	net/neoforged/neoforge/fluids/capability/templates/VoidFluidHandler	net/minecraftforge/fluids/capability/templates/VoidFluidHandler
+TYPE_RENAME	net/neoforged/neoforge/fluids/capability/wrappers/BlockWrapper	net/minecraftforge/fluids/capability/wrappers/BlockWrapper
+TYPE_RENAME	net/neoforged/neoforge/internal/BrandingControl	net/minecraftforge/internal/BrandingControl
+TYPE_RENAME	net/neoforged/neoforge/items/IItemHandler	net/minecraftforge/items/IItemHandler
+TYPE_RENAME	net/neoforged/neoforge/items/IItemHandlerModifiable	net/minecraftforge/items/IItemHandlerModifiable
+TYPE_RENAME	net/neoforged/neoforge/items/VanillaHopperItemHandler	net/minecraftforge/items/VanillaHopperItemHandler
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/CombinedInvWrapper	net/minecraftforge/items/wrapper/CombinedInvWrapper
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/InvWrapper	net/minecraftforge/items/wrapper/InvWrapper
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/PlayerArmorInvWrapper	net/minecraftforge/items/wrapper/PlayerArmorInvWrapper
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/PlayerInvWrapper	net/minecraftforge/items/wrapper/PlayerInvWrapper
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/PlayerMainInvWrapper	net/minecraftforge/items/wrapper/PlayerMainInvWrapper
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/PlayerOffhandInvWrapper	net/minecraftforge/items/wrapper/PlayerOffhandInvWrapper
+TYPE_RENAME	net/neoforged/neoforge/items/wrapper/RangedWrapper	net/minecraftforge/items/wrapper/RangedWrapper
+TYPE_RENAME	net/neoforged/neoforge/server/command/EnumArgument	net/minecraftforge/server/command/EnumArgument
+TYPE_RENAME	net/neoforged/neoforge/server/command/ModIdArgument	net/minecraftforge/server/command/ModIdArgument
+TYPE_RENAME	net/neoforged/neoforge/server/permission/PermissionAPI	net/minecraftforge/server/permission/PermissionAPI
+TYPE_RENAME	net/neoforged/neoforge/server/permission/nodes/PermissionDynamicContext	net/minecraftforge/server/permission/nodes/PermissionDynamicContext
+TYPE_RENAME	net/neoforged/neoforge/server/permission/nodes/PermissionDynamicContextKey	net/minecraftforge/server/permission/nodes/PermissionDynamicContextKey
+TYPE_RENAME	net/neoforged/neoforge/server/permission/nodes/PermissionNode	net/minecraftforge/server/permission/nodes/PermissionNode
+TYPE_RENAME	net/neoforged/neoforge/server/permission/nodes/PermissionTypes	net/minecraftforge/server/permission/nodes/PermissionTypes
+TYPE_RENAME	net/neoforged/neoforgespi/language/IConfigurable	net/minecraftforge/forgespi/language/IConfigurable
+TYPE_RENAME	net/neoforged/neoforgespi/language/ModFileScanData$AnnotationData	net/minecraftforge/forgespi/language/ModFileScanData$AnnotationData
+TYPE_RENAME	net/neoforged/neoforgespi/language/ModFileScanData$ClassData	net/minecraftforge/forgespi/language/ModFileScanData$ClassData

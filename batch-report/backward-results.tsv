@@ -2,7 +2,7 @@ modId	referenceIds	candidateIds	missing	extra	registryPct	status
 additional_lights	182	182	0	0	100.0	OK
 aiimprovements	0	0	0	0	0	NO_CONTENT
 allthearcanistgear	0	0	0	0	0	DEPS_MISSING
-allthecompressed	983	0	983	0	0.0	LOADED_NOTHING
+allthecompressed	983	1796	9	822	99.1	OK
 alltheores	252	0	252	0	0.0	LOADED_NOTHING
 appleskin	0	0	0	0	0	NO_CONTENT
 appmek	0	0	0	0	0	DEPS_MISSING
