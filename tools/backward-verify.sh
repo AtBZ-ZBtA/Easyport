@@ -22,7 +22,13 @@ CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar;devenv
 PLATFORM=(devenv/spi/forge-1.20.1-official.jar devenv/spi/forge-bus-6.0.5.jar
           devenv/spi/forge-fmlcore.jar devenv/spi/forge-fmlloader.jar
           devenv/spi/forge-forgespi.jar devenv/spi/forge-javafmllanguage.jar
-          devenv/spi/forge-distmarker.jar neoforge-compat/neoforge-compat.jar)
+          devenv/spi/forge-distmarker.jar neoforge-compat/neoforge-compat.jar
+          # Shared libraries, and leaving them out is not harmless. The transformer reports a
+          # member whose owner it cannot find, so an unindexed library reads as "this type does
+          # not exist in 1.20.1" -- DataFixerUpper alone accounted for 275 of 445 supposedly
+          # missing types, which is a measurement artefact wearing the costume of a finding.
+          devenv/spi/dfu.jar devenv/spi/brigadier.jar devenv/spi/guava.jar
+          devenv/spi/gson.jar devenv/spi/commons-lang3.jar)
 
 OUT="batch-report/backward"
 # Overridable so two different mod lists do not accumulate into one table. Runs are appended and

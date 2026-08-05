@@ -343,12 +343,18 @@ public class Translate {
             backward = jarIsNeoForge(probe);
         }
         if (backward != rulesBackward) {
-            throw new IllegalStateException(String.format(
-                    "%s is a %s mod, but %s declares `#direction: %s`. Refusing: a rules file used "
-                  + "in the wrong direction does not fail, it produces a jar of confidently wrong "
-                  + "renames.",
-                    in.getFileName(), backward ? "NeoForge 1.21.1" : "Forge 1.20.1",
-                    rules.getFileName(), rulesBackward ? "backward" : "forward"));
+            // A jar that is already the target loader's shape needs no translation, and that is
+            // not an error -- a modpack folder carries plenty of them. 19 of the 479 jars in the
+            // 1.21.1 corpus declare mods.toml: datapack-only jars, Fabric jars, and a few mods
+            // shipping both descriptors. Treating those as failures made a sweep read 19 worse
+            // than it was and buried the ones that genuinely broke.
+            //
+            // The mismatch is still refused rather than translated. Running a mod through the
+            // wrong rules does not fail, it produces a jar of confidently wrong renames.
+            System.out.printf("%s is already a %s mod; nothing to translate.%n",
+                    in.getFileName(), backward ? "Forge 1.20.1" : "NeoForge 1.21.1");
+            Files.copy(in, out, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return;
         }
 
         loadMappings(mappings);
@@ -369,6 +375,7 @@ public class Translate {
             // Every path the input already holds. A rename can land on one of them -- a mod built
             // for both loaders ships mods.toml *and* neoforge.mods.toml -- and writing both is a
             // duplicate-entry ZipException that fails the whole jar.
+            Set<String> writtenEntries = new HashSet<>();
             Set<String> sourceEntries = new HashSet<>();
             for (var en = zip.entries(); en.hasMoreElements(); ) {
                 sourceEntries.add(en.nextElement().getName());
@@ -460,6 +467,15 @@ public class Translate {
                 // stale signature file makes the jar fail verification outright.
                 if (name.startsWith("META-INF/") &&
                     (name.endsWith(".SF") || name.endsWith(".RSA") || name.endsWith(".DSA"))) continue;
+
+                // A zip may legitimately hold two entries under one name, and some mods do:
+                // ars_nouveau ships META-INF/LICENSE.txt twice. Nothing in the translation causes
+                // it and nothing downstream can survive it -- the second putNextEntry throws and
+                // fails the whole jar -- so the first wins and the duplicate is dropped.
+                if (!writtenEntries.add(name)) {
+                    count(appliedCounts, "DUPLICATE_ENTRY_DROPPED " + name);
+                    continue;
+                }
 
                 zos.putNextEntry(new ZipEntry(name));
                 zos.write(data);
@@ -666,6 +682,24 @@ public class Translate {
         // without this check every `RenderShape.MODEL` and `SoundSource.PLAYERS` reads as a
         // missing API.
         if (resolvedTargetMembers(owner).contains(name + " " + desc)) return name;
+
+        // The owner has to be indexed before a member on it can be called missing. Two very
+        // different things read identically otherwise, and both were being reported per member:
+        //
+        //   * a library the platform jars do not carry. com.mojang.serialization is
+        //     DataFixerUpper and com.mojang.blaze3d is a rendering library -- neither obfuscated,
+        //     neither needing any rename. That alone produced 2,350 findings for `Codec` and
+        //     1,734 for `RenderSystem`.
+        //   * a type 1.21 introduced, where the *type* is the finding and repeating it once per
+        //     member says the same thing hundreds of times.
+        //
+        // Reported once per owner instead, which is the same split VanillaGaps makes when it
+        // counts "skipped, owner type is gone" separately from members that are genuinely missing.
+        if (!targetClasses.contains(owner)) {
+            count(unresolved, "OWNER_NOT_IN_1201 " + owner
+                    + " (type absent from 1.20.1, or a library the platform jars do not carry)");
+            return name;
+        }
 
         count(unresolved, "NO_SRG_NAME " + owner + "." + name + (field ? " " : "") + desc
                 + " (not present in 1.20.1)");

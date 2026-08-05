@@ -122,14 +122,19 @@ bash tools/build-forge-compat.sh          # after ANY forge-compat change; clear
 bash tools/build-neoforge-compat.sh       # the backward shim layer
 bash tools/build-service.sh               # easyport.jar, the in-game half; needs forge-compat first
 
-# Backward. Direction is detected from the jar; the rules file must agree or the run is refused.
+# Backward. Direction is detected from the jar; a jar already in the target shape is copied, not
+# translated. Pass the shared libraries too -- without them an unindexed library reads as a type
+# that does not exist, which is how DataFixerUpper became 275 phantom findings.
 # EASYPORT_BACKWARD_NAMING=official for a dev-environment jar; omit it for one players will run.
 # bash tools/build-neoforge-compat.sh, then drop the jar in devenv/forge-1.20.1/run-data/mods/
 # and run: cd devenv/forge-1.20.1 && ./gradlew.bat runData --no-daemon --console=plain
 java -cp "$CP" tools/Translate.java <neoforge-mod.jar> out.jar \
     mappings/srg2official.tsv rules/backward.rules.tsv \
-    devenv/spi/forge-*.jar neoforge-compat/neoforge-compat.jar
+    devenv/spi/forge-*.jar neoforge-compat/neoforge-compat.jar \
+    devenv/spi/dfu.jar devenv/spi/brigadier.jar devenv/spi/guava.jar
 EASYPORT_DIRECTION=backward bash tools/verify-bytecode.sh out.jar
+bash tools/backward-verify.sh < batch-report/backward.tsv   # registry content vs the 1.20.1 build
+
 bash tools/batch-verify.sh < batch-report/libs.tsv     # 8 highest-fan-in libraries
 bash tools/batch-verify.sh < batch-report/sample.tsv   # 14 mixed mods
 
@@ -284,6 +289,17 @@ added. Treat a low percentage as a prompt to look at the diff, never as a defect
 error is just as easy — `blockui`'s GUI textures moving into a `<modid>_sprites/` directory looked
 like a systematic 1.21 migration until it was counted: `assets/<ns>/atlases/` appears in 77 of 433
 ATM9 jars and 78 of 479 ATM10 jars, so it is not a version change at all.
+
+**How much is left, stated plainly, because the shape of recent progress invites the wrong
+answer.** Both directions translate, load and register end to end, and both have a measurement
+loop. That is architecture, not coverage. **Registry content has been measured for 22 mods of the
+288 ground-truth pairs — 7.6% — and two of them pass.** The corpus analysis has said from the
+start that 48.6% of pairs are Hard or Nightmare and nothing has changed that. A run of green
+results on a 14-mod sample is not the project nearly finished; it is the sample being small.
+
+The backward sweep puts a number on the rest: **4,142 distinct vanilla members and 350 types with
+no 1.20.1 counterpart**, roughly twice the forward gap, and weighted toward things 1.20.1 cannot
+represent at all rather than things that merely moved.
 
 **The backward direction is started, not finished**, and it is the whole of what remains. See its
 own block below for what is built and what is not. Two things to carry into any work on it:
@@ -624,6 +640,40 @@ armor materials a *registry* — `Registries.ARMOR_MATERIAL` exists in 1.21.1 an
 armor system reads an enum. This is the backward mirror of `OutOfJarResourceLocation extends
 ResourceLocation`: forward, the hard cases are things 1.21 added that a 1.20.1 mod cannot know
 about; backward, they are things 1.21 added that a 1.20.1 *game* cannot represent.
+
+#### The whole 1.21.1 corpus, translated backward
+
+**479 / 479 jars translate**, and that is the same narrow claim the forward direction makes: the
+transformer runs to completion and produces a jar. What it does not say is the point.
+
+| Measure | Backward | Forward, for scale |
+|---|---|---|
+| Distinct vanilla members with no counterpart | **4,142** | 1,968 of 25,288 references |
+| Distinct types absent from the target | **350** | 114 |
+| Jars needing an abstract stub | 226 | — |
+| Jars with a mixin injector defused | 107 | 96 |
+| Jars using a Java 21 construct with no 17 form | 75 | n/a |
+
+**Roughly twice the vanilla gap of the forward direction, and it is not symmetric drift.** 1.21
+added the data-component system, `StreamCodec`, `RegistryFriendlyByteBuf`, data-driven
+enchantments and armour-material registries; every one of those is a thing a 1.20.1 game has no
+representation for, so the backward tail contains walls where the forward tail contains queues.
+
+Three defects surfaced only because the sweep ran over everything rather than a sample, and two
+of them were in the *reporting* rather than the transformer — which is worse, because a wrong
+number is acted on:
+
+- **19 jars read as failures that were not.** A modpack folder carries jars already in the target
+  loader's shape — datapack-only jars, Fabric jars, mods shipping both descriptors. Refusing them
+  is right; calling them failures made a sweep read 19 worse than it was.
+- **`OWNER_NOT_IN_1201` conflated two things.** A member whose owner the transformer cannot find
+  was reported as "this type does not exist in 1.20.1" — but an unindexed *library* looks
+  identical. DataFixerUpper accounted for 275 of 445 supposedly-missing types. The platform set
+  now carries the shared libraries, and the lesson generalises: an index that is missing something
+  does not report a gap in itself, it reports a gap in the thing it is measuring.
+- **A source jar can hold two entries under one name.** ars_nouveau ships `META-INF/LICENSE.txt`
+  twice; the second `putNextEntry` throws and fails the jar. Nothing in translation causes it and
+  nothing downstream survives it, so the first wins and the duplicate is named.
 
 #### Known-incomplete, deliberately
 
