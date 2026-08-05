@@ -308,7 +308,7 @@ and `it/unimi/dsi/` (1,404) both resolve at 100%. So the scoping bug cost exactl
 which is worth knowing precisely — the instinct after finding a hole like this is to assume more
 of them.
 
-#### The backward side of the same rework, designed and deliberately not half-built
+#### The backward side of the same rework — BUILT
 
 Scanning ATM10 the same way says the mirror is just as big: `setUv` 136 jars,
 `addVertex(Matrix4f,…)` 124, `Tesselator.begin` 110, `BufferUploader.drawWithShader(MeshData)`
@@ -348,11 +348,56 @@ hole: a helper that returns a part-built vertex ends it at *its caller's* `POP`,
 reachable from inside the helper without an interprocedural pass. Those 22 jars get named in the
 report rather than quietly rewritten wrong.
 
-Not built yet on purpose: **this family is all-or-nothing.** Without the renames a mod dies with a
-loud `NoSuchMethodError`; with the renames but without `endVertex` it feeds a malformed vertex
-stream into vanilla's builder and fails somewhere far away, or draws corrupt geometry. Shipping
-the easy half would trade a clear failure for a confusing one, which is the wrong direction and
-the opposite of every other trade this project makes.
+It was built all at once, because **this family is all-or-nothing.** Without the renames a mod dies
+with a loud `NoSuchMethodError`; with the renames but without `endVertex` it feeds a malformed
+vertex stream into vanilla's builder and fails somewhere far away, or draws corrupt geometry.
+Shipping the easy half would have traded a clear failure for a confusing one.
+
+Measured over the whole 1.21.1 corpus, 479/479 still translating: **5,484 chains closed across 170
+jars, 103 left unclosed across 25, and no method the analysis could not read.** The closed figure is
+higher than `VertexChains`' 5,033 because `Translate` descends into `META-INF/jarjar/` and the
+standalone tool reads top-level classes only — it sees a strict superset, which is the right way
+round for the one doing the rewriting.
+
+**The check that matters is that nothing new broke.** Type-checking the four heaviest jars against
+the previous sweep gives byte-for-byte the same verification results — `mahoutsukai` 111 classes /
+137 methods, `pneumaticcraft` 320 / 580, `structurize` 15 / 22, `rftoolsbuilder` 33 / 51, identical
+before and after, with 391, 233, 330 and 198 chains rewritten in them. Every one of those errors is
+a NeoForge type with no shim yet (`RegistryFriendlyByteBuf`, `FMLModContainer`, `BakedModelWrapper`)
+— the standing backward queue, untouched by this.
+
+What is in it: `Translate#closeVertexChains` for the insertion, `easyport/neobridge/VertexBridge`
+for the shape changes, `easyport/neovanilla/MeshData` and `ByteBufferBuilder` for the two 1.21-only
+types, and 37 rules. The two vanilla types are shimmed under `easyport.neovanilla` and reached by
+`TYPE_RENAME` rather than declared in their own package — **Minecraft is a module on the 1.20.1
+boot layer, and a second module contributing to a package it already exports is a split package,
+which the JVM refuses before any code runs.**
+
+`sortQuads` and `ByteBufferBuilder.Result` are deliberately absent (6 and 4 jars). 1.21 sorts a
+*built* mesh; 1.20.1 sorts by configuring the builder before it ends, and there is no object to
+apply that to after the fact. A shim would accept the call and leave the quads unsorted, which for
+transparency is a rendering bug that looks like a mod bug.
+
+#### The finding that came out of building it: every backward rule was emitting the wrong names
+
+The SRG pass runs before the rules do. So when a rule wrote its target — `color`, `uv`,
+`copy` — that official name went straight into the output, and a jar shipped to players runs on
+Forge 1.20.1 under **SRG** member names. **This was true of the entire backward rule table, not
+just the vertex rules**, and it had never shown up because the only backward harness is a
+ForgeGradle dev launch, which runs official names and is therefore the one environment where the
+bug is invisible.
+
+Fixed by routing every rule's emitted name through `Translate#emittedName`, which is `toSrg` in the
+backward direction and the identity forward. Verified by disassembly rather than by the report: a
+translated CTM now calls `m_6122_`, `m_7421_`, `m_7122_`, `m_7120_`, `m_5601_`, and the inserted
+`m_5752_`. Bridge owners pass through untouched, since `toSrg` only rewrites `net.minecraft` and
+`com.mojang`.
+
+A second, smaller correction rode along: the SRG pass was **reporting** every member a rule was
+about to fix. 1.21's whole vertex protocol appeared in the "no 1.20.1 counterpart" count while the
+rules handling it sat two passes away. Rule source-sides are now registered at load time and skipped
+by the reporter — a work queue that lists finished work is exactly what `VanillaGaps` exists to
+avoid.
 
 The mixin layer is done (Phase 5, signed off below). What is left there is not load failures but
 595 injectors and accessors that load and no longer do anything, ranked in
@@ -390,7 +435,7 @@ loop. That is architecture, not coverage. **Registry content has been measured f
 start that 48.6% of pairs are Hard or Nightmare and nothing has changed that. A run of green
 results on a 14-mod sample is not the project nearly finished; it is the sample being small.
 
-The backward sweep puts a number on the rest: **3,425 distinct vanilla members and 339 types with
+The backward sweep puts a number on the rest: **3,396 distinct vanilla members and 339 types with
 no 1.20.1 counterpart**, close to twice the forward gap, and weighted toward things 1.20.1 cannot
 represent at all rather than things that merely moved.
 
@@ -741,7 +786,7 @@ transformer runs to completion and produces a jar. What it does not say is the p
 
 | Measure | Backward | Forward, for scale |
 |---|---|---|
-| Distinct vanilla members with no counterpart | **3,425** | 1,968 of 25,288 references |
+| Distinct vanilla members with no counterpart | **3,396** | 1,968 of 25,288 references |
 | Distinct types absent from the target | **339** | 114 |
 | Jars needing an abstract stub | 234 | — |
 | Jars with a mixin injector defused | 110 | 96 |
@@ -750,9 +795,10 @@ transformer runs to completion and produces a jar. What it does not say is the p
 **The member figure was 4,142 and the correction is worth more than the number.** Roughly 700 of
 those were the platform index reporting on itself: authlib and `com.mojang.logging` were on the
 classpath but not member-indexed, so every member of an indexed-but-unread owner came back absent,
-and `GameProfile.getId` was on the missing-API list. The three counts that went *up* moved for the
-same reason in reverse — indexing everything makes more of the corpus judgeable, so more abstract
-stubs and defused injectors are found rather than skipped. See gotcha 0.
+and `GameProfile.getId` was on the missing-API list. Another 29 were members a rule was about to
+fix two passes later — the SRG pass reported them before handing over. The three counts that went
+*up* moved for the same reason in reverse: indexing everything makes more of the corpus judgeable,
+so more abstract stubs and defused injectors are found rather than skipped. See gotcha 0.
 
 **Roughly twice the vanilla gap of the forward direction, and it is not symmetric drift.** 1.21
 added the data-component system, `StreamCodec`, `RegistryFriendlyByteBuf`, data-driven
@@ -794,6 +840,13 @@ What is missing is the official → SRG conversion of the coordinates themselves
 would run. It needs the owner-qualified table plus each selector's own owner, which all exists;
 it has simply not been written. The dev harness runs under official names and so cannot show the
 gap either way.
+
+**The same blind spot had a second, larger instance, now fixed.** Rule *targets* were being emitted
+as official names too — the SRG pass runs before the rules, so anything a rule wrote stayed
+official — which meant the entire backward rule table produced names Forge 1.20.1 production
+cannot resolve. See `Translate#emittedName`. The mixin coordinates are what is left of that class
+of bug, and the reason both hid for so long is the same: the only backward harness runs official
+names, so an official-named output looks correct in the one place it can be observed.
 
 **1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are

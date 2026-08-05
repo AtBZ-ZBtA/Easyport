@@ -884,6 +884,11 @@ to invert the producer map into consumers, and classifies what finally reads the
 a `NoSuchMethodError` that a sweep would catch; it produces a malformed vertex stream that fails
 somewhere else entirely.
 
+It came out go, and the pass it authorised is `Translate#closeVertexChains`. That runs the same
+analysis per method and replaces the `POP`; anything else is counted as `VERTEX_CHAIN_UNCLOSED` in
+the per-jar report. Re-run this tool if the corpus changes — the ratio is the only thing standing
+behind the pass, and it is a property of the corpus rather than of the code.
+
 ### MixinGaps — the same question asked of *mixins*, which neither other report can see
 
 ```bash

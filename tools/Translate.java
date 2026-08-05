@@ -105,6 +105,9 @@ public class Translate {
     private final List<CtorRule> ctorRules = new ArrayList<>();
     private final List<SwapRule> swapRules = new ArrayList<>();
     private final List<RenameRule> renameRules = new ArrayList<>();
+    /** Source-side {@code owner\tname\tdesc} of every member rule, so the SRG pass can stay quiet
+     *  about members it is about to hand over. See the use in {@code toSrg}. */
+    private final Set<String> ruledMembers = new HashSet<>();
     private final List<RenameRule> methodToStaticRules = new ArrayList<>();
     private final Map<String, String> fieldRetypes = new LinkedHashMap<>();
     private final List<RenameRule> fieldToStaticRules = new ArrayList<>();
@@ -730,6 +733,13 @@ public class Translate {
         // into silence is the more dangerous of the two failure modes -- an invented gap gets
         // investigated and disproved, a vanished one is never looked at again -- so the count of
         // "could not judge" stays visible next to the count of "is missing".
+        // A member a rule already covers is not a gap. The SRG pass runs before the rules do, so
+        // without this every ruled member is reported missing and then immediately fixed -- 1.21's
+        // whole vertex protocol showed up in the "no 1.20.1 counterpart" count while the rules that
+        // handle it sat two passes away. The report is meant to be a work queue, and a queue that
+        // lists finished work is the failure mode VanillaGaps was built to avoid.
+        if (ruledMembers.contains(owner + "\t" + name + "\t" + desc)) return name;
+
         String unindexed = firstUnindexedSupertype(owner);
         if (unindexed != null) {
             count(unresolved, "SUPERTYPE_NOT_INDEXED " + owner + " (inherits from " + unindexed
@@ -869,6 +879,9 @@ public class Translate {
         // Pass 2: structural rules.
         for (MethodNode m : node.methods) {
             if (m.instructions == null) continue;
+            // First, because it recognises a chain by the 1.21 names -- addVertex, setColor,
+            // setUv -- and the rules below are about to rewrite every one of them.
+            if (backward) closeVertexChains(node.name, m);
             applyRenameRules(m.instructions);
             applyMethodToStaticRules(m.instructions);
             applyFieldRetypeRules(m.instructions);
@@ -889,6 +902,189 @@ public class Translate {
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         node.accept(writer);
         return writer.toByteArray();
+    }
+
+    private static final String VERTEX_CONSUMER = "com/mojang/blaze3d/vertex/VertexConsumer";
+    private static final String BLAZE3D_VERTEX = "com/mojang/blaze3d/vertex/";
+
+    /**
+     * The name a rule's *target* has to be written as, which is not always the name in the rule.
+     *
+     * Rules are authored in official names in both directions, because that is the only spelling a
+     * human can read or check. Forward that is also what the target runs, so the rule's text goes
+     * straight into the bytecode. <b>Backward it is not:</b> a jar shipped to players runs on Forge
+     * 1.20.1 under SRG member names, and the SRG pass has already been and gone by the time rules
+     * apply — so every name a rule wrote was landing in the output as an official name that
+     * production cannot resolve.
+     *
+     * That was true of the entire backward rule table, not only the ones added with it. It never
+     * showed up because the only backward harness is a ForgeGradle dev launch, which runs official
+     * names and so is the one environment where the bug is invisible.
+     *
+     * Bridge and shim owners pass through untouched: {@code toSrg} only rewrites {@code
+     * net.minecraft} and {@code com.mojang}, and {@code easyport.*} is neither.
+     */
+    private String emittedName(String owner, String name, String desc, boolean field) {
+        return backward ? toSrg(owner, name, desc, field) : name;
+    }
+
+    /**
+     * Puts {@code endVertex()} back, which is the one part of the 1.21 vertex rework that no rule
+     * and no bridge can do.
+     *
+     * <h2>The problem</h2>
+     *
+     * 1.21 removed {@code endVertex}: a vertex is committed when the next one begins or when the
+     * mesh is built. 1.20.1's builder requires the call. So a 1.21 mod never makes it, 1.20.1
+     * cannot work without it, and <b>nothing in the mod's bytecode marks where a vertex ends</b>.
+     * A bridge cannot help — a bridge sees one call, and the boundary is <i>between</i> calls.
+     *
+     * <h2>The answer, and the measurement that earned it</h2>
+     *
+     * The 1.21 idiom is a fluent chain whose value is discarded:
+     * {@code consumer.addVertex(m,x,y,z).setColor(…).setUv(…).setLight(…);} — a run of invocations
+     * ending in {@code POP}. The {@code POP} is the end of the vertex, exactly and syntactically,
+     * so it is replaced with the call.
+     *
+     * "The idiom is always X" is right often enough to feel safe and wrong often enough to corrupt
+     * geometry, in the one subsystem no harness this project has can test. So
+     * {@code tools/VertexChains.java} counted it first, over all 479 jars of the 1.21.1 corpus:
+     * <b>5,033 of 5,158 chains end at a {@code POP}</b>, 38 store the consumer in a local, 36
+     * return it from a helper, 27 pass it to a call, and 24 are the void eleven-argument form that
+     * needs no insertion because 1.20.1's fourteen-argument {@code vertex} ends its own vertex.
+     *
+     * Everything that is not a {@code POP} is <b>reported and left alone</b>. Ending a vertex early
+     * does not fail loudly — it feeds a malformed stream into vanilla's builder and surfaces
+     * somewhere else entirely — so the shapes this cannot prove are named per jar instead.
+     */
+    private void closeVertexChains(String ownerName, MethodNode m) {
+        if (m.instructions == null || m.instructions.size() == 0) return;
+
+        boolean any = false;
+        for (AbstractInsnNode insn : m.instructions) {
+            if (insn instanceof MethodInsnNode min && isVertexChainRoot(min)) { any = true; break; }
+        }
+        if (!any) return;
+
+        org.objectweb.asm.tree.analysis.Frame<org.objectweb.asm.tree.analysis.SourceValue>[] frames;
+        try {
+            frames = new org.objectweb.asm.tree.analysis.Analyzer<>(
+                    new org.objectweb.asm.tree.analysis.SourceInterpreter()).analyze(ownerName, m);
+        } catch (org.objectweb.asm.tree.analysis.AnalyzerException | RuntimeException ex) {
+            count(unresolved, "VERTEX_CHAIN_UNANALYSABLE " + ownerName + "." + m.name
+                    + " (no vertex in this method was closed)");
+            return;
+        }
+
+        AbstractInsnNode[] insns = m.instructions.toArray();
+
+        // Mark the chain: the roots, then any blaze3d call whose *receiver* came from something
+        // already marked. Iterated to a fixed point -- a chain is arbitrarily long, and the
+        // instructions are not necessarily in chain order once the compiler has had its way.
+        Set<AbstractInsnNode> marked = new HashSet<>();
+        for (AbstractInsnNode insn : insns) {
+            if (insn instanceof MethodInsnNode min && isVertexChainRoot(min)) marked.add(min);
+        }
+        for (boolean grew = true; grew; ) {
+            grew = false;
+            for (int i = 0; i < insns.length; i++) {
+                if (!(insns[i] instanceof MethodInsnNode min) || marked.contains(min)) continue;
+                if (!returnsVertexConsumer(min) || frames[i] == null) continue;
+                for (AbstractInsnNode src : chainReceiverSources(frames[i], min)) {
+                    if (marked.contains(src)) { marked.add(min); grew = true; break; }
+                }
+            }
+        }
+
+        // A marked call is a terminal when nothing else marked consumes what it produced.
+        Set<AbstractInsnNode> links = new HashSet<>();
+        for (int i = 0; i < insns.length; i++) {
+            if (!(insns[i] instanceof MethodInsnNode min) || !marked.contains(min)) continue;
+            if (frames[i] == null) continue;
+            links.addAll(chainReceiverSources(frames[i], min));
+        }
+
+        String endName = toSrg(VERTEX_CONSUMER, "endVertex", "()V", false);
+        for (int i = 0; i < insns.length; i++) {
+            if (!(insns[i] instanceof MethodInsnNode end) || !marked.contains(end)) continue;
+            if (links.contains(end)) continue;
+            // The void eleven-argument form is its own terminal and closes its own vertex.
+            if (Type.getReturnType(end.desc).getSort() == Type.VOID) continue;
+
+            AbstractInsnNode consumer = soleConsumerOf(insns, frames, end);
+            if (consumer == null || consumer.getOpcode() != Opcodes.POP) {
+                count(unresolved, "VERTEX_CHAIN_UNCLOSED " + ownerName + "." + m.name
+                        + " (chain does not end at a POP; endVertex not inserted)");
+                continue;
+            }
+            m.instructions.set(consumer,
+                    new MethodInsnNode(Opcodes.INVOKEINTERFACE, VERTEX_CONSUMER, endName, "()V", true));
+            count(appliedCounts, "VERTEX_CHAIN_CLOSED " + VERTEX_CONSUMER + "#" + endName);
+        }
+    }
+
+    /** The single instruction that reads a value, or null when it is zero or more than one. */
+    private AbstractInsnNode soleConsumerOf(
+            AbstractInsnNode[] insns,
+            org.objectweb.asm.tree.analysis.Frame<org.objectweb.asm.tree.analysis.SourceValue>[] frames,
+            AbstractInsnNode produced) {
+        AbstractInsnNode found = null;
+        for (int i = 0; i < insns.length; i++) {
+            var f = frames[i];
+            if (f == null) continue;
+            int slots = valueSlotsRead(insns[i]);
+            for (int s = 0; s < slots && s < f.getStackSize(); s++) {
+                if (!f.getStack(f.getStackSize() - 1 - s).insns.contains(produced)) continue;
+                if (found != null && found != insns[i]) return null;   // two readers: not a chain
+                found = insns[i];
+            }
+        }
+        return found;
+    }
+
+    /**
+     * How many stack slots an instruction reads, for the consumer search.
+     *
+     * Only the shapes that can plausibly read a chain's value are counted. Anything else reads
+     * zero, which leaves the chain looking unconsumed and therefore reported rather than rewritten
+     * — the safe direction for a pass whose mistakes are silent.
+     */
+    private static int valueSlotsRead(AbstractInsnNode insn) {
+        return switch (insn.getOpcode()) {
+            case Opcodes.POP, Opcodes.ASTORE, Opcodes.ARETURN, Opcodes.ATHROW, Opcodes.CHECKCAST,
+                 Opcodes.INSTANCEOF, Opcodes.MONITORENTER, Opcodes.MONITOREXIT,
+                 Opcodes.IFNULL, Opcodes.IFNONNULL, Opcodes.PUTSTATIC, Opcodes.ARRAYLENGTH -> 1;
+            case Opcodes.PUTFIELD, Opcodes.IF_ACMPEQ, Opcodes.IF_ACMPNE -> 2;
+            case Opcodes.AASTORE -> 3;
+            case Opcodes.INVOKEVIRTUAL, Opcodes.INVOKEINTERFACE, Opcodes.INVOKESPECIAL ->
+                    insn instanceof MethodInsnNode min
+                            ? Type.getArgumentTypes(min.desc).length + 1 : 0;
+            case Opcodes.INVOKESTATIC ->
+                    insn instanceof MethodInsnNode min ? Type.getArgumentTypes(min.desc).length : 0;
+            default -> 0;
+        };
+    }
+
+    private static boolean isVertexChainRoot(MethodInsnNode min) {
+        return min.name.equals("addVertex") && min.owner.startsWith(BLAZE3D_VERTEX);
+    }
+
+    private static boolean returnsVertexConsumer(MethodInsnNode min) {
+        if (!min.owner.startsWith(BLAZE3D_VERTEX)) return false;
+        Type ret = Type.getReturnType(min.desc);
+        return ret.getSort() == Type.OBJECT && ret.getInternalName().equals(VERTEX_CONSUMER);
+    }
+
+    /** The instructions that produced a call's receiver — the deepest slot it pops. */
+    private static List<AbstractInsnNode> chainReceiverSources(
+            org.objectweb.asm.tree.analysis.Frame<org.objectweb.asm.tree.analysis.SourceValue> f,
+            MethodInsnNode min) {
+        if (min.getOpcode() == Opcodes.INVOKESTATIC) return List.of();
+        int depth = 0;
+        for (Type t : Type.getArgumentTypes(min.desc)) depth += t.getSize();
+        int slot = f.getStackSize() - 1 - depth;
+        if (slot < 0) return List.of();
+        return new ArrayList<>(f.getStack(slot).insns);
     }
 
     /**
@@ -924,7 +1120,8 @@ public class Translate {
 
             min.setOpcode(Opcodes.INVOKESTATIC);
             min.owner = rule.factoryOwner();
-            min.name = rule.factoryName();
+            min.name = emittedName(rule.factoryOwner(), rule.factoryName(),
+                                   rule.factoryDesc(), false);
             min.desc = rule.factoryDesc();
             min.itf = false;
             count(appliedCounts, "CTOR_TO_STATIC " + rule.owner() + "#" + rule.factoryName());
@@ -997,7 +1194,7 @@ public class Translate {
                 if (!r.owner().equals(min.owner) || !r.name().equals(min.name)
                         || !r.desc().equals(min.desc)) continue;
                 min.owner = r.newOwner();
-                min.name = r.newName();
+                min.name = emittedName(r.newOwner(), r.newName(), r.newDesc(), false);
                 min.desc = r.newDesc();
                 count(appliedCounts, "RENAME_METHOD " + r.owner() + "#" + r.name()
                                      + " -> " + r.newName());
@@ -1063,8 +1260,9 @@ public class Translate {
                 // Matching by equality missed every such read, and the failure named the mod's
                 // class as the one lacking a vanilla field.
                 if (!inheritsFrom(fin.owner, r.owner())) continue;
-                insns.set(fin, new MethodInsnNode(Opcodes.INVOKESTATIC,
-                        r.newOwner(), r.newName(), r.newDesc(), false));
+                insns.set(fin, new MethodInsnNode(Opcodes.INVOKESTATIC, r.newOwner(),
+                        emittedName(r.newOwner(), r.newName(), r.newDesc(), false),
+                        r.newDesc(), false));
                 count(appliedCounts, "FIELD_TO_STATIC " + r.owner() + "#" + r.name()
                                      + " -> " + r.newOwner() + "#" + r.newName());
                 break;
@@ -1096,8 +1294,9 @@ public class Translate {
             for (RenameRule r : methodToStaticRules) {
                 if (!r.owner().equals(min.owner) || !r.name().equals(min.name)
                         || !r.desc().equals(min.desc)) continue;
-                MethodInsnNode replacement = new MethodInsnNode(
-                        Opcodes.INVOKESTATIC, r.newOwner(), r.newName(), r.newDesc(), false);
+                MethodInsnNode replacement = new MethodInsnNode(Opcodes.INVOKESTATIC, r.newOwner(),
+                        emittedName(r.newOwner(), r.newName(), r.newDesc(), false),
+                        r.newDesc(), false);
                 insns.set(min, replacement);
                 count(appliedCounts, "METHOD_TO_STATIC " + r.owner() + "#" + r.name()
                                      + " -> " + r.newOwner() + "#" + r.newName());
@@ -4775,16 +4974,25 @@ public class Translate {
                     }
                 }
                 case "RENAME_METHOD" -> {
-                    if (c.length >= 7) renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                    if (c.length >= 7) {
+                        renameRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                        ruledMembers.add(c[1] + "\t" + c[2] + "\t" + c[3]);
+                    }
                 }
                 case "FIELD_TO_STATIC" -> {
-                    if (c.length >= 7) fieldToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                    if (c.length >= 7) {
+                        fieldToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                        ruledMembers.add(c[1] + "\t" + c[2] + "\t" + c[3]);
+                    }
                 }
                 case "FIELD_RETYPE" -> {
                     if (c.length >= 3) fieldRetypes.put(c[1], c[2]);
                 }
                 case "METHOD_TO_STATIC" -> {
-                    if (c.length >= 7) methodToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                    if (c.length >= 7) {
+                        methodToStaticRules.add(new RenameRule(c[1], c[2], c[3], c[4], c[5], c[6]));
+                        ruledMembers.add(c[1] + "\t" + c[2] + "\t" + c[3]);
+                    }
                 }
                 case "CTOR_SWAP2" -> {
                     if (c.length >= 4) swapRules.add(new SwapRule(c[1], c[2], c[3],

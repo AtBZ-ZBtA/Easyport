@@ -797,3 +797,46 @@ TYPE_RENAME	net/neoforged/neoforge/server/permission/nodes/PermissionTypes	net/m
 TYPE_RENAME	net/neoforged/neoforgespi/language/IConfigurable	net/minecraftforge/forgespi/language/IConfigurable
 TYPE_RENAME	net/neoforged/neoforgespi/language/ModFileScanData$AnnotationData	net/minecraftforge/forgespi/language/ModFileScanData$AnnotationData
 TYPE_RENAME	net/neoforged/neoforgespi/language/ModFileScanData$ClassData	net/minecraftforge/forgespi/language/ModFileScanData$ClassData
+
+# --- blaze3d vertex protocol, 1.21.1 -> 1.20.1 -------------------------------------------------
+# The mirror of the forward block, and the same size: setUv is 136 of the 479 ATM10 jars, addVertex
+# 124, Tesselator.begin 110, drawWithShader(MeshData) 100.
+#
+# Two asymmetries are worth knowing before editing this. The Tesselator lifecycle, which is a wall
+# going forward, is trivial here -- one call becomes two, which a bridge does. And endVertex has to
+# be put *back*, which no rule can do; that is Translate#closeVertexChains.
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setColor	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	color	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setColor	(FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	color	(FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setColor	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	color	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setUv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	uv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setUv1	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	overlayCoords	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setUv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	uv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setLight	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	uv2	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setOverlay	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	overlayCoords	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	setNormal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	normal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	setColor	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	color	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	setUv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	uv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	setUv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	uv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	setNormal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	normal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	addVertex	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	addVertex	(Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	addVertex	(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	addVertex	(Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(FFFIFFIIFFF)V	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFIFFIIFFF)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	addVertex	(FFFIFFIIFFF)V	easyport/neobridge/VertexBridge	addVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFIFFIIFFF)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	setNormal	(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/neobridge/VertexBridge	setNormal	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/Tesselator	begin	(Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)Lcom/mojang/blaze3d/vertex/BufferBuilder;	easyport/neobridge/VertexBridge	begin	(Lcom/mojang/blaze3d/vertex/Tesselator;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)Lcom/mojang/blaze3d/vertex/BufferBuilder;
+TYPE_RENAME	com/mojang/blaze3d/vertex/MeshData	easyport/neovanilla/MeshData
+TYPE_RENAME	com/mojang/blaze3d/vertex/MeshData$DrawState	easyport/neovanilla/MeshData$DrawState
+TYPE_RENAME	com/mojang/blaze3d/vertex/ByteBufferBuilder	easyport/neovanilla/ByteBufferBuilder
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	build	()Leasyport/neovanilla/MeshData;	easyport/neobridge/VertexBridge	build	(Lcom/mojang/blaze3d/vertex/BufferBuilder;)Leasyport/neovanilla/MeshData;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	buildOrThrow	()Leasyport/neovanilla/MeshData;	easyport/neobridge/VertexBridge	buildOrThrow	(Lcom/mojang/blaze3d/vertex/BufferBuilder;)Leasyport/neovanilla/MeshData;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexBuffer	upload	(Leasyport/neovanilla/MeshData;)V	easyport/neobridge/VertexBridge	upload	(Lcom/mojang/blaze3d/vertex/VertexBuffer;Leasyport/neovanilla/MeshData;)V
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferUploader	drawWithShader	(Leasyport/neovanilla/MeshData;)V	easyport/neobridge/VertexBridge	drawWithShader	(Leasyport/neovanilla/MeshData;)V
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferUploader	draw	(Leasyport/neovanilla/MeshData;)V	easyport/neobridge/VertexBridge	draw	(Leasyport/neovanilla/MeshData;)V
+CTOR_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	(Leasyport/neovanilla/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V	newBufferBuilder	(Leasyport/neovanilla/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)Lcom/mojang/blaze3d/vertex/BufferBuilder;	easyport/neobridge/VertexBridge
