@@ -176,7 +176,7 @@ when it crosses 25% on one side and falls below 5% on the other.
 
 This section used to be headed "Known limitation: no nested context", and it gave as its
 hypothetical example a recipe's `result.item` becoming `result.id` while `item` stayed valid
-inside ingredients. That is exactly what 1.20.5 did, to 29,824 files in the corpus — the largest
+inside ingredients. That is exactly what 1.20.5 did, to 34,375 files in the corpus — the largest
 single change in the resource layer after the tag namespace — and the flat scan hid it for two
 phases while the limitation sat documented directly above the output.
 
@@ -367,13 +367,13 @@ corpus rather than a reading of the changelog.
 
 | Pass | Scale in the corpus | What it looks like if skipped |
 |---|---|---|
-| Tag namespace `forge:` → `c:` | 29,923 references, 181 of 433 jars | Recipes never match; nothing is logged |
+| Tag namespace `forge:` → `c:` | 33,674 references, 206 of 433 jars | Recipes never match; nothing is logged |
 | Common-tag renames past the swap | 39 tags, mined from the two platform jars | As above, for those tags |
-| Recipe `result.item` → `result.id` | 29,824 files | Recipe fails to decode and is dropped |
+| Recipe `result.item` → `result.id` | 34,375 files | Recipe fails to decode and is dropped |
 | Advancement `display.icon.item` → `id` | 55 mods | The advancement is dropped |
 | `conditions` → `neoforge:conditions` | 47 mods, ~20,000 conditions | Every conditional recipe becomes unconditional |
-| Condition/modifier `type` `forge:` → `neoforge:` | 20,079 `mod_loaded` alone | The condition is unknown; the file is dropped |
-| `forge:conditional` unwrapped | 2,464 files | The recipe type does not exist; the file is dropped |
+| Condition/modifier `type` `forge:` → `neoforge:` | 32,937 type values | The condition is unknown; the file is dropped |
+| `forge:conditional` unwrapped | 2,457 files | The recipe type does not exist; the file is dropped |
 | `data/<ns>/forge/` → `neoforge/` | 59 jars | Biome and structure modifiers never load |
 | `dimension_type` int-provider flattened | 5 mods | The dimension does not exist |
 | `show_notification` dropped | 58 mods | Nothing — cosmetic, and the only one on this list that is |
@@ -382,8 +382,11 @@ corpus rather than a reading of the changelog.
 place in this project where the corpus is the wrong source. `data/c/tags/item/tools/axes.json` in
 some ATM10 mod proves only that a mod author invented that name; Forge's own
 `forge-1.20.1-47.4.22-universal.jar` and `neoforge-21.1.248.jar` are what the game actually
-defines. 321 tags against 463, 187 identical under the directory singularisation, 39 renamed and
-39 with no counterpart at all.
+defines. 321 Forge tags against 463 NeoForge ones: **187 identical** under the directory
+singularisation, **59 renamed** by 42 `COMMON_TAG` rules, **75 with no counterpart** flagged by 39
+`TAG_GONE` rules. Nothing is unaccounted for. Rules outnumber neither because they are keyed on the
+tag path alone — `forge:cobblestone` is one rule covering both the block and the item tag, which
+always move together.
 
 Where no counterpart exists the namespace is swapped anyway and the loss is reported. That looks
 odd until you see what the alternative buys: a mod that both defines and uses `forge:glass/black`

@@ -132,7 +132,7 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
 
 - **A documented limitation is not a handled limitation.** `tools/README.md` carried a section
   headed "Known limitation: no nested context" whose worked example was a recipe's `result.item`
-  becoming `result.id`. That is what 1.20.5 did, to 29,824 corpus files, and the caveat sat
+  becoming `result.id`. That is what 1.20.5 did, to 34,375 corpus files, and the caveat sat
   directly above the report that was being read as a complete answer — by the same person who had
   written the caveat. If a blind spot is worth a paragraph, it is worth a measurement.
 - **Translate the whole corpus before believing any number.** The 22-mod tested set had been the
@@ -257,14 +257,14 @@ layer throws. A recipe naming a tag that no longer exists never matches; a datap
 a key the loader stopped reading is never evaluated. The mod loads, registers every block and item
 it has, and cannot craft any of them, with nothing in any log to say why. Four of the nine
 migrations in the phase fail exactly that way, the largest being the `forge:` → `c:` tag namespace
-at 29,923 references across 181 of the 433 corpus jars. Table in
+at 33,674 references across 206 of the 433 corpus jars. Table in
 [tools/README.md](tools/README.md).
 
 **One rule that is specific to this layer: for tags, the corpus is the wrong source.** Everything
 else here is mined from ATM9 against ATM10. A `data/c/tags/item/tools/axes.json` sitting in an
 ATM10 mod proves only that a mod author invented that name; Forge's and NeoForge's own jars are
 what the game defines. That mapping is mined from the two platform jars — 321 tags against 463,
-187 identical, 39 renamed, 39 with no counterpart. The 39 with none are reported rather than
+187 identical, 59 renamed, 75 with no counterpart. The 75 with none are reported rather than
 approximated.
 
 **Never use resource-coverage percentages as a measure of resource migration.** They carry the same
@@ -463,7 +463,7 @@ and a mystery.
 | Measure | Start of phase | Now |
 |---|---|---|
 | Corpus jars that translate at all | 412 / 433 | **433 / 433** |
-| Datapack rewrites across the corpus | — | **138,095** in 265 of 433 jars |
+| Datapack rewrites across the corpus | — | **137,968** in 265 of 433 jars |
 | Datapack files that stop parsing | — | **0** of 148,051 |
 | `architectury` resource coverage | 0.0% | **100.0%** |
 | Libraries loading | 7 / 8 | 7 / 8 |
@@ -477,7 +477,11 @@ Corpus-wide actions, largest first: `PLATFORM_TYPE_NAMESPACE` 32,937 · `TAG_NAM
 
 Losses, named rather than counted as successes: `RECIPE_RESULT_ID on a mod recipe type` 4,904 in
 94 jars, `TAG_NO_COUNTERPART` 135 in 32 jars, `RECIPE_CONDITIONAL_ALTERNATIVES_DROPPED` 118 in 3
-jars, `RESOURCE_JSON_UNPARSED` 2.
+jars, `RECIPE_CONDITIONAL_UNREADABLE` 7, `RESOURCE_JSON_UNPARSED` 2.
+
+The rewrite total reconciles as 132,929 clean plus the 5,039 that were applied *and* flagged — the
+mod-recipe-type results and the no-counterpart tags, both of which are real edits carrying a
+caveat. The remaining 127 findings changed nothing and are not counted as rewrites.
 
 **The 4,904 is the one to understand.** A mod's own recipe type is decoded by the mod's own code,
 which this pass did not rewrite. Most such codecs delegate to `ItemStack`'s and therefore want
@@ -498,20 +502,20 @@ ROADMAP had this as "mostly already built" with three small items left. That ass
 `resource-report/json-key-deltas.tsv`, and **the tool that produced it documented the exact blind
 spot that was hiding the real work.** `tools/README.md` carried a section headed "Known
 limitation: no nested context" whose hypothetical example was a recipe's `result.item` becoming
-`result.id`. That is what 1.20.5 did, to 29,824 files in the corpus.
+`result.id`. That is what 1.20.5 did, to 34,375 files in the corpus.
 
 Teaching `ResourceMiner` to record key *paths* rather than bare key names took about thirty lines
 and turned three small items into nine:
 
 | Change | Scale | Failure if skipped |
 |---|---|---|
-| Tag namespace `forge:` → `c:` | 29,923 references, **181 of 433 jars** | **silent** — recipes never match |
+| Tag namespace `forge:` → `c:` | 33,674 references, **206 of 433 jars** | **silent** — recipes never match |
 | Common-tag renames past the swap | 39 tags | **silent** |
-| Recipe `result.item` → `result.id` | 29,824 files | recipe dropped |
+| Recipe `result.item` → `result.id` | 34,375 files | recipe dropped |
 | Advancement `display.icon.item` → `id` | 55 mods | advancement dropped |
 | `conditions` → `neoforge:conditions` | 47 mods | **silent** — conditional recipes all fire |
-| Condition/modifier `type` `forge:` → `neoforge:` | 20,079 `mod_loaded` alone | file dropped |
-| `forge:conditional` unwrapped | 2,464 files | file dropped |
+| Condition/modifier `type` `forge:` → `neoforge:` | 32,937 type values | file dropped |
+| `forge:conditional` unwrapped | 2,457 files | file dropped |
 | `data/<ns>/forge/` → `neoforge/` | 59 jars | biome modifiers never load |
 | `dimension_type` int provider flattened | 5 mods | the dimension does not exist |
 
@@ -534,10 +538,12 @@ want 48 rather than 34.
 The `forge:` → `c:` tag mapping is mined from `forge-1.20.1-47.4.22-universal.jar` against
 `neoforge-21.1.248.jar`, not from ATM9 against ATM10. A `data/c/tags/item/tools/axes.json` in some
 ATM10 mod proves only that a mod author invented that name; the platform jars are what the game
-defines. 321 tags against 463, 187 identical under the directory singularisation, 39 renamed, 39
-with no counterpart.
+defines. 321 Forge tags against 463 NeoForge ones: **187 identical** under the directory
+singularisation, **59 renamed** by 42 `COMMON_TAG` rules, **75 with no counterpart** flagged by 39
+`TAG_GONE` rules. Nothing is unaccounted for — rules are keyed on the tag path alone, so one rule
+covers both the block and the item form, which always move together.
 
-The 39 with no counterpart are reported, not approximated. Most are the colour tags — 1.21 replaced
+The 75 with no counterpart are reported, not approximated. Most are the colour tags — 1.21 replaced
 `forge:glass/black` with the intersection of `c:glass_blocks` and `c:dyed/black`, a set operation
 no rename can express. Mapping it to `c:dyed/black` alone would silently widen a stained-glass
 recipe to accept black wool, which is the trade this project always refuses. The namespace is

@@ -628,7 +628,7 @@ The section this replaces said Phase 6 was "mostly already built" and listed thr
 That assessment was made by reading `resource-report/json-key-deltas.tsv`, which was produced by a
 scan of **bare key names** — and the note in `tools/README.md` documenting that blind spot gave as
 its hypothetical example a recipe's `result.item` becoming `result.id`. That is precisely what
-1.20.5 did, to 29,824 files in the corpus. The limitation was written down, directly above the
+1.20.5 did, to 34,375 files in the corpus. The limitation was written down, directly above the
 output, and the output was still read as a complete answer.
 
 Making the scan record key *paths* instead took about thirty lines and turned three small items
@@ -636,13 +636,13 @@ into nine, several of them corpus-wide:
 
 | Change | Scale | Failure if skipped |
 |---|---|---|
-| Tag namespace `forge:` → `c:` | 29,923 references, **181 of 433 jars** | silent — recipes never match |
+| Tag namespace `forge:` → `c:` | 33,674 references, **206 of 433 jars** | silent — recipes never match |
 | Common-tag renames past the swap | 39 tags | silent |
-| Recipe `result.item` → `result.id` | 29,824 files | recipe dropped |
+| Recipe `result.item` → `result.id` | 34,375 files | recipe dropped |
 | Advancement `display.icon.item` → `id` | 55 mods | advancement dropped |
 | `conditions` → `neoforge:conditions` | 47 mods | silent — every conditional recipe fires |
-| Condition/modifier `type` `forge:` → `neoforge:` | 20,079 `mod_loaded` alone | file dropped |
-| `forge:conditional` unwrapped | 2,464 files | file dropped |
+| Condition/modifier `type` `forge:` → `neoforge:` | 32,937 type values | file dropped |
+| `forge:conditional` unwrapped | 2,457 files | file dropped |
 | `data/<ns>/forge/` → `neoforge/` | 59 jars | biome modifiers never load |
 | `dimension_type` int provider flattened | 5 mods | the dimension does not exist |
 
@@ -665,9 +665,10 @@ Everything else in this project is mined from ATM9 against ATM10. The `forge:` �
 is mined from `forge-1.20.1-47.4.22-universal.jar` against `neoforge-21.1.248.jar` instead,
 because a `data/c/tags/item/tools/axes.json` sitting in some ATM10 mod proves only that a mod
 author invented that name. The platform jars are what the game defines: 321 tags against 463, 187
-identical under the directory singularisation, 39 renamed, 39 with no counterpart at all.
+identical under the directory singularisation, 59 renamed by 42 rules, 75 with no counterpart
+flagged by 39 more. Nothing is unaccounted for.
 
-The 39 with no counterpart are reported rather than approximated. Most are the colour tags: 1.21
+The 75 with no counterpart are reported rather than approximated. Most are the colour tags: 1.21
 replaced `forge:glass/black` with the intersection of `c:glass_blocks` and `c:dyed/black`, which
 no rename can express, and mapping it to `c:dyed/black` alone would silently widen a
 stained-glass recipe to accept black wool. That is the trade this project always refuses.

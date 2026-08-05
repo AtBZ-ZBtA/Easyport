@@ -67,12 +67,12 @@ the author's own 1.21.1 port and compared on what each registers into the game:
 | Vanilla API the corpus calls | 92% still resolves after translation |
 | Mixin coordinates the corpus declares | 88% still point at what their author meant |
 | Mixin problems that stop a mod loading | none left |
-| Recipes, tags and advancements rewritten | 138,095 across 265 mods; 0 of 148,051 data files broken |
+| Recipes, tags and advancements rewritten | 137,968 across 265 mods; 0 of 148,051 data files broken |
 
 **The last row is the layer that fails without telling you.** A missing class throws and something
 catches it; a recipe naming a tag that no longer exists just never matches, so the mod loads,
 registers everything, and cannot craft any of it. Forge and NeoForge disagree about the name of
-almost every shared tag — 30,000 references across 181 of the 433 test mods — and nothing anywhere
+almost every shared tag — 33,674 references across 206 of the 433 test mods — and nothing anywhere
 reports a tag that is not there. That is why those numbers are counted rather than assumed, and why
 every file is re-read after rewriting.
 
