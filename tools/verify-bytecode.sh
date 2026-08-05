@@ -37,18 +37,57 @@ else
   ARGS=("$JAR" "$D/neoforge-21.1.248.jar" "forge-compat/forge-compat.jar")
 fi
 for j in "$S"/*.jar; do
+  b="$(basename "$j")"
   # The other direction's platform jar must not be on the path: both declare net/minecraft, and
   # whichever loads first decides what every vanilla signature looks like.
-  case "$(basename "$j")" in forge-1.20.1-official.jar) continue ;; esac
+  case "$b" in forge-1.20.1-official.jar) continue ;; esac
+  # The same hazard, one level down, and newly real: the shared libraries are now kept at both
+  # games' versions side by side (authlib-1201 and authlib-1211, netty-*-1201 and -1211, ...).
+  # Putting both on the path means the first one loaded decides what every signature looks like,
+  # which is arbitrary order deciding a verification result. Take only this direction's.
+  #
+  # An unsuffixed name is the 1.20.1 build, kept because most of the toolchain predates the
+  # split; it is skipped going forward whenever a -1211 twin exists.
+  case "$b" in
+    *-1201.jar) [ "${EASYPORT_DIRECTION:-forward}" = "backward" ] || continue ;;
+    *-1211.jar) [ "${EASYPORT_DIRECTION:-forward}" = "backward" ] && continue ;;
+    # An unsuffixed name is the 1.20.1 build -- most of the toolchain predates the split and still
+    # refers to dfu.jar, guava.jar and friends by those names. So it is kept going backward and
+    # dropped going forward, where the -1211 twin is the right one.
+    #
+    # That convention only holds because the two files that violated it are gone: netty-buffer.jar
+    # and netty-common.jar were 4.1.115, which is neither game's version (1.20.1 ships 4.1.82,
+    # 1.21.1 ships 4.1.97) and had been sitting on both directions' classpaths.
+    *) if [ "${EASYPORT_DIRECTION:-forward}" != "backward" ] \
+         && [ -f "$S/${b%.jar}-1211.jar" ]; then continue; fi ;;
+  esac
   ARGS+=("$j")
+  # Stems of what was actually taken, not of everything on offer. Built from the additions so a
+  # library the direction filter dropped is still allowed to come from the cache below -- an
+  # earlier version keyed off the whole directory and removed guava twice over, once for having a
+  # -1211 twin and once for being "pinned", leaving the verifier with no guava at all.
+  PINNED="${PINNED:-} ${b%.jar}"
 done
+# dfu is Mojang's DataFixerUpper under a shorter name here. Aliased explicitly because the cache
+# spells it in full, and a stem match on "dfu" would never fire.
+case "${PINNED:-}" in *" dfu"*) PINNED="$PINNED datafixerupper" ;; esac
 
-# Minecraft's libraries, from whichever gradle cache has them. Not pinned to exact versions:
-# the verifier only needs the types to resolve, and a minor version difference in fastutil does
-# not change whether an Object2ObjectOpenHashMap is a Map.
+# Minecraft's libraries, from whichever gradle cache has them. Broad on purpose: the verifier only
+# needs the types to resolve, and a minor version difference in fastutil does not change whether an
+# Object2ObjectOpenHashMap is a Map.
+#
+# But the cache holds *both* games' libraries, because both dev environments have run against it.
+# Anything pinned above is therefore skipped here -- otherwise a backward verify picks up
+# authlib 6.0.54 beside the 4.0.43 it was just handed, and which one answers a question is decided
+# by find(1) ordering. Where a version genuinely matters, the pinned copy is the one that wins.
 LIBS="$HOME/.gradle/caches/minecraft/libraries"
 if [ -d "$LIBS" ]; then
-  while IFS= read -r j; do ARGS+=("$j"); done < <(find "$LIBS" -name '*.jar' ! -name '*-sources.jar')
+  while IFS= read -r j; do
+    stem="$(basename "$j" .jar)"
+    stem="${stem%%-[0-9]*}"
+    case " ${PINNED:-} " in *" $stem "* | *" $stem-12"*) continue ;; esac
+    ARGS+=("$j")
+  done < <(find "$LIBS" -name '*.jar' ! -name '*-sources.jar')
 fi
 
 # Libraries the mod bundles itself. A mod jar carrying its own dependencies under jarjar has

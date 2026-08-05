@@ -35,7 +35,10 @@ PLATFORM=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar fo
           devenv/spi/netty-codec-1211.jar devenv/spi/netty-handler-1211.jar
           devenv/spi/netty-transport-1211.jar)
 
-OUT="batch-report/verify-sweep"
+# Overridable, and it matters at corpus scale: a 433-jar run writes about 1,700 files here, which
+# is not something to drop into the repo beside a committed 22-mod result. Point it at a scratch
+# directory for a full sweep and commit the summary rather than the run.
+OUT="${EASYPORT_SWEEP_OUT:-batch-report/verify-sweep}"
 mkdir -p "$OUT" translated
 
 # The distinct error shapes in one verify log, stripped of their counts.

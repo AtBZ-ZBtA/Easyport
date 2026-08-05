@@ -29,7 +29,7 @@ CP="$CP;$S/forge-distmarker.jar"
 # Vanilla signatures reference them constantly: Registry.key() returns something whose supertype is
 # com.mojang.serialization.Keyable, and without DFU the compiler cannot even read the method.
 CP="$CP;$S/dfu.jar;$S/guava.jar;$S/gson.jar;$S/commons-lang3.jar;$S/brigadier.jar"
-CP="$CP;$S/netty-buffer.jar;$S/netty-common.jar;$S/nightconfig-core.jar;$S/slf4j-api.jar"
+CP="$CP;$S/netty-buffer-1201.jar;$S/netty-common-1201.jar;$S/nightconfig-core.jar;$S/slf4j-api.jar"
 # blaze3d's vertex API takes Matrix4f/Matrix3f directly, so VertexBridge needs joml. Same build
 # (1.10.5) under both game versions, hence no suffix.
 CP="$CP;$S/joml.jar"

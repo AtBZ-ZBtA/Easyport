@@ -18,7 +18,7 @@ CP="$CP;$S/distmarker.jar;$S/commons-lang3.jar;$S/gson.jar"
 # FriendlyByteBuf extends netty's ByteBuf, so javac needs netty on the classpath to resolve any
 # call on a buffer -- even writeVarInt, which is declared on FriendlyByteBuf itself. Only needed
 # to compile; at runtime Minecraft brings its own.
-CP="$CP;$S/netty-buffer.jar;$S/netty-common.jar;$S/brigadier.jar"
+CP="$CP;$S/netty-buffer-1211.jar;$S/netty-common-1211.jar;$S/brigadier.jar"
 # joml is not inside the NeoForge artifact, and blaze3d's vertex API takes Matrix3f/Matrix4f
 # directly, so VertexBridge will not compile without it.
 CP="$CP;$S/joml.jar"
