@@ -61,6 +61,18 @@ rather than from rules, so nothing in `forward.rules.tsv` marks that work done. 
 were taught about them they showed roughly 1,600 jar-references of *completed* work at the head of
 the queue. If you add a pass that needs no rules, teach the reports about it in the same change.
 
+**Adding a corpus, or chasing one mod that will not translate.** The corpus is an *input*, not a
+component — every Java tool takes the mods folder as an argument, and the two shell wrappers read
+`EASYPORT_SOURCE_MODS` / `EASYPORT_TARGET_MODS`. Re-run `MemberScan` against the new folder and
+both gap reports re-rank themselves, so whatever the old corpus never exercised surfaces in
+priority order instead of at a launch. A single problem mod needs no corpus at all: translate it,
+run `verify-bytecode.sh`, read the report. Full workflow in [tools/README.md](tools/README.md).
+
+What that does *not* carry across is a different Minecraft version. The seven mechanisms are
+version-agnostic — they compare a mod against whatever platform jar they are handed — but
+`rules/forward.rules.tsv` and `forge-compat/` are specific to 1.20.1 → 1.21.1. Roughly: one more
+pack is hours, one more mod is minutes, one more Minecraft version is a phase.
+
 **Two rules of thumb this produced, for events:**
 
 - An event NeoForge *removed* gets a **link-only shim**, never a rename. The mod links and the

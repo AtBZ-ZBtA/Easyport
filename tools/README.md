@@ -447,6 +447,53 @@ remapper is the project's critical path.
 
 ---
 
+## Pointing the whole thing at a different corpus
+
+**The corpus is an input, not a component.** Every Java tool here takes the mods folder as an
+argument; the two shell wrappers default to All the Mods 9 / 10 and take
+`EASYPORT_SOURCE_MODS` / `EASYPORT_TARGET_MODS` instead. Nothing else in the toolchain knows
+where the mods live.
+
+```bash
+export EASYPORT_SOURCE_MODS="/packs/somepack-1.20.1/mods"
+export EASYPORT_TARGET_MODS="/packs/somepack-1.21.1/mods"
+
+# 1. What does this corpus use, and how often?
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java \
+    "$EASYPORT_SOURCE_MODS" "net/minecraftforge/" > api-report/forge-api-usage.txt
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java \
+    "$EASYPORT_SOURCE_MODS" "net/minecraft/"      > api-report/vanilla-api-usage.txt
+
+# 2. Re-rank both gap reports against it. Same commands as in STATE.md.
+# 3. Which of its mods have a reference port to measure against?
+java tools/CorpusAnalyzer.java "$EASYPORT_SOURCE_MODS" "$EASYPORT_TARGET_MODS" corpus-report
+
+# 4. Build a work list from ground-truth-pairs.tsv and sweep it.
+bash tools/verify-sweep.sh < my-list.tsv
+```
+
+### What that actually buys, and what it doesn't
+
+A **second corpus for the same version pair** is close to free and immediately useful. The gap
+reports re-rank themselves, so anything the first corpus happened not to exercise appears in
+priority order rather than as a surprise at launch. `CorpusAnalyzer` finds whichever of its mods
+were ported by their own authors, and those become new ground truth — for measuring coverage and
+for `RuleMiner` to mine against.
+
+A **single mod that will not translate** needs no new corpus at all. Translate it, run
+`verify-bytecode.sh` on the result, and read the report: between them they name every unresolved
+symbol, every type mismatch, and every illegal hierarchy. That is the same loop this project runs
+on itself, and it does not care whether the jar came from a pack or from a user.
+
+What a new corpus does **not** buy is a different *version pair*. The seven adaptation mechanisms
+are version-agnostic — they compare a mod against whatever platform jar you hand them — but
+`rules/forward.rules.tsv` and everything in `forge-compat/` are specific to 1.20.1 → 1.21.1.
+Aiming at a new Minecraft version means a new rule file and a new pass over the shims, with the
+mechanisms and the tooling carrying over intact.
+
+The honest ranking of effort, then: **one more pack, hours. One more mod, minutes. One more
+Minecraft version, a phase.**
+
 ## The offline analysis tools — **start here**
 
 `UsageScan`, `MemberScan` and `RenameGaps` answer, without launching the game, what the

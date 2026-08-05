@@ -113,6 +113,14 @@ Mods present in both packs were ported by their own authors, which is what makes
 as ground truth. Don't prune either folder — mods unique to one version are needed test
 cases too.
 
+**Any pack works, and you can use more than one.** The corpus is an input to the tools, not a
+part of them: every analysis tool takes the mods folder as an argument, and the scripts read
+`EASYPORT_SOURCE_MODS` / `EASYPORT_TARGET_MODS`. Adding a second pack re-ranks the work queue
+automatically, so whatever the first one never happened to use shows up in priority order.
+
+If a single mod won't translate, you don't need a pack at all — translate it and read the report
+it writes, which names every symbol it could not resolve. See [tools/README.md](tools/README.md).
+
 ---
 
 ## License

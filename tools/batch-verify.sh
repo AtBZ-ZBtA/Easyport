@@ -15,8 +15,11 @@ set -u
 # them, leaving javac with no classpath and every mod failing identically at translate.
 cd "$(dirname "$0")/.." || exit 1
 
-A9="scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods"
-A10="scrapyard/forge 1.21.1 modpacks/All the Mods 10 - ATM10/mods"
+# Corpus location. Overridable, because the corpus is an input to this project rather than part
+# of it -- pointing these at a different pack is how you ask "what does that one still break on".
+# Nothing else in the toolchain knows where the mods live; every Java tool takes it as an argument.
+A9="${EASYPORT_SOURCE_MODS:-scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods}"
+A10="${EASYPORT_TARGET_MODS:-scrapyard/forge 1.21.1 modpacks/All the Mods 10 - ATM10/mods}"
 CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar;devenv/spi/asm-analysis.jar"
 SUPPORT_SRC="testkit/inspector/inspector.jar forge-compat/forge-compat.jar"
 # Target-platform jar, so the transformer can tell which mixin targets still exist.
