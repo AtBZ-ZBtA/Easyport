@@ -50,6 +50,10 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB com/supermartijn642/core/data/recipe/ConditionalRecipeSerializer.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
      1  MIXIN_DROP (target became an interface: net/minecraft/client/renderer/texture/atlas/SpriteResourceLoader) SpriteResourceLoaderMixin
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) com/supermartijn642/core/registry/ClientRegistrationHandler
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) com/supermartijn642/core/mixin/CraftingHelperMixin.registerConditionSerializer
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) com/supermartijn642/core/mixin/GameDataMixin.postRegisterEvents
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) com/supermartijn642/core/mixin/LevelRendererMixin.renderLevel
+     1  MIXIN_SOFT_FAIL (ModifyVariable no longer resolves; injector disabled, mixin kept) com/supermartijn642/core/mixin/SpriteResourceLoaderMixin.appendSprites
 
 Wrote translated\supermartijn642corelib.jar
       translated\supermartijn642corelib.report.tsv

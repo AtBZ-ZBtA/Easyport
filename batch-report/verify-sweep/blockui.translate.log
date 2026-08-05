@@ -8,6 +8,7 @@ Applied:
      1  COERCE net/minecraft/client/resources/model/ModelResourceLocation -> net/minecraft/resources/ResourceLocation
      6  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
     11  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+     1  EVENT_SPLIT abstract listener: net/minecraftforge/client/event/RenderGuiOverlayEvent -> 2 concrete
      1  FIELD_TO_STATIC net/neoforged/fml/common/EventBusSubscriber$Bus#FORGE -> easyport/bridge/BusBridge#forge
      1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      2  METHOD_TO_STATIC net/neoforged/fml/common/EventBusSubscriber$Bus#bus -> easyport/bridge/BusBridge#bus

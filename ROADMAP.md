@@ -582,22 +582,35 @@ by owning type, and one shape stands outside all seven mechanisms: an *override*
 sites, and a mod declaring `saveAdditional(CompoundTag)` is not calling anything — it is failing
 to override something.
 
-### Phase 5 — Mixin & coremod handling · 1–3 months · **PROMOTED from last to core**
-*Gated by: per-mod bespoke work. Runs parallel with Phases 3–4.*
+### Phase 5 — Mixin & coremod handling — **DONE**
 
-Originally planned as a closing long tail. The corpus measurement moved it: **48.6% of
-paired mods carry mixins, so coverage is capped at 51.4% until this is solved.** It is not
-optional and it cannot wait for the end.
+Planned as the longest phase, on the grounds that it "resists batching" and would need per-mod
+bespoke work against 1,786 mixin classes. Wrong about the shape, and wrong in a useful direction.
 
-Refmap remapping is tractable. Injection-point repair is the hard part — when a target
-method's body changed across versions, the `@At` anchor must be re-derived. Approach is
-corpus-driven: every one of the **1,786 mixin classes** in the paired set has an
-author-written 1.21.1 counterpart, so repair patterns are learned from worked examples
-rather than derived analytically.
+**What the plan got right.** Injection-point repair really is the hard part, and it is not a
+signature problem: the anchor names a member that still exists and the method being patched stopped
+calling it. What the plan missed is that this is answerable *offline* — the platform jar has the
+bodies, and Mixin scans exactly the resolved target method, so reading that one method's instruction
+list asks the same question Mixin will. 53 of them, invisible to every other check.
 
-Sequence it by weight — the median mixin mod carries ~13 classes and is tractable early;
-the top of the distribution (`oculus` 188, `railways` 177, `modernfix` 171) is late work.
-**Still the longest phase, because it resists batching.**
+**What the plan got wrong.** It assumed the work was repair, learned from worked examples. Measured,
+the distribution has no head at all — nothing in the queue exceeds 8 jars — so per-case repair is
+all cost and no leverage. The leverage was in **changing the granularity of failure**. A broken
+coordinate used to delete the whole mixin class; `require = 0` disables the one injector and leaves
+the rest applying. That took every mixin failure in the corpus off the launch path without
+addressing a single one of them individually.
+
+**What the plan missed entirely:** that removing a `@Accessor` annotation reclassifies the *whole
+mixin* (`MixinInfo.getVariant`), turning one dead accessor into a mixin that may no longer target a
+class. It regressed an unrelated library from 100% to not loading.
+
+Measured outcome: libraries loading 6/8 → **7/8**, mixin coordinates intact **88.4%**, and
+coordinates that abort a launch **595 → 0**. The 595 still lose their behaviour and are ranked in
+[api-report/README.md](api-report/README.md); that queue is dominated by client rendering, which
+`runData` cannot exercise.
+
+The corpus-driven learning from the 1,786 pairs was **not** built. It was not needed for the exit
+criterion and the flat distribution argues against doing it blind. The pairs are still there.
 
 ### Phase 6 — Resource/data migration · days
 Independent of the bytecode work — pullable earlier as a self-contained slice. **Work list

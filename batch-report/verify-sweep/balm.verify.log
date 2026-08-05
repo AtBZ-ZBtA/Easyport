@@ -1,5 +1,5 @@
 balm.jar
-  399 classes, 1985 methods analysed
+  399 classes, 1986 methods analysed
   0 classes with a verification error (0 methods)
   5 other-mod classes absent from this classpath, not counted
   CLEAN - every method type-checks

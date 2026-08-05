@@ -20,14 +20,23 @@ java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scr
 | `network-usage.txt` | The Forge scan narrowed to `net.minecraftforge.network` — the input to the networking shims |
 | `unresolved-types.txt` | Output of `RenameGaps`: what nothing resolves, plus four classes of *wrong* resolution |
 | `vanilla-gaps.txt` | Output of `VanillaGaps`: vanilla members that no longer exist on types that still do |
+| `mixin-gaps.txt` | Output of `MixinGaps`: mixin coordinates that no longer point at anything. **Reads the jars, not a usage file** |
 
-## Two reports, because they are not the same question
+## Three reports, because they are not the same question
 
 `RenameGaps` asks whether a **Forge** type resolves to anything. Pointed at `net.minecraft` that
 question is nearly always answered yes and is the wrong one: 1.21 mostly kept type names and
 changed what is *inside* them. `ItemStack` still exists and no longer has `getTag`. So
 `VanillaGaps` inverts the emphasis — missing types are a footnote, and the body of the report is
 members that no longer exist on types that do.
+
+`MixinGaps` asks a question **neither of the others can even see**. Both of them read the mined
+usage files above, which works because ordinary code addresses its targets through the constant
+pool. Mixins address theirs as *text* — `@Inject(method = "...")`, `@At(target = "...")`,
+`@Accessor("...")` — so no member scan contains them, and a mixin-heavy mod gets a clean bill of
+health from both right up to the launch that aborts. It reads the jars directly, and its output is
+not a list of unresolved symbols but a list of **behaviour the translated mod no longer has**:
+everything it reports already loads.
 
 Read `vanilla-gaps.txt`'s **`BY OWNING TYPE`** rollup before its ranked lists. It says which
 *subsystem* to fix, which is a better question than which single member: forty one-jar findings
@@ -134,3 +143,28 @@ On the vanilla side, ranked by the `BY OWNING TYPE` rollup:
 is failing to override something. The method links, the class loads, and vanilla never calls it.
 Fixing it means rewriting the mod's own method signature and adapting its body, which is a
 different kind of pass to anything here.
+
+On the mixin side, the numbers mean something different and the difference matters. As of Phase 5
+sign-off, of 5,129 coordinates **88.4% are intact** — 4,485 unchanged plus 49 whose descriptor was
+repaired off the platform — and the remaining 595 are split 366 defused injectors and 229 stubbed
+accessors and shadows.
+
+**All 595 load.** None of them aborts a launch any more, and every one of them has stopped doing
+what its author intended. That is the trade the phase made deliberately, and it is why the report
+counts the four outcomes separately instead of printing a pass rate.
+
+| Target | Jars | What it is |
+|---|---|---|
+| `ItemStack` | 12 | The same data-component migration, reached through mixins |
+| `ModelBakery` | 8 | 1.21 restructured model loading; `loadModel` is gone outright |
+| `WorldGenRegion` | 8 | Accessors onto fields that moved |
+| `PotionBrewing` | 8 | Became instance-based with a builder; `POTION_MIXES` and `addMix` both gone |
+| `RecipeManager` | 7 | `RecipeInput` replaced `Container` throughout |
+| `LevelRenderer` | 6 | Renderer signatures changed wholesale |
+| `ChunkMap` | 6 | Chunk tracking rewritten |
+| `EnchantmentHelper` | 6 | Follows the data-driven enchantment change |
+
+**Read that list for its shape, not its entries.** It is overwhelmingly *client rendering*, which is
+worth knowing twice over: those mods will load and then draw the wrong thing, and `runData` — the
+only launch harness this project has — never touches any of it. Nothing here will catch a regression
+in that column.

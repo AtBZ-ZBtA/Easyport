@@ -50,7 +50,9 @@ Applied:
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB top/theillusivec4/curios/common/util/EquipCurioTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
-     1  MIXIN_DROP (@Shadow field not found: net/minecraft/world/level/storage/loot/functions/ApplyBonusCount#enchantment) MixinApplyBonusCount
+     1  MIXIN_SHADOW_FIELD_STUB (no longer on the target; became a mixin-added field) top/theillusivec4/curios/mixin/core/MixinApplyBonusCount.enchantment
+     1  MIXIN_SOFT_FAIL (ModifyArg no longer resolves; injector disabled, mixin kept) top/theillusivec4/curios/mixin/core/MixinShearsItem.curios$applyFortuneToShears
+     1  MIXIN_SOFT_FAIL (ModifyVariable no longer resolves; injector disabled, mixin kept) top/theillusivec4/curios/mixin/core/MixinApplyBonusCount.curios$applyFortune
     12  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
      5  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LivingEvent$LivingTickEvent
     11  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/living/LootingLevelEvent

@@ -1,0 +1,336 @@
+=== MIXIN COORDINATE RESOLUTION ===
+
+jars scanned              433
+jars carrying mixins      189
+unreadable jars           0
+vanilla mixin targets     2340
+non-vanilla targets       711  (not judged)
+
+coordinates checked       5129
+  intact                  4534  (88.4%)
+    resolve unchanged     4485
+    descriptor repaired   49
+  behaviour lost          595
+    injector defused      366
+    accessor/shadow stub  229
+
+excluded, by reason
+  wildcard selectors      31
+  owner not judgeable     109
+  anchors with no target  1787
+  author marked optional  15
+
+Everything listed below loads. What it lists is behaviour the
+translated mod no longer has -- the Phase 5 work queue proper.
+
+=== SELECTOR SIGNATURE CHANGED ===
+    3  net/minecraft/client/multiplayer/ClientChunkCache#getChunk
+         (IILnet/minecraft/world/level/chunk/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/LevelChunk; -> (IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/ChunkAccess; | (IIZ)Lnet/minecraft/world/level/chunk/LevelChunk; | (IILnet/minecraft/world/level/chunk/status/ChunkStatus;Z)Lnet/minecraft/world/level/chunk/LevelChunk;
+    2  net/minecraft/client/Minecraft#reloadResourcePacks
+         (Z)Ljava/util/concurrent/CompletableFuture; -> ()Ljava/util/concurrent/CompletableFuture; | (ZLnet/minecraft/client/Minecraft$GameLoadCookie;)Ljava/util/concurrent/CompletableFuture;
+    2  net/minecraft/client/model/geom/ModelPart#render
+         (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V -> (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V | (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V
+    2  net/minecraft/client/particle/ParticleEngine#render
+         (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/client/Camera;FLnet/minecraft/client/renderer/culling/Frustum;)V -> (Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/client/Camera;FLnet/minecraft/client/renderer/culling/Frustum;Ljava/util/function/Predicate;)V | (Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/client/Camera;F)V
+    2  net/minecraft/client/renderer/LevelRenderer#renderClouds
+         (Lcom/mojang/blaze3d/vertex/PoseStack;Lorg/joml/Matrix4f;FDDD)V -> (Lcom/mojang/blaze3d/vertex/PoseStack;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FDDD)V
+    2  net/minecraft/client/renderer/LevelRenderer#renderLevel
+         (Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V -> (Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;)V
+    2  net/minecraft/client/renderer/LevelRenderer#renderSky
+         (Lcom/mojang/blaze3d/vertex/PoseStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/Camera;ZLjava/lang/Runnable;)V -> (Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;FLnet/minecraft/client/Camera;ZLjava/lang/Runnable;)V
+    2  net/minecraft/client/renderer/blockentity/BeaconRenderer#renderBeaconBeam
+         (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/resources/ResourceLocation;FFJII[FFF)V -> (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;FJIII)V | (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/resources/ResourceLocation;FFJIIIFF)V
+    2  net/minecraft/network/protocol/game/ClientboundMapItemDataPacket#<init>
+         (IBZLjava/util/Collection;Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData$MapPatch;)V -> (Lnet/minecraft/world/level/saveddata/maps/MapId;BZLjava/util/Collection;Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData$MapPatch;)V | (Lnet/minecraft/world/level/saveddata/maps/MapId;BZLjava/util/Optional;Ljava/util/Optional;)V
+         (Lnet/minecraft/network/FriendlyByteBuf;)V -> (Lnet/minecraft/world/level/saveddata/maps/MapId;BZLjava/util/Collection;Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData$MapPatch;)V | (Lnet/minecraft/world/level/saveddata/maps/MapId;BZLjava/util/Optional;Ljava/util/Optional;)V
+    2  net/minecraft/resources/ResourceLocation#<init>
+         (Ljava/lang/String;Ljava/lang/String;Lnet/minecraft/resources/ResourceLocation$Dummy;)V -> (Ljava/lang/String;Ljava/lang/String;)V
+         ([Ljava/lang/String;)V -> (Ljava/lang/String;Ljava/lang/String;)V
+    2  net/minecraft/server/ReloadableServerResources#updateRegistryTags
+         (Lnet/minecraft/core/RegistryAccess;)V -> ()V | (Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/tags/TagManager$LoadResult;)V
+    2  net/minecraft/world/item/ItemStack#<init>
+         (Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/nbt/CompoundTag;)V -> (Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/DataComponentPatch;)V | (Lnet/minecraft/core/Holder;)V | (Lnet/minecraft/world/level/ItemLike;I)V | (Lnet/minecraft/world/level/ItemLike;)V | (Lnet/minecraft/core/Holder;I)V | (Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V | (Ljava/lang/Void;)V
+         (Lnet/minecraft/nbt/CompoundTag;)V -> (Lnet/minecraft/core/Holder;ILnet/minecraft/core/component/DataComponentPatch;)V | (Lnet/minecraft/core/Holder;)V | (Lnet/minecraft/world/level/ItemLike;I)V | (Lnet/minecraft/world/level/ItemLike;)V | (Lnet/minecraft/core/Holder;I)V | (Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/core/component/PatchedDataComponentMap;)V | (Ljava/lang/Void;)V
+    2  net/minecraft/world/item/crafting/RecipeManager#getRecipeFor
+         (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/Container;Lnet/minecraft/world/level/Level;)Ljava/util/Optional; -> (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/crafting/RecipeHolder;)Ljava/util/Optional; | (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;Lnet/minecraft/resources/ResourceLocation;)Ljava/util/Optional; | (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;
+         (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/Container;Lnet/minecraft/world/level/Level;Lnet/minecraft/resources/ResourceLocation;)Ljava/util/Optional; -> (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/crafting/RecipeHolder;)Ljava/util/Optional; | (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;Lnet/minecraft/resources/ResourceLocation;)Ljava/util/Optional; | (Lnet/minecraft/world/item/crafting/RecipeType;Lnet/minecraft/world/item/crafting/RecipeInput;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;
+    2  net/minecraft/world/item/trading/MerchantOffers#<init>
+         (Lnet/minecraft/nbt/CompoundTag;)V -> ()V | (Ljava/util/Collection;)V | (I)V
+       ... and 19 more in a single jar each
+
+=== SELECTOR METHOD GONE ===
+    6  net/minecraft/client/resources/model/ModelBakery#loadModel
+         Inject
+         Redirect
+    4  net/minecraft/client/Minecraft#clearLevel
+         Inject
+    3  com/mojang/blaze3d/vertex/BufferBuilder#endVertex
+         Inject
+    3  net/minecraft/server/level/ChunkMap#setViewDistance
+         Inject
+         ModifyVariable
+    2  com/mojang/blaze3d/systems/RenderSystem#_setShaderFogEnd
+         Inject
+    2  com/mojang/blaze3d/systems/RenderSystem#_setShaderFogStart
+         Inject
+    2  com/mojang/blaze3d/vertex/BufferBuilder#begin
+         ModifyVariable
+    2  com/mojang/blaze3d/vertex/BufferBuilder#end
+         Inject
+    2  com/mojang/blaze3d/vertex/BufferBuilder#reset
+         Inject
+    2  com/mojang/blaze3d/vertex/BufferBuilder#vertex
+         ModifyVariable
+    2  net/minecraft/client/player/AbstractClientPlayer#getCloakTextureLocation
+         Inject
+    2  net/minecraft/client/player/AbstractClientPlayer#isCapeLoaded
+         Inject
+    2  net/minecraft/client/renderer/GameRenderer#getPositionColorTexShader
+         Inject
+    2  net/minecraft/client/renderer/GameRenderer#getPositionTexColorNormalShader
+         Inject
+    2  net/minecraft/client/renderer/GameRenderer#getRendertypeTranslucentNoCrumblingShader
+         Inject
+    2  net/minecraft/client/renderer/LevelRenderer#renderChunkLayer
+         Inject
+    2  net/minecraft/client/renderer/texture/SpriteContents#sodium$setActive
+         Inject
+    2  net/minecraft/client/renderer/texture/TextureManager#method_18167
+         Inject
+    2  net/minecraft/client/renderer/texture/atlas/SpriteResourceLoader#load
+         Inject
+         ModifyVariable
+    2  net/minecraft/network/protocol/game/ClientboundMapItemDataPacket#write
+         Inject
+    2  net/minecraft/resources/RegistryDataLoader#loadRegistryContents
+         Inject
+         ModifyArg
+    2  net/minecraft/world/entity/animal/IronGolem#method_6498
+         Inject
+    2  net/minecraft/world/item/enchantment/EnchantmentHelper#doPostHurtEffects
+         Inject
+    2  net/minecraft/world/level/block/AbstractCauldronBlock#use
+         ModifyReturnValue
+         Inject
+    2  net/minecraft/world/level/block/entity/JukeboxBlockEntity#load
+         Inject
+       ... and 98 more in a single jar each
+
+=== INJECTION POINT SIGNATURE CHANGED ===
+    2  net/minecraft/client/particle/ParticleEngine#render
+         (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/client/Camera;FLnet/minecraft/client/renderer/culling/Frustum;)V -> (Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/client/Camera;FLnet/minecraft/client/renderer/culling/Frustum;Ljava/util/function/Predicate;)V | (Lnet/minecraft/client/renderer/LightTexture;Lnet/minecraft/client/Camera;F)V
+    2  net/minecraft/world/item/enchantment/EnchantmentHelper#getRandomItemWith
+         (Lnet/minecraft/world/item/enchantment/Enchantment;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Predicate;)Ljava/util/Map$Entry; -> (Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/entity/LivingEntity;Ljava/util/function/Predicate;)Ljava/util/Optional;
+       ... and 21 more in a single jar each
+
+=== INJECTION POINT GONE ===
+    2  com/mojang/blaze3d/vertex/BufferBuilder#begin
+         method
+    2  com/mojang/blaze3d/vertex/BufferBuilder#end
+         method
+    2  net/minecraft/client/renderer/RenderType#end
+         method
+    2  net/minecraft/world/item/ItemStack#appendEnchantmentNames
+         method
+    2  net/minecraftforge/eventbus/api/IEventBus#post
+         method
+       ... and 16 more in a single jar each
+
+=== INJECTION POINT UNREACHABLE ===
+    2  com/mojang/blaze3d/vertex/BufferBuilder#begin
+         Redirect into net/minecraft/client/renderer/MultiBufferSource$BufferSource
+    2  com/mojang/blaze3d/vertex/BufferBuilder#end
+         Inject into net/minecraft/client/renderer/LevelRenderer
+    2  net/minecraft/client/renderer/RenderType#end
+         Inject into net/minecraft/client/renderer/MultiBufferSource$BufferSource
+    2  net/minecraft/server/level/ServerPlayer#getLastSectionPos
+         Redirect into net/minecraft/server/level/ChunkMap
+         Inject into net/minecraft/server/level/ChunkMap
+    2  net/minecraft/world/item/ItemStack#appendEnchantmentNames
+         Redirect into net/minecraft/world/item/ItemStack
+         ModifyArg into net/minecraft/world/item/ItemStack
+    2  net/minecraft/world/item/ItemStack#getItem
+         Inject into net/minecraft/client/renderer/entity/layers/HumanoidArmorLayer
+         WrapOperation into net/minecraft/client/gui/screens/inventory/LoomScreen
+    2  net/minecraftforge/eventbus/api/IEventBus#post
+         ModifyArg into net/minecraft/world/level/chunk/storage/ChunkSerializer
+         Redirect into net/minecraft/client/renderer/entity/player/PlayerRenderer
+         Redirect into net/minecraft/client/renderer/entity/LivingEntityRenderer
+       ... and 39 more in a single jar each
+
+=== ACCESSOR TARGET GONE ===
+    8  net/minecraft/server/level/WorldGenRegion#structureManager
+         Accessor aether$getStructureManager()Lnet/minecraft/world/level/StructureManager;
+         Accessor getStructureManager()Lnet/minecraft/world/level/StructureManager;
+    5  net/minecraft/world/item/alchemy/PotionBrewing#POTION_MIXES
+         Accessor mixList()Ljava/util/List;
+         Accessor getPotionMixes()Ljava/util/List;
+         Accessor getConversions()Ljava/util/List;
+         Accessor getMixes()Ljava/util/List;
+         Accessor zeta$getPotionMixes()Ljava/util/List;
+    4  net/minecraft/server/level/WorldGenRegion#firstPos
+         Accessor getFirstPos()Lnet/minecraft/world/level/ChunkPos;
+    4  net/minecraft/server/level/WorldGenRegion#lastPos
+         Accessor getLastPos()Lnet/minecraft/world/level/ChunkPos;
+    4  net/minecraft/server/level/WorldGenRegion#size
+         Accessor getSize()I
+    2  net/minecraft/advancements/CriteriaTriggers#CRITERIA
+         Accessor getValues()Ljava/util/Map;
+    2  net/minecraft/client/gui/components/ImageButton#resourceLocation
+         Accessor getResourceLocation()Lnet/minecraft/resources/ResourceLocation;
+         Accessor kjs$getButtonTexture()Lnet/minecraft/resources/ResourceLocation;
+    2  net/minecraft/data/loot/BlockLootSubProvider#HAS_SILK_TOUCH
+         Accessor aether$hasSilkTouch()Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition$Builder;
+         Accessor create$HAS_SILK_TOUCH()Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition$Builder;
+    2  net/minecraft/world/entity/Entity#isInsidePortal
+         Accessor aether$isIsInsidePortal()Z
+         Accessor getIsInsidePortal()Z
+       ... and 27 more in a single jar each
+
+=== INVOKER TARGET GONE ===
+    3  net/minecraft/world/item/alchemy/PotionBrewing#addMix
+         Invoker callAddMix(Lnet/minecraft/world/item/alchemy/Potion;Lnet/minecraft/world/item/Item;Lnet/minecraft/world/item/alchemy/Potion;)V
+    3  net/minecraft/world/item/crafting/ShapedRecipe#dissolvePattern
+         Invoker bookshelf$dissolvePattern([Ljava/lang/String;Ljava/util/Map;II)Lnet/minecraft/core/NonNullList;
+         Invoker callDissolvePattern([Ljava/lang/String;Ljava/util/Map;II)Lnet/minecraft/core/NonNullList;
+         Invoker invokeCreatePatternMatrix([Ljava/lang/String;Ljava/util/Map;II)Lnet/minecraft/core/NonNullList;
+    3  net/minecraft/world/item/crafting/ShapedRecipe#keyFromJson
+         Invoker bookshelf$keyFromJson(Lcom/google/gson/JsonObject;)Ljava/util/Map;
+         Invoker callKeyFromJson(Lcom/google/gson/JsonObject;)Ljava/util/Map;
+         Invoker invokeReadSymbols(Lcom/google/gson/JsonObject;)Ljava/util/Map;
+    3  net/minecraft/world/item/crafting/ShapedRecipe#patternFromJson
+         Invoker bookshelf$patternFromJson(Lcom/google/gson/JsonArray;)[Ljava/lang/String;
+         Invoker callPatternFromJson(Lcom/google/gson/JsonArray;)[Ljava/lang/String;
+         Invoker invokeGetPattern(Lcom/google/gson/JsonArray;)[Ljava/lang/String;
+    3  net/minecraft/world/item/crafting/ShapedRecipe#shrink
+         Invoker bookshelf$shrink([Ljava/lang/String;)[Ljava/lang/String;
+         Invoker callShrink([Ljava/lang/String;)[Ljava/lang/String;
+         Invoker invokeRemovePadding([Ljava/lang/String;)[Ljava/lang/String;
+    2  net/minecraft/client/renderer/LevelRenderer#renderChunkLayer
+         Invoker invokeRenderChunkLayer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack;DDDLorg/joml/Matrix4f;)V
+       ... and 8 more in a single jar each
+
+=== SHADOW RETYPED ===
+    4  com/mojang/blaze3d/vertex/BufferBuilder#buffer
+         Ljava/nio/ByteBuffer; -> Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;
+    3  net/minecraft/server/level/ChunkMap#updateChunkTracking
+         (Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/ChunkPos;Lorg/apache/commons/lang3/mutable/MutableObject;ZZ)V -> (Lnet/minecraft/server/level/ServerPlayer;)V
+    2  net/minecraft/client/renderer/MultiBufferSource$BufferSource#fixedBuffers
+         Ljava/util/Map; -> Ljava/util/SequencedMap;
+    2  net/minecraft/client/renderer/RenderBuffers#fixedBufferPack
+         Lnet/minecraft/client/renderer/ChunkBufferBuilderPack; -> ()Lnet/minecraft/client/renderer/SectionBufferBuilderPack; | Lnet/minecraft/client/renderer/SectionBufferBuilderPack;
+    2  net/minecraft/client/resources/model/ModelBakery#MISSING_MODEL_LOCATION
+         Lnet/minecraft/client/resources/model/ModelResourceLocation; -> Lnet/minecraft/resources/ResourceLocation;
+    2  net/minecraft/world/entity/LivingEntity#getEffect
+         (Lnet/minecraft/world/effect/MobEffect;)Lnet/minecraft/world/effect/MobEffectInstance; -> (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/effect/MobEffectInstance;
+    2  net/minecraft/world/entity/LivingEntity#hasEffect
+         (Lnet/minecraft/world/effect/MobEffect;)Z -> (Lnet/minecraft/core/Holder;)Z
+    2  net/minecraft/world/inventory/SmithingMenu#selectedRecipe
+         Lnet/minecraft/world/item/crafting/SmithingRecipe; -> Lnet/minecraft/world/item/crafting/RecipeHolder;
+    2  net/minecraft/world/item/crafting/RecipeManager#byType
+         (Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map; -> (Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Collection; | Lcom/google/common/collect/Multimap;
+    2  net/minecraft/world/level/block/DispenserBlock#getDispenseMethod
+         (Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior; -> (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
+       ... and 29 more in a single jar each
+
+=== SHADOW GONE ===
+    6  net/minecraft/client/resources/model/ModelBakery#cacheAndQueueDependencies
+         method (Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/resources/model/UnbakedModel;)V
+    3  com/mojang/blaze3d/vertex/BufferBuilder#nextElementByte
+         field I
+    3  net/minecraft/server/level/ChunkMap#viewDistance
+         field I
+    3  net/minecraftforge/client/gui/overlay/ForgeGui#getMinecraft
+         method ()Lnet/minecraft/client/Minecraft;
+    2  com/mojang/blaze3d/vertex/BufferBuilder#begin
+         method (Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+    2  com/mojang/blaze3d/vertex/BufferBuilder#currentElement
+         field Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    2  com/mojang/blaze3d/vertex/BufferBuilder#ensureVertexCapacity
+         method ()V
+    2  com/mojang/blaze3d/vertex/BufferBuilder#nextElement
+         method ()V
+    2  com/mojang/blaze3d/vertex/BufferBuilder#putShort
+         method (IS)V
+    2  net/minecraft/client/renderer/MultiBufferSource$BufferSource#builder
+         field Lcom/mojang/blaze3d/vertex/BufferBuilder;
+    2  net/minecraft/world/item/ItemStack#getTag
+         method ()Lnet/minecraft/nbt/CompoundTag;
+       ... and 49 more in a single jar each
+
+=== TARGET CLASS GONE ===
+    5  net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask
+    5  net/minecraft/world/level/storage/loot/LootDataManager
+    3  net/minecraft/world/item/alchemy/PotionUtils
+    2  net/minecraft/client/gui/screens/VideoSettingsScreen
+    2  net/minecraft/client/renderer/ChunkBufferBuilderPack
+    2  net/minecraft/client/renderer/chunk/ChunkRenderDispatcher
+    2  net/minecraft/core/dispenser/AbstractProjectileDispenseBehavior
+    2  net/minecraft/network/protocol/game/ClientboundCustomPayloadPacket
+    2  net/minecraft/network/protocol/game/ServerboundCustomPayloadPacket
+    2  net/minecraft/network/protocol/login/ServerboundCustomQueryPacket
+       ... and 35 more in a single jar each
+
+=== BY TARGET TYPE ===
+   12  net/minecraft/world/item/ItemStack
+    8  net/minecraft/client/resources/model/ModelBakery
+    8  net/minecraft/server/level/WorldGenRegion
+    8  net/minecraft/world/item/alchemy/PotionBrewing
+    7  net/minecraft/world/item/crafting/RecipeManager
+    6  net/minecraft/client/renderer/LevelRenderer
+    6  net/minecraft/server/level/ChunkMap
+    6  net/minecraft/world/item/enchantment/EnchantmentHelper
+    5  net/minecraft/client/Minecraft
+    5  net/minecraft/server/level/ServerPlayer
+    5  net/minecraft/world/entity/Entity
+    4  com/mojang/blaze3d/vertex/BufferBuilder
+    4  net/minecraft/server/ReloadableServerResources
+    4  net/minecraft/world/entity/LivingEntity
+    4  net/minecraft/world/item/Item
+    3  com/mojang/blaze3d/systems/RenderSystem
+    3  net/minecraft/client/multiplayer/ClientChunkCache
+    3  net/minecraft/client/renderer/GameRenderer
+    3  net/minecraft/client/renderer/MultiBufferSource$BufferSource
+    3  net/minecraft/client/renderer/RenderType
+    3  net/minecraft/world/entity/player/Player
+    3  net/minecraft/world/item/crafting/Ingredient
+    3  net/minecraft/world/item/crafting/ShapedRecipe
+    3  net/minecraftforge/client/gui/overlay/ForgeGui
+    2  net/minecraft/advancements/CriteriaTriggers
+    2  net/minecraft/client/Camera
+    2  net/minecraft/client/gui/GuiGraphics
+    2  net/minecraft/client/gui/components/ImageButton
+    2  net/minecraft/client/gui/screens/worldselection/WorldOpenFlows
+    2  net/minecraft/client/model/geom/ModelPart
+    2  net/minecraft/client/multiplayer/ClientLevel
+    2  net/minecraft/client/multiplayer/ClientPacketListener
+    2  net/minecraft/client/multiplayer/PlayerInfo
+    2  net/minecraft/client/particle/ParticleEngine
+    2  net/minecraft/client/player/AbstractClientPlayer
+    2  net/minecraft/client/renderer/RenderBuffers
+    2  net/minecraft/client/renderer/blockentity/BeaconRenderer
+    2  net/minecraft/client/renderer/entity/player/PlayerRenderer
+    2  net/minecraft/client/renderer/texture/SpriteContents
+    2  net/minecraft/client/renderer/texture/TextureManager
+    2  net/minecraft/client/renderer/texture/atlas/SpriteResourceLoader
+    2  net/minecraft/data/loot/BlockLootSubProvider
+    2  net/minecraft/network/FriendlyByteBuf
+    2  net/minecraft/network/protocol/game/ClientboundMapItemDataPacket
+    2  net/minecraft/resources/RegistryDataLoader
+    2  net/minecraft/resources/ResourceLocation
+    2  net/minecraft/world/entity/animal/IronGolem
+    2  net/minecraft/world/inventory/SmithingMenu
+    2  net/minecraft/world/item/armortrim/ArmorTrim
+    2  net/minecraft/world/item/enchantment/Enchantment
+    2  net/minecraft/world/item/trading/MerchantOffer
+    2  net/minecraft/world/item/trading/MerchantOffers
+    2  net/minecraft/world/level/Level
+    2  net/minecraft/world/level/block/AbstractCauldronBlock
+    2  net/minecraft/world/level/block/DispenserBlock
+    2  net/minecraft/world/level/block/FireBlock
+    2  net/minecraft/world/level/block/entity/BlockEntity
+    2  net/minecraft/world/level/block/entity/JukeboxBlockEntity
+    2  net/minecraft/world/level/levelgen/structure/pools/JigsawPlacement
+    2  net/minecraftforge/eventbus/api/IEventBus
+    2  net/minecraftforge/network/NetworkHooks
+

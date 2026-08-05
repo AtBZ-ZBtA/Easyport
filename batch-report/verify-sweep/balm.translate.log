@@ -66,6 +66,9 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.setItem(ILnet/minecraft/world/item/ItemStack;)V (added by net/minecraft/world/Container)
      1  ABSTRACT_STUB net/blay09/mods/balm/api/container/DefaultContainer.stillValid(Lnet/minecraft/world/entity/player/Player;)Z (added by net/minecraft/world/Container)
      1  ABSTRACT_STUB net/blay09/mods/balm/forge/world/BalmBiomeModifier.codec()Lcom/mojang/serialization/MapCodec; (added by net/neoforged/neoforge/common/world/BiomeModifier)
+     1  MIXIN_ACCESSOR_STUB (Accessor target gone) net/blay09/mods/balm/mixin/ImageButtonAccessor.getResourceLocation -> resourceLocation
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) net/blay09/mods/balm/mixin/ModelBakeryMixin.apply
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) net/blay09/mods/balm/mixin/ReloadableServerResourcesMixin.loadResources
      7  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent
      8  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Post
      9  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/RenderGuiOverlayEvent$Pre

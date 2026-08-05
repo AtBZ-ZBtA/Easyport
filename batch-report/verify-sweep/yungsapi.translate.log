@@ -22,6 +22,8 @@ Applied:
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB com/yungnickyoung/minecraft/yungsapi/criteria/SafeStructureLocationTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
+     1  MIXIN_ACCESSOR_STUB (Accessor target gone) com/yungnickyoung/minecraft/yungsapi/mixin/accessor/CriteriaTriggersAccessor.getValues -> CRITERIA
+     1  MIXIN_ACCESSOR_STUB (Invoker target gone) com/yungnickyoung/minecraft/yungsapi/mixin/accessor/PotionBrewingAccessor.callAddMix -> addMix
 
 Wrote translated\yungsapi.jar
       translated\yungsapi.report.tsv

@@ -26,7 +26,11 @@ SUPPORT_SRC="testkit/inspector/inspector.jar forge-compat/forge-compat.jar"
 # All platform jars, not just neoforge. FML classes (@Mod, FMLLoader, ModLoader) live in the
 # loader jar, and validating against a partial index silently rejects correct renames -- which
 # for @Mod would mean the mod is never discovered at all.
-PLATFORM_JARS=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar)
+#
+# forge-compat is on the list because it is what a mixin into a Forge class is actually applied
+# to. supermartijn642corelib patches net.minecraftforge.registries.GameData; the shim does not
+# have the patched method, and without the shim indexed nothing could tell.
+PLATFORM_JARS=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar forge-compat/forge-compat.jar devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar)
 OUT="batch-report"
 RESULTS="$OUT/batch-results.tsv"
 

@@ -305,10 +305,46 @@ Stubs and placeholder codecs are a deliberate trade, and always reported: the ty
 everything registered beside it survives, while the specific thing 1.21 added does not work.
 The alternative is a mod that fails to load at all.
 
+### Mixins: repair, then defuse, then delete
+
+Mixins are the one part of a mod the remapper cannot reach, because they address their targets as
+strings rather than through the constant pool. The passes below run in descending order of how much
+of the mod survives, and none of them needs a rule.
+
+| Pass | For | Effect when it applies |
+|---|---|---|
+| SRG-in-text | Every coordinate in every Forge mod | `m_12345_` → the official name, in refmaps, `@At`, `@Accessor` |
+| Type rename in selectors | A descriptor naming a type that moved | Forge `ModelData` → NeoForge's, in the string |
+| `@At` owner rename | An anchor into a method Forge itself patched | `IForgeShearable.onSheared` → NeoForge's `IShearable` |
+| Descriptor repair | The name survives, the descriptor moved | Rewritten to the platform's own, where unambiguous |
+| Injector defuse | Nothing above resolves it | `require = 0` — that one injector no-ops, the mixin still applies |
+| Accessor / shadow stub | Points at a deleted member | Annotation removed, inert body or mixin-added field |
+| Mixin drop | Target class gone, or became an interface | The whole mixin class, as before |
+
+**The defuse step is the one that changed the shape of the problem.** Previously a single bad
+coordinate deleted an entire mixin class, and that is not a contained loss: a dropped mixin can be
+the only path into a static initialiser, which is exactly how placebo came to load and register
+nothing. Per-injector granularity makes the loss the size of the actual breakage.
+
+`require = 0` was verified against Mixin 0.8.5 rather than assumed.
+`InjectionInfo.validateTargets` and `InjectionInfo.postInject` both throw only when
+`requiredCallbackCount > 0`, and `parseRequirements` takes an explicit `require` over the mixin
+config's `defaultRequire`. `@Group` is stripped alongside it, because a named group carries its own
+`min` check that `require` does not reach — a defused injector left in its group fails via the
+group instead, and the fix would look applied while changing nothing.
+
+Two limits worth knowing. An `@Inject` whose handler *captures target arguments* is only retargeted
+when those arguments still match, since repairing the selector would otherwise trade a missing
+target for a handler mismatch. And an `@At` on a `@Redirect` is checked but never rewritten — there
+the anchor is what the handler matches, so repairing it fails just as hard and reads worse.
+
 ### The report
 
 Every run writes `<output>.report.tsv` listing what was applied and what was left
 unresolved. Unresolved entries are the point: they name exactly what to add next.
+
+`MIXIN_SOFT_FAIL`, `MIXIN_ACCESSOR_STUB`, `MIXIN_SHADOW_FIELD_STUB` and `MIXIN_DROP` are losses,
+not successes. The jar loads; those specific behaviours are gone.
 
 ---
 
@@ -464,7 +500,8 @@ java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java \
 java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java \
     "$EASYPORT_SOURCE_MODS" "net/minecraft/"      > api-report/vanilla-api-usage.txt
 
-# 2. Re-rank both gap reports against it. Same commands as in STATE.md.
+# 2. Re-rank the gap reports against it. Same commands as in STATE.md.
+#    MixinGaps needs no scan step -- it reads the jars, so just point it at the folder.
 # 3. Which of its mods have a reference port to measure against?
 java tools/CorpusAnalyzer.java "$EASYPORT_SOURCE_MODS" "$EASYPORT_TARGET_MODS" corpus-report
 
@@ -596,6 +633,53 @@ It knows about the Holder passes, which is the difference between a queue and a 
 transformer discovers that family from the platform's own descriptors rather than from rules, so
 nothing in `forward.rules.tsv` marks any of it done — and a report that only understood rules put
 about 1,400 jar-references of already-finished work at the top of its list.
+
+### MixinGaps — the same question asked of *mixins*, which neither other report can see
+
+```bash
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MixinGaps.java \
+    "<corpus-dir>" rules/forward.rules.tsv mappings/srg2official.tsv \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    forge-compat/forge-compat.jar \
+    > api-report/mixin-gaps.txt
+
+# or point it at one jar, which drops the summarising threshold and lists everything
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MixinGaps.java \
+    "<corpus-dir>/YungsApi-1.20-Forge-4.0.6.jar" rules/forward.rules.tsv \
+    mappings/srg2official.tsv devenv/.../neoforge-21.1.248.jar
+```
+
+The other two reports read a *mined usage file*, which works because ordinary code addresses its
+targets through the constant pool. Mixins do not — they address theirs as **text**, in
+`@Inject(method = "...")`, `@At(target = "...")`, `@Accessor("...")` — so nothing in a member scan
+sees them, and a mixin-heavy mod gets a clean bill of health from both right up to the launch that
+aborts. This one reads the jars themselves.
+
+The failure is also worse than an ordinary one. An unresolved member reference throws
+`NoSuchMethodError` on the path that reaches it; an unresolved mixin coordinate throws during mixin
+*apply* and takes down **the whole launch, every mod in it**.
+
+**Read the header, not the sections.** The headline is what still does what the author intended:
+
+| Outcome | Means |
+|---|---|
+| `resolve unchanged` | Nothing to do |
+| `descriptor repaired` | Stale descriptor, rewritten off the platform. No rule needed |
+| `injector defused` | Cannot be repaired; `require = 0` makes it a silent no-op. **Behaviour lost** |
+| `accessor/shadow stub` | Points at a deleted member; given an inert stand-in. **Behaviour lost** |
+
+All four *load*. The bottom two load and do nothing, which is the failure this project spends most
+of its checks avoiding, so they are counted rather than folded into a pass rate. Everything the
+sections below the header list is behaviour a translated mod no longer has — that is the queue.
+
+`INJECTION POINT UNREACHABLE` is the one worth understanding. Both halves of the coordinate
+resolve: the anchor names a real member, the target method exists, and the method simply stopped
+calling it. Mixin scans exactly that method, finds nothing, and throws. The platform jar has the
+bodies, so this is answerable offline — 53 of them, none of which any signature check can see.
+
+It knows what the transformer does, and that has to stay true: `chooseDescriptor` and
+`handlerStillMatches` are duplicated from `Translate` on purpose, and a divergence puts finished
+work back at the head of the queue.
 
 ### VerifyBytecode / verify-bytecode.sh / verify-sweep.sh — the JVM's own checks, offline
 

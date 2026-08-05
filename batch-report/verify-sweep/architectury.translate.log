@@ -73,6 +73,8 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB dev/architectury/registry/level/biome/forge/BiomeModificationsImpl$BiomeModifierImpl.codec()Lcom/mojang/serialization/MapCodec; (added by net/neoforged/neoforge/common/world/BiomeModifier)
      1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) MixinLootDataManager
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/architectury/event/forge/EventHandlerImplCommon
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) dev/architectury/mixin/forge/MixinMinecraft.onStopping
+     1  MIXIN_SOFT_FAIL (ModifyArg no longer resolves; injector disabled, mixin kept) dev/architectury/mixin/forge/MixinChunkSerializer.modifyProtoChunkLevel
      1  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/TextureStitchEvent
     13  TYPE_PREFIX target missing: net/neoforged/neoforge/event/entity/player/FillBucketEvent
 

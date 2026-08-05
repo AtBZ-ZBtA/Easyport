@@ -13,9 +13,9 @@ Two things get built:
 
 **Status:** the translator works on real mods; nothing user-facing is ready. There is no
 one-click tool and no in-game mod yet, and only the Forge → NeoForge direction exists — the
-reverse is not started. Both halves of the API migration are largely handled; what is left is
-mixins, which is its own phase. See [STATE.md](STATE.md) for exactly where things stand and
-[ROADMAP.md](ROADMAP.md) for the plan.
+reverse is not started. Both halves of the API migration are handled, and so is the mixin layer.
+What is left is packaging, the reverse direction, and a tail of individually small gaps. See
+[STATE.md](STATE.md) for exactly where things stand and [ROADMAP.md](ROADMAP.md) for the plan.
 
 ---
 
@@ -38,15 +38,17 @@ the author's own 1.21.1 port and compared on what each registers into the game:
 | | |
 |---|---|
 | `additional_lights` | 100% of registry entries, 100% of resources |
-| 6 of the 8 most-depended-on libraries | load and register content |
+| 7 of the 8 most-depended-on libraries | load and register content |
 | 22 of 22 libraries and sampled mods | pass a full bytecode type-check |
 | Vanilla API the corpus calls | 92% still resolves after translation |
-| Everything still failing | fails on *mixin application*, not on Forge or vanilla API |
+| Mixin coordinates the corpus declares | 88% still point at what their author meant |
+| Mixin problems that stop a mod loading | none left |
 
-That last row is the real state of things, and it moved during the vanilla-bridge work: the
-loader migration and Minecraft's own 1.20.1 → 1.21.1 changes are both largely handled, and what
-remains is mixins — mods that patch Minecraft's own methods, where the target still exists and
-the code inside it has changed.
+**That last row is worth reading carefully, because it is not the same as "mixins work."** A mixin
+that patches a Minecraft method whose body has since changed cannot be repaired automatically, and
+about 12% of them are in that position. What changed is that such a mixin now switches itself off
+and is named in the report, instead of aborting the launch and taking every other mod down with it.
+The mod loads and does slightly less; it used to be the whole game refusing to start.
 
 Anything it cannot translate is **reported, never guessed**. Each run writes a report naming
 exactly what was left unresolved. A jar that loads while quietly doing the wrong thing is worse

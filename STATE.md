@@ -29,6 +29,14 @@ java -cp "devenv/spi/asm.jar" tools/VanillaGaps.java \
     api-report/vanilla-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
     devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
     > api-report/vanilla-gaps.txt
+
+# What do mixins still point at that is not there? Reads the jars, not a usage file.
+# Pass a single jar instead of the folder to work one mod; it lists everything then.
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MixinGaps.java \
+    "<corpus>/mods" rules/forward.rules.tsv mappings/srg2official.tsv \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    forge-compat/forge-compat.jar \
+    > api-report/mixin-gaps.txt
 ```
 
 `RenameGaps` lists every **Forge** type the corpus references that neither a shim nor a rule
@@ -36,6 +44,14 @@ resolves. `VanillaGaps` asks a deliberately different question of **vanilla**, b
 type resolve" is the wrong one there — 1.21 mostly kept type names and changed what is inside
 them, so the body of that report is members that no longer exist on types that do. Read its
 `BY OWNING TYPE` rollup first: it says which *subsystem* to fix.
+
+`MixinGaps` exists because **neither of the other two can see a mixin at all.** They read a mined
+usage file, which works because ordinary code addresses its targets through the constant pool;
+mixins address theirs as *text*, so a mixin-heavy mod gets a clean bill of health from both right up
+to the launch that aborts. Read its header rather than its sections: the number that matters is
+`intact`, and everything listed below the header already loads — what it lists is behaviour a
+translated mod no longer has. Pass `forge-compat.jar` alongside the platform jar, or mixins into
+Forge's own classes go unjudged.
 
 `verify-sweep` answers something neither report can, and it is where Phase 4's failures actually
 showed up. It runs the JVM's own type checks over each translated jar, so it catches a
@@ -144,6 +160,23 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
   had in fact applied looked like they had done nothing. `ls -la --time-style=+%H:%M` before
   drawing a conclusion from any batch output.
 
+**Mixins, after Phase 5: repair, then defuse, then delete.** A broken mixin coordinate does not fail
+like a broken call — it fails during mixin *apply* and takes the whole launch with it, every mod
+included. It used to be handled by deleting the mixin class, which is not a contained loss: a dropped
+mixin can be the only path into a static initialiser, and that is exactly how placebo came to load
+and register nothing. **Failure granularity is now the individual injector**, via `require = 0`, so
+the loss is the size of the actual breakage. Seven passes, none of which needs a rule; the table is
+in [tools/README.md](tools/README.md). Three things to know before touching it:
+
+- **Never remove an `@Accessor` from an interface mixin without marking the method
+  `ACC_SYNTHETIC`.** Mixin decides the mixin's *variant* from the class — an interface is an
+  ACCESSOR mixin only while every method is an accessor or synthetic, else an INTERFACE mixin, which
+  may only target an interface. Stubbing one dead accessor regressed balm from 100% to not loading.
+- **Strip `@Group` when defusing.** A named group's `min` check is separate from `require`, so the
+  soft-fail otherwise looks applied and changes nothing.
+- **Selectors have two spellings**, `Lnet/minecraft/Foo;bar()V` and `net/minecraft/Foo.bar()V`. The
+  bare one is what `remap = false` anchors use, which is where Forge types need renaming.
+
 **The Phase 4 architecture, and the one idea behind all of it.** Phase 4 built the vanilla bridge
 and is signed off below. The whole phase turned on a single decision that is worth understanding
 before touching any of it, because the obvious alternative was tried first and does not work.
@@ -200,8 +233,10 @@ never called.
 Also outstanding, smaller: `ForgeHooks` (91 jars) and `ForgeEventFactory` (80) were split across
 NeoForge's `EventHooks` and `CommonHooks` and need per-method rules rather than a type rename.
 
-The mixin `@Inject` and `@Accessor` failures (yungsapi, supermartijn642corelib) are Phase 5 and
-should be left until last.
+The mixin layer is done (Phase 5, signed off below). What is left there is not load failures but
+595 injectors and accessors that load and no longer do anything, ranked in
+`api-report/mixin-gaps.txt`. That queue is dominated by **client rendering**, which `runData` never
+exercises — so it is the one area where no harness this project has will catch a regression.
 
 **Not started:** backward direction (1.21.1 → 1.20.1). Only `rules/forward.rules.tsv` exists.
 The locked decision is omnidirectional, and everything so far reads as forward progress — do
@@ -318,6 +353,134 @@ Everything below is measured, not estimated.
   the work list at 241 mods — cannot be expressed as a symbol mapping at all**; the bus is
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
+
+### Phase 5 — COMPLETE
+
+**Exit criterion:** no library or sampled mod is blocked by mixin application. Met. Both mods that
+were stuck on it moved: yungsapi loads, and supermartijn642corelib is now past the mixin layer
+entirely and fails on `BuiltInRegistries.POTION`, whose *field descriptor* changed in 1.21 —
+`DefaultedRegistry` to `Registry`. That is a Phase 4 shape found by clearing Phase 5.
+
+| Measure | Start of phase | Now |
+|---|---|---|
+| Libraries loading | 6 / 8 | **7 / 8** |
+| Mixin coordinates intact | — | **88.4%** (4,485 unchanged + 49 repaired of 5,129) |
+| Coordinates that do not resolve | 595 | 595, **none of them fatal** |
+| Libraries + sampled mods that type-check clean | 22 / 22 | 22 / 22 |
+
+**Read the second and third rows together, because the second one alone flatters the phase.** 595
+coordinates still do not do what their author intended, and the phase repaired only 49 of them. What
+changed is that every one this tooling can detect now switches itself off instead of taking the
+launch down — and that distinction is the whole phase, because a broken mixin is not like a broken
+call. An unresolved member reference throws `NoSuchMethodError` on the path that reaches it; an
+unresolved mixin coordinate throws during mixin *apply*, which aborts **the entire launch, every mod
+in it**, including mods that had nothing to do with it.
+
+"None of them fatal" is a claim about what is *detected*, not a proof. Anchor shapes the reachability
+check does not model — `CONSTANT`, `JUMP` — and target bodies it cannot read are treated as
+reachable, deliberately, because a false positive silently deletes a working injector. Those can
+still fail at apply. The two libraries that were blocked on mixins are the evidence that the common
+cases are covered; they are not evidence that none remain.
+
+#### The one decision the phase turned on
+
+Before this, a single bad coordinate deleted the **whole mixin class**. That is not a contained
+loss: a dropped mixin can be the only path into a static initialiser, which is exactly how placebo
+came to load and register nothing while reporting no error at all.
+
+**So the granularity of failure moved from the mixin class to the individual injector.** What cannot
+be repaired gets `require = 0`, which makes that one injector a silent no-op and leaves every other
+injector in the same class applying normally. `MIXIN_DROP` is now the last resort rather than the
+only tool.
+
+That mechanism was verified against Mixin 0.8.5 rather than assumed, because the whole phase rests
+on it: `InjectionInfo.validateTargets` and `InjectionInfo.postInject` both throw only when
+`requiredCallbackCount > 0`, and `parseRequirements` takes an explicit `require` over the mixin
+config's `defaultRequire`. Reading the bytecode took ten minutes and replaced a guess that would
+have been found wrong by a launch.
+
+Across all 433 corpus jars, 569 mixin actions in 96 jars:
+
+| Action | Count |
+|---|---|
+| `MIXIN_SOFT_FAIL` | 309 |
+| `MIXIN_ACCESSOR_STUB` | 99 |
+| `MIXIN_SHADOW_FIELD_STUB` | 54 |
+| `MIXIN_SHADOW_METHOD_STUB` | 42 |
+| `MIXIN_DROP` | 36 |
+| `MIXIN_SELECTOR_REPAIR` / `MIXIN_AT_REPAIR` / `MIXIN_AT_OWNER_RENAME` | 14 / 10 / 1 |
+
+Only the bottom row is a repair. **The phase's value is in the top four rows, which are losses that
+used to be launch failures**, and in the fact that `MIXIN_DROP` — the only tool that existed before —
+now accounts for 36 of 569 rather than all of them.
+
+#### Seven passes, and none of them needs a rule
+
+| Pass | For |
+|---|---|
+| SRG-in-text | Every coordinate in every Forge mod (pre-existing) |
+| Type rename in selectors | A descriptor naming a type that moved |
+| `@At` owner rename | An anchor into a method Forge itself patched |
+| Descriptor repair | The name survives, the descriptor moved |
+| Injector defuse | Nothing above resolves it |
+| Accessor / shadow stub | Points at a deleted member |
+| Mixin drop | Target class gone, or became an interface (pre-existing) |
+
+Not one of them consults `forward.rules.tsv`. This is the same property that carried Phase 4 — the
+platform is asked what the answer is, rather than a human enumerating cases — and it matters more
+here, because the mixin queue has no head to work down: nothing in it exceeds 8 jars, so a
+rule-per-case approach would have been all cost and no leverage.
+
+#### What Phase 5 built beyond the passes
+
+**`MixinGaps`**, the third gap report, and it had to exist. `RenameGaps` and `VanillaGaps` both read
+a mined usage file, which works because ordinary code addresses its targets through the constant
+pool. Mixins address theirs as *text*, so a mixin-heavy mod gets a clean bill of health from both
+reports right up to the launch that aborts. Pointed at a single jar it names a library's blocker in
+seconds — it found yungsapi's `CriteriaTriggers.CRITERIA` and supermartijn642corelib's
+`SpriteResourceLoader` offline, both of which had previously cost a launch each to discover.
+
+It also answers the question the roadmap called the hard part, and that nothing else can: **an
+anchor whose member still exists on a method that no longer calls it.** Both halves resolve, Mixin
+scans exactly that method, finds nothing, and throws. The platform jar has the bodies, so it is
+answerable offline — 53 of them, invisible to every signature check.
+
+#### Three bugs worth remembering
+
+**Removing `@Accessor` reclassifies the whole mixin.** Mixin decides a mixin's *variant* from the
+mixin class, in `MixinInfo.getVariant`: an interface is an ACCESSOR mixin only while every method it
+declares is an accessor **or synthetic**, and an INTERFACE mixin otherwise — which may only target
+an interface. So stubbing out one dead accessor turned `InvalidAccessorException` into `@Mixin
+target type mismatch: ... is not an interface`, which is no improvement whatsoever. It regressed
+balm from 100% to not loading, and balm has nothing to do with the accessor that was stubbed. The
+fix is to mark the degraded method `ACC_SYNTHETIC`, which keeps the variant and means nothing to
+method resolution at the JVM level.
+
+**A defused injector must also leave its `@Group`.** A named injector group carries its own `min`
+check in `InjectorGroupInfo.validate` that `require` does not reach, so the soft-fail would look
+applied while changing nothing.
+
+**Mixin selectors have two spellings and only one was parsed.** `Lnet/minecraft/Foo;bar()V` and
+`net/minecraft/Foo.bar()V` both occur, and they are not interchangeable in practice: the bare form
+is what mods write for `remap = false` anchors, which is precisely where Forge types appear and need
+renaming. 178 coordinates were silently unjudged.
+
+#### Known-incomplete inside Phase 5, deliberately
+
+**595 coordinates still lose their behaviour**, ranked in `api-report/mixin-gaps.txt`. The queue is
+dominated by client rendering — `ModelBakery`, `LevelRenderer`, `GameRenderer`, `ParticleEngine`,
+`ChunkMap` — which is worth knowing for two reasons: those are the mods most likely to look fine and
+render wrong, and **`runData` never exercises any of it**, so no harness this project has can catch
+a regression there.
+
+**The corpus-driven repair the roadmap planned was not built.** The plan was to learn injection-point
+repairs from the 1,786 author-ported mixin counterparts in ATM10. It was not needed to meet the exit
+criterion, and the measurement argues against doing it blind: the distribution is flat, so it is a
+per-case effort against a 595-item tail rather than a mechanism. Worth revisiting when a specific
+mod's behaviour matters, with the 1,786 pairs still sitting there as worked examples.
+
+**Mixins into other mods' classes are not judged at all.** 711 targets. Nothing in the platform index
+covers them, and guessing would defuse working injectors.
 
 ### Phase 4 — COMPLETE
 
@@ -945,6 +1108,17 @@ public download.
     that had been at 100%. The script fails loudly, refuses to package an obviously incomplete
     build, and clears the cached baseline. **Never chain a build and a long test run into one
     backgrounded command and then read only the tail.**
+
+15. **A mixin's *variant* is decided by the mixin class, not by what you do to one member.**
+    `MixinInfo.getVariant` calls an interface an ACCESSOR mixin only while every method it declares
+    is an accessor or synthetic; otherwise it is an INTERFACE mixin, which may only be applied to an
+    interface target. So removing a single dead `@Accessor` annotation reclassifies the whole mixin
+    and swaps `InvalidAccessorException` for `@Mixin target type mismatch: ... is not an interface`.
+    It regressed balm from 100% to not loading, on a mixin unrelated to the one being fixed. Mark
+    degraded members `ACC_SYNTHETIC`: it preserves the variant and means nothing to the JVM's method
+    resolution. **Read Mixin's own bytecode before assuming what an annotation change does** — this
+    and the `require = 0` semantics both took ten minutes to check and would each have cost a launch
+    to find.
 
 14. **Constructors are not inherited — never resolve one through the class hierarchy.** Both
     offline tools fold supertype members in, which is right for every member except this one.

@@ -17,6 +17,7 @@ Applied:
      4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      4  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     1  MIXIN_SELECTOR_REPAIR ModifyConstant
      2  SRG_IN_TEXT
     30  TYPE_PREFIX net/minecraftforge/client/event/
      2  TYPE_PREFIX net/minecraftforge/energy/
