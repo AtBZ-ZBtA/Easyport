@@ -1,11 +1,18 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 25 classes, moved 5288 resources
+Rewrote 25 classes, moved 5288 resources, rewrote 2333 data files
 
 Applied:
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/data/loot/packs/VanillaBlockLoot.<init>
      8  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      3  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
+   371  PLATFORM_TYPE_NAMESPACE forge:and
+   811  PLATFORM_TYPE_NAMESPACE forge:mod_loaded
+   173  PLATFORM_TYPE_NAMESPACE forge:not
+   371  RECIPE_CONDITIONS_NAMESPACED
+  1962  RECIPE_RESULT_ID
+   981  RECIPE_SHOW_NOTIFICATION_DROP
+     4  TAG_NAMESPACE forge: -> c:
     65  TYPE_PREFIX net/minecraftforge/client/model/
     31  TYPE_PREFIX net/minecraftforge/common/data/
      7  TYPE_PREFIX net/minecraftforge/data/event/
@@ -19,7 +26,9 @@ Applied:
      1  TYPE_RENAME net/minecraftforge/resource/ResourcePackLoader
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
-  (none)
+    54  RECIPE_RESULT_ID on a mod recipe type (immersiveengineering) - correct only if its codec follows ItemStack's
+    27  RECIPE_RESULT_ID on a mod recipe type (powah) - correct only if its codec follows ItemStack's
+    81  RECIPE_RESULT_ID on a mod recipe type (thermal) - correct only if its codec follows ItemStack's
 
 Wrote translated\allthecompressed.jar
       translated\allthecompressed.report.tsv

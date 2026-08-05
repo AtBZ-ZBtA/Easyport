@@ -1,3 +1,10 @@
+// Packaged, not default-package, and the reason is Phase 7 rather than tidiness: the in-game
+// service jar becomes a module on FML's SERVICE layer, and a module cannot export the unnamed
+// package -- classes in it are invisible to every other class in the layer. `java
+// tools/Translate.java` is unaffected; the source launcher does not require the file to sit in a
+// directory matching its package.
+package easyport.tools;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -70,6 +77,8 @@ public class Translate {
         TAG_RENAMES.put("fluids", "fluid");
         TAG_RENAMES.put("entity_types", "entity_type");
         TAG_RENAMES.put("game_events", "game_event");
+        TAG_RENAMES.put("enchantments", "enchantment");
+        TAG_RENAMES.put("functions", "function");
     }
 
     /**
@@ -117,6 +126,14 @@ public class Translate {
     /** A platform type that stopped being an interface -> what to implement in its place. */
     private final Map<String, String> interfaceSubstitutes = new LinkedHashMap<>();
 
+    /**
+     * `forge:` common tags whose 1.21 name is not just a namespace swap, and the ones with no
+     * counterpart at all. Both are mined from the two platform jars; see the COMMON_TAG block
+     * in forward.rules.tsv for why the corpus is the wrong source for this one thing.
+     */
+    private final Map<String, String> commonTagRenames = new LinkedHashMap<>();
+    private final Set<String> tagsWithNoCounterpart = new LinkedHashSet<>();
+
     /** Every class in the jar being translated -> its superclass. The mod's own hierarchy. */
     private final Map<String, String> modSuper = new HashMap<>();
 
@@ -126,9 +143,18 @@ public class Translate {
     /** Translated class bytes, held until the coercion pass has run over all of them. */
     private final Map<String, byte[]> transformedClasses = new LinkedHashMap<>();
 
+    /**
+     * Tag files, held rather than written straight through, because two of them can land on one
+     * path. A mod built for both loaders ships its tag twice -- `data/forge/tags/entity_types/`
+     * for Forge and `data/c/tags/entity_types/` for Fabric -- and the namespace swap collapses
+     * those onto the same name. Botania does exactly this, and writing as we go made it a
+     * duplicate-entry ZipException that failed the whole jar.
+     */
+    private final Map<String, byte[]> pendingTags = new LinkedHashMap<>();
+
     private final Map<String, Integer> appliedCounts = new TreeMap<>();
     private final Map<String, Integer> unresolved = new TreeMap<>();
-    private int classesRewritten = 0, resourcesMoved = 0;
+    private int classesRewritten = 0, resourcesMoved = 0, resourcesMigrated = 0;
 
     public static void main(String[] args) throws Exception {
         if (args.length < 4) {
@@ -182,7 +208,7 @@ public class Translate {
     private final Set<String> targetFinalClasses = new HashSet<>();
     private final Map<String, Set<String>> targetFinalMethods = new HashMap<>();
 
-    private void loadTargetIndex(String[] jars) {
+    public void loadTargetIndex(String[] jars) {
         platformJarPaths = jars;
         for (String j : jars) {
             Path p = Paths.get(j);
@@ -279,7 +305,7 @@ public class Translate {
         }
     }
 
-    private void run(Path in, Path out, Path mappings, Path rules) throws Exception {
+    public void run(Path in, Path out, Path mappings, Path rules) throws Exception {
         inputJar = in;
         loadMappings(mappings);
         loadRules(rules);
@@ -292,6 +318,14 @@ public class Translate {
 
             findDeadMixins(zip);
             findSubstitutedClasses(zip);
+
+            // Every path the input already holds. A rename can land on one of them -- a mod built
+            // for both loaders ships mods.toml *and* neoforge.mods.toml -- and writing both is a
+            // duplicate-entry ZipException that fails the whole jar.
+            Set<String> sourceEntries = new HashSet<>();
+            for (var en = zip.entries(); en.hasMoreElements(); ) {
+                sourceEntries.add(en.nextElement().getName());
+            }
 
             Enumeration<? extends ZipEntry> entries = zip.entries();
             while (entries.hasMoreElements()) {
@@ -336,8 +370,24 @@ public class Translate {
                     continue;
                 } else {
                     String moved = renamePath(name);
-                    if (!moved.equals(name)) { resourcesMoved++; name = moved; }
+                    if (!moved.equals(name)) {
+                        // The author already supplies a file at the destination, so theirs wins:
+                        // it was written for the target loader and this one was not. Tag files are
+                        // the exception and are merged instead -- see holdTag -- because a tag is
+                        // a set and two files naming it both contribute.
+                        if (sourceEntries.contains(moved) && !isTagFile(moved)) {
+                            count(appliedCounts, "RESOURCE_SUPERSEDED " + name
+                                    + " (the jar already ships " + moved + ")");
+                            continue;
+                        }
+                        resourcesMoved++;
+                        name = moved;
+                    }
                     if (name.equals("META-INF/neoforge.mods.toml")) data = migrateDescriptor(data);
+                    if (name.startsWith("data/") && name.endsWith(".json")) {
+                        data = migrateResourceJson(name, data);
+                        if (isTagFile(name)) { holdTag(name, data); continue; }
+                    }
                     // The jarjar index lists every bundled jar by path. Dropping a jar without
                     // removing its entry leaves FML resolving a path that is no longer there,
                     // which surfaces as "Invalid paths argument" and an IOException naming the
@@ -370,6 +420,11 @@ public class Translate {
             }
             runCoercionPass();
             for (var e : transformedClasses.entrySet()) {
+                zos.putNextEntry(new ZipEntry(e.getKey()));
+                zos.write(e.getValue());
+                zos.closeEntry();
+            }
+            for (var e : pendingTags.entrySet()) {
                 zos.putNextEntry(new ZipEntry(e.getKey()));
                 zos.write(e.getValue());
                 zos.closeEntry();
@@ -1614,10 +1669,14 @@ public class Translate {
             var frame = frames[i];
             for (int p = params.length - 1; p >= 0; p--) {
                 // Arguments sit at the top of the frame in declaration order, so the last
-                // parameter is nearest the top. Counting back from the top gives the slot.
-                int depth = 0;
-                for (int q = p + 1; q < params.length; q++) depth += params[q].getSize();
-                var value = frame.getStack(frame.getStackSize() - depth - params[p].getSize());
+                // parameter is nearest the top. Counting back from the top gives the position.
+                //
+                // Counted in *values*, not slots. An analysis Frame holds a long or a double as
+                // one entry whose getSize() is 2 -- getStackSize() counts entries -- so adding
+                // Type.getSize() here overshoots by one per wide argument. With two of them it
+                // indexes past the bottom of the stack, which is an ArrayIndexOutOfBoundsException
+                // that fails the whole jar; with one it silently reads the wrong argument.
+                var value = frame.getStack(frame.getStackSize() - (params.length - p));
                 if (value == null || value.getType() == null) continue;
                 if (value.getType().getSort() != Type.OBJECT) continue;
                 if (value.getType().equals(params[p])) continue;
@@ -2777,9 +2836,23 @@ public class Translate {
         String owner = selectorOwner(spec);
         String rest = afterOwner(spec);
         if (want == 'N') {
-            // NEW may name the type alone or a factory-style descriptor returning it.
-            String type = owner != null && rest.isEmpty() ? owner
-                        : Type.getReturnType(rest.isEmpty() ? spec : rest).getInternalName();
+            // NEW may name the type alone or a factory-style descriptor returning it. Only the
+            // second form can be read as a descriptor, and asking Type for a return type it has
+            // not got is an ArrayIndexOutOfBoundsException out of ASM that fails the whole jar --
+            // FastWorkbench writes `@At(value = "NEW", target = "net/minecraft/world/Container")`,
+            // which is a perfectly ordinary bare type name.
+            String type;
+            if (owner != null && rest.isEmpty()) {
+                type = owner;
+            } else {
+                String desc = rest.isEmpty() ? spec : rest;
+                int paren = desc.indexOf('(');
+                if (paren < 0 || desc.indexOf(')') < paren) return true;
+                Type returned = Type.getReturnType(desc.substring(paren));
+                if (returned.getSort() != Type.OBJECT) return true;
+                type = returned.getInternalName();
+            }
+            if (type == null) return true;
             return anyBodyContains(selected, "N " + type, null, null);
         }
         boolean field = want == 'F';
@@ -3238,6 +3311,10 @@ public class Translate {
             try (ZipFile zip = new ZipFile(tmp.toFile());
                  ZipOutputStream zos = new ZipOutputStream(out)) {
                 Enumeration<? extends ZipEntry> entries = zip.entries();
+                // Renaming can make two entries share a name -- see pendingTags. Inside a bundled
+                // library the merge machinery is not worth carrying, but the collision must not
+                // become a ZipException: that is caught below and ships the library untranslated.
+                Set<String> written = new HashSet<>();
                 while (entries.hasMoreElements()) {
                     ZipEntry e = entries.nextElement();
                     if (e.isDirectory()) continue;
@@ -3258,6 +3335,13 @@ public class Translate {
                         if (!moved.equals(entryName)) entryName = moved;
                         if (entryName.equals("META-INF/neoforge.mods.toml")) data = migrateDescriptor(data);
                         if (entryName.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
+                        if (entryName.startsWith("data/") && entryName.endsWith(".json")) {
+                            data = migrateResourceJson(entryName, data);
+                        }
+                    }
+                    if (!written.add(entryName)) {
+                        count(unresolved, "TAG_FILE_COLLISION in " + name + ": " + entryName);
+                        continue;
                     }
                     zos.putNextEntry(new ZipEntry(entryName));
                     zos.write(data);
@@ -3332,20 +3416,49 @@ public class Translate {
     }
 
     /** Applies the descriptor rename and the 1.21 datapack directory singularisation. */
-    private static String renamePath(String path) {
+    private String renamePath(String path) {
         if (path.equals("META-INF/mods.toml")) return "META-INF/neoforge.mods.toml";
 
         String[] p = path.split("/");
         if (p.length >= 4 && p[0].equals("data")) {
+            // The common-tag namespace. A mod that contributes to forge:ingots/copper ships
+            // data/forge/tags/items/ingots/copper.json, and that file has to move with the
+            // references to it or the mod stops agreeing with its own tag.
+            boolean commonTags = p[1].equals("forge") && p[2].equals("tags");
+            if (commonTags) p[1] = "c";
+            // Biome and structure modifiers: data/<ns>/forge/ -> data/<ns>/neoforge/. 59 of the
+            // 433 corpus jars ship one, and the loader reads nothing outside its own namespace.
+            if (p[2].equals("forge")) p[2] = "neoforge";
+
             String renamed = DIR_RENAMES.get(p[2]);
             if (renamed != null) p[2] = renamed;
             if (p[2].equals("tags") && p.length >= 5) {
                 String tagRenamed = TAG_RENAMES.get(p[3]);
                 if (tagRenamed != null) p[3] = tagRenamed;
             }
-            return String.join("/", p);
+            String joined = String.join("/", p);
+            return commonTags ? renameCommonTagFile(joined) : joined;
         }
         return path;
+    }
+
+    /**
+     * Applies the COMMON_TAG map to a `data/c/tags/&lt;type&gt;/&lt;name&gt;.json` path.
+     *
+     * A cross-namespace target moves the file out of `c/` entirely -- forge:armors/boots became
+     * vanilla's minecraft:foot_armor -- so the namespace segment is rewritten from the target
+     * rather than assumed to stay `c`.
+     */
+    private String renameCommonTagFile(String path) {
+        String[] p = path.split("/", 5);            // data / c / tags / <type> / <rest>
+        if (p.length < 5 || !p[4].endsWith(".json")) return path;
+        String bare = p[4].substring(0, p[4].length() - 5);
+        String target = commonTagRenames.get("forge:" + bare);
+        if (target == null) return path;
+        int colon = target.indexOf(':');
+        count(appliedCounts, "TAG_FILE_RENAME forge:" + bare + " -> " + target);
+        return p[0] + "/" + target.substring(0, colon) + "/" + p[2] + "/" + p[3] + "/"
+                + target.substring(colon + 1) + ".json";
     }
 
     /**
@@ -3414,6 +3527,550 @@ public class Translate {
         return out.toString().getBytes(StandardCharsets.UTF_8);
     }
 
+    // ---- resource JSON -----------------------------------------------------------------
+
+    /**
+     * Migrates one datapack JSON file.
+     *
+     * Called with the path already renamed, so `data/&lt;ns&gt;/recipe/x.json` is what arrives
+     * even though the jar holds `data/&lt;ns&gt;/recipes/x.json`.
+     *
+     * Everything here is a *silent* failure if skipped, which is why the phase exists at all. A
+     * missing class throws; a recipe naming a tag that no longer exists simply never matches, and
+     * a recipe whose type was deleted is logged once at startup among thousands of other lines.
+     * The mod loads, registers its blocks and items, and cannot craft any of them.
+     *
+     * Reserialisation is deliberately conditional. Most files need no change, and rewriting all
+     * of them would replace the author's formatting throughout the jar for nothing -- so the
+     * parsed tree is compared and the original bytes returned unless something actually moved.
+     */
+    private byte[] migrateResourceJson(String path, byte[] data) {
+        String text = new String(data, StandardCharsets.UTF_8);
+        Object root;
+        try {
+            root = Json.parse(text);
+        } catch (RuntimeException e) {
+            // Named per file, not per category. An unreadable file silently skips every migration
+            // above -- its tags stay in the forge namespace, its recipe result keeps the old key --
+            // and "some file somewhere in this jar" is not something anyone can act on.
+            count(unresolved, "RESOURCE_JSON_UNPARSED " + path + " (" + e.getMessage() + ")");
+            return data;
+        }
+
+        boolean[] changed = { false };
+        String category = category(path);
+        if (category.equals("recipe")) root = migrateRecipe(root, changed, path);
+        else if (category.equals("advancement")) root = migrateAdvancement(root, changed);
+        else if (category.equals("dimension_type")) root = migrateDimensionType(root, changed);
+        root = migrateJsonStrings(root, null, changed);
+
+        if (!changed[0]) return data;
+
+        // Read back what is about to be written. Everything this pass does is invisible until the
+        // game parses the file, and a file the game cannot parse is worse than one that was never
+        // migrated -- the recipe disappears instead of merely not matching. The check costs one
+        // parse of a file already in memory, and it makes "produced malformed JSON" a class of bug
+        // that cannot reach a jar.
+        String out = Json.write(root);
+        try {
+            Json.parse(out);
+        } catch (RuntimeException e) {
+            count(unresolved, "RESOURCE_JSON_REWRITE_REJECTED " + path + " (kept as-is)");
+            return data;
+        }
+        resourcesMigrated++;
+        return out.getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static boolean isTagFile(String path) {
+        String[] p = path.split("/");
+        return p.length >= 4 && p[0].equals("data") && p[2].equals("tags");
+    }
+
+    /**
+     * Adds a tag file to the output, merging it with anything already at that path.
+     *
+     * A tag is a set, and two files naming the same tag both contribute to it -- so the union is
+     * not a compromise, it is what the game would have done with the two files had they stayed
+     * under separate namespaces. `replace` wins if either side asks for it, since a file that
+     * discards the tag's other contributors still means to.
+     */
+    private void holdTag(String path, byte[] data) {
+        byte[] existing = pendingTags.get(path);
+        if (existing == null) { pendingTags.put(path, data); return; }
+        byte[] merged = mergeTagFiles(existing, data);
+        if (merged == null) {
+            count(unresolved, "TAG_FILE_COLLISION " + path + " (kept the first, dropped a second)");
+            return;
+        }
+        pendingTags.put(path, merged);
+        count(appliedCounts, "TAG_FILE_MERGE");
+    }
+
+    /** Union of two tag files' `values`, or null if either cannot be read as one. */
+    @SuppressWarnings("unchecked")
+    private static byte[] mergeTagFiles(byte[] a, byte[] b) {
+        try {
+            Object ra = Json.parse(new String(a, StandardCharsets.UTF_8));
+            Object rb = Json.parse(new String(b, StandardCharsets.UTF_8));
+            if (!(ra instanceof Map) || !(rb instanceof Map)) return null;
+            Map<String, Object> ma = (Map<String, Object>) ra, mb = (Map<String, Object>) rb;
+            if (!(ma.get("values") instanceof List<?> va) || !(mb.get("values") instanceof List<?> vb)) {
+                return null;
+            }
+            List<Object> values = new ArrayList<>(va);
+            for (Object o : vb) if (!values.contains(o)) values.add(o);
+            Map<String, Object> out = new LinkedHashMap<>(ma);
+            out.put("values", values);
+            if (truthy(mb.get("replace"))) out.put("replace", new Json.Lit("true"));
+            return Json.write(out).getBytes(StandardCharsets.UTF_8);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    private static boolean truthy(Object v) {
+        return v instanceof Json.Lit l && l.text().equals("true");
+    }
+
+    /** `data/&lt;ns&gt;/recipe/foo/bar.json` -&gt; `recipe`. */
+    private static String category(String path) {
+        String[] p = path.split("/");
+        return p.length >= 3 ? p[2] : path;
+    }
+
+    /**
+     * Recipe migration, in the order the changes depend on each other.
+     *
+     * `forge:conditional` has to be unwrapped first, because everything after it applies to the
+     * recipe that was inside the wrapper rather than to the wrapper.
+     */
+    @SuppressWarnings("unchecked")
+    private Object migrateRecipe(Object root, boolean[] changed, String path) {
+        if (!(root instanceof Map)) return root;
+        Map<String, Object> m = (Map<String, Object>) root;
+
+        if ("forge:conditional".equals(m.get("type"))) {
+            Map<String, Object> unwrapped = unwrapConditional(m, path);
+            if (unwrapped != null) { m = unwrapped; changed[0] = true; }
+        }
+
+        // 1.21 dropped show_notification from the crafting recipe codec. Harmless if left --
+        // decoding ignores unknown keys -- but the author ports all removed it, and a key that
+        // means nothing is worse than no key when the next person reads the file.
+        if (m.containsKey("show_notification")) {
+            m = new LinkedHashMap<>(m);
+            m.remove("show_notification");
+            changed[0] = true;
+            count(appliedCounts, "RECIPE_SHOW_NOTIFICATION_DROP");
+        }
+
+        // Forge's datapack conditions moved under a namespaced key. Left alone the key is simply
+        // not read, so every conditional recipe becomes unconditional -- compatibility recipes
+        // for mods that are not installed start appearing in the crafting book.
+        if (m.containsKey("conditions")) {
+            m = renameKey(m, "conditions", "neoforge:conditions");
+            changed[0] = true;
+            count(appliedCounts, "RECIPE_CONDITIONS_NAMESPACED");
+        }
+
+        // The 1.20.5 ItemStack codec renamed `item` to `id`. This is the largest single change
+        // in the resource layer after the tag namespace: 29,824 files in the corpus.
+        Object result = m.get("result");
+        if (result instanceof Map<?, ?> r && r.containsKey("item") && !r.containsKey("id")) {
+            m = new LinkedHashMap<>(m);
+            m.put("result", renameKey((Map<String, Object>) r, "item", "id"));
+            changed[0] = true;
+            String type = m.get("type") instanceof String s ? s : "";
+            if (type.startsWith("minecraft:") || type.startsWith("forge:")
+                    || type.startsWith("neoforge:") || type.isEmpty()) {
+                count(appliedCounts, "RECIPE_RESULT_ID");
+            } else {
+                // A mod's own recipe type is parsed by the mod's own code, which this run did not
+                // rewrite. Most such codecs delegate to ItemStack's and therefore want `id` -- in
+                // the reference ports, mod recipe types moved with vanilla's almost everywhere --
+                // but a codec that reads the key by hand still wants `item`, and nothing in the
+                // JSON says which. Applied, and named, because a wrong guess either way costs the
+                // same recipe.
+                count(unresolved, "RECIPE_RESULT_ID on a mod recipe type ("
+                        + type.substring(0, type.indexOf(':') < 0 ? type.length() : type.indexOf(':'))
+                        + ") - correct only if its codec follows ItemStack's");
+            }
+        }
+        return m;
+    }
+
+    /**
+     * Flattens `forge:conditional` into a plain recipe carrying its conditions.
+     *
+     * The wrapper is a list of alternatives, first match wins, and NeoForge replaced it with a
+     * per-recipe condition list -- which is one recipe, not a list of them. 2,339 of the 2,464
+     * corpus files hold exactly one alternative and translate exactly; the other 125 lose
+     * everything after the first, and say so.
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> unwrapConditional(Map<String, Object> wrapper, String path) {
+        if (!(wrapper.get("recipes") instanceof List<?> alts) || alts.isEmpty()
+                || !(alts.get(0) instanceof Map)) {
+            count(unresolved, "RECIPE_CONDITIONAL_UNREADABLE " + path);
+            return null;
+        }
+        Map<String, Object> first = (Map<String, Object>) alts.get(0);
+        if (!(first.get("recipe") instanceof Map)) {
+            count(unresolved, "RECIPE_CONDITIONAL_UNREADABLE " + path);
+            return null;
+        }
+        if (alts.size() > 1) {
+            count(unresolved, "RECIPE_CONDITIONAL_ALTERNATIVES_DROPPED (" + (alts.size() - 1)
+                    + " of " + alts.size() + ") " + path);
+        }
+
+        Map<String, Object> out = new LinkedHashMap<>((Map<String, Object>) first.get("recipe"));
+        // Both condition lists gate the same recipe and both must hold, which is exactly what a
+        // single flat list means to NeoForge.
+        List<Object> conditions = new ArrayList<>();
+        if (wrapper.get("conditions") instanceof List<?> outer) conditions.addAll(outer);
+        if (first.get("conditions") instanceof List<?> inner) conditions.addAll(inner);
+        if (out.get("conditions") instanceof List<?> own) conditions.addAll(own);
+        if (!conditions.isEmpty()) out.put("conditions", conditions);
+        count(appliedCounts, "RECIPE_CONDITIONAL_UNWRAP");
+        return out;
+    }
+
+    /** The advancement display icon is an ItemStack and took the same `item` -&gt; `id` rename. */
+    @SuppressWarnings("unchecked")
+    private Object migrateAdvancement(Object root, boolean[] changed) {
+        if (!(root instanceof Map<?, ?> m0)) return root;
+        Map<String, Object> m = (Map<String, Object>) m0;
+        if (!(m.get("display") instanceof Map<?, ?> d)) return m;
+        Map<String, Object> display = (Map<String, Object>) d;
+        if (!(display.get("icon") instanceof Map<?, ?> i) || !i.containsKey("item")
+                || i.containsKey("id")) return m;
+
+        Map<String, Object> outDisplay = new LinkedHashMap<>(display);
+        outDisplay.put("icon", renameKey((Map<String, Object>) i, "item", "id"));
+        Map<String, Object> out = new LinkedHashMap<>(m);
+        out.put("display", outDisplay);
+        changed[0] = true;
+        count(appliedCounts, "ADVANCEMENT_ICON_ID");
+        return out;
+    }
+
+    /**
+     * The int provider inside a dimension type lost its `value` wrapper.
+     *
+     * `{"type": "minecraft:uniform", "value": {"min_inclusive": 0, ...}}` became
+     * `{"type": "minecraft:uniform", "min_inclusive": 0, ...}`. Five corpus mods, and the cost of
+     * missing it is the whole dimension: a dimension type that fails to decode takes its
+     * dimension with it, and a mod whose dimension does not exist is not obviously a JSON problem.
+     */
+    @SuppressWarnings("unchecked")
+    private Object migrateDimensionType(Object root, boolean[] changed) {
+        if (!(root instanceof Map<?, ?> m0)) return root;
+        Map<String, Object> m = (Map<String, Object>) m0;
+        if (!(m.get("monster_spawn_light_level") instanceof Map<?, ?> lvl)
+                || !(lvl.get("value") instanceof Map<?, ?> inner)) return m;
+
+        Map<String, Object> flattened = new LinkedHashMap<>();
+        ((Map<String, Object>) lvl).forEach((k, v) -> { if (!k.equals("value")) flattened.put(k, v); });
+        flattened.putAll((Map<String, Object>) inner);
+        Map<String, Object> out = new LinkedHashMap<>(m);
+        out.put("monster_spawn_light_level", flattened);
+        changed[0] = true;
+        count(appliedCounts, "DIMENSION_INT_PROVIDER_FLATTEN");
+        return out;
+    }
+
+    /**
+     * Rewrites every string in the document that names a tag or a platform-defined type.
+     *
+     * The enclosing key is the only thing that distinguishes a tag reference from an item id --
+     * `"tag": "forge:ingots/iron"` is one, `"item": "minecraft:iron_ingot"` is not -- so it is
+     * carried down. The `#` prefix is the other form and needs no key at all.
+     */
+    @SuppressWarnings("unchecked")
+    private Object migrateJsonStrings(Object node, String key, boolean[] changed) {
+        if (node instanceof Map<?, ?> m) {
+            Map<String, Object> out = new LinkedHashMap<>();
+            for (var e : ((Map<String, Object>) m).entrySet()) {
+                out.put(e.getKey(), migrateJsonStrings(e.getValue(), e.getKey(), changed));
+            }
+            return out;
+        }
+        if (node instanceof List<?> l) {
+            List<Object> out = new ArrayList<>(l.size());
+            // Array elements inherit the enclosing key: a tag list is "values": ["#forge:x", ...].
+            for (Object o : l) out.add(migrateJsonStrings(o, key, changed));
+            return out;
+        }
+        if (!(node instanceof String s)) return node;
+
+        if (s.startsWith("#")) {
+            String moved = migrateTag(s.substring(1));
+            if (moved != null) { changed[0] = true; return "#" + moved; }
+        } else if ("tag".equals(key)) {
+            String moved = migrateTag(s);
+            if (moved != null) { changed[0] = true; return moved; }
+        } else if ("type".equals(key) && s.startsWith("forge:")) {
+            // Datapack conditions, biome modifiers and structure modifiers all moved namespace
+            // with the loader. The type sets are identical either side -- mod_loaded, not, and,
+            // or, tag_empty, item_exists, false, add_features, add_spawns, remove_* -- so this is
+            // a namespace swap and not a mapping.
+            changed[0] = true;
+            count(appliedCounts, "PLATFORM_TYPE_NAMESPACE " + s);
+            return "neoforge:" + s.substring(6);
+        }
+        return node;
+    }
+
+    /** A `forge:` tag -&gt; its 1.21 name, or null if this is not a forge tag. */
+    private String migrateTag(String tag) {
+        if (!tag.startsWith("forge:")) return null;
+        String mapped = commonTagRenames.get(tag);
+        if (mapped != null) {
+            count(appliedCounts, "TAG_RENAME " + tag + " -> " + mapped);
+            return mapped;
+        }
+        if (tagsWithNoCounterpart.contains(tag)) {
+            count(unresolved, "TAG_NO_COUNTERPART " + tag
+                    + " (namespace swapped; nothing in 1.21 defines it)");
+        }
+        count(appliedCounts, "TAG_NAMESPACE forge: -> c:");
+        return "c:" + tag.substring(6);
+    }
+
+    // ---- JSON --------------------------------------------------------------------------
+
+    /**
+     * Just enough JSON to move keys around and put the file back.
+     *
+     * Objects are LinkedHashMap so key order survives, arrays are List, strings are String, and
+     * everything else -- numbers, booleans, null -- is kept as the literal text that was read.
+     * That last part is not laziness: a recipe count read as a double and written back as `1.0`
+     * is a different file, and re-deriving the original spelling of a number is harder than
+     * never losing it.
+     *
+     * <h2>Lenient, because the game is</h2>
+     *
+     * Minecraft reads datapack JSON through {@code GsonHelper}, whose reader is lenient, so the
+     * corpus is full of files that are not strict JSON and work perfectly: {@code // Mod
+     * integrations} comments, unquoted object keys like {@code {id: "#c:x", required: false}},
+     * trailing commas, single-quoted strings. A strict parser rejects 55 corpus files that the
+     * game accepts, and rejecting one means it silently skips every migration above -- its tags
+     * stay in the forge namespace and nothing says so. Being stricter than the consumer is the
+     * expensive kind of correct here.
+     *
+     * The one thing this loses is comments, in files it actually rewrites. That is a fair trade
+     * against not migrating the file at all, and the game never sees them either way.
+     */
+    private static final class Json {
+
+        /** A number, boolean or null, held exactly as written. */
+        record Lit(String text) {}
+
+        static Object parse(String s) {
+            // A leading byte-order mark. Gson's reader consumes one, so the game accepts these
+            // files; a parser that does not sees U+FEFF where a value should be and reads the
+            // whole document as one malformed literal. 13 of ironfurnaces' recipes are like this.
+            if (!s.isEmpty() && s.charAt(0) == 0xFEFF) s = s.substring(1);
+            Json j = new Json(s);
+            Object v = j.value();
+            j.ws();
+            if (j.i < s.length()) throw new IllegalStateException("trailing content");
+            return v;
+        }
+
+        private final String s;
+        private int i;
+
+        private Json(String s) { this.s = s; this.i = 0; }
+
+        private Object value() {
+            ws();
+            char c = peek();
+            if (c == '{') return object();
+            if (c == '[') return array();
+            if (c == '"') return string();
+            return literal();
+        }
+
+        private Map<String, Object> object() {
+            Map<String, Object> m = new LinkedHashMap<>();
+            i++;
+            ws();
+            if (peek() == '}') { i++; return m; }
+            while (true) {
+                ws();
+                if (peek() == '}') { i++; return m; }      // trailing comma
+                String k = key();
+                ws();
+                if (peek() != ':') throw new IllegalStateException("expected :");
+                i++;
+                m.put(k, value());
+                ws();
+                char c = peek();
+                i++;
+                if (c == ',') continue;
+                if (c == '}') return m;
+                throw new IllegalStateException("expected , or }");
+            }
+        }
+
+        private List<Object> array() {
+            List<Object> l = new ArrayList<>();
+            i++;
+            ws();
+            if (peek() == ']') { i++; return l; }
+            while (true) {
+                ws();
+                if (peek() == ']') { i++; return l; }      // trailing comma
+                l.add(value());
+                ws();
+                char c = peek();
+                i++;
+                if (c == ',') continue;
+                if (c == ']') return l;
+                throw new IllegalStateException("expected , or ]");
+            }
+        }
+
+        /** An object key: quoted, or a bare identifier the way the lenient reader allows. */
+        private String key() {
+            char c = peek();
+            if (c == '"' || c == '\'') return string();
+            int start = i;
+            while (i < s.length() && ":,}] \t\r\n".indexOf(s.charAt(i)) < 0) i++;
+            if (i == start) throw new IllegalStateException("expected a key");
+            return s.substring(start, i);
+        }
+
+        private String string() {
+            char quote = peek();
+            if (quote != '"' && quote != '\'') throw new IllegalStateException("expected string");
+            i++;
+            StringBuilder sb = new StringBuilder();
+            while (true) {
+                if (i >= s.length()) throw new IllegalStateException("unterminated string");
+                char c = s.charAt(i++);
+                if (c == quote) return sb.toString();
+                if (c != '\\') { sb.append(c); continue; }
+                char e = s.charAt(i++);
+                switch (e) {
+                    case 'n' -> sb.append('\n');
+                    case 't' -> sb.append('\t');
+                    case 'r' -> sb.append('\r');
+                    case 'b' -> sb.append('\b');
+                    case 'f' -> sb.append('\f');
+                    case 'u' -> { sb.append((char) Integer.parseInt(s.substring(i, i + 4), 16)); i += 4; }
+                    default -> sb.append(e);            // \" \\ \/ and anything else
+                }
+            }
+        }
+
+        private Lit literal() {
+            int start = i;
+            while (i < s.length() && ",}] \t\r\n".indexOf(s.charAt(i)) < 0) i++;
+            if (i == start) throw new IllegalStateException("empty value");
+            return new Lit(s.substring(start, i));
+        }
+
+        private char peek() {
+            if (i >= s.length()) throw new IllegalStateException("unexpected end of input");
+            return s.charAt(i);
+        }
+
+        /** Whitespace, and the comments the lenient reader treats as whitespace. */
+        private void ws() {
+            while (i < s.length()) {
+                char c = s.charAt(i);
+                if (Character.isWhitespace(c)) { i++; continue; }
+                if (c != '/' || i + 1 >= s.length()) return;
+                char n = s.charAt(i + 1);
+                if (n == '/') {
+                    i += 2;
+                    while (i < s.length() && s.charAt(i) != '\n') i++;
+                } else if (n == '*') {
+                    i += 2;
+                    while (i + 1 < s.length() && !(s.charAt(i) == '*' && s.charAt(i + 1) == '/')) i++;
+                    i = Math.min(i + 2, s.length());
+                } else {
+                    return;
+                }
+            }
+        }
+
+        // ---- writing ---------------------------------------------------------------
+
+        static String write(Object v) {
+            StringBuilder sb = new StringBuilder();
+            write(v, sb, 0);
+            return sb.append('\n').toString();
+        }
+
+        private static void write(Object v, StringBuilder sb, int indent) {
+            if (v instanceof Map<?, ?> m) {
+                if (m.isEmpty()) { sb.append("{}"); return; }
+                sb.append("{\n");
+                int n = 0;
+                for (var e : m.entrySet()) {
+                    pad(sb, indent + 1);
+                    quote(String.valueOf(e.getKey()), sb);
+                    sb.append(": ");
+                    write(e.getValue(), sb, indent + 1);
+                    if (++n < m.size()) sb.append(',');
+                    sb.append('\n');
+                }
+                pad(sb, indent);
+                sb.append('}');
+            } else if (v instanceof List<?> l) {
+                if (l.isEmpty()) { sb.append("[]"); return; }
+                sb.append("[\n");
+                for (int k = 0; k < l.size(); k++) {
+                    pad(sb, indent + 1);
+                    write(l.get(k), sb, indent + 1);
+                    if (k < l.size() - 1) sb.append(',');
+                    sb.append('\n');
+                }
+                pad(sb, indent);
+                sb.append(']');
+            } else if (v instanceof String s) {
+                quote(s, sb);
+            } else {
+                sb.append(((Lit) v).text());
+            }
+        }
+
+        private static void pad(StringBuilder sb, int indent) { sb.append("  ".repeat(indent)); }
+
+        private static void quote(String s, StringBuilder sb) {
+            sb.append('"');
+            for (int k = 0; k < s.length(); k++) {
+                char c = s.charAt(k);
+                switch (c) {
+                    case '"' -> sb.append("\\\"");
+                    case '\\' -> sb.append("\\\\");
+                    case '\n' -> sb.append("\\n");
+                    case '\r' -> sb.append("\\r");
+                    case '\t' -> sb.append("\\t");
+                    case '\b' -> sb.append("\\b");
+                    case '\f' -> sb.append("\\f");
+                    default -> {
+                        if (c < 0x20) sb.append(String.format("\\u%04x", (int) c));
+                        else sb.append(c);
+                    }
+                }
+            }
+            sb.append('"');
+        }
+    }
+
+    /** Renames one key, keeping it where it was. */
+    private static Map<String, Object> renameKey(Map<String, Object> m, String from, String to) {
+        Map<String, Object> out = new LinkedHashMap<>();
+        m.forEach((k, v) -> out.put(k.equals(from) ? to : k, v));
+        return out;
+    }
+
     // ---- reporting ---------------------------------------------------------------------
 
     /**
@@ -3422,7 +4079,8 @@ public class Translate {
      * not handle.
      */
     private void report(Path out) throws IOException {
-        System.out.printf("%nRewrote %d classes, moved %d resources%n", classesRewritten, resourcesMoved);
+        System.out.printf("%nRewrote %d classes, moved %d resources, rewrote %d data files%n",
+                classesRewritten, resourcesMoved, resourcesMigrated);
 
         System.out.println("\nApplied:");
         if (appliedCounts.isEmpty()) System.out.println("  (none)");
@@ -3505,6 +4163,12 @@ public class Translate {
                 }
                 case "INTERFACE_SUBSTITUTE" -> {
                     if (c.length >= 3) interfaceSubstitutes.put(c[1], c[2]);
+                }
+                case "COMMON_TAG" -> {
+                    if (c.length >= 3) commonTagRenames.put(c[1], c[2]);
+                }
+                case "TAG_GONE" -> {
+                    if (c.length >= 2) tagsWithNoCounterpart.add(c[1]);
                 }
                 case "COERCE" -> {
                     // from <TAB> to <TAB> bridgeOwner <TAB> bridgeName. The bridge's descriptor

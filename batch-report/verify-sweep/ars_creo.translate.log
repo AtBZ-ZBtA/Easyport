@@ -1,12 +1,13 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 32 classes, moved 4 resources
+Rewrote 32 classes, moved 4 resources, rewrote 1 data files
 
 Applied:
      5  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      1  EBS_BUS FORGE -> GAME
      1  EBS_STRIP (no @SubscribeEvent methods) com/hollingsworth/ars_creo/CreoConfig
      1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     1  RECIPE_RESULT_ID
      6  TYPE_PREFIX net/minecraftforge/client/event/
      4  TYPE_PREFIX net/minecraftforge/common/Tags
     48  TYPE_PREFIX net/minecraftforge/fluids/

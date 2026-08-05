@@ -11,15 +11,38 @@ Two things get built:
    `/mods-from-other-version` gets translated into `/mods` automatically, renamed so you
    can tell what was translated.
 
-**Status:** the translator works on real mods; nothing user-facing is ready. There is no
-one-click tool and no in-game mod yet, and only the Forge → NeoForge direction exists — the
-reverse is not started. Both halves of the API migration are handled, and so is the mixin layer.
-What is left is packaging, the reverse direction, and a tail of individually small gaps. See
-[STATE.md](STATE.md) for exactly where things stand and [ROADMAP.md](ROADMAP.md) for the plan.
+**Status:** both deliverables exist and work, in one direction. Forge 1.20.1 → NeoForge 1.21.1 is
+built end to end — bytecode, mixins, resources — and the in-game mod translates and loads mods
+during the same launch you drop them in. **The reverse direction is not started.** That is the
+large remaining piece, along with a tail of individually small gaps. See [STATE.md](STATE.md) for
+exactly where things stand and [ROADMAP.md](ROADMAP.md) for the plan.
 
 ---
 
 ## What works right now
+
+### The mod
+
+`easyport.jar` goes in your NeoForge 1.21.1 `mods` folder. Drop a Forge 1.20.1 mod into
+`mods-from-other-version/` next to it, start the game, and the mod is translated into `mods/`
+under a `-easyport.jar` name and loaded **in that same launch** — no restart, no second pass, no
+launcher arguments.
+
+```bash
+bash tools/build-service.sh          # produces easyport.jar
+```
+
+It also keeps the folder honest. A translated mod is rebuilt when its source changes or when
+Easyport itself is upgraded, and removing the source jar from `mods-from-other-version/` removes
+the translated one — so the file you dropped in is the file you manage. Nothing without the
+`-easyport.jar` suffix is ever touched.
+
+The translation it performs is **byte-for-byte the same** as the command-line tool's: it runs the
+same class, not a reimplementation, and that equality is checked rather than assumed. Everything
+Easyport could not translate goes to the log and to a report in `.easyport/`.
+
+What it needs to work is a Forge mod — a jar carrying `META-INF/mods.toml`. A NeoForge mod dropped
+in by mistake is left alone rather than mangled.
 
 ### The translator
 
@@ -39,12 +62,21 @@ the author's own 1.21.1 port and compared on what each registers into the game:
 |---|---|
 | `additional_lights` | 100% of registry entries, 100% of resources |
 | 7 of the 8 most-depended-on libraries | load and register content |
+| All 433 mods in the test corpus | translate without error |
 | 22 of 22 libraries and sampled mods | pass a full bytecode type-check |
 | Vanilla API the corpus calls | 92% still resolves after translation |
 | Mixin coordinates the corpus declares | 88% still point at what their author meant |
 | Mixin problems that stop a mod loading | none left |
+| Recipes, tags and advancements rewritten | 138,095 across 265 mods; 0 of 148,051 data files broken |
 
-**That last row is worth reading carefully, because it is not the same as "mixins work."** A mixin
+**The last row is the layer that fails without telling you.** A missing class throws and something
+catches it; a recipe naming a tag that no longer exists just never matches, so the mod loads,
+registers everything, and cannot craft any of it. Forge and NeoForge disagree about the name of
+almost every shared tag — 30,000 references across 181 of the 433 test mods — and nothing anywhere
+reports a tag that is not there. That is why those numbers are counted rather than assumed, and why
+every file is re-read after rewriting.
+
+**The mixin row is worth reading carefully too, because it is not the same as "mixins work."** A mixin
 that patches a Minecraft method whose body has since changed cannot be repaired automatically, and
 about 12% of them are in that position. What changed is that such a mixin now switches itself off
 and is named in the report, instead of aborting the launch and taking every other mod down with it.

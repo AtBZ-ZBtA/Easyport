@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 39 classes, moved 1205 resources
+Rewrote 39 classes, moved 1236 resources, rewrote 542 data files
 
 Applied:
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/data/loot/packs/VanillaBlockLoot.<init>
@@ -9,7 +9,16 @@ Applied:
      2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  EBS_BUS FORGE -> GAME
      1  EBS_STRIP (no @SubscribeEvent methods) net/allthemods/alltheores/AllTheOres
+    31  PLATFORM_TYPE_NAMESPACE forge:add_features
+   102  PLATFORM_TYPE_NAMESPACE forge:mod_loaded
+   102  RECIPE_CONDITIONS_NAMESPACED
+   220  RECIPE_RESULT_ID
+   126  RECIPE_SHOW_NOTIFICATION_DROP
      1  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
+   483  TAG_NAMESPACE forge: -> c:
+     6  TAG_RENAME forge:cobblestone -> c:cobblestones
+     2  TAG_RENAME forge:cobblestone/deepslate -> c:cobblestones/deepslate
+     2  TAG_RENAME forge:cobblestone/normal -> c:cobblestones/normal
     14  TYPE_PREFIX net/minecraftforge/client/model/
      6  TYPE_PREFIX net/minecraftforge/common/Tags
     23  TYPE_PREFIX net/minecraftforge/common/data/

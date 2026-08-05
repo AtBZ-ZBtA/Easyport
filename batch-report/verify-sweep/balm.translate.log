@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 399 classes, moved 32 resources
+Rewrote 399 classes, moved 33 resources, rewrote 31 data files
 
 Applied:
      1  ARG_DROP java/util/function/Function from net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.create
@@ -14,6 +14,8 @@ Applied:
      1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Reloading#getConfig -> easyport/bridge/ConfigBridge#getConfig
      1  RENAME_METHOD net/neoforged/neoforge/items/ItemHandlerHelper#canItemStacksStack -> canItemStacksStack
      1  SRG_IN_TEXT
+    30  TAG_NAMESPACE forge: -> c:
+     1  TAG_RENAME forge:stone -> c:stones
    434  TYPE_PREFIX net/minecraftforge/client/event/
      5  TYPE_PREFIX net/minecraftforge/client/model/
     79  TYPE_PREFIX net/minecraftforge/client/settings/

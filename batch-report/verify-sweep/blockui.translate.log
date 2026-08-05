@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 121 classes, moved 1 resources
+Rewrote 121 classes, moved 1 resources, rewrote 0 data files
 
 Applied:
      1  ARG_FILL net/minecraft/core/HolderLookup$Provider into net/minecraft/world/level/block/entity/BlockEntity.loadStatic

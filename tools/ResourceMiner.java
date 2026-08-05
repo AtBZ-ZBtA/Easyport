@@ -22,8 +22,15 @@ import java.util.zip.ZipFile;
  *
  * Three things are mined:
  *   1. Resource *directory* renames  - data/x/recipes/ -> data/x/recipe/ and friends
- *   2. JSON *key* changes per category - e.g. a recipe result naming its item differently
+ *   2. JSON *key path* changes per category - e.g. a recipe result naming its item differently
  *   3. Descriptor and pack_format deltas - the concrete inputs to the resource migrator
+ *
+ * Key *paths*, not bare key names, and that distinction found the single largest recipe
+ * change in the corpus after a flat scan had missed it for two phases. 1.21 renamed the
+ * result's `item` to `id`, and a flat key set cannot see it: `item` is still everywhere,
+ * because ingredients kept it, and `id` already occurred in enough 1.20.1 files to clear the
+ * noise floor. `result.item` -> `result.id` is unambiguous. The cost is that a change spread
+ * over many paths fragments its own evidence, which is why the corroboration floor stays low.
  *
  * Run:
  *   java tools/ResourceMiner.java <pairs.tsv> <sourceModsDir> <targetModsDir> [outDir]
@@ -111,9 +118,8 @@ public class ResourceMiner {
                 } else if (name.endsWith(".json")) {
                     String cat = category(name);
                     if (cat == null) continue;
-                    Matcher m = JSON_KEY.matcher(read(zip, e));
                     Set<String> keys = jarJson.computeIfAbsent(cat, k -> new HashSet<>());
-                    while (m.find()) keys.add(m.group(1));
+                    collectKeyPaths(read(zip, e), keys);
                 }
             }
         }
@@ -125,6 +131,120 @@ public class ResourceMiner {
             Map<String, Integer> agg = jsonKeys.computeIfAbsent(cat, k -> new HashMap<>());
             for (String k : keys) agg.merge(k, 1, Integer::sum);
         });
+    }
+
+    // ---- JSON key paths ----------------------------------------------------------------
+
+    /**
+     * Longest key path recorded. Loot tables nest arbitrarily deep and the deep end is all
+     * author data — every extra segment splits the evidence for a change without adding any.
+     */
+    private static final int MAX_PATH_DEPTH = 5;
+
+    /**
+     * Collects every object key in a JSON document as a dotted path from the root, with array
+     * indices flattened to `[]` so `pattern[0]` and `pattern[7]` are one fact rather than eight.
+     *
+     * Falls back to the flat key set if the document does not parse. Some corpus jars ship JSON
+     * with trailing commas or comments, and a mod whose recipes are unreadable should contribute
+     * its bare key names rather than nothing at all — silently dropping it would bias the counts
+     * towards whichever side happened to be stricter.
+     */
+    private static void collectKeyPaths(String json, Set<String> out) {
+        try {
+            new PathScanner(json, out).parseValue("");
+        } catch (RuntimeException ignored) {
+            Matcher m = JSON_KEY.matcher(json);
+            while (m.find()) out.add(m.group(1));
+        }
+    }
+
+    /** Minimal recursive-descent walker. Records structure and discards every value. */
+    private static final class PathScanner {
+        private final String s;
+        private final Set<String> out;
+        private int i;
+
+        PathScanner(String s, Set<String> out) { this.s = s; this.out = out; }
+
+        void parseValue(String path) {
+            ws();
+            if (i >= s.length()) throw new IllegalStateException("eof");
+            char c = s.charAt(i);
+            if (c == '{') parseObject(path);
+            else if (c == '[') parseArray(path);
+            else if (c == '"') parseString();
+            else parseLiteral();
+        }
+
+        private void parseObject(String path) {
+            i++;                                        // '{'
+            ws();
+            if (peek() == '}') { i++; return; }
+            while (true) {
+                ws();
+                String key = parseString();
+                String child = path.isEmpty() ? key : path + '.' + key;
+                if (depth(child) <= MAX_PATH_DEPTH) out.add(child);
+                ws();
+                if (peek() != ':') throw new IllegalStateException("expected :");
+                i++;
+                parseValue(child);
+                ws();
+                char c = peek();
+                i++;
+                if (c == ',') continue;
+                if (c == '}') return;
+                throw new IllegalStateException("expected , or }");
+            }
+        }
+
+        private void parseArray(String path) {
+            i++;                                        // '['
+            ws();
+            if (peek() == ']') { i++; return; }
+            while (true) {
+                parseValue(path + "[]");
+                ws();
+                char c = peek();
+                i++;
+                if (c == ',') continue;
+                if (c == ']') return;
+                throw new IllegalStateException("expected , or ]");
+            }
+        }
+
+        private String parseString() {
+            if (peek() != '"') throw new IllegalStateException("expected string");
+            i++;
+            StringBuilder sb = new StringBuilder();
+            while (true) {
+                if (i >= s.length()) throw new IllegalStateException("unterminated string");
+                char c = s.charAt(i++);
+                if (c == '\\') { i++; sb.append('_'); continue; }   // escapes never matter here
+                if (c == '"') return sb.toString();
+                sb.append(c);
+            }
+        }
+
+        private void parseLiteral() {
+            int start = i;
+            while (i < s.length() && ",}] \t\r\n".indexOf(s.charAt(i)) < 0) i++;
+            if (i == start) throw new IllegalStateException("empty literal");
+        }
+
+        private char peek() {
+            if (i >= s.length()) throw new IllegalStateException("eof");
+            return s.charAt(i);
+        }
+
+        private void ws() { while (i < s.length() && Character.isWhitespace(s.charAt(i))) i++; }
+
+        private static int depth(String path) {
+            int n = 1;
+            for (int k = 0; k < path.length(); k++) if (path.charAt(k) == '.') n++;
+            return n;
+        }
     }
 
     /**
@@ -226,10 +346,10 @@ public class ResourceMiner {
                                        Map<String, Map<String, Integer>> tgt, Path out)
                                        throws IOException {
         System.out.println("\n" + "=".repeat(78));
-        System.out.println("JSON KEY DELTAS BY RESOURCE CATEGORY");
+        System.out.println("JSON KEY-PATH DELTAS BY RESOURCE CATEGORY");
         System.out.println("=".repeat(78));
 
-        StringBuilder sb = new StringBuilder("category\tstatus\tsrcMods\ttgtMods\tkey\n");
+        StringBuilder sb = new StringBuilder("category\tstatus\tsrcMods\ttgtMods\tkeyPath\n");
         Set<String> cats = new TreeSet<>();
         cats.addAll(src.keySet());
         cats.addAll(tgt.keySet());

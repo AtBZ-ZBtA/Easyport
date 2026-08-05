@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 120 classes, moved 217 resources
+Rewrote 120 classes, moved 257 resources, rewrote 110 data files
 
 Applied:
      1  ARG_COLLAPSE net/minecraft/world/item/AxeItem.<init>
@@ -42,11 +42,23 @@ Applied:
      8  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
      3  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      2  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+    13  RECIPE_CONDITIONS_NAMESPACED
+    53  RECIPE_RESULT_ID
      7  RENAME_METHOD net/minecraft/world/food/FoodProperties$Builder#saturationMod -> saturationModifier
      5  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
      1  RENAME_METHOD net/minecraft/world/level/storage/loot/BuiltInLootTables#register -> registerLootTable
      2  RENAME_METHOD net/neoforged/neoforge/common/crafting/CraftingHelper#register -> registerSerializer
      1  SRG_IN_TEXT
+     1  TAG_FILE_RENAME forge:armors/boots -> minecraft:foot_armor
+     1  TAG_FILE_RENAME forge:armors/chestplates -> minecraft:chest_armor
+     1  TAG_FILE_RENAME forge:armors/helmets -> minecraft:head_armor
+     1  TAG_FILE_RENAME forge:armors/leggings -> minecraft:leg_armor
+     1  TAG_FILE_RENAME forge:tools/bows -> c:tools/bow
+     1  TAG_FILE_RENAME forge:tools/fishing_rods -> c:tools/fishing_rod
+   112  TAG_NAMESPACE forge: -> c:
+     2  TAG_RENAME forge:cobblestone -> c:cobblestones
+     1  TAG_RENAME forge:is_water -> c:is_aquatic
+     6  TAG_RENAME forge:string -> c:strings
     37  TYPE_PREFIX net/minecraftforge/client/event/
      3  TYPE_PREFIX net/minecraftforge/client/extensions/
      4  TYPE_PREFIX net/minecraftforge/common/Tags

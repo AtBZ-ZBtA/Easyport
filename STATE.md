@@ -119,6 +119,7 @@ and behaviour, which need a real launch:
 
 ```bash
 bash tools/build-forge-compat.sh          # after ANY forge-compat change; clears the baseline
+bash tools/build-service.sh               # easyport.jar, the in-game half; needs forge-compat first
 bash tools/batch-verify.sh < batch-report/libs.tsv     # 8 highest-fan-in libraries
 bash tools/batch-verify.sh < batch-report/sample.tsv   # 14 mixed mods
 
@@ -127,7 +128,19 @@ grep -oE "(ClassNotFoundException|NoSuchMethodError)[:.] ?'?[a-zA-Z0-9_./$]{0,50
     devenv/neoforge-1.21.1/run/failed-<modid>.log | head -2
 ```
 
-**Eight hard rules, each learned by breaking something:**
+**Ten hard rules, each learned by breaking something:**
+
+- **A documented limitation is not a handled limitation.** `tools/README.md` carried a section
+  headed "Known limitation: no nested context" whose worked example was a recipe's `result.item`
+  becoming `result.id`. That is what 1.20.5 did, to 29,824 corpus files, and the caveat sat
+  directly above the report that was being read as a complete answer — by the same person who had
+  written the caveat. If a blind spot is worth a paragraph, it is worth a measurement.
+- **Translate the whole corpus before believing any number.** The 22-mod tested set had been the
+  denominator for four phases, and the first sweep of all 433 jars found **21 that could not be
+  translated at all** — three distinct crashes, two of them older than the phase that found them,
+  and not one of them in the tested set. A mod that fails to translate never reaches the harness,
+  so it is invisible to every measurement the harness produces. `translated=N failed=M` over the
+  full corpus is cheap and is the only thing that sees this class of failure.
 
 - **Never chain a build into a backgrounded batch and read only the tail.** A compile error
   scrolled past once and ten minutes of verification ran against a one-class forge-compat,
@@ -238,14 +251,21 @@ The mixin layer is done (Phase 5, signed off below). What is left there is not l
 `api-report/mixin-gaps.txt`. That queue is dominated by **client rendering**, which `runData` never
 exercises — so it is the one area where no harness this project has will catch a regression.
 
-**What is actually next, having checked rather than read the phase numbers off the roadmap.**
-Phases 0–5 are signed off below. Phase 6 as written is *mostly already built*: the datapack
-singularisation, tag renames, descriptor rename and dependency version ranges all went into
-`Translate` during Phase 2, because a mod that does not migrate its resources scores 0% and nothing
-after it can be measured. What is genuinely left forward-side is three small items —
-`pack.mcmeta` `pack_format` is still 15 in every translated jar, recipe `components` /
-`show_notification`, and the advancement `id` key. The rest of ROADMAP §Phase 6 is a list of trees
-that exist only in 1.21.1, which is **backward-direction work**.
+**Resources fail without saying anything, and that is the whole of Phase 6.** Bytecode failures
+announce themselves — a missing class throws and the harness catches it. Nothing in the resource
+layer throws. A recipe naming a tag that no longer exists never matches; a datapack condition under
+a key the loader stopped reading is never evaluated. The mod loads, registers every block and item
+it has, and cannot craft any of them, with nothing in any log to say why. Four of the nine
+migrations in the phase fail exactly that way, the largest being the `forge:` → `c:` tag namespace
+at 29,923 references across 181 of the 433 corpus jars. Table in
+[tools/README.md](tools/README.md).
+
+**One rule that is specific to this layer: for tags, the corpus is the wrong source.** Everything
+else here is mined from ATM9 against ATM10. A `data/c/tags/item/tools/axes.json` sitting in an
+ATM10 mod proves only that a mod author invented that name; Forge's and NeoForge's own jars are
+what the game defines. That mapping is mined from the two platform jars — 321 tags against 463,
+187 identical, 39 renamed, 39 with no counterpart. The 39 with none are reported rather than
+approximated.
 
 **Never use resource-coverage percentages as a measure of resource migration.** They carry the same
 feature drift that poisons rule mining: `allthecompressed` reports 6,612 missing resources because
@@ -255,11 +275,11 @@ error is just as easy — `blockui`'s GUI textures moving into a `<modid>_sprite
 like a systematic 1.21 migration until it was counted: `assets/<ns>/atlases/` appears in 77 of 433
 ATM9 jars and 78 of 479 ATM10 jars, so it is not a version change at all.
 
-**Not started:** backward direction (1.21.1 → 1.20.1). Only `rules/forward.rules.tsv` exists.
-The locked decision is omnidirectional, and everything so far reads as forward progress — do
-not mistake that for being halfway. Phase 7 (the in-game service jar) is the other candidate and is
-cheap: Phase 0 proved same-launch injection works, so it is wrapping the CLI rather than new
-mechanism.
+**Not started, and it is the whole of what remains: the backward direction** (1.21.1 → 1.20.1).
+Only `rules/forward.rules.tsv` exists. Phases 0–7 are signed off below, both deliverables work, and
+every one of those phases moved in one direction — do not read that as being halfway. The forward
+side also still has a tail: 595 mixin coordinates that load and do nothing, the `BlockEntity`
+override shape no pass reaches, and the `ForgeHooks`/`ForgeEventFactory` split.
 
 ---
 
@@ -267,7 +287,9 @@ mechanism.
 
 **Easyport** translates Minecraft mods between **Forge 1.20.1** and **NeoForge 1.21.1**,
 both directions, aiming at complete coverage. Two deliverables: a CLI tool, and a jar that
-sits in `/mods` and auto-translates anything dropped in `/mods-from-other-version`.
+sits in `/mods` and auto-translates anything dropped in `/mods-from-other-version`. **Both exist
+and work, forward only** — `tools/Translate.java` and `easyport.jar` (`tools/build-service.sh`).
+The in-game one runs the CLI's own class and produces byte-identical output.
 
 This is *two* stacked migrations — loader (Forge↔NeoForge) and game version (1.20.1↔1.21.1).
 The second is harder and contains the data-component rewrite (1.20.5) and data-driven
@@ -372,6 +394,215 @@ Everything below is measured, not estimated.
   the work list at 241 mods — cannot be expressed as a symbol mapping at all**; the bus is
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
+
+### Phase 7 — COMPLETE
+
+**Exit criterion:** a mod dropped into `mods-from-other-version/` is translated and loaded by the
+same launch. Met.
+
+`easyport.jar` goes in `mods/`. It declares `IModFileCandidateLocator` in `META-INF/services`,
+which FML's `ModDirTransformerDiscoverer` finds while walking the mods folder *before* mod
+discovery — the only window in which a jar can be translated and still be loaded by the launch
+that found it. It carries `forward.rules.tsv`, `srg2official.tsv` and `forge-compat.jar` inside
+itself. Build with `bash tools/build-service.sh`.
+
+| Check | Result |
+|---|---|
+| Translated mod loads in the same launch | `Creating FMLModContainer instance for [com.mgen256.al.AdditionalLights]` |
+| Four mixin-heavy libraries at once | balm, curios, supermartijn642corelib, yungsapi all construct |
+| In-game output vs CLI output | **byte-identical**, unpacked and diffed |
+| Unchanged source relaunched | cache hit, no retranslation |
+| Easyport rebuilt | cache invalidated, mod retranslated |
+| Source removed from the inbox | translated jar removed from `mods/` |
+
+**The byte-identical row is the one that matters**, and it is why this phase cost days rather than
+weeks. It runs `easyport.tools.Translate` — the same class the command line runs, not a port of it.
+A second implementation would drift from the one every measurement in this project was taken
+against, and the drift would surface as mods behaving differently depending on how they were
+translated.
+
+#### Three things that were wrong first, all found by running it
+
+**The jar cannot find itself.** FML loads it through the secure jar handler, so its code source is
+a `union:` URI that `Paths.get` refuses. Using its own modification time as a cache key silently
+produced a stamp of zero, so a rebuilt Easyport reported every mod up to date and retranslated
+nothing — a fix that ships and reaches nothing the user has already ported looks exactly like a fix
+that does not work. The build id is now a content hash packaged *into* the jar.
+
+**The module path arrives with its separators doubled.** Windows accepts `C:\\Users\\...`, so the
+same platform jar appeared twice under two spellings and was indexed twice. Paths go through
+`toRealPath` before deduplication.
+
+**forge-compat has to be in the target index, not just the mods folder.** It was injected as a mod
+from the first run and looked complete, because the mod under test had no mixins into Forge's own
+classes. Phase 5 already recorded that supermartijn642corelib patches `net.minecraftforge.registries.GameData`
+and needs forge-compat indexed to judge it; the in-game path was missing that and would have
+silently judged those mixins against nothing.
+
+#### What it deliberately does not do
+
+**It does not detect direction.** It translates Forge 1.20.1 → NeoForge 1.21.1 and recognises a
+NeoForge jar it should leave alone rather than mangle. Running on a Forge 1.20.1 instance and
+translating the other way needs the backward rule set, which does not exist.
+
+**It claims exactly one thing in the mods folder: the `-easyport.jar` suffix.** Files carrying it
+are rebuilt when their source or Easyport changes, and deleted when their source leaves the inbox —
+otherwise the user's way of uninstalling a translated mod, deleting the file they dropped in, does
+nothing at all. Nothing without that suffix is ever touched.
+
+**Without a target index it still translates, loudly.** If no platform jar is found on the module
+or class path it warns and carries on with the Holder, argument-arity, abstract-stub and mixin
+passes disabled. That is a large loss, and the warning is the difference between a known limitation
+and a mystery.
+
+### Phase 6 — COMPLETE
+
+**Exit criterion:** a translated mod's datapack means the same thing to 1.21.1 that it meant to
+1.20.1. Met for everything the two platform jars and the corpus can be asked about.
+
+| Measure | Start of phase | Now |
+|---|---|---|
+| Corpus jars that translate at all | 412 / 433 | **433 / 433** |
+| Datapack rewrites across the corpus | — | **138,095** in 265 of 433 jars |
+| Datapack files that stop parsing | — | **0** of 148,051 |
+| `architectury` resource coverage | 0.0% | **100.0%** |
+| Libraries loading | 7 / 8 | 7 / 8 |
+| Type-check clean | 22 / 22 | 22 / 22 |
+
+Corpus-wide actions, largest first: `PLATFORM_TYPE_NAMESPACE` 32,937 · `TAG_NAMESPACE` 31,771 ·
+`RECIPE_RESULT_ID` 29,471 · `RECIPE_CONDITIONS_NAMESPACED` 20,075 ·
+`RECIPE_SHOW_NOTIFICATION_DROP` 11,240 · `ADVANCEMENT_ICON_ID` 2,817 ·
+`RECIPE_CONDITIONAL_UNWRAP` 2,457 · `TAG_RENAME` 1,903 · `TAG_FILE_RENAME` 212 ·
+`DIMENSION_INT_PROVIDER_FLATTEN` 30 · `TAG_FILE_MERGE` 11 · `RESOURCE_SUPERSEDED` 5.
+
+Losses, named rather than counted as successes: `RECIPE_RESULT_ID on a mod recipe type` 4,904 in
+94 jars, `TAG_NO_COUNTERPART` 135 in 32 jars, `RECIPE_CONDITIONAL_ALTERNATIVES_DROPPED` 118 in 3
+jars, `RESOURCE_JSON_UNPARSED` 2.
+
+**The 4,904 is the one to understand.** A mod's own recipe type is decoded by the mod's own code,
+which this pass did not rewrite. Most such codecs delegate to `ItemStack`'s and therefore want
+`id` — in the reference ports, mod recipe types moved with vanilla's almost everywhere — but a
+codec that reads the key by hand still wants `item`, and nothing in the JSON says which.
+`farmingforblockheads` kept `item` across 810 files while `mysticalagriculture` moved all 501 of
+its own. It is applied, because a wrong guess costs the same recipe either way, and it is reported
+separately so the guess is visible.
+
+**Neither the libraries row nor the type-check row moved, and both were meant to be read that
+way.** This phase changes what a mod *does*, not whether it loads; a resource migration that
+altered either number would be a bug. What moved is 21 jars that could not be translated at all,
+and a mod whose only datapack file was in a namespace the loader does not read.
+
+#### The phase existed because the plan said it did not
+
+ROADMAP had this as "mostly already built" with three small items left. That assessment came from
+`resource-report/json-key-deltas.tsv`, and **the tool that produced it documented the exact blind
+spot that was hiding the real work.** `tools/README.md` carried a section headed "Known
+limitation: no nested context" whose hypothetical example was a recipe's `result.item` becoming
+`result.id`. That is what 1.20.5 did, to 29,824 files in the corpus.
+
+Teaching `ResourceMiner` to record key *paths* rather than bare key names took about thirty lines
+and turned three small items into nine:
+
+| Change | Scale | Failure if skipped |
+|---|---|---|
+| Tag namespace `forge:` → `c:` | 29,923 references, **181 of 433 jars** | **silent** — recipes never match |
+| Common-tag renames past the swap | 39 tags | **silent** |
+| Recipe `result.item` → `result.id` | 29,824 files | recipe dropped |
+| Advancement `display.icon.item` → `id` | 55 mods | advancement dropped |
+| `conditions` → `neoforge:conditions` | 47 mods | **silent** — conditional recipes all fire |
+| Condition/modifier `type` `forge:` → `neoforge:` | 20,079 `mod_loaded` alone | file dropped |
+| `forge:conditional` unwrapped | 2,464 files | file dropped |
+| `data/<ns>/forge/` → `neoforge/` | 59 jars | biome modifiers never load |
+| `dimension_type` int provider flattened | 5 mods | the dimension does not exist |
+
+**A limitation that is written down is not a limitation that is handled.** A report whose blind
+spot is documented still reads as a complete answer to anyone who trusts its output — and the
+person trusting it was the same person who wrote the caveat. If a blind spot is worth a paragraph,
+it is worth a measurement.
+
+#### `pack_format` was the one item with evidence, and measuring it retired it
+
+It was the only one of the three old items backed by an observation rather than a changelog:
+translated jars do ship 15 where 1.21.1 wants 34. ATM10 is a shipping modpack, and **19 of its
+jars declare `pack_format: 6`** — Minecraft 1.16.2 — 30 declare 15, and 179 of 479 ship no
+`pack.mcmeta` at all. Mod resource packs are not validated against it. Bumping it would have been
+a change with a plausible rationale, no effect, and a fresh chance to be wrong, since data packs
+want 48 rather than 34.
+
+#### The one place the corpus is the wrong source
+
+The `forge:` → `c:` tag mapping is mined from `forge-1.20.1-47.4.22-universal.jar` against
+`neoforge-21.1.248.jar`, not from ATM9 against ATM10. A `data/c/tags/item/tools/axes.json` in some
+ATM10 mod proves only that a mod author invented that name; the platform jars are what the game
+defines. 321 tags against 463, 187 identical under the directory singularisation, 39 renamed, 39
+with no counterpart.
+
+The 39 with no counterpart are reported, not approximated. Most are the colour tags — 1.21 replaced
+`forge:glass/black` with the intersection of `c:glass_blocks` and `c:dyed/black`, a set operation
+no rename can express. Mapping it to `c:dyed/black` alone would silently widen a stained-glass
+recipe to accept black wool, which is the trade this project always refuses. The namespace is
+swapped anyway, so a mod that both defines and uses the tag keeps agreeing with itself; what is
+lost either way is agreement with every other mod.
+
+#### Two collision shapes, both from mods built for two loaders at once
+
+A mod that supports Forge and Fabric ships its common tag twice, under `forge:` and under `c:`, and
+the namespace swap lands them on one path. A mod that supports Forge and NeoForge ships both
+`mods.toml` and `neoforge.mods.toml`. Either one was a duplicate-entry `ZipException` that failed
+the entire jar — 9 of 433 on the first sweep, which is how they were found.
+
+They resolve differently on purpose. **Tags are merged**, because a tag is a set and the union is
+what the game would have computed from the two files anyway. **Everything else defers to the file
+the author already put at the destination**, because it was written for the target loader and the
+one being renamed was not.
+
+#### It also closed a gap Phase 3 recorded as unexplained
+
+Phase 3 signed off architectury as "OK, 100%" with a note that its resource coverage was 0/1 and
+was "a separate unexplained gap worth a look". It is the `data/<ns>/forge/` → `neoforge/` rename.
+Architectury ships exactly one datapack file, `data/architectury/forge/biome_modifier/impl.json`,
+and the author's own port has it at `data/architectury/neoforge/biome_modifier/impl.json`. Ours now
+matches, and architectury reads **100% registry, 100% resource**.
+
+Worth reading as more than one file moving. Architectury's entire datapack contribution is that
+one biome modifier, it was in a namespace the loader does not read, and every measurement said the
+mod was fine — because the thing that was broken was not the kind of thing anything was measuring.
+
+#### The pass checks its own output, and had to be as lenient as the game
+
+Every rewritten file is re-parsed before it is written, and kept as-is if it does not survive the
+round trip. This whole layer is invisible until the game reads the file, and a file the game cannot
+read is worse than one that was never migrated — the recipe disappears instead of merely not
+matching. It costs one parse of a document already in memory and makes "produced malformed JSON" a
+bug that cannot reach a jar. Across the corpus it has never fired.
+
+**Being stricter than the consumer was the expensive kind of correct.** Minecraft reads datapack
+JSON through `GsonHelper`, whose reader is lenient, so the corpus is full of files that are not
+strict JSON and work perfectly: `// Mod integrations` comments, unquoted keys like
+`{id: "#c:x", required: false}`, trailing commas. A strict parser rejected 55 of them, and a
+rejected file silently skips **every** migration above — its tags stay in the `forge:` namespace and
+nothing says so. The parser matches the game now, and the one file still rejected is genuinely
+truncated, is named in the report, and is left alone.
+
+That rejection is per file and named per file for the same reason. "Some file somewhere in this jar
+did not parse" is not something anyone can act on.
+
+#### Three crashes found by sweeping the corpus, two of them older than this phase
+
+The Phase 6 sweep was the first time all 433 jars had been translated in one pass, and it found
+three ways `Translate` could abort. Only the first is Phase 6's own.
+
+**Renaming onto an occupied path**, above. Phase 6's.
+
+**Argument stack depth counted in slots rather than values.** The coercion pass located a call's
+arguments with `Type.getSize()`, but an ASM analysis frame holds a long or a double as *one* entry
+whose size is 2. With one wide argument it silently read the wrong one; with two it indexed past
+the bottom of the stack and threw. Present since Phase 4 and invisible because every method with
+only single-width parameters computes the same answer.
+
+**`@At("NEW")` naming a bare type.** `Type.getReturnType` was handed a target that is not a
+descriptor — `target = "net/minecraft/world/Container"` is perfectly ordinary — and threw out of
+ASM. Present since Phase 5.
 
 ### Phase 5 — COMPLETE
 

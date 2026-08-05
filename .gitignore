@@ -69,6 +69,12 @@ translated/
 forge-compat/out/
 forge-compat/*.jar
 
+# In-game service jar. Build output, like forge-compat.jar above -- and it bundles that jar plus
+# the 1.5 MB mapping table, so committing it would store both twice. Sources are in service/;
+# build with tools/build-service.sh.
+easyport.jar
+service/out/
+
 # Batch run artifacts. batch-results.tsv is the durable output and stays tracked;
 # per-mod logs and intermediate deltas churn on every run.
 batch-report/*.log

@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 31 classes, moved 5 resources
+Rewrote 31 classes, moved 5 resources, rewrote 1 data files
 
 Applied:
      1  ARG_DROP net/minecraft/resources/ResourceLocation from net/minecraft/data/loot/packs/VanillaEntityLoot.add
@@ -12,6 +12,7 @@ Applied:
      1  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  JARJAR_TRANSLATE (depth 1)
      1  SRG_IN_TEXT
+     1  TAG_NAMESPACE forge: -> c:
     28  TYPE_PREFIX net/minecraftforge/client/event/
      3  TYPE_PREFIX net/minecraftforge/client/extensions/
    119  TYPE_PREFIX net/minecraftforge/client/model/
@@ -53,6 +54,7 @@ Applied:
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  HIERARCHY cannot extend final class: com/tterrag/registrate/util/DataIngredient extends net/minecraft/world/item/crafting/Ingredient
+     1  RECIPE_RESULT_ID on a mod recipe type (occultism) - correct only if its codec follows ItemStack's
      7  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
 
 Wrote translated\ars_ocultas.jar

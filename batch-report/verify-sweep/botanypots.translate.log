@@ -1,11 +1,13 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 71 classes, moved 1905 resources
+Rewrote 71 classes, moved 1905 resources, rewrote 149 data files
 
 Applied:
+     2  ADVANCEMENT_ICON_ID
     16  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
      1  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      5  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+    49  RECIPE_RESULT_ID
      6  TYPE_PREFIX net/minecraftforge/client/event/
      1  TYPE_RENAME net/minecraftforge/api/distmarker/Dist
      7  TYPE_RENAME net/minecraftforge/eventbus/api/Event
@@ -27,6 +29,7 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB net/darkhax/botanypots/data/recipes/potinteraction/BasicPotInteractionSerializer.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
      1  ABSTRACT_STUB net/darkhax/botanypots/data/recipes/soil/BasicSoilSerializer.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
      1  ABSTRACT_STUB net/darkhax/botanypots/data/recipes/soil/BasicSoilSerializer.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+    98  RECIPE_RESULT_ID on a mod recipe type (crafting_shaped) - correct only if its codec follows ItemStack's
 
 Wrote translated\botanypots.jar
       translated\botanypots.report.tsv

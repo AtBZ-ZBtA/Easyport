@@ -1,9 +1,12 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 74 classes, moved 24 resources
+Rewrote 74 classes, moved 24 resources, rewrote 12 data files
 
 Applied:
     13  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+    11  RECIPE_RESULT_ID
+     1  RECIPE_SHOW_NOTIFICATION_DROP
+     3  TAG_NAMESPACE forge: -> c:
      9  TYPE_PREFIX net/minecraftforge/client/event/
     25  TYPE_PREFIX net/minecraftforge/client/model/
      5  TYPE_PREFIX net/minecraftforge/common/Tags

@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 42 classes, moved 34 resources
+Rewrote 42 classes, moved 34 resources, rewrote 26 data files
 
 Applied:
      1  ARG_COLLAPSE net/minecraft/world/item/SwordItem.<init>
@@ -16,7 +16,11 @@ Applied:
      8  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
      5  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
      4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
+     1  RECIPE_RESULT_ID
      1  RENAME_METHOD net/minecraft/world/food/FoodProperties$Builder#saturationMod -> saturationModifier
+    14  TAG_NAMESPACE forge: -> c:
+     1  TAG_RENAME forge:glass -> c:glass_blocks
+     5  TAG_RENAME forge:string -> c:strings
      4  TYPE_PREFIX net/minecraftforge/common/Tags
     19  TYPE_PREFIX net/minecraftforge/event/
    115  TYPE_PREFIX net/minecraftforge/items/
@@ -35,6 +39,9 @@ Applied:
 UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB com/traverse/bhc/common/recipes/HeartAmuletRecipe$BHCSerializer.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
      1  ABSTRACT_STUB com/traverse/bhc/common/recipes/HeartAmuletRecipe$BHCSerializer.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
+     1  RECIPE_RESULT_ID on a mod recipe type (bhc) - correct only if its codec follows ItemStack's
+    17  RECIPE_RESULT_ID on a mod recipe type (crafting_shaped) - correct only if its codec follows ItemStack's
+     7  RECIPE_RESULT_ID on a mod recipe type (crafting_shapeless) - correct only if its codec follows ItemStack's
     12  TYPE_PREFIX target missing: net/neoforged/neoforge/event/AttachCapabilitiesEvent
 
 Wrote translated\bhc.jar

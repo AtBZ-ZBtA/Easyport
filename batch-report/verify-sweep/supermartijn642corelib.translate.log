@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 181 classes, moved 8 resources
+Rewrote 181 classes, moved 8 resources, rewrote 0 data files
 
 Applied:
      1  ARG_DROP java/util/function/Function from net/minecraft/network/protocol/game/ClientboundBlockEntityDataPacket.create

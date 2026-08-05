@@ -806,3 +806,115 @@ FIELD_TO_STATIC	net/minecraft/world/item/Item	BASE_ATTACK_SPEED_UUID	Ljava/util/
 # FoodProperties.Builder renamed saturationMod to saturationModifier. Same shape, so a plain
 # call-site rewrite. 1.21 also dropped meat()/alwaysEat(), which are separate findings.
 RENAME_METHOD	net/minecraft/world/food/FoodProperties$Builder	saturationMod	(F)Lnet/minecraft/world/food/FoodProperties$Builder;	net/minecraft/world/food/FoodProperties$Builder	saturationModifier	(F)Lnet/minecraft/world/food/FoodProperties$Builder;
+
+# --- Common tags: forge: -> c: ------------------------------------------------------------
+#
+# The largest single change in the resource layer, and the one that fails most quietly. Forge
+# 1.20.1 puts its common tags in the `forge:` namespace; NeoForge 1.21.1 uses `c:`, shared with
+# Fabric. 29,923 tag references across 181 of the 433 corpus jars are affected, and nothing
+# reports a tag that does not exist -- the recipe simply never matches, so a translated mod
+# loads, registers everything, and its recipes quietly do nothing.
+#
+# The default is a plain namespace swap and is NOT listed here; only the tags whose name also
+# changed are. That mapping is mined from the two *platform* jars rather than from the corpus,
+# because a mod-authored data/c/tags/ file proves only that some mod invented that name.
+# forge-1.20.1-47.4.22-universal.jar ships 321 tags, neoforge-21.1.248.jar ships 463, and 187
+# are identical under the directory singularisation.
+#
+# TAG_GONE marks the rest: a forge tag with no 1.21 counterpart at all. The namespace swap is
+# still applied to it, so a mod that both defines and uses the tag keeps working -- what is
+# lost is agreement with everyone else. The colour tags are the bulk of it: 1.21 replaced
+# `forge:glass/black` with the intersection of `c:glass_blocks` and `c:dyed/black`, which is a
+# set operation no rename can express. Mapping them to `c:dyed/black` alone was rejected -- it
+# would silently widen a black-stained-glass recipe to accept black wool.
+
+COMMON_TAG	forge:cobblestone	c:cobblestones
+COMMON_TAG	forge:cobblestone/deepslate	c:cobblestones/deepslate
+COMMON_TAG	forge:cobblestone/infested	c:cobblestones/infested
+COMMON_TAG	forge:cobblestone/mossy	c:cobblestones/mossy
+COMMON_TAG	forge:cobblestone/normal	c:cobblestones/normal
+COMMON_TAG	forge:gravel	c:gravels
+COMMON_TAG	forge:gunpowder	c:gunpowders
+COMMON_TAG	forge:leather	c:leathers
+COMMON_TAG	forge:netherrack	c:netherracks
+COMMON_TAG	forge:obsidian	c:obsidians
+COMMON_TAG	forge:sand	c:sands
+COMMON_TAG	forge:sand/colorless	c:sands/colorless
+COMMON_TAG	forge:sand/red	c:sands/red
+COMMON_TAG	forge:stone	c:stones
+COMMON_TAG	forge:string	c:strings
+COMMON_TAG	forge:sandstone	c:sandstone/blocks
+COMMON_TAG	forge:glass	c:glass_blocks
+COMMON_TAG	forge:glass/colorless	c:glass_blocks/colorless
+COMMON_TAG	forge:glass/tinted	c:glass_blocks/tinted
+COMMON_TAG	forge:glass/silica	c:glass_blocks/cheap
+COMMON_TAG	forge:ingots/brick	c:bricks/normal
+COMMON_TAG	forge:ingots/nether_brick	c:bricks/nether
+COMMON_TAG	forge:shears	c:tools/shear
+COMMON_TAG	forge:tools/bows	c:tools/bow
+COMMON_TAG	forge:tools/crossbows	c:tools/crossbow
+COMMON_TAG	forge:tools/fishing_rods	c:tools/fishing_rod
+COMMON_TAG	forge:tools/shields	c:tools/shield
+COMMON_TAG	forge:tools/tridents	c:tools/spear
+
+# Armour slots left the common namespace entirely -- 1.21 added these to vanilla.
+COMMON_TAG	forge:armors/boots	minecraft:foot_armor
+COMMON_TAG	forge:armors/chestplates	minecraft:chest_armor
+COMMON_TAG	forge:armors/helmets	minecraft:head_armor
+COMMON_TAG	forge:armors/leggings	minecraft:leg_armor
+
+# Two tags NeoForge kept as its own rather than promoting to the shared namespace.
+COMMON_TAG	forge:enchanting_fuels	neoforge:enchanting_fuels
+COMMON_TAG	forge:enderman_place_on_blacklist	neoforge:enderman_place_on_blacklist
+
+# Biome tags were regrouped under their category rather than renamed one for one.
+COMMON_TAG	forge:is_coniferous	c:is_tree/coniferous
+COMMON_TAG	forge:is_dense	c:is_dense_vegetation
+COMMON_TAG	forge:is_dense/overworld	c:is_dense_vegetation/overworld
+COMMON_TAG	forge:is_peak	c:is_mountain/peak
+COMMON_TAG	forge:is_slope	c:is_mountain/slope
+COMMON_TAG	forge:is_sparse	c:is_sparse_vegetation
+COMMON_TAG	forge:is_sparse/overworld	c:is_sparse_vegetation/overworld
+COMMON_TAG	forge:is_water	c:is_aquatic
+
+# No 1.21 counterpart. Swapped to c: anyway so a mod that defines and uses its own copy still
+# agrees with itself; what is lost is agreement with every other mod.
+TAG_GONE	forge:glass/black
+TAG_GONE	forge:glass/blue
+TAG_GONE	forge:glass/brown
+TAG_GONE	forge:glass/cyan
+TAG_GONE	forge:glass/gray
+TAG_GONE	forge:glass/green
+TAG_GONE	forge:glass/light_blue
+TAG_GONE	forge:glass/light_gray
+TAG_GONE	forge:glass/lime
+TAG_GONE	forge:glass/magenta
+TAG_GONE	forge:glass/orange
+TAG_GONE	forge:glass/pink
+TAG_GONE	forge:glass/purple
+TAG_GONE	forge:glass/red
+TAG_GONE	forge:glass/white
+TAG_GONE	forge:glass/yellow
+TAG_GONE	forge:glass_panes/black
+TAG_GONE	forge:glass_panes/blue
+TAG_GONE	forge:glass_panes/brown
+TAG_GONE	forge:glass_panes/cyan
+TAG_GONE	forge:glass_panes/gray
+TAG_GONE	forge:glass_panes/green
+TAG_GONE	forge:glass_panes/light_blue
+TAG_GONE	forge:glass_panes/light_gray
+TAG_GONE	forge:glass_panes/lime
+TAG_GONE	forge:glass_panes/magenta
+TAG_GONE	forge:glass_panes/orange
+TAG_GONE	forge:glass_panes/pink
+TAG_GONE	forge:glass_panes/purple
+TAG_GONE	forge:glass_panes/red
+TAG_GONE	forge:glass_panes/white
+TAG_GONE	forge:glass_panes/yellow
+TAG_GONE	forge:stained_glass
+TAG_GONE	forge:stained_glass_panes
+TAG_GONE	forge:storage_blocks/amethyst
+TAG_GONE	forge:storage_blocks/quartz
+TAG_GONE	forge:dusts/prismarine
+TAG_GONE	forge:heads
+TAG_GONE	forge:chorus_additionally_grows_on

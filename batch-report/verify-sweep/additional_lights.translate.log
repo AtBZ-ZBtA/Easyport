@@ -1,11 +1,12 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 33 classes, moved 149 resources
+Rewrote 33 classes, moved 149 resources, rewrote 143 data files
 
 Applied:
      1  CTOR_SWAP2 net/minecraft/world/level/block/TorchBlock
      1  CTOR_SWAP2 net/minecraft/world/level/block/WallTorchBlock
      5  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+   143  RECIPE_RESULT_ID
      1  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
      1  TYPE_RENAME net/minecraftforge/fml/common/Mod
      4  TYPE_RENAME net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent

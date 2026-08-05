@@ -158,7 +158,7 @@ Mines three things, all ranked by how many independent mods agree:
 |---|---|
 | `directory-deltas.tsv` | Resource directory renames — 1.21 singularised the datapack tree |
 | `descriptor-deltas.tsv` | `mods.toml` → `neoforge.mods.toml` key changes |
-| `json-key-deltas.tsv` | JSON schema key changes per resource category |
+| `json-key-deltas.tsv` | JSON schema key-*path* changes per resource category |
 
 ### Two things it gets right that a naive version wouldn't
 
@@ -172,12 +172,23 @@ criterion names like `has_iron_ingot`. A raw count cannot separate them. Schema 
 in a large share of mods on one side and collapse on the other, so a key is only reported
 when it crosses 25% on one side and falls below 5% on the other.
 
-### Known limitation: no nested context
+### Keys are *paths*, and that is not a detail
 
-Key analysis is flat, so a change in *where* a key appears is invisible. If a recipe's
-`result.item` became `result.id` while `item` remained valid inside ingredients, this tool
-cannot see it — `item` is still common on both sides. Nested-path analysis would be needed to
-catch that class of change.
+This section used to be headed "Known limitation: no nested context", and it gave as its
+hypothetical example a recipe's `result.item` becoming `result.id` while `item` stayed valid
+inside ingredients. That is exactly what 1.20.5 did, to 29,824 files in the corpus — the largest
+single change in the resource layer after the tag namespace — and the flat scan hid it for two
+phases while the limitation sat documented directly above the output.
+
+So keys are now recorded as dotted paths from the root, with array indices flattened to `[]`.
+`result.item` → `result.id` is unambiguous where a bare `item` → `id` is invisible: `item` is
+still everywhere because ingredients kept it, and `id` already occurred in enough 1.20.1 files to
+clear the noise floor. The cost is that a change spread over many paths splits its own evidence,
+which is why the corroboration floor stays low.
+
+**The lesson generalises past this tool.** A limitation that is written down is not a limitation
+that is handled, and a report whose blind spot is documented still reads as a complete answer to
+anyone who trusts its output. If the blind spot is worth a paragraph, it is worth a measurement.
 
 ---
 
@@ -197,7 +208,9 @@ inside `ClassReader`, far from the actual cause.
 ### What it does, and deliberately doesn't
 
 Three passes: SRG→official member names, then rules, then resources. The SRG pass must run
-first because every rule is written against official names.
+first because every rule is written against official names. The resource pass is not an
+afterthought — see [Resources](#resources-the-layer-that-fails-without-saying-anything) below;
+it is the layer where everything fails silently.
 
 It rewrites as little as possible. Under shim-first, most `net.minecraftforge.*` references
 need no rewriting — they resolve against `forge-compat` unchanged. Rewriting is reserved for
@@ -227,6 +240,8 @@ Type renames are therefore an explicit allowlist in the rule file, **not** a bla
 | `INTERFACE_SUBSTITUTE` | platformType, substitute | A vanilla interface became a record |
 | `ARG_FILL` | paramType, bridgeOwner, bridgeName | 1.21 added a parameter the call site cannot supply |
 | `ARG_COLLAPSE` | owner, name, oldDesc, newDesc, bridgeOwner, bridgeName | Several parameters folded into one |
+| `COMMON_TAG` | forgeTag, targetTag | A `forge:` tag whose 1.21 name is not just a namespace swap |
+| `TAG_GONE` | forgeTag | A `forge:` tag with no 1.21 counterpart — swapped anyway, and reported |
 | `REMOVED` | symbol | No replacement — reported, never rewritten |
 
 `METHOD_TO_STATIC` and `FIELD_TO_STATIC` exist for the case neither a rename nor a shim can
@@ -338,13 +353,108 @@ when those arguments still match, since repairing the selector would otherwise t
 target for a handler mismatch. And an `@At` on a `@Redirect` is checked but never rewritten — there
 the anchor is what the handler matches, so repairing it fails just as hard and reads worse.
 
+### Resources: the layer that fails without saying anything
+
+Bytecode failures announce themselves. A missing class throws, a bad descriptor throws, and the
+harness catches both. **Nothing in the resource layer throws.** A recipe naming a tag that no
+longer exists simply never matches; a datapack condition under a key the loader stopped reading is
+never evaluated, so a compatibility recipe for a mod you do not have starts appearing in the
+crafting book. The mod loads, registers all its blocks and items, and cannot craft any of them —
+and no log line anywhere says why.
+
+That is why this is a pass rather than a footnote, and why every entry below is a count from the
+corpus rather than a reading of the changelog.
+
+| Pass | Scale in the corpus | What it looks like if skipped |
+|---|---|---|
+| Tag namespace `forge:` → `c:` | 29,923 references, 181 of 433 jars | Recipes never match; nothing is logged |
+| Common-tag renames past the swap | 39 tags, mined from the two platform jars | As above, for those tags |
+| Recipe `result.item` → `result.id` | 29,824 files | Recipe fails to decode and is dropped |
+| Advancement `display.icon.item` → `id` | 55 mods | The advancement is dropped |
+| `conditions` → `neoforge:conditions` | 47 mods, ~20,000 conditions | Every conditional recipe becomes unconditional |
+| Condition/modifier `type` `forge:` → `neoforge:` | 20,079 `mod_loaded` alone | The condition is unknown; the file is dropped |
+| `forge:conditional` unwrapped | 2,464 files | The recipe type does not exist; the file is dropped |
+| `data/<ns>/forge/` → `neoforge/` | 59 jars | Biome and structure modifiers never load |
+| `dimension_type` int-provider flattened | 5 mods | The dimension does not exist |
+| `show_notification` dropped | 58 mods | Nothing — cosmetic, and the only one on this list that is |
+
+**The tag mapping is mined from the two platform jars, not from the corpus**, and that is the one
+place in this project where the corpus is the wrong source. `data/c/tags/item/tools/axes.json` in
+some ATM10 mod proves only that a mod author invented that name; Forge's own
+`forge-1.20.1-47.4.22-universal.jar` and `neoforge-21.1.248.jar` are what the game actually
+defines. 321 tags against 463, 187 identical under the directory singularisation, 39 renamed and
+39 with no counterpart at all.
+
+Where no counterpart exists the namespace is swapped anyway and the loss is reported. That looks
+odd until you see what the alternative buys: a mod that both defines and uses `forge:glass/black`
+keeps agreeing with itself after the swap and stops agreeing with itself without it. What is lost
+either way is agreement with every *other* mod. The colour tags are most of that list — 1.21
+replaced `forge:glass/black` with the intersection of `c:glass_blocks` and `c:dyed/black`, a set
+operation no rename can express, and mapping it to `c:dyed/black` alone would silently widen a
+stained-glass recipe to accept black wool.
+
+Two mechanical notes. A mod built for both loaders ships its tag twice, once under `forge:` and
+once under `c:`, and the swap lands them on one path — so tag files are held back and **merged**
+rather than written as they come, because a tag is a set and the union is what the game would have
+computed anyway. And every rewritten file is **re-parsed before it is written**: this whole pass is
+invisible until the game reads the file, and a file the game cannot read is worse than one that was
+never migrated.
+
 ### The report
 
 Every run writes `<output>.report.tsv` listing what was applied and what was left
 unresolved. Unresolved entries are the point: they name exactly what to add next.
 
 `MIXIN_SOFT_FAIL`, `MIXIN_ACCESSOR_STUB`, `MIXIN_SHADOW_FIELD_STUB` and `MIXIN_DROP` are losses,
-not successes. The jar loads; those specific behaviours are gone.
+not successes. The jar loads; those specific behaviours are gone. So are `TAG_NO_COUNTERPART` and
+`RECIPE_CONDITIONAL_ALTERNATIVES_DROPPED` on the resource side.
+
+### Why it is a package now
+
+`Translate.java` declares `package easyport.tools`. That is not tidiness: the in-game service jar
+becomes a module on FML's SERVICE layer, and a module cannot export the unnamed package, so a
+default-package `Translate` is invisible to everything in the layer. `java tools/Translate.java`
+is unaffected — the source launcher does not require the file to sit in a matching directory.
+
+---
+
+## build-service.sh
+
+Builds `easyport.jar`, the in-game half of the project.
+
+```bash
+bash tools/build-service.sh
+```
+
+**Requires `forge-compat.jar` to exist** — build that first. The service jar carries everything the
+command line takes as an argument: `forward.rules.tsv`, `srg2official.tsv`, and forge-compat
+itself, all under `easyport/data/`.
+
+It refuses to package an incomplete build, for the reason `build-forge-compat.sh` does: a jar that
+packages cleanly out of a failed compile is indistinguishable from a working one until a launch
+says otherwise, and a launch costs ten minutes. It also asserts after packaging that
+`META-INF/services/net.neoforged.neoforgespi.locating.IModFileCandidateLocator` survived, because
+without that one file FML never promotes the jar to the SERVICE layer, the locator never runs, and
+the mod list looks entirely normal.
+
+### What the service jar has to work out for itself
+
+The command line is handed the platform jars. In the game there is nothing to hand them over —
+FML has not built the game layer yet, so NeoForge's own classes are not loaded and cannot be asked
+where they came from. What is already true is that the launcher put minecraft and neoforge on the
+module path in order to start the JVM at all, so that is where it looks, matching by name. If it
+finds nothing it says so loudly and translates anyway, with the passes that read 1.21's own
+descriptors disabled — which is a large loss, and worth a warning rather than a silence.
+
+Two things that were wrong on the first attempt and are worth not repeating:
+
+- **The jar cannot find itself.** FML loads it through the secure jar handler, so its code source
+  is a `union:` URI that `Paths.get` refuses. Using its modification time as a cache key therefore
+  produced a stamp of zero, and a rebuilt Easyport quietly retranslated nothing. The build id is a
+  hash packaged *into* the jar instead.
+- **The module path arrives with its separators doubled**, which Windows accepts, so the same jar
+  looked like two different ones and was indexed twice. Paths are resolved with `toRealPath`
+  before deduplication.
 
 ---
 

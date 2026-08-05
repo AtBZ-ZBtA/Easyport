@@ -1,6 +1,6 @@
 Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
-Rewrote 36 classes, moved 1 resources
+Rewrote 36 classes, moved 1 resources, rewrote 0 data files
 
 Applied:
      2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
