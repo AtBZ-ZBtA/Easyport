@@ -60,11 +60,21 @@ import org.objectweb.asm.tree.MethodNode;
  *       the method being patched. This is the shape the roadmap called the hard part.</li>
  *   <li><b>ACCESSOR TARGET GONE</b> -- {@code @Accessor} / {@code @Invoker} onto a member 1.21
  *       removed. yungsapi's {@code CriteriaTriggers.CRITERIA} is this.</li>
+ *   <li><b>INJECTION POINT UNREACHABLE</b> -- both halves resolve and the anchor still cannot be
+ *       found, because the method being patched stopped calling it. Answerable only by reading the
+ *       platform's own method bodies, which is why it is here and not in any signature check.</li>
  *   <li><b>SHADOW GONE</b> -- a {@code @Shadow} member absent under that name and descriptor.
  *       Fields were already checked during translation; methods were not.</li>
  *   <li><b>TARGET CLASS GONE</b> -- reported last, because the transformer already drops these.
  *       Kept in the report so the count is visible rather than implied.</li>
  * </ul>
+ *
+ * <h2>Read the header, not the sections</h2>
+ *
+ * The four outcomes it counts -- resolve unchanged, descriptor repaired, injector defused,
+ * accessor/shadow stubbed -- all <em>load</em>. The bottom two load and do nothing, so they are
+ * counted separately rather than folded into a pass rate. Everything the sections list is behaviour
+ * a translated mod no longer has.
  *
  * <h2>Guards, all of them learned by an earlier report getting it wrong</h2>
  *
@@ -74,18 +84,24 @@ import org.objectweb.asm.tree.MethodNode;
  *       as missing and the report is 100% noise.</li>
  *   <li>Inherited members count as present, so a {@code @Shadow} of something a supertype declares
  *       is not a finding.</li>
- *   <li>Only targets under {@code net/minecraft/} are judged. A mixin into another mod's class or
- *       into Forge cannot be resolved against the platform index and would report as gone.</li>
+ *   <li>Only targets the platform index covers are judged -- vanilla, NeoForge, and forge-compat's
+ *       shims when it is on the jar list. A mixin into another mod's class cannot be resolved here
+ *       and is left alone; reporting it gone would be pure noise. Pass forge-compat, or mixins into
+ *       Forge's own classes go unjudged: supermartijn642corelib patches
+ *       {@code net.minecraftforge.registries.GameData} and died there long after its vanilla
+ *       coordinates were fine.</li>
  *   <li>A coordinate with {@code require = 0} is allowed to miss by its author, so a failure to
  *       resolve is not a launch failure. Counted separately, never listed as work.</li>
  *   <li>Wildcard and bare-name selectors resolve by name only -- matching Mixin, which accepts any
  *       overload when no descriptor is given.</li>
  * </ul>
  *
- * Usage:
- *   java -cp asm.jar tools/MixinGaps.java \
+ * Usage -- the first argument may be a mods folder or a single jar, and a single jar drops the
+ * summarising threshold so nothing is hidden:
+ *
+ *   java -cp "asm.jar;asm-tree.jar" tools/MixinGaps.java \
  *       "&lt;source-mods-folder&gt;" rules/forward.rules.tsv mappings/srg2official.tsv \
- *       &lt;platform.jar&gt;...
+ *       neoforge-21.1.248.jar forge-compat/forge-compat.jar
  */
 public class MixinGaps {
 
