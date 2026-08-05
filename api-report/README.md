@@ -9,7 +9,17 @@ Regenerate with:
 ```bash
 java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods" "net/minecraftforge/" > api-report/forge-api-usage.txt
 java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods" "net/minecraft/" > api-report/vanilla-api-usage.txt
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scrapyard/forge 1.20.1 modpacks/All the Mods 9 - ATM9/mods" "com/mojang/" > api-report/lib-api-usage.txt
 ```
+
+**The prefix is the scope of everything downstream.** For a long time only the first two were
+run, so `com.mojang.blaze3d` — same jar, same obfuscation, and reworked in 1.21 harder than most
+of vanilla — appeared in no report here. `VertexConsumer.endVertex` is 157 of the 433 jars and had
+never been counted. If you add a scan, add it to this list; the reports cannot tell you about a
+prefix nobody asked them for.
+
+`org/joml/` and `it/unimi/dsi/` were checked the same way and are clean at 100% (434 and 1,404
+references), so they are not kept as standing files.
 
 ## Files
 
@@ -19,7 +29,9 @@ java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java "Scr
 | `vanilla-api-usage.txt` | The same for `net.minecraft` — 25,000 member references, the input to `VanillaGaps` |
 | `network-usage.txt` | The Forge scan narrowed to `net.minecraftforge.network` — the input to the networking shims |
 | `unresolved-types.txt` | Output of `RenameGaps`: what nothing resolves, plus four classes of *wrong* resolution |
+| `lib-api-usage.txt` | The same for `com.mojang` — blaze3d, DataFixerUpper, authlib, brigadier |
 | `vanilla-gaps.txt` | Output of `VanillaGaps`: vanilla members that no longer exist on types that still do |
+| `lib-gaps.txt` | `VanillaGaps` over the `com.mojang` scan. Needs the shared libraries on the platform list at the versions **1.21.1** resolves, or a library that both versions ship reads as deleted |
 | `mixin-gaps.txt` | Output of `MixinGaps`: mixin coordinates that no longer point at anything. **Reads the jars, not a usage file** |
 
 ## Three reports, because they are not the same question

@@ -23,7 +23,17 @@ CP="devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-commons.jar;devenv
 # analysis has to see it -- without it the coercion pass cannot resolve a mod class that
 # implements a shimmed interface, and gives up on the method.
 PLATFORM=(devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar forge-compat/forge-compat.jar
-          devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar)
+          devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar devenv/spi/distmarker.jar
+          # The shared libraries, at the versions 1.21.1 resolves rather than the newest in the
+          # Gradle cache. Every -1211 name here has a 1.20.1 twin under a different name, and
+          # mixing them up would make a gap vanish instead of appear -- the harder direction to
+          # notice. joml and text2speech are the same build on both sides, hence no suffix.
+          devenv/spi/dfu-1211.jar devenv/spi/brigadier-1211.jar devenv/spi/authlib-1211.jar
+          devenv/spi/logging-1211.jar devenv/spi/guava-1211.jar devenv/spi/gson-1211.jar
+          devenv/spi/fastutil-1211.jar devenv/spi/joml.jar devenv/spi/text2speech.jar
+          devenv/spi/netty-buffer-1211.jar devenv/spi/netty-common-1211.jar
+          devenv/spi/netty-codec-1211.jar devenv/spi/netty-handler-1211.jar
+          devenv/spi/netty-transport-1211.jar)
 
 OUT="batch-report/verify-sweep"
 mkdir -p "$OUT" translated

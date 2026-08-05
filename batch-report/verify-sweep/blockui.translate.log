@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 121 classes, moved 1 resources, rewrote 0 data files
 
@@ -10,8 +10,15 @@ Applied:
     11  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      1  EVENT_SPLIT abstract listener: net/minecraftforge/client/event/RenderGuiOverlayEvent -> 2 concrete
      1  FIELD_TO_STATIC net/neoforged/fml/common/EventBusSubscriber$Bus#FORGE -> easyport/bridge/BusBridge#forge
+     1  METHOD_TO_STATIC com/mojang/blaze3d/vertex/BufferBuilder#defaultColor -> easyport/bridge/VertexBridge#defaultColor
+    72  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
      1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      2  METHOD_TO_STATIC net/neoforged/fml/common/EventBusSubscriber$Bus#bus -> easyport/bridge/BusBridge#bus
+     1  RENAME_METHOD com/mojang/blaze3d/vertex/BufferBuilder#color -> setColor
+    72  RENAME_METHOD com/mojang/blaze3d/vertex/BufferBuilder#vertex -> addVertex
+     2  RENAME_METHOD com/mojang/blaze3d/vertex/PoseStack#mulPoseMatrix -> mulPose
+    58  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#color -> setColor
+    10  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv -> setUv
      1  SRG_IN_TEXT
     16  TYPE_PREFIX net/minecraftforge/client/event/
      9  TYPE_PREFIX net/minecraftforge/client/extensions/

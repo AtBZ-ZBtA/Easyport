@@ -1,0 +1,1283 @@
+scanned 433 jars for owners under com/mojang/
+
+=== TYPES (jars referencing) ===
+  250  com/mojang/blaze3d/vertex/PoseStack
+  192  com/mojang/blaze3d/systems/RenderSystem
+  167  com/mojang/blaze3d/vertex/PoseStack$Pose
+  164  com/mojang/blaze3d/vertex/VertexConsumer
+  144  com/mojang/math/Axis
+  140  com/mojang/datafixers/util/Pair
+  140  com/mojang/serialization/Codec
+  138  com/mojang/blaze3d/vertex/DefaultVertexFormat
+  135  com/mojang/blaze3d/vertex/VertexFormat$Mode
+  118  com/mojang/brigadier/builder/LiteralArgumentBuilder
+  116  com/mojang/brigadier/CommandDispatcher
+  116  com/mojang/serialization/codecs/RecordCodecBuilder
+  115  com/mojang/blaze3d/platform/Window
+  114  com/mojang/brigadier/context/CommandContext
+  111  com/mojang/serialization/MapCodec
+  109  com/mojang/blaze3d/vertex/BufferBuilder
+  109  com/mojang/blaze3d/vertex/Tesselator
+  102  com/mojang/serialization/codecs/RecordCodecBuilder$Instance
+   99  com/mojang/brigadier/builder/RequiredArgumentBuilder
+   96  com/mojang/blaze3d/platform/InputConstants
+   86  com/mojang/authlib/GameProfile
+   86  com/mojang/datafixers/util/Either
+   82  com/mojang/serialization/codecs/PrimitiveCodec
+   81  com/mojang/datafixers/Products$P1
+   77  com/mojang/blaze3d/platform/GlStateManager$DestFactor
+   77  com/mojang/blaze3d/platform/GlStateManager$SourceFactor
+   76  com/mojang/serialization/DataResult
+   75  com/mojang/logging/LogUtils
+   74  com/mojang/datafixers/Products$P2
+   63  com/mojang/blaze3d/platform/InputConstants$Key
+   60  com/mojang/blaze3d/platform/InputConstants$Type
+   60  com/mojang/serialization/JsonOps
+   59  com/mojang/datafixers/Products$P3
+   57  com/mojang/blaze3d/platform/Lighting
+   55  com/mojang/brigadier/StringReader
+   54  com/mojang/blaze3d/vertex/BufferUploader
+   51  com/mojang/brigadier/arguments/IntegerArgumentType
+   48  com/mojang/brigadier/arguments/StringArgumentType
+   48  com/mojang/datafixers/Products$P4
+   43  com/mojang/math/Transformation
+   36  com/mojang/datafixers/Products$P5
+   35  com/mojang/brigadier/exceptions/SimpleCommandExceptionType
+   33  com/mojang/blaze3d/platform/GlStateManager
+   31  com/mojang/blaze3d/platform/NativeImage
+   29  com/mojang/brigadier/arguments/BoolArgumentType
+   28  com/mojang/brigadier/exceptions/DynamicCommandExceptionType
+   28  com/mojang/datafixers/Products$P6
+   26  com/mojang/brigadier/arguments/ArgumentType
+   26  com/mojang/brigadier/exceptions/CommandSyntaxException
+   24  com/mojang/blaze3d/vertex/VertexBuffer
+   23  com/mojang/blaze3d/vertex/VertexBuffer$Usage
+   23  com/mojang/datafixers/Products$P7
+   22  com/mojang/blaze3d/vertex/VertexFormat
+   20  com/mojang/datafixers/Products$P8
+   18  com/mojang/blaze3d/shaders/Uniform
+   18  com/mojang/brigadier/Command
+   17  com/mojang/blaze3d/pipeline/RenderTarget
+   16  com/mojang/blaze3d/vertex/VertexSorting
+   16  com/mojang/serialization/DynamicOps
+   14  com/mojang/authlib/minecraft/MinecraftProfileTexture$Type
+   14  com/mojang/blaze3d/platform/TextureUtil
+   14  com/mojang/brigadier/suggestion/SuggestionsBuilder
+   14  com/mojang/serialization/Dynamic
+   13  com/mojang/blaze3d/shaders/FogShape
+   13  com/mojang/blaze3d/vertex/VertexFormatElement
+   12  com/mojang/authlib/minecraft/MinecraftProfileTexture
+   12  com/mojang/datafixers/Products$P10
+   12  com/mojang/serialization/Lifecycle
+   11  com/mojang/brigadier/arguments/FloatArgumentType
+   11  com/mojang/brigadier/builder/ArgumentBuilder
+   11  com/mojang/brigadier/tree/CommandNode
+   10  com/mojang/blaze3d/vertex/VertexFormatElement$Usage
+   10  com/mojang/datafixers/Products$P9
+   10  com/mojang/serialization/codecs/UnboundedMapCodec
+    9  com/mojang/blaze3d/platform/GlStateManager$LogicOp
+    9  com/mojang/blaze3d/platform/NativeImage$Format
+    9  com/mojang/blaze3d/vertex/VertexFormatElement$Type
+    9  com/mojang/brigadier/exceptions/Dynamic2CommandExceptionType
+    9  com/mojang/datafixers/Products$P13
+    9  com/mojang/serialization/DataResult$PartialResult
+    8  com/mojang/blaze3d/pipeline/TextureTarget
+    8  com/mojang/brigadier/suggestion/Suggestions
+    8  com/mojang/datafixers/Products$P11
+    8  com/mojang/datafixers/Products$P12
+    8  com/mojang/serialization/MapLike
+    7  com/mojang/datafixers/Products$P14
+    6  com/mojang/authlib/properties/PropertyMap
+    6  com/mojang/brigadier/arguments/DoubleArgumentType
+    6  com/mojang/datafixers/util/Function3
+    6  com/mojang/serialization/RecordBuilder
+    6  com/mojang/text2speech/Narrator
+    5  com/mojang/blaze3d/font/GlyphInfo
+    5  com/mojang/blaze3d/platform/GlUtil
+    5  com/mojang/blaze3d/vertex/DefaultedVertexConsumer
+    5  com/mojang/blaze3d/vertex/SheetedDecalTextureGenerator
+    5  com/mojang/brigadier/context/ParsedCommandNode
+    5  com/mojang/datafixers/util/Function4
+    5  com/mojang/util/UUIDTypeAdapter
+    4  com/mojang/authlib/minecraft/MinecraftSessionService
+    4  com/mojang/blaze3d/shaders/Program$Type
+    4  com/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer
+    4  com/mojang/blaze3d/vertex/VertexFormat$IndexType
+    4  com/mojang/brigadier/Message
+    4  com/mojang/brigadier/ParseResults
+    4  com/mojang/brigadier/context/CommandContextBuilder
+    4  com/mojang/brigadier/tree/LiteralCommandNode
+    4  com/mojang/brigadier/tree/RootCommandNode
+    4  com/mojang/datafixers/util/Function5
+    4  com/mojang/datafixers/util/Unit
+    4  com/mojang/serialization/Encoder
+    3  com/mojang/authlib/properties/Property
+    3  com/mojang/blaze3d/platform/GlStateManager$BlendState
+    3  com/mojang/blaze3d/platform/GlStateManager$Viewport
+    3  com/mojang/blaze3d/shaders/AbstractUniform
+    3  com/mojang/blaze3d/shaders/Program
+    3  com/mojang/blaze3d/vertex/BufferVertexConsumer
+    3  com/mojang/blaze3d/vertex/VertexMultiConsumer
+    3  com/mojang/brigadier/suggestion/SuggestionProvider
+    3  com/mojang/datafixers/DSL
+    3  com/mojang/datafixers/DataFixUtils
+    3  com/mojang/datafixers/DataFixer
+    3  com/mojang/datafixers/Products$P15
+    3  com/mojang/datafixers/Products$P16
+    3  com/mojang/datafixers/util/Function6
+    3  com/mojang/math/OctahedralGroup
+    3  com/mojang/realmsclient/RealmsMainScreen
+    2  com/mojang/blaze3d/audio/Channel
+    2  com/mojang/blaze3d/pipeline/MainTarget
+    2  com/mojang/blaze3d/platform/GlDebug
+    2  com/mojang/blaze3d/platform/GlStateManager$ColorMask
+    2  com/mojang/blaze3d/platform/GlStateManager$DepthState
+    2  com/mojang/blaze3d/platform/GlStateManager$TextureState
+    2  com/mojang/blaze3d/platform/MemoryTracker
+    2  com/mojang/blaze3d/platform/Monitor
+    2  com/mojang/blaze3d/platform/VideoMode
+    2  com/mojang/blaze3d/preprocessor/GlslPreprocessor
+    2  com/mojang/blaze3d/shaders/ProgramManager
+    2  com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer
+    2  com/mojang/blaze3d/vertex/BufferBuilder$DrawState
+    2  com/mojang/brigadier/ImmutableStringReader
+    2  com/mojang/brigadier/LiteralMessage
+    2  com/mojang/brigadier/arguments/LongArgumentType
+    2  com/mojang/datafixers/DataFixerBuilder
+    2  com/mojang/datafixers/schemas/Schema
+    2  com/mojang/math/MatrixUtil
+    2  com/mojang/realmsclient/util/JsonUtils
+    2  com/mojang/serialization/ListBuilder
+    2  com/mojang/serialization/OptionalDynamic
+    2  com/mojang/serialization/RecordBuilder$AbstractStringBuilder
+    1  com/mojang/authlib/Environment
+    1  com/mojang/authlib/EnvironmentParser
+    1  com/mojang/authlib/HttpAuthenticationService
+    1  com/mojang/authlib/exceptions/AuthenticationException
+    1  com/mojang/authlib/exceptions/InsufficientPrivilegesException
+    1  com/mojang/authlib/exceptions/InvalidCredentialsException
+    1  com/mojang/authlib/exceptions/UserBannedException
+    1  com/mojang/authlib/exceptions/UserMigratedException
+    1  com/mojang/authlib/minecraft/TelemetrySession
+    1  com/mojang/authlib/minecraft/UserApiService
+    1  com/mojang/authlib/minecraft/client/ObjectMapper
+    1  com/mojang/authlib/yggdrasil/YggdrasilAuthenticationService
+    1  com/mojang/authlib/yggdrasil/YggdrasilEnvironment
+    1  com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse
+    1  com/mojang/authlib/yggdrasil/response/MinecraftTexturesPayload
+    1  com/mojang/blaze3d/Blaze3D
+    1  com/mojang/blaze3d/audio/SoundBuffer
+    1  com/mojang/blaze3d/font/GlyphProvider
+    1  com/mojang/blaze3d/pipeline/RenderCall
+    1  com/mojang/blaze3d/platform/GlStateManager$BooleanState
+    1  com/mojang/blaze3d/platform/WindowEventHandler
+    1  com/mojang/blaze3d/vertex/BufferBuilder$SortState
+    1  com/mojang/brigadier/context/StringRange
+    1  com/mojang/brigadier/exceptions/BuiltInExceptionProvider
+    1  com/mojang/brigadier/exceptions/CommandExceptionType
+    1  com/mojang/brigadier/exceptions/Dynamic3CommandExceptionType
+    1  com/mojang/brigadier/suggestion/Suggestion
+    1  com/mojang/datafixers/DataFix
+    1  com/mojang/datafixers/DataFixerUpper
+    1  com/mojang/datafixers/Typed
+    1  com/mojang/datafixers/types/constant/EmptyPart
+    1  com/mojang/datafixers/util/Function10
+    1  com/mojang/datafixers/util/Function11
+    1  com/mojang/datafixers/util/Function12
+    1  com/mojang/datafixers/util/Function13
+    1  com/mojang/datafixers/util/Function14
+    1  com/mojang/datafixers/util/Function15
+    1  com/mojang/datafixers/util/Function16
+    1  com/mojang/datafixers/util/Function7
+    1  com/mojang/datafixers/util/Function8
+    1  com/mojang/datafixers/util/Function9
+    1  com/mojang/math/Divisor
+    1  com/mojang/realmsclient/dto/RealmsServer
+    1  com/mojang/serialization/Keyable
+    1  com/mojang/serialization/codecs/EitherCodec
+    1  com/mojang/serialization/codecs/ListCodec
+    1  com/mojang/serialization/codecs/OptionalFieldCodec
+    1  com/mojang/serialization/codecs/SimpleMapCodec
+
+=== MEMBERS (jars calling) ===
+  233  M com/mojang/blaze3d/vertex/PoseStack.m_85836_ ()V
+  233  M com/mojang/blaze3d/vertex/PoseStack.m_85849_ ()V
+  190  M com/mojang/blaze3d/vertex/PoseStack.m_252880_ (FFF)V
+  188  M com/mojang/blaze3d/vertex/PoseStack.m_85841_ (FFF)V
+  178  M com/mojang/blaze3d/vertex/PoseStack.m_85837_ (DDD)V
+  170  M com/mojang/blaze3d/vertex/PoseStack.m_85850_ ()Lcom/mojang/blaze3d/vertex/PoseStack$Pose;
+  168  M com/mojang/blaze3d/vertex/PoseStack.m_252781_ (Lorg/joml/Quaternionf;)V
+  167  M com/mojang/blaze3d/vertex/PoseStack$Pose.m_252922_ ()Lorg/joml/Matrix4f;
+  157  M com/mojang/blaze3d/vertex/VertexConsumer.m_5752_ ()V
+  141  M com/mojang/math/Axis.m_252977_ (F)Lorg/joml/Quaternionf;
+  138  M com/mojang/blaze3d/systems/RenderSystem.enableBlend ()V
+  134  M com/mojang/blaze3d/systems/RenderSystem.setShaderColor (FFFF)V
+  127  M com/mojang/blaze3d/vertex/VertexConsumer.m_7421_ (FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+  124  F com/mojang/math/Axis.f_252436_ Lcom/mojang/math/Axis;
+  122  M com/mojang/datafixers/util/Pair.getFirst ()Ljava/lang/Object;
+  119  F com/mojang/blaze3d/vertex/VertexFormat$Mode.QUADS Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+  119  M com/mojang/blaze3d/vertex/VertexConsumer.m_252986_ (Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+  114  M com/mojang/blaze3d/systems/RenderSystem.disableBlend ()V
+  114  M com/mojang/brigadier/CommandDispatcher.register (Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;
+  114  M com/mojang/brigadier/context/CommandContext.getSource ()Ljava/lang/Object;
+  113  M com/mojang/brigadier/builder/LiteralArgumentBuilder.then (Lcom/mojang/brigadier/builder/ArgumentBuilder;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+  112  M com/mojang/blaze3d/systems/RenderSystem.setShaderTexture (ILnet/minecraft/resources/ResourceLocation;)V
+  112  M com/mojang/serialization/codecs/RecordCodecBuilder.create (Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+  111  F com/mojang/math/Axis.f_252529_ Lcom/mojang/math/Axis;
+  109  M com/mojang/blaze3d/systems/RenderSystem.setShader (Ljava/util/function/Supplier;)V
+  108  M com/mojang/serialization/MapCodec.forGetter (Ljava/util/function/Function;)Lcom/mojang/serialization/codecs/RecordCodecBuilder;
+  107  M com/mojang/blaze3d/systems/RenderSystem.enableDepthTest ()V
+  106  M com/mojang/datafixers/util/Pair.getSecond ()Ljava/lang/Object;
+  105  M com/mojang/blaze3d/vertex/Tesselator.m_85913_ ()Lcom/mojang/blaze3d/vertex/Tesselator;
+  104  M com/mojang/blaze3d/vertex/BufferBuilder.m_166779_ (Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+  104  M com/mojang/blaze3d/vertex/Tesselator.m_85915_ ()Lcom/mojang/blaze3d/vertex/BufferBuilder;
+  102  M com/mojang/brigadier/builder/LiteralArgumentBuilder.executes (Lcom/mojang/brigadier/Command;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+  101  M com/mojang/serialization/Codec.fieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+  100  M com/mojang/brigadier/builder/LiteralArgumentBuilder.requires (Ljava/util/function/Predicate;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+  100  M com/mojang/datafixers/util/Pair.of (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/datafixers/util/Pair;
+   99  M com/mojang/blaze3d/vertex/VertexConsumer.m_85950_ (FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   97  M com/mojang/blaze3d/vertex/VertexConsumer.m_6122_ (IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   97  M com/mojang/brigadier/builder/RequiredArgumentBuilder.executes (Lcom/mojang/brigadier/Command;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+   91  F com/mojang/math/Axis.f_252403_ Lcom/mojang/math/Axis;
+   88  M com/mojang/blaze3d/vertex/VertexConsumer.m_85969_ (I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   86  M com/mojang/blaze3d/systems/RenderSystem.disableDepthTest ()V
+   86  M com/mojang/blaze3d/vertex/PoseStack$Pose.m_252943_ ()Lorg/joml/Matrix3f;
+   83  M com/mojang/blaze3d/systems/RenderSystem.defaultBlendFunc ()V
+   79  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85815_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   76  M com/mojang/blaze3d/vertex/Tesselator.m_85914_ ()V
+   74  M com/mojang/blaze3d/platform/Window.m_85445_ ()I
+   73  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.SRC_ALPHA Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+   73  M com/mojang/blaze3d/vertex/VertexConsumer.m_252939_ (Lorg/joml/Matrix3f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   73  M com/mojang/logging/LogUtils.getLogger ()Lorg/slf4j/Logger;
+   71  M com/mojang/blaze3d/platform/Window.m_85446_ ()I
+   70  M com/mojang/brigadier/builder/RequiredArgumentBuilder.then (Lcom/mojang/brigadier/builder/ArgumentBuilder;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+   70  M com/mojang/serialization/codecs/PrimitiveCodec.fieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+   68  M com/mojang/blaze3d/vertex/BufferBuilder.m_252986_ (Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   66  M com/mojang/datafixers/Products$P2.apply (Lcom/mojang/datafixers/kinds/Applicative;Ljava/util/function/BiFunction;)Lcom/mojang/datafixers/kinds/App;
+   65  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.ONE_MINUS_SRC_ALPHA Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;
+   65  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P2;
+   64  M com/mojang/datafixers/Products$P1.apply (Lcom/mojang/datafixers/kinds/Applicative;Ljava/util/function/Function;)Lcom/mojang/datafixers/kinds/App;
+   62  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85817_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   60  F com/mojang/serialization/JsonOps.INSTANCE Lcom/mojang/serialization/JsonOps;
+   60  M com/mojang/blaze3d/vertex/BufferBuilder.m_231175_ ()Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;
+   58  M com/mojang/blaze3d/vertex/VertexConsumer.m_86008_ (I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   57  M com/mojang/serialization/Codec.encodeStart (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+   56  M com/mojang/blaze3d/platform/Window.m_85439_ ()J
+   56  M com/mojang/datafixers/util/Either.left (Ljava/lang/Object;)Lcom/mojang/datafixers/util/Either;
+   54  F com/mojang/blaze3d/platform/InputConstants$Type.KEYSYM Lcom/mojang/blaze3d/platform/InputConstants$Type;
+   54  F com/mojang/serialization/Codec.INT Lcom/mojang/serialization/codecs/PrimitiveCodec;
+   54  M com/mojang/blaze3d/platform/InputConstants$Key.m_84873_ ()I
+   54  M com/mojang/datafixers/Products$P3.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function3;)Lcom/mojang/datafixers/kinds/App;
+   54  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P1;
+   53  F com/mojang/serialization/Codec.BOOL Lcom/mojang/serialization/codecs/PrimitiveCodec;
+   53  F com/mojang/serialization/Codec.STRING Lcom/mojang/serialization/codecs/PrimitiveCodec;
+   53  M com/mojang/authlib/GameProfile.<init> (Ljava/util/UUID;Ljava/lang/String;)V
+   52  M com/mojang/blaze3d/vertex/PoseStack.<init> ()V
+   51  M com/mojang/blaze3d/systems/RenderSystem.blendFunc (Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;)V
+   51  M com/mojang/blaze3d/vertex/BufferUploader.m_231202_ (Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;)V
+   50  M com/mojang/authlib/GameProfile.getName ()Ljava/lang/String;
+   50  M com/mojang/blaze3d/vertex/BufferBuilder.m_5483_ (DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   50  M com/mojang/blaze3d/vertex/VertexConsumer.m_5601_ (FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   48  M com/mojang/authlib/GameProfile.getId ()Ljava/util/UUID;
+   48  M com/mojang/blaze3d/platform/InputConstants.m_84830_ (JI)Z
+   47  M com/mojang/blaze3d/platform/Lighting.m_84931_ ()V
+   47  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P3;
+   46  M com/mojang/blaze3d/systems/RenderSystem.depthMask (Z)V
+   46  M com/mojang/datafixers/Products$P4.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function4;)Lcom/mojang/datafixers/kinds/App;
+   46  M com/mojang/datafixers/util/Either.right (Ljava/lang/Object;)Lcom/mojang/datafixers/util/Either;
+   46  M com/mojang/serialization/Codec.parse (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+   44  F com/mojang/serialization/Codec.FLOAT Lcom/mojang/serialization/codecs/PrimitiveCodec;
+   44  M com/mojang/brigadier/arguments/IntegerArgumentType.getInteger (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)I
+   44  M com/mojang/datafixers/util/Either.left ()Ljava/util/Optional;
+   44  M com/mojang/datafixers/util/Either.map (Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/lang/Object;
+   44  M com/mojang/serialization/Codec.listOf ()Lcom/mojang/serialization/Codec;
+   44  M com/mojang/serialization/DataResult.result ()Ljava/util/Optional;
+   43  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.ONE Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+   43  M com/mojang/blaze3d/systems/RenderSystem.applyModelViewMatrix ()V
+   43  M com/mojang/blaze3d/vertex/VertexConsumer.m_5483_ (DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   42  M com/mojang/blaze3d/platform/Lighting.m_84930_ ()V
+   42  M com/mojang/brigadier/context/CommandContext.getArgument (Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+   42  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P4;
+   40  M com/mojang/blaze3d/platform/InputConstants.m_84827_ (II)Lcom/mojang/blaze3d/platform/InputConstants$Key;
+   40  M com/mojang/datafixers/util/Pair.<init> (Ljava/lang/Object;Ljava/lang/Object;)V
+   40  M com/mojang/serialization/Codec.optionalFieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+   40  M com/mojang/serialization/Codec.unit (Ljava/util/function/Supplier;)Lcom/mojang/serialization/Codec;
+   38  M com/mojang/blaze3d/systems/RenderSystem.getModelViewStack ()Lcom/mojang/blaze3d/vertex/PoseStack;
+   38  M com/mojang/brigadier/builder/RequiredArgumentBuilder.suggests (Lcom/mojang/brigadier/suggestion/SuggestionProvider;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
+   37  M com/mojang/blaze3d/systems/RenderSystem.blendFuncSeparate (Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;)V
+   35  M com/mojang/brigadier/exceptions/SimpleCommandExceptionType.<init> (Lcom/mojang/brigadier/Message;)V
+   34  F com/mojang/math/Axis.f_252495_ Lcom/mojang/math/Axis;
+   34  M com/mojang/datafixers/Products$P5.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function5;)Lcom/mojang/datafixers/kinds/App;
+   34  M com/mojang/serialization/DataResult.error (Ljava/util/function/Supplier;)Lcom/mojang/serialization/DataResult;
+   34  M com/mojang/serialization/DataResult.success (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+   33  M com/mojang/math/Axis.m_252961_ (F)Lorg/joml/Quaternionf;
+   33  M com/mojang/serialization/codecs/PrimitiveCodec.optionalFieldOf (Ljava/lang/String;Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;
+   32  F com/mojang/blaze3d/vertex/VertexFormat$Mode.LINES Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+   32  M com/mojang/blaze3d/systems/RenderSystem.blendFunc (II)V
+   32  M com/mojang/blaze3d/vertex/VertexConsumer.m_7120_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   32  M com/mojang/brigadier/arguments/StringArgumentType.getString (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Ljava/lang/String;
+   32  M com/mojang/brigadier/exceptions/SimpleCommandExceptionType.create ()Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+   32  M com/mojang/serialization/Codec.intRange (II)Lcom/mojang/serialization/Codec;
+   32  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P5;
+   31  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85811_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   31  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85818_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   31  F com/mojang/math/Axis.f_252392_ Lcom/mojang/math/Axis;
+   31  M com/mojang/blaze3d/vertex/PoseStack.m_252931_ (Lorg/joml/Matrix4f;)V
+   31  M com/mojang/brigadier/StringReader.expect (C)V
+   31  M com/mojang/serialization/MapCodec.codec ()Lcom/mojang/serialization/Codec;
+   30  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.ZERO Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;
+   29  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85812_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   29  M com/mojang/brigadier/arguments/BoolArgumentType.bool ()Lcom/mojang/brigadier/arguments/BoolArgumentType;
+   28  F com/mojang/blaze3d/platform/InputConstants.f_84822_ Lcom/mojang/blaze3d/platform/InputConstants$Key;
+   28  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_166851_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   28  M com/mojang/serialization/DataResult.getOrThrow (ZLjava/util/function/Consumer;)Ljava/lang/Object;
+   27  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.ONE Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;
+   27  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85813_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   27  M com/mojang/blaze3d/platform/Window.m_85449_ ()D
+   27  M com/mojang/serialization/Codec.decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+   27  M com/mojang/serialization/Codec.floatRange (FF)Lcom/mojang/serialization/Codec;
+   27  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P6;
+   26  M com/mojang/blaze3d/vertex/VertexConsumer.m_193479_ (I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   26  M com/mojang/brigadier/arguments/BoolArgumentType.getBool (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Z
+   26  M com/mojang/datafixers/Products$P6.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function6;)Lcom/mojang/datafixers/kinds/App;
+   26  M com/mojang/serialization/Codec.optionalFieldOf (Ljava/lang/String;Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;
+   26  M com/mojang/serialization/Codec.xmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+   25  M com/mojang/blaze3d/platform/Window.m_85444_ ()I
+   25  M com/mojang/brigadier/arguments/IntegerArgumentType.integer (I)Lcom/mojang/brigadier/arguments/IntegerArgumentType;
+   25  M com/mojang/brigadier/arguments/StringArgumentType.string ()Lcom/mojang/brigadier/arguments/StringArgumentType;
+   25  M com/mojang/brigadier/exceptions/DynamicCommandExceptionType.<init> (Ljava/util/function/Function;)V
+   24  M com/mojang/blaze3d/platform/NativeImage.m_84982_ ()I
+   24  M com/mojang/blaze3d/platform/Window.m_85443_ ()I
+   24  M com/mojang/blaze3d/systems/RenderSystem.colorMask (ZZZZ)V
+   24  M com/mojang/blaze3d/systems/RenderSystem.disableCull ()V
+   24  M com/mojang/blaze3d/systems/RenderSystem.enableCull ()V
+   24  M com/mojang/brigadier/exceptions/DynamicCommandExceptionType.create (Ljava/lang/Object;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+   24  M com/mojang/datafixers/Products$P1.and (Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P2;
+   24  M com/mojang/serialization/DataResult.resultOrPartial (Ljava/util/function/Consumer;)Ljava/util/Optional;
+   23  M com/mojang/blaze3d/platform/NativeImage.m_85084_ ()I
+   23  M com/mojang/blaze3d/platform/Window.m_85442_ ()I
+   23  M com/mojang/blaze3d/vertex/VertexBuffer.<init> (Lcom/mojang/blaze3d/vertex/VertexBuffer$Usage;)V
+   23  M com/mojang/blaze3d/vertex/VertexBuffer.m_85931_ ()V
+   23  M com/mojang/brigadier/arguments/IntegerArgumentType.integer ()Lcom/mojang/brigadier/arguments/IntegerArgumentType;
+   23  M com/mojang/brigadier/arguments/IntegerArgumentType.integer (II)Lcom/mojang/brigadier/arguments/IntegerArgumentType;
+   23  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P7;
+   23  M com/mojang/serialization/codecs/RecordCodecBuilder.mapCodec (Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;
+   22  F com/mojang/blaze3d/platform/InputConstants$Type.MOUSE Lcom/mojang/blaze3d/platform/InputConstants$Type;
+   22  F com/mojang/blaze3d/vertex/VertexFormat$Mode.TRIANGLES Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+   22  M com/mojang/blaze3d/vertex/BufferBuilder.<init> (I)V
+   22  M com/mojang/blaze3d/vertex/VertexBuffer.m_85921_ ()V
+   22  M com/mojang/brigadier/arguments/StringArgumentType.word ()Lcom/mojang/brigadier/arguments/StringArgumentType;
+   22  M com/mojang/brigadier/builder/LiteralArgumentBuilder.redirect (Lcom/mojang/brigadier/tree/CommandNode;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+   22  M com/mojang/datafixers/Products$P7.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function7;)Lcom/mojang/datafixers/kinds/App;
+   22  M com/mojang/serialization/MapCodec.orElse (Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;
+   21  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85820_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   21  F com/mojang/serialization/Codec.DOUBLE Lcom/mojang/serialization/codecs/PrimitiveCodec;
+   21  M com/mojang/blaze3d/vertex/VertexBuffer.close ()V
+   21  M com/mojang/blaze3d/vertex/VertexBuffer.m_231221_ (Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;)V
+   21  M com/mojang/brigadier/StringReader.readInt ()I
+   21  M com/mojang/math/Transformation.m_252783_ ()Lorg/joml/Matrix4f;
+   20  M com/mojang/blaze3d/platform/InputConstants$Type.m_84895_ (I)Lcom/mojang/blaze3d/platform/InputConstants$Key;
+   20  M com/mojang/blaze3d/vertex/VertexConsumer.m_7122_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+   20  M com/mojang/math/Transformation.m_121093_ ()Lcom/mojang/math/Transformation;
+   20  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P8;
+   19  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85814_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   19  M com/mojang/blaze3d/platform/NativeImage.<init> (IIZ)V
+   19  M com/mojang/blaze3d/platform/NativeImage.close ()V
+   19  M com/mojang/blaze3d/platform/Window.m_85441_ ()I
+   19  M com/mojang/datafixers/Products$P8.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function8;)Lcom/mojang/datafixers/kinds/App;
+   19  M com/mojang/serialization/Codec.unit (Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+   19  M com/mojang/serialization/MapCodec.xmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;
+   18  F com/mojang/blaze3d/vertex/VertexBuffer$Usage.STATIC Lcom/mojang/blaze3d/vertex/VertexBuffer$Usage;
+   18  F com/mojang/blaze3d/vertex/VertexFormat$Mode.TRIANGLE_FAN Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+   18  M com/mojang/blaze3d/platform/NativeImage.m_84988_ (III)V
+   18  M com/mojang/blaze3d/systems/RenderSystem.clear (IZ)V
+   18  M com/mojang/blaze3d/vertex/VertexBuffer.m_253207_ (Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/client/renderer/ShaderInstance;)V
+   18  M com/mojang/brigadier/builder/LiteralArgumentBuilder.literal (Ljava/lang/String;)Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;
+   18  M com/mojang/datafixers/util/Either.right ()Ljava/util/Optional;
+   18  M com/mojang/math/Transformation.m_121096_ (Lcom/mojang/math/Transformation;)Lcom/mojang/math/Transformation;
+   18  M com/mojang/serialization/Codec.either (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+   18  M com/mojang/serialization/codecs/PrimitiveCodec.xmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+   17  M com/mojang/blaze3d/platform/NativeImage.m_85058_ (Ljava/io/InputStream;)Lcom/mojang/blaze3d/platform/NativeImage;
+   17  M com/mojang/brigadier/arguments/StringArgumentType.greedyString ()Lcom/mojang/brigadier/arguments/StringArgumentType;
+   17  M com/mojang/math/Transformation.<init> (Lorg/joml/Vector3f;Lorg/joml/Quaternionf;Lorg/joml/Vector3f;Lorg/joml/Quaternionf;)V
+   16  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85819_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+   16  F com/mojang/math/Axis.f_252393_ Lcom/mojang/math/Axis;
+   16  M com/mojang/blaze3d/platform/NativeImage.m_84985_ (II)I
+   16  M com/mojang/blaze3d/systems/RenderSystem.getProjectionMatrix ()Lorg/joml/Matrix4f;
+   16  M com/mojang/brigadier/StringReader.readFloat ()F
+   16  M com/mojang/serialization/DataResult.get ()Lcom/mojang/datafixers/util/Either;
+   16  M com/mojang/serialization/codecs/PrimitiveCodec.listOf ()Lcom/mojang/serialization/Codec;
+   15  F com/mojang/blaze3d/vertex/VertexFormat$Mode.TRIANGLE_STRIP Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+   15  M com/mojang/blaze3d/systems/RenderSystem.depthFunc (I)V
+   15  M com/mojang/brigadier/StringReader.<init> (Ljava/lang/String;)V
+   15  M com/mojang/brigadier/StringReader.canRead ()Z
+   15  M com/mojang/brigadier/StringReader.readString ()Ljava/lang/String;
+   15  M com/mojang/serialization/Codec.unboundedMap (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/codecs/UnboundedMapCodec;
+   15  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.stable (Ljava/lang/Object;)Lcom/mojang/datafixers/kinds/App;
+   14  M com/mojang/blaze3d/platform/GlStateManager._disableBlend ()V
+   14  M com/mojang/blaze3d/platform/InputConstants$Key.m_84868_ ()Lcom/mojang/blaze3d/platform/InputConstants$Type;
+   14  M com/mojang/blaze3d/systems/RenderSystem.setShaderFogStart (F)V
+   14  M com/mojang/blaze3d/vertex/VertexConsumer.m_141991_ ()V
+   14  M com/mojang/blaze3d/vertex/VertexConsumer.m_5954_ (FFFFFFFFFIIFFF)V
+   14  M com/mojang/blaze3d/vertex/VertexConsumer.m_7404_ (IIII)V
+   14  M com/mojang/blaze3d/vertex/VertexFormat.m_86020_ ()I
+   14  M com/mojang/blaze3d/vertex/VertexFormat.m_86023_ ()Lcom/google/common/collect/ImmutableList;
+   14  M com/mojang/brigadier/StringReader.readDouble ()D
+   14  M com/mojang/datafixers/util/Either.ifLeft (Ljava/util/function/Consumer;)Lcom/mojang/datafixers/util/Either;
+   14  M com/mojang/datafixers/util/Either.ifRight (Ljava/util/function/Consumer;)Lcom/mojang/datafixers/util/Either;
+   14  M com/mojang/serialization/codecs/PrimitiveCodec.comapFlatMap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+   14  M com/mojang/serialization/codecs/PrimitiveCodec.optionalFieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+   13  M com/mojang/blaze3d/pipeline/RenderTarget.m_83947_ (Z)V
+   13  M com/mojang/blaze3d/platform/GlStateManager._enableBlend ()V
+   13  M com/mojang/blaze3d/platform/Lighting.m_166384_ ()V
+   13  M com/mojang/blaze3d/systems/RenderSystem.blendFuncSeparate (IIII)V
+   13  M com/mojang/blaze3d/systems/RenderSystem.getShader ()Lnet/minecraft/client/renderer/ShaderInstance;
+   13  M com/mojang/blaze3d/systems/RenderSystem.setShaderFogEnd (F)V
+   13  M com/mojang/brigadier/StringReader.readBoolean ()Z
+   13  M com/mojang/brigadier/suggestion/SuggestionsBuilder.buildFuture ()Ljava/util/concurrent/CompletableFuture;
+   12  F com/mojang/authlib/minecraft/MinecraftProfileTexture$Type.SKIN Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;
+   12  F com/mojang/blaze3d/vertex/VertexFormat$Mode.DEBUG_LINES Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+   12  M com/mojang/blaze3d/platform/InputConstants.m_84851_ (Ljava/lang/String;)Lcom/mojang/blaze3d/platform/InputConstants$Key;
+   12  M com/mojang/blaze3d/systems/RenderSystem.setProjectionMatrix (Lorg/joml/Matrix4f;Lcom/mojang/blaze3d/vertex/VertexSorting;)V
+   12  M com/mojang/blaze3d/systems/RenderSystem.setShaderTexture (II)V
+   12  M com/mojang/blaze3d/vertex/PoseStack.m_166856_ ()V
+   12  M com/mojang/blaze3d/vertex/VertexConsumer.putBulkData (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFIIZ)V
+   12  M com/mojang/blaze3d/vertex/VertexFormat.m_86017_ ()I
+   12  M com/mojang/brigadier/StringReader.peek ()C
+   12  M com/mojang/brigadier/StringReader.readUnquotedString ()Ljava/lang/String;
+   12  M com/mojang/brigadier/suggestion/SuggestionsBuilder.suggest (Ljava/lang/String;)Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;
+   12  M com/mojang/serialization/DataResult.map (Ljava/util/function/Function;)Lcom/mojang/serialization/DataResult;
+   12  M com/mojang/serialization/Dynamic.<init> (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)V
+   12  M com/mojang/serialization/Lifecycle.stable ()Lcom/mojang/serialization/Lifecycle;
+   12  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P10;
+   11  F com/mojang/blaze3d/vertex/VertexSorting.f_276633_ Lcom/mojang/blaze3d/vertex/VertexSorting;
+   11  M com/mojang/blaze3d/platform/InputConstants$Key.m_84875_ ()Lnet/minecraft/network/chat/Component;
+   11  M com/mojang/blaze3d/shaders/Uniform.m_142617_ (I)V
+   11  M com/mojang/blaze3d/shaders/Uniform.m_5985_ (F)V
+   11  M com/mojang/blaze3d/systems/RenderSystem.disableScissor ()V
+   11  M com/mojang/blaze3d/systems/RenderSystem.enableScissor (IIII)V
+   11  M com/mojang/blaze3d/systems/RenderSystem.isOnRenderThread ()Z
+   11  M com/mojang/blaze3d/systems/RenderSystem.lineWidth (F)V
+   11  M com/mojang/blaze3d/systems/RenderSystem.recordRenderCall (Lcom/mojang/blaze3d/pipeline/RenderCall;)V
+   11  M com/mojang/blaze3d/systems/RenderSystem.runAsFancy (Ljava/lang/Runnable;)V
+   11  M com/mojang/brigadier/StringReader.getCursor ()I
+   11  M com/mojang/brigadier/arguments/FloatArgumentType.getFloat (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)F
+   11  M com/mojang/brigadier/exceptions/CommandSyntaxException.printStackTrace ()V
+   11  M com/mojang/datafixers/Products$P10.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function10;)Lcom/mojang/datafixers/kinds/App;
+   11  M com/mojang/serialization/Codec.encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+   11  M com/mojang/serialization/Codec.list (Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+   10  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.value I
+   10  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.value I
+   10  F com/mojang/serialization/Codec.LONG Lcom/mojang/serialization/codecs/PrimitiveCodec;
+   10  M com/mojang/blaze3d/systems/RenderSystem.bindTexture (I)V
+   10  M com/mojang/blaze3d/vertex/VertexFormatElement.m_86048_ ()Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+   10  M com/mojang/blaze3d/vertex/VertexFormatElement.m_86050_ ()I
+   10  M com/mojang/brigadier/StringReader.getString ()Ljava/lang/String;
+   10  M com/mojang/brigadier/StringReader.skip ()V
+   10  M com/mojang/brigadier/builder/RequiredArgumentBuilder.requires (Ljava/util/function/Predicate;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+   10  M com/mojang/brigadier/exceptions/CommandSyntaxException.getMessage ()Ljava/lang/String;
+   10  M com/mojang/math/Transformation.isIdentity ()Z
+   10  M com/mojang/serialization/Codec.flatXmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+   10  M com/mojang/serialization/JsonOps.convertTo (Lcom/mojang/serialization/DynamicOps;Lcom/google/gson/JsonElement;)Ljava/lang/Object;
+   10  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P9;
+    9  F com/mojang/blaze3d/pipeline/RenderTarget.f_83915_ I
+    9  F com/mojang/blaze3d/pipeline/RenderTarget.f_83916_ I
+    9  F com/mojang/blaze3d/platform/GlStateManager$LogicOp.OR_REVERSE Lcom/mojang/blaze3d/platform/GlStateManager$LogicOp;
+    9  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85804_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    9  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85816_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+    9  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.FLOAT Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    9  M com/mojang/blaze3d/vertex/VertexConsumer.m_85987_ (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFII)V
+    9  M com/mojang/brigadier/builder/LiteralArgumentBuilder.build ()Lcom/mojang/brigadier/tree/LiteralCommandNode;
+    9  M com/mojang/brigadier/builder/LiteralArgumentBuilder.then (Lcom/mojang/brigadier/tree/CommandNode;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+    9  M com/mojang/brigadier/exceptions/DynamicCommandExceptionType.createWithContext (Lcom/mojang/brigadier/ImmutableStringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+    9  M com/mojang/datafixers/Products$P13.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function13;)Lcom/mojang/datafixers/kinds/App;
+    9  M com/mojang/serialization/DataResult$PartialResult.message ()Ljava/lang/String;
+    9  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P13;
+    8  F com/mojang/blaze3d/platform/NativeImage$Format.RGBA Lcom/mojang/blaze3d/platform/NativeImage$Format;
+    8  F com/mojang/blaze3d/vertex/VertexBuffer$Usage.DYNAMIC Lcom/mojang/blaze3d/vertex/VertexBuffer$Usage;
+    8  M com/mojang/authlib/GameProfile.isComplete ()Z
+    8  M com/mojang/blaze3d/pipeline/RenderTarget.m_83954_ (Z)V
+    8  M com/mojang/blaze3d/pipeline/RenderTarget.m_83975_ ()I
+    8  M com/mojang/blaze3d/pipeline/TextureTarget.<init> (IIZZ)V
+    8  M com/mojang/blaze3d/platform/NativeImage.<init> (Lcom/mojang/blaze3d/platform/NativeImage$Format;IIZ)V
+    8  M com/mojang/blaze3d/platform/NativeImage.m_85013_ (IIIIIIIZZZZ)V
+    8  M com/mojang/blaze3d/platform/NativeImage.m_85045_ (IZ)V
+    8  M com/mojang/blaze3d/platform/NativeImage.m_85102_ ()Lcom/mojang/blaze3d/platform/NativeImage$Format;
+    8  M com/mojang/blaze3d/shaders/Uniform.m_5679_ (Lorg/joml/Matrix4f;)V
+    8  M com/mojang/blaze3d/systems/RenderSystem.activeTexture (I)V
+    8  M com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThread ()V
+    8  M com/mojang/blaze3d/systems/RenderSystem.clearColor (FFFF)V
+    8  M com/mojang/blaze3d/systems/RenderSystem.disableColorLogicOp ()V
+    8  M com/mojang/blaze3d/systems/RenderSystem.enableColorLogicOp ()V
+    8  M com/mojang/blaze3d/systems/RenderSystem.getShaderFogEnd ()F
+    8  M com/mojang/blaze3d/systems/RenderSystem.getShaderFogStart ()F
+    8  M com/mojang/blaze3d/systems/RenderSystem.logicOp (Lcom/mojang/blaze3d/platform/GlStateManager$LogicOp;)V
+    8  M com/mojang/blaze3d/systems/RenderSystem.viewport (IIII)V
+    8  M com/mojang/blaze3d/vertex/VertexFormatElement.m_86041_ ()Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    8  M com/mojang/brigadier/builder/RequiredArgumentBuilder.argument (Ljava/lang/String;Lcom/mojang/brigadier/arguments/ArgumentType;)Lcom/mojang/brigadier/builder/RequiredArgumentBuilder;
+    8  M com/mojang/brigadier/exceptions/Dynamic2CommandExceptionType.<init> (Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType$Function;)V
+    8  M com/mojang/brigadier/exceptions/Dynamic2CommandExceptionType.create (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+    8  M com/mojang/brigadier/suggestion/Suggestions.empty ()Ljava/util/concurrent/CompletableFuture;
+    8  M com/mojang/brigadier/tree/CommandNode.getName ()Ljava/lang/String;
+    8  M com/mojang/datafixers/Products$P1.and (Lcom/mojang/datafixers/Products$P2;)Lcom/mojang/datafixers/Products$P3;
+    8  M com/mojang/datafixers/Products$P12.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function12;)Lcom/mojang/datafixers/kinds/App;
+    8  M com/mojang/datafixers/Products$P9.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function9;)Lcom/mojang/datafixers/kinds/App;
+    8  M com/mojang/math/Transformation.<init> (Lorg/joml/Matrix4f;)V
+    8  M com/mojang/math/Transformation.m_253244_ ()Lorg/joml/Quaternionf;
+    8  M com/mojang/serialization/Codec.dispatch (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    8  M com/mojang/serialization/DataResult.flatMap (Ljava/util/function/Function;)Lcom/mojang/serialization/DataResult;
+    8  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P11;
+    8  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P12;
+    7  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85808_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    7  F com/mojang/blaze3d/vertex/VertexFormatElement$Usage.UV Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    7  M com/mojang/blaze3d/platform/GlStateManager._enableDepthTest ()V
+    7  M com/mojang/blaze3d/platform/NativeImage.m_85040_ (IIIZ)V
+    7  M com/mojang/blaze3d/platform/TextureUtil.prepareImage (IIII)V
+    7  M com/mojang/blaze3d/platform/Window.m_85385_ (IZ)I
+    7  M com/mojang/blaze3d/systems/RenderSystem.disablePolygonOffset ()V
+    7  M com/mojang/blaze3d/systems/RenderSystem.enablePolygonOffset ()V
+    7  M com/mojang/blaze3d/systems/RenderSystem.getShaderFogColor ()[F
+    7  M com/mojang/blaze3d/systems/RenderSystem.getShaderFogShape ()Lcom/mojang/blaze3d/shaders/FogShape;
+    7  M com/mojang/blaze3d/systems/RenderSystem.getShaderTexture (I)I
+    7  M com/mojang/blaze3d/systems/RenderSystem.polygonOffset (FF)V
+    7  M com/mojang/brigadier/CommandDispatcher.getRoot ()Lcom/mojang/brigadier/tree/RootCommandNode;
+    7  M com/mojang/brigadier/builder/ArgumentBuilder.then (Lcom/mojang/brigadier/builder/ArgumentBuilder;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+    7  M com/mojang/brigadier/exceptions/SimpleCommandExceptionType.createWithContext (Lcom/mojang/brigadier/ImmutableStringReader;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+    7  M com/mojang/datafixers/Products$P11.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function11;)Lcom/mojang/datafixers/kinds/App;
+    7  M com/mojang/datafixers/Products$P14.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function14;)Lcom/mojang/datafixers/kinds/App;
+    7  M com/mojang/serialization/DataResult.error ()Ljava/util/Optional;
+    7  M com/mojang/serialization/Dynamic.getValue ()Ljava/lang/Object;
+    7  M com/mojang/serialization/DynamicOps.convertTo (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Ljava/lang/Object;
+    7  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P14;
+    7  M com/mojang/serialization/codecs/UnboundedMapCodec.fieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+    6  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85805_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    6  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85806_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    6  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85807_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    6  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85809_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    6  F com/mojang/blaze3d/vertex/VertexFormat$Mode.DEBUG_LINE_STRIP Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+    6  F com/mojang/blaze3d/vertex/VertexFormatElement$Usage.PADDING Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    6  F com/mojang/blaze3d/vertex/VertexFormatElement$Usage.POSITION Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    6  M com/mojang/authlib/GameProfile.equals (Ljava/lang/Object;)Z
+    6  M com/mojang/authlib/GameProfile.getProperties ()Lcom/mojang/authlib/properties/PropertyMap;
+    6  M com/mojang/blaze3d/platform/GlStateManager._bindTexture (I)V
+    6  M com/mojang/blaze3d/platform/GlStateManager._blendFunc (II)V
+    6  M com/mojang/blaze3d/platform/GlStateManager._depthMask (Z)V
+    6  M com/mojang/blaze3d/platform/NativeImage.m_85056_ (Ljava/io/File;)V
+    6  M com/mojang/blaze3d/platform/NativeImage.m_85121_ ()[B
+    6  M com/mojang/blaze3d/shaders/Uniform.m_5941_ ([F)V
+    6  M com/mojang/blaze3d/vertex/PoseStack.m_272245_ (Lorg/joml/Quaternionf;FFF)V
+    6  M com/mojang/blaze3d/vertex/VertexBuffer.m_166882_ ()V
+    6  M com/mojang/blaze3d/vertex/VertexFormat.getOffset (I)I
+    6  M com/mojang/brigadier/StringReader.setCursor (I)V
+    6  M com/mojang/brigadier/arguments/DoubleArgumentType.getDouble (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)D
+    6  M com/mojang/brigadier/arguments/FloatArgumentType.floatArg ()Lcom/mojang/brigadier/arguments/FloatArgumentType;
+    6  M com/mojang/brigadier/arguments/FloatArgumentType.floatArg (FF)Lcom/mojang/brigadier/arguments/FloatArgumentType;
+    6  M com/mojang/brigadier/suggestion/SuggestionsBuilder.getRemaining ()Ljava/lang/String;
+    6  M com/mojang/datafixers/Products$P2.and (Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P3;
+    6  M com/mojang/datafixers/Products$P2.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    6  M com/mojang/datafixers/util/Either.orThrow ()Ljava/lang/Object;
+    6  M com/mojang/datafixers/util/Function3.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    6  M com/mojang/math/Axis.m_253057_ (Lorg/joml/Vector3f;)Lcom/mojang/math/Axis;
+    6  M com/mojang/serialization/Codec.comapFlatMap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    6  M com/mojang/serialization/Codec.mapPair (Lcom/mojang/serialization/MapCodec;Lcom/mojang/serialization/MapCodec;)Lcom/mojang/serialization/MapCodec;
+    6  M com/mojang/serialization/DynamicOps.createString (Ljava/lang/String;)Ljava/lang/Object;
+    6  M com/mojang/serialization/MapCodec.<init> ()V
+    6  M com/mojang/serialization/MapCodec.flatXmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;
+    5  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.ONE_MINUS_SRC_COLOR Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;
+    5  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.ZERO Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+    5  F com/mojang/blaze3d/shaders/FogShape.CYLINDER Lcom/mojang/blaze3d/shaders/FogShape;
+    5  F com/mojang/blaze3d/vertex/VertexFormat$Mode.LINE_STRIP Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+    5  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.BYTE Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    5  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.SHORT Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    5  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.USHORT Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    5  F com/mojang/blaze3d/vertex/VertexFormatElement$Usage.COLOR Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    5  F com/mojang/blaze3d/vertex/VertexSorting.f_276450_ Lcom/mojang/blaze3d/vertex/VertexSorting;
+    5  M com/mojang/blaze3d/font/GlyphInfo.m_83827_ (Z)F
+    5  M com/mojang/blaze3d/pipeline/RenderTarget.m_83930_ ()V
+    5  M com/mojang/blaze3d/pipeline/RenderTarget.m_83970_ ()V
+    5  M com/mojang/blaze3d/platform/GlStateManager._blendFuncSeparate (IIII)V
+    5  M com/mojang/blaze3d/platform/GlStateManager._deleteTexture (I)V
+    5  M com/mojang/blaze3d/platform/GlStateManager._disableDepthTest ()V
+    5  M com/mojang/blaze3d/platform/GlStateManager._genTexture ()I
+    5  M com/mojang/blaze3d/platform/GlStateManager._glBindFramebuffer (II)V
+    5  M com/mojang/blaze3d/platform/GlUtil.m_84820_ ()Ljava/lang/String;
+    5  M com/mojang/blaze3d/platform/InputConstants$Key.equals (Ljava/lang/Object;)Z
+    5  M com/mojang/blaze3d/platform/NativeImage.m_166411_ (III)V
+    5  M com/mojang/blaze3d/platform/NativeImage.m_85066_ (Ljava/nio/file/Path;)V
+    5  M com/mojang/blaze3d/platform/NativeImage.m_85122_ ()V
+    5  M com/mojang/blaze3d/shaders/FogShape.m_202324_ ()I
+    5  M com/mojang/blaze3d/shaders/Uniform.m_85633_ ()V
+    5  M com/mojang/blaze3d/systems/RenderSystem.getShaderGameTime ()F
+    5  M com/mojang/blaze3d/vertex/BufferBuilder.m_141991_ ()V
+    5  M com/mojang/blaze3d/vertex/BufferBuilder.m_231168_ ()Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;
+    5  M com/mojang/blaze3d/vertex/BufferBuilder.m_85729_ ()V
+    5  M com/mojang/blaze3d/vertex/BufferUploader.m_166835_ ()V
+    5  M com/mojang/blaze3d/vertex/DefaultedVertexConsumer.<init> ()V
+    5  M com/mojang/blaze3d/vertex/SheetedDecalTextureGenerator.<init> (Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Matrix4f;Lorg/joml/Matrix3f;F)V
+    5  M com/mojang/blaze3d/vertex/VertexFormat.<init> (Lcom/google/common/collect/ImmutableMap;)V
+    5  M com/mojang/brigadier/arguments/DoubleArgumentType.doubleArg (DD)Lcom/mojang/brigadier/arguments/DoubleArgumentType;
+    5  M com/mojang/brigadier/builder/ArgumentBuilder.executes (Lcom/mojang/brigadier/Command;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+    5  M com/mojang/brigadier/context/ParsedCommandNode.getNode ()Lcom/mojang/brigadier/tree/CommandNode;
+    5  M com/mojang/datafixers/Products$P1.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    5  M com/mojang/datafixers/Products$P3.and (Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P4;
+    5  M com/mojang/datafixers/util/Function4.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    5  M com/mojang/math/Transformation.m_252829_ ()Lorg/joml/Vector3f;
+    5  M com/mojang/math/Transformation.m_252848_ ()Lorg/joml/Quaternionf;
+    5  M com/mojang/math/Transformation.m_252900_ ()Lorg/joml/Vector3f;
+    5  M com/mojang/serialization/DataResult.error (Ljava/util/function/Supplier;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    5  M com/mojang/serialization/DataResult.success (Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;)Lcom/mojang/serialization/DataResult;
+    5  M com/mojang/serialization/Dynamic.convert (Lcom/mojang/serialization/DynamicOps;)Lcom/mojang/serialization/Dynamic;
+    5  M com/mojang/serialization/DynamicOps.empty ()Ljava/lang/Object;
+    5  M com/mojang/serialization/codecs/PrimitiveCodec.flatXmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    4  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.ONE_MINUS_DST_COLOR Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+    4  F com/mojang/blaze3d/platform/NativeImage.f_84964_ J
+    4  F com/mojang/blaze3d/shaders/FogShape.SPHERE Lcom/mojang/blaze3d/shaders/FogShape;
+    4  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85810_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    4  F com/mojang/datafixers/util/Unit.INSTANCE Lcom/mojang/datafixers/util/Unit;
+    4  M com/mojang/blaze3d/platform/GlStateManager._activeTexture (I)V
+    4  M com/mojang/blaze3d/platform/GlStateManager._colorMask (ZZZZ)V
+    4  M com/mojang/blaze3d/platform/GlStateManager._getActiveTexture ()I
+    4  M com/mojang/blaze3d/platform/GlStateManager._glBindBuffer (II)V
+    4  M com/mojang/blaze3d/platform/GlUtil.m_84821_ ()Ljava/lang/String;
+    4  M com/mojang/blaze3d/platform/InputConstants$Key.m_84874_ ()Ljava/lang/String;
+    4  M com/mojang/blaze3d/platform/InputConstants$Key.toString ()Ljava/lang/String;
+    4  M com/mojang/blaze3d/platform/Lighting.m_252756_ (Lorg/joml/Matrix4f;)V
+    4  M com/mojang/blaze3d/platform/NativeImage.m_84997_ (IIIII)V
+    4  M com/mojang/blaze3d/platform/NativeImage.m_85054_ (Lcom/mojang/blaze3d/platform/NativeImage;)V
+    4  M com/mojang/blaze3d/platform/NativeImage.m_85062_ (Ljava/nio/ByteBuffer;)Lcom/mojang/blaze3d/platform/NativeImage;
+    4  M com/mojang/blaze3d/platform/TextureUtil.prepareImage (III)V
+    4  M com/mojang/blaze3d/platform/TextureUtil.writeAsPNG (Ljava/nio/file/Path;Ljava/lang/String;IIII)V
+    4  M com/mojang/blaze3d/systems/RenderSystem.backupProjectionMatrix ()V
+    4  M com/mojang/blaze3d/systems/RenderSystem.getModelViewMatrix ()Lorg/joml/Matrix4f;
+    4  M com/mojang/blaze3d/systems/RenderSystem.getShaderColor ()[F
+    4  M com/mojang/blaze3d/systems/RenderSystem.getTextureMatrix ()Lorg/joml/Matrix4f;
+    4  M com/mojang/blaze3d/systems/RenderSystem.getVertexSorting ()Lcom/mojang/blaze3d/vertex/VertexSorting;
+    4  M com/mojang/blaze3d/systems/RenderSystem.restoreProjectionMatrix ()V
+    4  M com/mojang/blaze3d/systems/RenderSystem.setupShaderLights (Lnet/minecraft/client/renderer/ShaderInstance;)V
+    4  M com/mojang/blaze3d/systems/RenderSystem.texParameter (III)V
+    4  M com/mojang/blaze3d/vertex/BufferBuilder.m_277127_ (Lcom/mojang/blaze3d/vertex/VertexSorting;)V
+    4  M com/mojang/blaze3d/vertex/BufferBuilder.m_7404_ (IIII)V
+    4  M com/mojang/blaze3d/vertex/VertexFormat.m_166912_ ()V
+    4  M com/mojang/blaze3d/vertex/VertexFormat.m_86024_ ()V
+    4  M com/mojang/brigadier/ParseResults.getContext ()Lcom/mojang/brigadier/context/CommandContextBuilder;
+    4  M com/mojang/brigadier/StringReader.readQuotedString ()Ljava/lang/String;
+    4  M com/mojang/brigadier/StringReader.skipWhitespace ()V
+    4  M com/mojang/brigadier/arguments/FloatArgumentType.floatArg (F)Lcom/mojang/brigadier/arguments/FloatArgumentType;
+    4  M com/mojang/brigadier/context/CommandContextBuilder.getNodes ()Ljava/util/List;
+    4  M com/mojang/brigadier/exceptions/CommandSyntaxException.getRawMessage ()Lcom/mojang/brigadier/Message;
+    4  M com/mojang/brigadier/suggestion/SuggestionsBuilder.createOffset (I)Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;
+    4  M com/mojang/brigadier/suggestion/SuggestionsBuilder.getStart ()I
+    4  M com/mojang/brigadier/suggestion/SuggestionsBuilder.suggest (Ljava/lang/String;Lcom/mojang/brigadier/Message;)Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;
+    4  M com/mojang/brigadier/tree/CommandNode.canUse (Ljava/lang/Object;)Z
+    4  M com/mojang/datafixers/Products$P1.and (Lcom/mojang/datafixers/Products$P3;)Lcom/mojang/datafixers/Products$P4;
+    4  M com/mojang/datafixers/util/Either.mapBoth (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Either;
+    4  M com/mojang/datafixers/util/Function5.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    4  M com/mojang/math/Transformation.rotateTransform (Lnet/minecraft/core/Direction;)Lnet/minecraft/core/Direction;
+    4  M com/mojang/serialization/Codec.parse (Lcom/mojang/serialization/Dynamic;)Lcom/mojang/serialization/DataResult;
+    4  M com/mojang/serialization/DataResult.mapError (Ljava/util/function/UnaryOperator;)Lcom/mojang/serialization/DataResult;
+    4  M com/mojang/serialization/DynamicOps.createInt (I)Ljava/lang/Object;
+    4  M com/mojang/serialization/DynamicOps.mapBuilder ()Lcom/mojang/serialization/RecordBuilder;
+    4  M com/mojang/serialization/Encoder.encodeStart (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    4  M com/mojang/serialization/MapLike.entries ()Ljava/util/stream/Stream;
+    4  M com/mojang/serialization/MapLike.get (Ljava/lang/String;)Ljava/lang/Object;
+    4  M com/mojang/text2speech/Narrator.say (Ljava/lang/String;Z)V
+    4  M com/mojang/util/UUIDTypeAdapter.fromUUID (Ljava/util/UUID;)Ljava/lang/String;
+    3  F com/mojang/authlib/minecraft/MinecraftProfileTexture$Type.CAPE Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;
+    3  F com/mojang/blaze3d/platform/GlStateManager$BlendState.f_84577_ Lcom/mojang/blaze3d/platform/GlStateManager$BooleanState;
+    3  F com/mojang/blaze3d/platform/InputConstants$Type.SCANCODE Lcom/mojang/blaze3d/platform/InputConstants$Type;
+    3  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_166849_ Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    3  F com/mojang/blaze3d/vertex/VertexFormat$IndexType.SHORT Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+    3  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.INT Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    3  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.UBYTE Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    3  F com/mojang/blaze3d/vertex/VertexFormatElement$Type.UINT Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    3  F com/mojang/blaze3d/vertex/VertexFormatElement$Usage.GENERIC Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    3  F com/mojang/logging/LogUtils.FATAL_MARKER Lorg/slf4j/Marker;
+    3  F com/mojang/serialization/Codec.SHORT Lcom/mojang/serialization/codecs/PrimitiveCodec;
+    3  M com/mojang/authlib/minecraft/MinecraftProfileTexture.getMetadata (Ljava/lang/String;)Ljava/lang/String;
+    3  M com/mojang/authlib/minecraft/MinecraftSessionService.fillProfileProperties (Lcom/mojang/authlib/GameProfile;Z)Lcom/mojang/authlib/GameProfile;
+    3  M com/mojang/blaze3d/pipeline/RenderTarget.enableStencil ()V
+    3  M com/mojang/blaze3d/pipeline/RenderTarget.m_83931_ (FFFF)V
+    3  M com/mojang/blaze3d/pipeline/RenderTarget.m_83980_ ()I
+    3  M com/mojang/blaze3d/platform/GlStateManager$Viewport.m_157128_ ()I
+    3  M com/mojang/blaze3d/platform/GlStateManager$Viewport.m_157129_ ()I
+    3  M com/mojang/blaze3d/platform/GlStateManager._clear (IZ)V
+    3  M com/mojang/blaze3d/platform/GlStateManager._disableCull ()V
+    3  M com/mojang/blaze3d/platform/GlStateManager._glBindVertexArray (I)V
+    3  M com/mojang/blaze3d/platform/GlStateManager._glGetUniformLocation (ILjava/lang/CharSequence;)I
+    3  M com/mojang/blaze3d/platform/GlStateManager._glUniform1i (II)V
+    3  M com/mojang/blaze3d/platform/GlStateManager._viewport (IIII)V
+    3  M com/mojang/blaze3d/platform/GlStateManager.glAttachShader (II)V
+    3  M com/mojang/blaze3d/platform/GlStateManager.glDeleteShader (I)V
+    3  M com/mojang/blaze3d/platform/GlStateManager.glGetProgrami (II)I
+    3  M com/mojang/blaze3d/platform/GlStateManager.glGetShaderi (II)I
+    3  M com/mojang/blaze3d/platform/GlUtil.m_84818_ ()Ljava/lang/String;
+    3  M com/mojang/blaze3d/platform/GlUtil.m_84819_ ()Ljava/lang/String;
+    3  M com/mojang/blaze3d/platform/InputConstants$Type.ordinal ()I
+    3  M com/mojang/blaze3d/platform/InputConstants$Type.values ()[Lcom/mojang/blaze3d/platform/InputConstants$Type;
+    3  M com/mojang/blaze3d/platform/NativeImage.m_260930_ (Lcom/mojang/blaze3d/platform/NativeImage;IIIIIIZZ)V
+    3  M com/mojang/blaze3d/platform/Window.m_85440_ ()Z
+    3  M com/mojang/blaze3d/shaders/AbstractUniform.m_5985_ (F)V
+    3  M com/mojang/blaze3d/shaders/Program$Type.m_85569_ ()Ljava/lang/String;
+    3  M com/mojang/blaze3d/shaders/Program$Type.m_85570_ ()Ljava/util/Map;
+    3  M com/mojang/blaze3d/systems/RenderSystem.assertOnRenderThreadOrInit ()V
+    3  M com/mojang/blaze3d/systems/RenderSystem.setShaderFogShape (Lcom/mojang/blaze3d/shaders/FogShape;)V
+    3  M com/mojang/blaze3d/systems/RenderSystem.stencilFunc (III)V
+    3  M com/mojang/blaze3d/systems/RenderSystem.stencilMask (I)V
+    3  M com/mojang/blaze3d/systems/RenderSystem.stencilOp (III)V
+    3  M com/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer.m_231200_ ()V
+    3  M com/mojang/blaze3d/vertex/BufferBuilder.m_5751_ ()V
+    3  M com/mojang/blaze3d/vertex/BufferBuilder.m_6122_ (IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    3  M com/mojang/blaze3d/vertex/DefaultedVertexConsumer.m_85995_ (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V
+    3  M com/mojang/blaze3d/vertex/PoseStack.m_85851_ ()Z
+    3  M com/mojang/blaze3d/vertex/VertexBuffer.m_166892_ ()Lcom/mojang/blaze3d/vertex/VertexFormat;
+    3  M com/mojang/blaze3d/vertex/VertexFormatElement$Type.m_86074_ ()I
+    3  M com/mojang/blaze3d/vertex/VertexFormatElement$Usage.ordinal ()I
+    3  M com/mojang/blaze3d/vertex/VertexFormatElement$Usage.values ()[Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    3  M com/mojang/blaze3d/vertex/VertexFormatElement.<init> (ILcom/mojang/blaze3d/vertex/VertexFormatElement$Type;Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;I)V
+    3  M com/mojang/blaze3d/vertex/VertexFormatElement.m_86049_ ()I
+    3  M com/mojang/blaze3d/vertex/VertexMultiConsumer.m_86168_ (Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/VertexConsumer;)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    3  M com/mojang/brigadier/CommandDispatcher.execute (Ljava/lang/String;Ljava/lang/Object;)I
+    3  M com/mojang/brigadier/Message.getString ()Ljava/lang/String;
+    3  M com/mojang/brigadier/StringReader.read ()C
+    3  M com/mojang/brigadier/context/CommandContext.getInput ()Ljava/lang/String;
+    3  M com/mojang/brigadier/exceptions/CommandSyntaxException.toString ()Ljava/lang/String;
+    3  M com/mojang/brigadier/exceptions/Dynamic2CommandExceptionType.createWithContext (Lcom/mojang/brigadier/ImmutableStringReader;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+    3  M com/mojang/brigadier/suggestion/SuggestionsBuilder.getInput ()Ljava/lang/String;
+    3  M com/mojang/brigadier/tree/CommandNode.getChildren ()Ljava/util/Collection;
+    3  M com/mojang/brigadier/tree/CommandNode.getRequirement ()Ljava/util/function/Predicate;
+    3  M com/mojang/brigadier/tree/LiteralCommandNode.addChild (Lcom/mojang/brigadier/tree/CommandNode;)V
+    3  M com/mojang/brigadier/tree/LiteralCommandNode.getRequirement ()Ljava/util/function/Predicate;
+    3  M com/mojang/datafixers/DataFixer.getSchema (I)Lcom/mojang/datafixers/schemas/Schema;
+    3  M com/mojang/datafixers/Products$P1.and (Lcom/mojang/datafixers/Products$P4;)Lcom/mojang/datafixers/Products$P5;
+    3  M com/mojang/datafixers/Products$P15.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function15;)Lcom/mojang/datafixers/kinds/App;
+    3  M com/mojang/datafixers/Products$P16.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/util/Function16;)Lcom/mojang/datafixers/kinds/App;
+    3  M com/mojang/datafixers/Products$P3.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    3  M com/mojang/datafixers/Products$P4.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    3  M com/mojang/datafixers/Products$P5.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    3  M com/mojang/datafixers/Products$P6.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    3  M com/mojang/datafixers/util/Either.mapLeft (Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Either;
+    3  M com/mojang/datafixers/util/Function6.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    3  M com/mojang/datafixers/util/Pair.swap ()Lcom/mojang/datafixers/util/Pair;
+    3  M com/mojang/serialization/Codec.dispatch (Ljava/lang/String;Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    3  M com/mojang/serialization/Codec.doubleRange (DD)Lcom/mojang/serialization/Codec;
+    3  M com/mojang/serialization/Codec.flatComapMap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    3  M com/mojang/serialization/Codec.map (Ljava/util/function/Function;)Lcom/mojang/serialization/Decoder;
+    3  M com/mojang/serialization/Codec.of (Lcom/mojang/serialization/Encoder;Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/Codec;
+    3  M com/mojang/serialization/Codec.pair (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+    3  M com/mojang/serialization/DataResult.apply2stable (Ljava/util/function/BiFunction;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/DataResult.setLifecycle (Lcom/mojang/serialization/Lifecycle;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/DynamicOps.createBoolean (Z)Ljava/lang/Object;
+    3  M com/mojang/serialization/DynamicOps.createShort (S)Ljava/lang/Object;
+    3  M com/mojang/serialization/DynamicOps.getMap (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/DynamicOps.getNumberValue (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/DynamicOps.mergeToPrimitive (Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/MapCodec.decode (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/MapCodec.encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/RecordBuilder;)Lcom/mojang/serialization/RecordBuilder;
+    3  M com/mojang/serialization/MapCodec.fieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+    3  M com/mojang/serialization/MapCodec.keys (Lcom/mojang/serialization/DynamicOps;)Ljava/util/stream/Stream;
+    3  M com/mojang/serialization/MapCodec.stable ()Lcom/mojang/serialization/MapCodec;
+    3  M com/mojang/serialization/RecordBuilder.add (Ljava/lang/String;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/RecordBuilder;
+    3  M com/mojang/serialization/RecordBuilder.build (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    3  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P15;
+    3  M com/mojang/serialization/codecs/RecordCodecBuilder$Instance.group (Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P16;
+    3  M com/mojang/serialization/codecs/UnboundedMapCodec.optionalFieldOf (Ljava/lang/String;Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;
+    3  M com/mojang/text2speech/Narrator.getNarrator ()Lcom/mojang/text2speech/Narrator;
+    2  F com/mojang/blaze3d/platform/GlStateManager$BlendState.f_84578_ I
+    2  F com/mojang/blaze3d/platform/GlStateManager$BlendState.f_84579_ I
+    2  F com/mojang/blaze3d/platform/GlStateManager$BlendState.f_84580_ I
+    2  F com/mojang/blaze3d/platform/GlStateManager$BlendState.f_84581_ I
+    2  F com/mojang/blaze3d/platform/GlStateManager$ColorMask.f_84608_ Z
+    2  F com/mojang/blaze3d/platform/GlStateManager$ColorMask.f_84609_ Z
+    2  F com/mojang/blaze3d/platform/GlStateManager$ColorMask.f_84610_ Z
+    2  F com/mojang/blaze3d/platform/GlStateManager$ColorMask.f_84611_ Z
+    2  F com/mojang/blaze3d/platform/GlStateManager$DepthState.f_84627_ Z
+    2  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.ONE_MINUS_CONSTANT_ALPHA Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;
+    2  F com/mojang/blaze3d/platform/GlStateManager$DestFactor.SRC_COLOR Lcom/mojang/blaze3d/platform/GlStateManager$DestFactor;
+    2  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.CONSTANT_ALPHA Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+    2  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.SRC_COLOR Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+    2  F com/mojang/blaze3d/platform/GlStateManager$TextureState.f_84801_ I
+    2  F com/mojang/blaze3d/vertex/DefaultVertexFormat.f_85822_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+    2  F com/mojang/blaze3d/vertex/VertexFormat$IndexType.f_166924_ I
+    2  F com/mojang/blaze3d/vertex/VertexFormatElement$Usage.NORMAL Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+    2  F com/mojang/serialization/Codec.BYTE Lcom/mojang/serialization/codecs/PrimitiveCodec;
+    2  F com/mojang/serialization/Codec.INT_STREAM Lcom/mojang/serialization/codecs/PrimitiveCodec;
+    2  F com/mojang/serialization/Codec.PASSTHROUGH Lcom/mojang/serialization/Codec;
+    2  F com/mojang/serialization/JsonOps.COMPRESSED Lcom/mojang/serialization/JsonOps;
+    2  F com/mojang/text2speech/Narrator.EMPTY Lcom/mojang/text2speech/Narrator;
+    2  M com/mojang/authlib/minecraft/MinecraftProfileTexture.getUrl ()Ljava/lang/String;
+    2  M com/mojang/authlib/properties/PropertyMap.containsKey (Ljava/lang/Object;)Z
+    2  M com/mojang/authlib/properties/PropertyMap.get (Ljava/lang/Object;)Ljava/util/Collection;
+    2  M com/mojang/blaze3d/audio/Channel.m_83652_ (I)V
+    2  M com/mojang/blaze3d/audio/Channel.m_83680_ ()Z
+    2  M com/mojang/blaze3d/pipeline/MainTarget.<init> (II)V
+    2  M com/mojang/blaze3d/pipeline/RenderTarget.m_83941_ (IIZ)V
+    2  M com/mojang/blaze3d/pipeline/TextureTarget.m_83930_ ()V
+    2  M com/mojang/blaze3d/pipeline/TextureTarget.m_83931_ (FFFF)V
+    2  M com/mojang/blaze3d/pipeline/TextureTarget.m_83947_ (Z)V
+    2  M com/mojang/blaze3d/platform/GlDebug.m_84049_ (IZ)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._clearColor (FFFF)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._deleteTextures ([I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._enableCull ()V
+    2  M com/mojang/blaze3d/platform/GlStateManager._genTextures ([I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._getInteger (I)I
+    2  M com/mojang/blaze3d/platform/GlStateManager._getString (I)Ljava/lang/String;
+    2  M com/mojang/blaze3d/platform/GlStateManager._getTexLevelParameter (III)I
+    2  M com/mojang/blaze3d/platform/GlStateManager._glBindAttribLocation (IILjava/lang/CharSequence;)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._glBufferData (IJI)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._glBufferData (ILjava/nio/ByteBuffer;I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._glCopyTexSubImage2D (IIIIIIII)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._glDeleteFramebuffers (I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._glFramebufferTexture2D (IIIII)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._glGenBuffers ()I
+    2  M com/mojang/blaze3d/platform/GlStateManager._glGenVertexArrays ()I
+    2  M com/mojang/blaze3d/platform/GlStateManager._glUseProgram (I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager._pixelStore (II)V
+    2  M com/mojang/blaze3d/platform/GlStateManager.glActiveTexture (I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager.glCheckFramebufferStatus (I)I
+    2  M com/mojang/blaze3d/platform/GlStateManager.glCompileShader (I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager.glCreateProgram ()I
+    2  M com/mojang/blaze3d/platform/GlStateManager.glCreateShader (I)I
+    2  M com/mojang/blaze3d/platform/GlStateManager.glDeleteProgram (I)V
+    2  M com/mojang/blaze3d/platform/GlStateManager.glGenFramebuffers ()I
+    2  M com/mojang/blaze3d/platform/GlStateManager.glGetShaderInfoLog (II)Ljava/lang/String;
+    2  M com/mojang/blaze3d/platform/GlStateManager.glLinkProgram (I)V
+    2  M com/mojang/blaze3d/platform/MemoryTracker.m_182527_ (I)Ljava/nio/ByteBuffer;
+    2  M com/mojang/blaze3d/platform/MemoryTracker.m_182529_ (Ljava/nio/ByteBuffer;I)Ljava/nio/ByteBuffer;
+    2  M com/mojang/blaze3d/platform/NativeImage.m_85003_ (IIIIIIIZZ)V
+    2  M com/mojang/blaze3d/platform/Window.m_85378_ (D)V
+    2  M com/mojang/blaze3d/platform/Window.m_85450_ ()Lcom/mojang/blaze3d/platform/Monitor;
+    2  M com/mojang/blaze3d/preprocessor/GlslPreprocessor.<init> ()V
+    2  M com/mojang/blaze3d/preprocessor/GlslPreprocessor.m_166461_ (Ljava/lang/String;)Ljava/util/List;
+    2  M com/mojang/blaze3d/shaders/Program.m_166604_ (Lcom/mojang/blaze3d/shaders/Program$Type;Ljava/lang/String;Ljava/io/InputStream;Ljava/lang/String;Lcom/mojang/blaze3d/preprocessor/GlslPreprocessor;)Lcom/mojang/blaze3d/shaders/Program;
+    2  M com/mojang/blaze3d/shaders/Program.m_166610_ (Lcom/mojang/blaze3d/shaders/Shader;)V
+    2  M com/mojang/blaze3d/shaders/Program.m_166618_ ()I
+    2  M com/mojang/blaze3d/shaders/Program.m_85543_ ()V
+    2  M com/mojang/blaze3d/shaders/ProgramManager.m_85578_ (I)V
+    2  M com/mojang/blaze3d/shaders/Uniform.<init> (Ljava/lang/String;IILcom/mojang/blaze3d/shaders/Shader;)V
+    2  M com/mojang/blaze3d/shaders/Uniform.m_166710_ (IILjava/lang/CharSequence;)V
+    2  M com/mojang/blaze3d/shaders/Uniform.m_166760_ ()Ljava/nio/IntBuffer;
+    2  M com/mojang/blaze3d/shaders/Uniform.m_166761_ ()Ljava/nio/FloatBuffer;
+    2  M com/mojang/blaze3d/shaders/Uniform.m_85624_ (ILjava/lang/CharSequence;)I
+    2  M com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.m_221944_ (I)Z
+    2  M com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer.m_221946_ (I)V
+    2  M com/mojang/blaze3d/systems/RenderSystem._setShaderTexture (ILnet/minecraft/resources/ResourceLocation;)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.bindTextureForSetup (I)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.clearDepth (D)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.getInverseViewRotationMatrix ()Lorg/joml/Matrix3f;
+    2  M com/mojang/blaze3d/systems/RenderSystem.getSequentialBuffer (Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;
+    2  M com/mojang/blaze3d/systems/RenderSystem.getShaderGlintAlpha ()F
+    2  M com/mojang/blaze3d/systems/RenderSystem.getShaderLineWidth ()F
+    2  M com/mojang/blaze3d/systems/RenderSystem.glDeleteBuffers (I)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.glUniform1i (II)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.glUniformMatrix3 (IZLjava/nio/FloatBuffer;)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.glUniformMatrix4 (IZLjava/nio/FloatBuffer;)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.isOnRenderThreadOrInit ()Z
+    2  M com/mojang/blaze3d/systems/RenderSystem.renderThreadTesselator ()Lcom/mojang/blaze3d/vertex/Tesselator;
+    2  M com/mojang/blaze3d/systems/RenderSystem.resetTextureMatrix ()V
+    2  M com/mojang/blaze3d/systems/RenderSystem.setInverseViewRotationMatrix (Lorg/joml/Matrix3f;)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.setShaderFogColor (FFFF)V
+    2  M com/mojang/blaze3d/systems/RenderSystem.setTextureMatrix (Lorg/joml/Matrix4f;)V
+    2  M com/mojang/blaze3d/vertex/BufferBuilder$DrawState.f_85733_ ()Lcom/mojang/blaze3d/vertex/VertexFormat;
+    2  M com/mojang/blaze3d/vertex/BufferBuilder$DrawState.f_85734_ ()I
+    2  M com/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer.m_231196_ ()Ljava/nio/ByteBuffer;
+    2  M com/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer.m_231198_ ()Lcom/mojang/blaze3d/vertex/BufferBuilder$DrawState;
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_5752_ ()V
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_5832_ (IF)V
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_5954_ (FFFFFFFFFIIFFF)V
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_7421_ (FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_85732_ ()Z
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_85950_ (FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    2  M com/mojang/blaze3d/vertex/BufferBuilder.m_85987_ (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFII)V
+    2  M com/mojang/blaze3d/vertex/BufferVertexConsumer.m_7120_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    2  M com/mojang/blaze3d/vertex/PoseStack.pushTransformation (Lcom/mojang/math/Transformation;)V
+    2  M com/mojang/blaze3d/vertex/VertexBuffer.m_231230_ ()Z
+    2  M com/mojang/blaze3d/vertex/VertexFormat$Mode.m_166958_ (I)I
+    2  M com/mojang/blaze3d/vertex/VertexFormat.m_166911_ ()Lcom/google/common/collect/ImmutableList;
+    2  M com/mojang/blaze3d/vertex/VertexFormatElement.getElementCount ()I
+    2  M com/mojang/blaze3d/vertex/VertexSorting.m_276997_ (Lorg/joml/Vector3f;)Lcom/mojang/blaze3d/vertex/VertexSorting;
+    2  M com/mojang/blaze3d/vertex/VertexSorting.m_277065_ ([Lorg/joml/Vector3f;)[I
+    2  M com/mojang/brigadier/CommandDispatcher.findNode (Ljava/util/Collection;)Lcom/mojang/brigadier/tree/CommandNode;
+    2  M com/mojang/brigadier/CommandDispatcher.getSmartUsage (Lcom/mojang/brigadier/tree/CommandNode;Ljava/lang/Object;)Ljava/util/Map;
+    2  M com/mojang/brigadier/ImmutableStringReader.getString ()Ljava/lang/String;
+    2  M com/mojang/brigadier/LiteralMessage.<init> (Ljava/lang/String;)V
+    2  M com/mojang/brigadier/ParseResults.getReader ()Lcom/mojang/brigadier/ImmutableStringReader;
+    2  M com/mojang/brigadier/StringReader.canRead (I)Z
+    2  M com/mojang/brigadier/StringReader.getRemaining ()Ljava/lang/String;
+    2  M com/mojang/brigadier/StringReader.isAllowedInUnquotedString (C)Z
+    2  M com/mojang/brigadier/StringReader.peek (I)C
+    2  M com/mojang/brigadier/arguments/ArgumentType.getExamples ()Ljava/util/Collection;
+    2  M com/mojang/brigadier/arguments/ArgumentType.listSuggestions (Lcom/mojang/brigadier/context/CommandContext;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;)Ljava/util/concurrent/CompletableFuture;
+    2  M com/mojang/brigadier/arguments/ArgumentType.parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Object;
+    2  M com/mojang/brigadier/arguments/LongArgumentType.getLong (Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)J
+    2  M com/mojang/brigadier/builder/ArgumentBuilder.build ()Lcom/mojang/brigadier/tree/CommandNode;
+    2  M com/mojang/brigadier/builder/ArgumentBuilder.getRequirement ()Ljava/util/function/Predicate;
+    2  M com/mojang/brigadier/builder/ArgumentBuilder.requires (Ljava/util/function/Predicate;)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+    2  M com/mojang/brigadier/builder/LiteralArgumentBuilder.<init> (Ljava/lang/String;)V
+    2  M com/mojang/brigadier/context/CommandContextBuilder.build (Ljava/lang/String;)Lcom/mojang/brigadier/context/CommandContext;
+    2  M com/mojang/brigadier/context/CommandContextBuilder.getSource ()Ljava/lang/Object;
+    2  M com/mojang/brigadier/suggestion/SuggestionsBuilder.<init> (Ljava/lang/String;I)V
+    2  M com/mojang/brigadier/suggestion/SuggestionsBuilder.getRemainingLowerCase ()Ljava/lang/String;
+    2  M com/mojang/brigadier/tree/CommandNode.addChild (Lcom/mojang/brigadier/tree/CommandNode;)V
+    2  M com/mojang/brigadier/tree/CommandNode.getChild (Ljava/lang/String;)Lcom/mojang/brigadier/tree/CommandNode;
+    2  M com/mojang/brigadier/tree/LiteralCommandNode.<init> (Ljava/lang/String;Lcom/mojang/brigadier/Command;Ljava/util/function/Predicate;Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/RedirectModifier;Z)V
+    2  M com/mojang/brigadier/tree/LiteralCommandNode.getChild (Ljava/lang/String;)Lcom/mojang/brigadier/tree/CommandNode;
+    2  M com/mojang/brigadier/tree/LiteralCommandNode.getName ()Ljava/lang/String;
+    2  M com/mojang/brigadier/tree/RootCommandNode.addChild (Lcom/mojang/brigadier/tree/CommandNode;)V
+    2  M com/mojang/brigadier/tree/RootCommandNode.getChild (Ljava/lang/String;)Lcom/mojang/brigadier/tree/CommandNode;
+    2  M com/mojang/datafixers/DataFixUtils.orElse (Ljava/util/Optional;Ljava/lang/Object;)Ljava/lang/Object;
+    2  M com/mojang/datafixers/DataFixer.update (Lcom/mojang/datafixers/DSL$TypeReference;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;
+    2  M com/mojang/datafixers/DataFixerBuilder.<init> (I)V
+    2  M com/mojang/datafixers/Products$P1.and (Lcom/mojang/datafixers/Products$P5;)Lcom/mojang/datafixers/Products$P6;
+    2  M com/mojang/datafixers/Products$P10.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    2  M com/mojang/datafixers/Products$P11.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    2  M com/mojang/datafixers/Products$P3.and (Lcom/mojang/datafixers/Products$P2;)Lcom/mojang/datafixers/Products$P5;
+    2  M com/mojang/datafixers/Products$P3.and (Lcom/mojang/datafixers/Products$P3;)Lcom/mojang/datafixers/Products$P6;
+    2  M com/mojang/datafixers/Products$P4.and (Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/Products$P5;
+    2  M com/mojang/datafixers/Products$P9.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    2  M com/mojang/datafixers/util/Either.mapRight (Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Either;
+    2  M com/mojang/datafixers/util/Pair.equals (Ljava/lang/Object;)Z
+    2  M com/mojang/datafixers/util/Pair.mapFirst (Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Pair;
+    2  M com/mojang/math/MatrixUtil.m_253023_ (Lorg/joml/Matrix4f;F)Lorg/joml/Matrix4f;
+    2  M com/mojang/math/OctahedralGroup.m_56528_ (Lnet/minecraft/core/Direction;)Lnet/minecraft/core/Direction;
+    2  M com/mojang/math/OctahedralGroup.m_56530_ (Lnet/minecraft/core/FrontAndTop;)Lnet/minecraft/core/FrontAndTop;
+    2  M com/mojang/math/Transformation.applyOrigin (Lorg/joml/Vector3f;)Lcom/mojang/math/Transformation;
+    2  M com/mojang/math/Transformation.blockCenterToCorner ()Lcom/mojang/math/Transformation;
+    2  M com/mojang/math/Transformation.equals (Ljava/lang/Object;)Z
+    2  M com/mojang/math/Transformation.transformPosition (Lorg/joml/Vector4f;)V
+    2  M com/mojang/realmsclient/RealmsMainScreen.<init> (Lnet/minecraft/client/gui/screens/Screen;)V
+    2  M com/mojang/serialization/Codec.compoundList (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)Lcom/mojang/serialization/Codec;
+    2  M com/mojang/serialization/Codec.dispatchStable (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    2  M com/mojang/serialization/Codec.stable ()Lcom/mojang/serialization/Codec;
+    2  M com/mojang/serialization/DataResult.setPartial (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    2  M com/mojang/serialization/Dynamic.get (Ljava/lang/String;)Lcom/mojang/serialization/OptionalDynamic;
+    2  M com/mojang/serialization/DynamicOps.createByte (B)Ljava/lang/Object;
+    2  M com/mojang/serialization/DynamicOps.createDouble (D)Ljava/lang/Object;
+    2  M com/mojang/serialization/DynamicOps.createFloat (F)Ljava/lang/Object;
+    2  M com/mojang/serialization/DynamicOps.createList (Ljava/util/stream/Stream;)Ljava/lang/Object;
+    2  M com/mojang/serialization/DynamicOps.createLong (J)Ljava/lang/Object;
+    2  M com/mojang/serialization/DynamicOps.createMap (Ljava/util/stream/Stream;)Ljava/lang/Object;
+    2  M com/mojang/serialization/DynamicOps.getStringValue (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    2  M com/mojang/serialization/MapCodec.orElseGet (Ljava/util/function/Supplier;)Lcom/mojang/serialization/MapCodec;
+    2  M com/mojang/serialization/MapCodec.unit (Ljava/util/function/Supplier;)Lcom/mojang/serialization/MapCodec;
+    2  M com/mojang/serialization/RecordBuilder$AbstractStringBuilder.<init> (Lcom/mojang/serialization/DynamicOps;)V
+    2  M com/mojang/serialization/RecordBuilder.add (Lcom/mojang/serialization/DataResult;Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/RecordBuilder;
+    2  M com/mojang/serialization/codecs/PrimitiveCodec.decode (Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    2  M com/mojang/serialization/codecs/PrimitiveCodec.dispatch (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    2  M com/mojang/serialization/codecs/PrimitiveCodec.flatComapMap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    2  M com/mojang/serialization/codecs/RecordCodecBuilder.point (Ljava/lang/Object;)Lcom/mojang/serialization/codecs/RecordCodecBuilder;
+    2  M com/mojang/text2speech/Narrator.clear ()V
+    2  M com/mojang/util/UUIDTypeAdapter.fromString (Ljava/lang/String;)Ljava/util/UUID;
+    1  F com/mojang/authlib/minecraft/MinecraftProfileTexture$Type.ELYTRA Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;
+    1  F com/mojang/authlib/minecraft/TelemetrySession.DISABLED Lcom/mojang/authlib/minecraft/TelemetrySession;
+    1  F com/mojang/authlib/minecraft/UserApiService.OFFLINE Lcom/mojang/authlib/minecraft/UserApiService;
+    1  F com/mojang/authlib/yggdrasil/YggdrasilEnvironment.PROD Lcom/mojang/authlib/yggdrasil/YggdrasilEnvironment;
+    1  F com/mojang/blaze3d/platform/GlStateManager$BooleanState.f_84586_ Z
+    1  F com/mojang/blaze3d/platform/GlStateManager$LogicOp.f_84715_ I
+    1  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.DST_COLOR Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+    1  F com/mojang/blaze3d/platform/GlStateManager$SourceFactor.ONE_MINUS_SRC_ALPHA Lcom/mojang/blaze3d/platform/GlStateManager$SourceFactor;
+    1  F com/mojang/blaze3d/platform/GlStateManager.BLEND Lcom/mojang/blaze3d/platform/GlStateManager$BlendState;
+    1  F com/mojang/blaze3d/platform/InputConstants$Key.f_84856_ Lnet/minecraft/util/LazyLoadedValue;
+    1  F com/mojang/blaze3d/platform/Lighting.f_84919_ Lorg/joml/Vector3f;
+    1  F com/mojang/blaze3d/platform/Lighting.f_84920_ Lorg/joml/Vector3f;
+    1  F com/mojang/blaze3d/platform/Lighting.f_84921_ Lorg/joml/Vector3f;
+    1  F com/mojang/blaze3d/platform/Lighting.f_84922_ Lorg/joml/Vector3f;
+    1  F com/mojang/blaze3d/shaders/Program$Type.FRAGMENT Lcom/mojang/blaze3d/shaders/Program$Type;
+    1  F com/mojang/blaze3d/vertex/BufferBuilder.f_85658_ Lcom/mojang/blaze3d/vertex/VertexFormat;
+    1  F com/mojang/blaze3d/vertex/BufferBuilder.f_85824_ Z
+    1  F com/mojang/blaze3d/vertex/PoseStack.f_85834_ Ljava/util/Deque;
+    1  F com/mojang/blaze3d/vertex/VertexFormat$IndexType.INT Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+    1  F com/mojang/blaze3d/vertex/VertexFormat$Mode.f_166947_ I
+    1  F com/mojang/blaze3d/vertex/VertexFormat$Mode.f_166948_ I
+    1  F com/mojang/blaze3d/vertex/VertexFormat.f_86013_ Lit/unimi/dsi/fastutil/ints/IntList;
+    1  F com/mojang/brigadier/exceptions/CommandSyntaxException.BUILT_IN_EXCEPTIONS Lcom/mojang/brigadier/exceptions/BuiltInExceptionProvider;
+    1  F com/mojang/math/OctahedralGroup.IDENTITY Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.INVERT_X Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.INVERT_Z Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.ROT_180_FACE_XZ Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.ROT_90_Y_NEG Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.ROT_90_Y_POS Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.SWAP_NEG_XZ Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/math/OctahedralGroup.SWAP_XZ Lcom/mojang/math/OctahedralGroup;
+    1  F com/mojang/realmsclient/RealmsMainScreen.f_86291_ Ljava/util/List;
+    1  F com/mojang/realmsclient/dto/RealmsServer.f_87473_ J
+    1  F com/mojang/realmsclient/dto/RealmsServer.f_87475_ Ljava/lang/String;
+    1  F com/mojang/serialization/codecs/PrimitiveCodec.FLOAT Lcom/mojang/serialization/codecs/PrimitiveCodec;
+    1  F com/mojang/serialization/codecs/PrimitiveCodec.INT Lcom/mojang/serialization/codecs/PrimitiveCodec;
+    1  M com/mojang/authlib/Environment.getSessionHost ()Ljava/lang/String;
+    1  M com/mojang/authlib/EnvironmentParser.getEnvironmentFromProperties ()Ljava/util/Optional;
+    1  M com/mojang/authlib/GameProfile.toString ()Ljava/lang/String;
+    1  M com/mojang/authlib/HttpAuthenticationService.concatenateURL (Ljava/net/URL;Ljava/lang/String;)Ljava/net/URL;
+    1  M com/mojang/authlib/HttpAuthenticationService.constantURL (Ljava/lang/String;)Ljava/net/URL;
+    1  M com/mojang/authlib/exceptions/AuthenticationException.<init> (Ljava/lang/String;)V
+    1  M com/mojang/authlib/exceptions/InsufficientPrivilegesException.<init> (Ljava/lang/String;)V
+    1  M com/mojang/authlib/exceptions/InvalidCredentialsException.<init> (Ljava/lang/String;)V
+    1  M com/mojang/authlib/exceptions/UserBannedException.<init> ()V
+    1  M com/mojang/authlib/exceptions/UserMigratedException.<init> (Ljava/lang/String;)V
+    1  M com/mojang/authlib/minecraft/MinecraftProfileTexture.getHash ()Ljava/lang/String;
+    1  M com/mojang/authlib/minecraft/MinecraftSessionService.getTextures (Lcom/mojang/authlib/GameProfile;Z)Ljava/util/Map;
+    1  M com/mojang/authlib/minecraft/client/ObjectMapper.create ()Lcom/mojang/authlib/minecraft/client/ObjectMapper;
+    1  M com/mojang/authlib/minecraft/client/ObjectMapper.readValue (Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;
+    1  M com/mojang/authlib/properties/Property.<init> (Ljava/lang/String;Ljava/lang/String;)V
+    1  M com/mojang/authlib/properties/PropertyMap.isEmpty ()Z
+    1  M com/mojang/authlib/properties/PropertyMap.put (Ljava/lang/Object;Ljava/lang/Object;)Z
+    1  M com/mojang/authlib/properties/PropertyMap.putAll (Lcom/google/common/collect/Multimap;)Z
+    1  M com/mojang/authlib/yggdrasil/YggdrasilAuthenticationService.<init> (Ljava/net/Proxy;)V
+    1  M com/mojang/authlib/yggdrasil/YggdrasilAuthenticationService.performGetRequest (Ljava/net/URL;)Ljava/lang/String;
+    1  M com/mojang/authlib/yggdrasil/YggdrasilEnvironment.getEnvironment ()Lcom/mojang/authlib/Environment;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse.getCause ()Ljava/lang/String;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse.getError ()Ljava/lang/String;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse.getErrorMessage ()Ljava/lang/String;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse.getId ()Ljava/util/UUID;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse.getName ()Ljava/lang/String;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftProfilePropertiesResponse.getProperties ()Lcom/mojang/authlib/properties/PropertyMap;
+    1  M com/mojang/authlib/yggdrasil/response/MinecraftTexturesPayload.getTextures ()Ljava/util/Map;
+    1  M com/mojang/blaze3d/Blaze3D.m_83640_ ()D
+    1  M com/mojang/blaze3d/audio/Channel.m_83673_ (F)V
+    1  M com/mojang/blaze3d/audio/SoundBuffer.m_83801_ ()V
+    1  M com/mojang/blaze3d/font/GlyphProvider.m_214022_ (I)Lcom/mojang/blaze3d/font/GlyphInfo;
+    1  M com/mojang/blaze3d/pipeline/RenderCall.m_83909_ ()V
+    1  M com/mojang/blaze3d/pipeline/RenderTarget.<init> (Z)V
+    1  M com/mojang/blaze3d/pipeline/RenderTarget.isStencilEnabled ()Z
+    1  M com/mojang/blaze3d/pipeline/RenderTarget.m_83956_ ()V
+    1  M com/mojang/blaze3d/pipeline/RenderTarget.m_83957_ (IIZ)V
+    1  M com/mojang/blaze3d/pipeline/RenderTarget.m_83963_ ()V
+    1  M com/mojang/blaze3d/pipeline/TextureTarget.m_83936_ (I)V
+    1  M com/mojang/blaze3d/pipeline/TextureTarget.m_83954_ (Z)V
+    1  M com/mojang/blaze3d/pipeline/TextureTarget.m_83956_ ()V
+    1  M com/mojang/blaze3d/pipeline/TextureTarget.m_83963_ ()V
+    1  M com/mojang/blaze3d/pipeline/TextureTarget.m_83970_ ()V
+    1  M com/mojang/blaze3d/pipeline/TextureTarget.m_83975_ ()I
+    1  M com/mojang/blaze3d/platform/GlStateManager._disableColorLogicOp ()V
+    1  M com/mojang/blaze3d/platform/GlStateManager._disableScissorTest ()V
+    1  M com/mojang/blaze3d/platform/GlStateManager._enableColorLogicOp ()V
+    1  M com/mojang/blaze3d/platform/GlStateManager._enableScissorTest ()V
+    1  M com/mojang/blaze3d/platform/GlStateManager._getError ()I
+    1  M com/mojang/blaze3d/platform/GlStateManager._glBlitFrameBuffer (IIIIIIIIII)V
+    1  M com/mojang/blaze3d/platform/GlStateManager._logicOp (I)V
+    1  M com/mojang/blaze3d/platform/GlStateManager._scissorBox (IIII)V
+    1  M com/mojang/blaze3d/platform/GlStateManager._texImage2D (IIIIIIIILjava/nio/IntBuffer;)V
+    1  M com/mojang/blaze3d/platform/GlStateManager._texParameter (III)V
+    1  M com/mojang/blaze3d/platform/GlStateManager._texSubImage2D (IIIIIIIIJ)V
+    1  M com/mojang/blaze3d/platform/InputConstants$Key.hashCode ()I
+    1  M com/mojang/blaze3d/platform/InputConstants.m_84833_ (JIDD)V
+    1  M com/mojang/blaze3d/platform/Monitor.m_84944_ (I)Lcom/mojang/blaze3d/platform/VideoMode;
+    1  M com/mojang/blaze3d/platform/Monitor.m_84946_ (Lcom/mojang/blaze3d/platform/VideoMode;)I
+    1  M com/mojang/blaze3d/platform/Monitor.m_84950_ ()Lcom/mojang/blaze3d/platform/VideoMode;
+    1  M com/mojang/blaze3d/platform/Monitor.m_84953_ ()I
+    1  M com/mojang/blaze3d/platform/NativeImage$Format.m_85161_ ()I
+    1  M com/mojang/blaze3d/platform/NativeImage$Format.m_85170_ ()I
+    1  M com/mojang/blaze3d/platform/NativeImage$Format.m_85171_ ()Z
+    1  M com/mojang/blaze3d/platform/NativeImage.m_266370_ ()[I
+    1  M com/mojang/blaze3d/platform/NativeImage.m_284481_ (Ljava/util/function/IntUnaryOperator;)V
+    1  M com/mojang/blaze3d/platform/NativeImage.m_85034_ (IIIILcom/mojang/blaze3d/platform/NativeImage;)V
+    1  M com/mojang/blaze3d/platform/NativeImage.m_85064_ (Ljava/nio/channels/WritableByteChannel;)Z
+    1  M com/mojang/blaze3d/platform/NativeImage.m_85118_ ()[I
+    1  M com/mojang/blaze3d/platform/TextureUtil.generateTextureId ()I
+    1  M com/mojang/blaze3d/platform/TextureUtil.getDebugTexturePath ()Ljava/nio/file/Path;
+    1  M com/mojang/blaze3d/platform/TextureUtil.readResource (Ljava/io/InputStream;)Ljava/nio/ByteBuffer;
+    1  M com/mojang/blaze3d/platform/TextureUtil.releaseTextureId (I)V
+    1  M com/mojang/blaze3d/platform/VideoMode.m_85332_ ()I
+    1  M com/mojang/blaze3d/platform/VideoMode.toString ()Ljava/lang/String;
+    1  M com/mojang/blaze3d/platform/Window.m_166450_ (I)V
+    1  M com/mojang/blaze3d/platform/Window.m_166452_ (I)V
+    1  M com/mojang/blaze3d/platform/Window.m_85380_ (I)V
+    1  M com/mojang/blaze3d/platform/Window.m_85405_ (Ljava/util/Optional;)V
+    1  M com/mojang/blaze3d/platform/Window.m_85409_ (Z)V
+    1  M com/mojang/blaze3d/platform/Window.m_85436_ ()Ljava/util/Optional;
+    1  M com/mojang/blaze3d/platform/Window.m_85437_ ()V
+    1  M com/mojang/blaze3d/platform/Window.m_85438_ ()V
+    1  M com/mojang/blaze3d/shaders/AbstractUniform.m_142617_ (I)V
+    1  M com/mojang/blaze3d/shaders/Program$Type.m_85566_ ()Ljava/lang/String;
+    1  M com/mojang/blaze3d/shaders/Program$Type.m_85571_ ()I
+    1  M com/mojang/blaze3d/shaders/Program.<init> (Lcom/mojang/blaze3d/shaders/Program$Type;ILjava/lang/String;)V
+    1  M com/mojang/blaze3d/shaders/Uniform.close ()V
+    1  M com/mojang/blaze3d/shaders/Uniform.m_142276_ (Lorg/joml/Vector3f;)V
+    1  M com/mojang/blaze3d/shaders/Uniform.m_142326_ (II)V
+    1  M com/mojang/blaze3d/shaders/Uniform.m_5805_ (FFFF)V
+    1  M com/mojang/blaze3d/shaders/Uniform.m_5889_ (FFF)V
+    1  M com/mojang/blaze3d/shaders/Uniform.m_7971_ (FF)V
+    1  M com/mojang/blaze3d/shaders/Uniform.m_85599_ ()Ljava/lang/String;
+    1  M com/mojang/blaze3d/shaders/Uniform.m_85614_ (I)V
+    1  M com/mojang/blaze3d/systems/RenderSystem.assertInInitPhase ()V
+    1  M com/mojang/blaze3d/systems/RenderSystem.blendEquation (I)V
+    1  M com/mojang/blaze3d/systems/RenderSystem.pixelStore (II)V
+    1  M com/mojang/blaze3d/systems/RenderSystem.renderCrosshair (I)V
+    1  M com/mojang/blaze3d/systems/RenderSystem.replayQueue ()V
+    1  M com/mojang/blaze3d/systems/RenderSystem.setShaderGameTime (JF)V
+    1  M com/mojang/blaze3d/systems/RenderSystem.setShaderLights (Lorg/joml/Vector3f;Lorg/joml/Vector3f;)V
+    1  M com/mojang/blaze3d/systems/RenderSystem.setupGui3DDiffuseLighting (Lorg/joml/Vector3f;Lorg/joml/Vector3f;)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder$DrawState.f_166797_ ()I
+    1  M com/mojang/blaze3d/vertex/BufferBuilder$DrawState.f_166798_ ()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder$DrawState.f_166800_ ()Z
+    1  M com/mojang/blaze3d/vertex/BufferBuilder$DrawState.f_85735_ ()Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer.m_231197_ ()Ljava/nio/ByteBuffer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.applyBakedLighting (ILjava/nio/ByteBuffer;)I
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.applyBakedNormals (Lorg/joml/Vector3f;Ljava/nio/ByteBuffer;Lorg/joml/Matrix3f;)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_166770_ ()Lcom/mojang/blaze3d/vertex/BufferBuilder$SortState;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_166775_ (Lcom/mojang/blaze3d/vertex/BufferBuilder$SortState;)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_193479_ (I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_231164_ ()Z
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_252939_ (Lorg/joml/Matrix3f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_5586_ (IS)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_5601_ (FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_5672_ (IB)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_6297_ ()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_7120_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_7122_ (II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_85730_ ()V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_85793_ (SSI)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_85969_ (I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_85995_ (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.m_86008_ (I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.misc (Lcom/mojang/blaze3d/vertex/VertexFormatElement;[I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.putBulkData (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFFIIZ)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.putBulkData (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V
+    1  M com/mojang/blaze3d/vertex/BufferBuilder.putBulkData (Ljava/nio/ByteBuffer;)V
+    1  M com/mojang/blaze3d/vertex/BufferUploader.m_231209_ (Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;)V
+    1  M com/mojang/blaze3d/vertex/BufferVertexConsumer.m_6122_ (IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/DefaultedVertexConsumer.m_5954_ (FFFFFFFFFIIFFF)V
+    1  M com/mojang/blaze3d/vertex/DefaultedVertexConsumer.m_85987_ (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFII)V
+    1  M com/mojang/blaze3d/vertex/PoseStack$Pose.<init> (Lorg/joml/Matrix4f;Lorg/joml/Matrix3f;)V
+    1  M com/mojang/blaze3d/vertex/Tesselator.<init> ()V
+    1  M com/mojang/blaze3d/vertex/VertexConsumer.applyBakedLighting (ILjava/nio/ByteBuffer;)I
+    1  M com/mojang/blaze3d/vertex/VertexConsumer.applyBakedNormals (Lorg/joml/Vector3f;Ljava/nio/ByteBuffer;Lorg/joml/Matrix3f;)V
+    1  M com/mojang/blaze3d/vertex/VertexConsumer.getClass ()Ljava/lang/Class;
+    1  M com/mojang/blaze3d/vertex/VertexConsumer.m_85995_ (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFF[IIZ)V
+    1  M com/mojang/blaze3d/vertex/VertexConsumer.misc (Lcom/mojang/blaze3d/vertex/VertexFormatElement;[I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+    1  M com/mojang/blaze3d/vertex/VertexConsumer.putBulkData (Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;[FFFFF[IIZ)V
+    1  M com/mojang/blaze3d/vertex/VertexFormat$IndexType.m_166933_ (I)Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+    1  M com/mojang/blaze3d/vertex/VertexFormat$IndexType.ordinal ()I
+    1  M com/mojang/blaze3d/vertex/VertexFormat$IndexType.values ()[Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;
+    1  M com/mojang/blaze3d/vertex/VertexFormat$Mode.ordinal ()I
+    1  M com/mojang/blaze3d/vertex/VertexFormat$Mode.values ()[Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;
+    1  M com/mojang/blaze3d/vertex/VertexFormat.equals (Ljava/lang/Object;)Z
+    1  M com/mojang/blaze3d/vertex/VertexFormatElement$Type.name ()Ljava/lang/String;
+    1  M com/mojang/blaze3d/vertex/VertexFormatElement$Type.ordinal ()I
+    1  M com/mojang/blaze3d/vertex/VertexFormatElement$Type.values ()[Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+    1  M com/mojang/blaze3d/vertex/VertexFormatElement$Usage.name ()Ljava/lang/String;
+    1  M com/mojang/blaze3d/vertex/VertexFormatElement.m_166969_ ()I
+    1  M com/mojang/blaze3d/vertex/VertexSorting.m_277071_ (FFF)Lcom/mojang/blaze3d/vertex/VertexSorting;
+    1  M com/mojang/brigadier/Command.run (Lcom/mojang/brigadier/context/CommandContext;)I
+    1  M com/mojang/brigadier/CommandDispatcher.parse (Lcom/mojang/brigadier/StringReader;Ljava/lang/Object;)Lcom/mojang/brigadier/ParseResults;
+    1  M com/mojang/brigadier/ImmutableStringReader.canRead ()Z
+    1  M com/mojang/brigadier/StringReader.isQuotedStringStart (C)Z
+    1  M com/mojang/brigadier/StringReader.readStringUntil (C)Ljava/lang/String;
+    1  M com/mojang/brigadier/arguments/BoolArgumentType.getExamples ()Ljava/util/Collection;
+    1  M com/mojang/brigadier/arguments/BoolArgumentType.parse (Lcom/mojang/brigadier/StringReader;)Ljava/lang/Boolean;
+    1  M com/mojang/brigadier/arguments/DoubleArgumentType.doubleArg ()Lcom/mojang/brigadier/arguments/DoubleArgumentType;
+    1  M com/mojang/brigadier/arguments/LongArgumentType.longArg ()Lcom/mojang/brigadier/arguments/LongArgumentType;
+    1  M com/mojang/brigadier/arguments/LongArgumentType.longArg (JJ)Lcom/mojang/brigadier/arguments/LongArgumentType;
+    1  M com/mojang/brigadier/builder/LiteralArgumentBuilder.forward (Lcom/mojang/brigadier/tree/CommandNode;Lcom/mojang/brigadier/RedirectModifier;Z)Lcom/mojang/brigadier/builder/ArgumentBuilder;
+    1  M com/mojang/brigadier/context/CommandContext.getNodes ()Ljava/util/List;
+    1  M com/mojang/brigadier/context/CommandContextBuilder.getArguments ()Ljava/util/Map;
+    1  M com/mojang/brigadier/context/StringRange.<init> (II)V
+    1  M com/mojang/brigadier/exceptions/BuiltInExceptionProvider.integerTooLow ()Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType;
+    1  M com/mojang/brigadier/exceptions/CommandSyntaxException.<init> (Lcom/mojang/brigadier/exceptions/CommandExceptionType;Lcom/mojang/brigadier/Message;)V
+    1  M com/mojang/brigadier/exceptions/Dynamic3CommandExceptionType.<init> (Lcom/mojang/brigadier/exceptions/Dynamic3CommandExceptionType$Function;)V
+    1  M com/mojang/brigadier/exceptions/Dynamic3CommandExceptionType.create (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;
+    1  M com/mojang/brigadier/suggestion/Suggestion.<init> (Lcom/mojang/brigadier/context/StringRange;Ljava/lang/String;)V
+    1  M com/mojang/brigadier/suggestion/Suggestion.getText ()Ljava/lang/String;
+    1  M com/mojang/brigadier/suggestion/SuggestionsBuilder.build ()Lcom/mojang/brigadier/suggestion/Suggestions;
+    1  M com/mojang/brigadier/suggestion/SuggestionsBuilder.suggest (ILcom/mojang/brigadier/Message;)Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;
+    1  M com/mojang/brigadier/tree/CommandNode.getRedirect ()Lcom/mojang/brigadier/tree/CommandNode;
+    1  M com/mojang/brigadier/tree/CommandNode.isFork ()Z
+    1  M com/mojang/brigadier/tree/LiteralCommandNode.getChildren ()Ljava/util/Collection;
+    1  M com/mojang/brigadier/tree/LiteralCommandNode.getCommand ()Lcom/mojang/brigadier/Command;
+    1  M com/mojang/brigadier/tree/LiteralCommandNode.getRedirect ()Lcom/mojang/brigadier/tree/CommandNode;
+    1  M com/mojang/brigadier/tree/LiteralCommandNode.getRedirectModifier ()Lcom/mojang/brigadier/RedirectModifier;
+    1  M com/mojang/brigadier/tree/LiteralCommandNode.isFork ()Z
+    1  M com/mojang/datafixers/DSL.emptyPartType ()Lcom/mojang/datafixers/types/Type;
+    1  M com/mojang/datafixers/DSL.remainderFinder ()Lcom/mojang/datafixers/OpticFinder;
+    1  M com/mojang/datafixers/DSL.remainderType ()Lcom/mojang/datafixers/types/Type;
+    1  M com/mojang/datafixers/DataFix.<init> (Lcom/mojang/datafixers/schemas/Schema;Z)V
+    1  M com/mojang/datafixers/DataFixUtils.makeKey (I)I
+    1  M com/mojang/datafixers/DataFixerBuilder.addFixer (Lcom/mojang/datafixers/DataFix;)V
+    1  M com/mojang/datafixers/DataFixerBuilder.addSchema (ILjava/util/function/BiFunction;)Lcom/mojang/datafixers/schemas/Schema;
+    1  M com/mojang/datafixers/DataFixerBuilder.buildOptimized (Ljava/util/Set;Ljava/util/concurrent/Executor;)Lcom/mojang/datafixers/DataFixer;
+    1  M com/mojang/datafixers/DataFixerBuilder.buildUnoptimized ()Lcom/mojang/datafixers/DataFixer;
+    1  M com/mojang/datafixers/Products$P1.t1 ()Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P2.and (Lcom/mojang/datafixers/Products$P2;)Lcom/mojang/datafixers/Products$P4;
+    1  M com/mojang/datafixers/Products$P2.t1 ()Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P2.t2 ()Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P5.t1 ()Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P5.t3 ()Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P5.t4 ()Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P7.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Products$P8.apply (Lcom/mojang/datafixers/kinds/Applicative;Lcom/mojang/datafixers/kinds/App;)Lcom/mojang/datafixers/kinds/App;
+    1  M com/mojang/datafixers/Typed.update (Lcom/mojang/datafixers/OpticFinder;Ljava/util/function/Function;)Lcom/mojang/datafixers/Typed;
+    1  M com/mojang/datafixers/schemas/Schema.<init> (ILcom/mojang/datafixers/schemas/Schema;)V
+    1  M com/mojang/datafixers/schemas/Schema.getType (Lcom/mojang/datafixers/DSL$TypeReference;)Lcom/mojang/datafixers/types/Type;
+    1  M com/mojang/datafixers/schemas/Schema.getVersionKey ()I
+    1  M com/mojang/datafixers/types/constant/EmptyPart.<init> ()V
+    1  M com/mojang/datafixers/util/Either.flatMap (Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Either;
+    1  M com/mojang/datafixers/util/Function10.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function11.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function12.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function13.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function14.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function15.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function16.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function7.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function8.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Function9.apply (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/datafixers/util/Pair.hashCode ()I
+    1  M com/mojang/datafixers/util/Pair.mapSecond (Ljava/util/function/Function;)Lcom/mojang/datafixers/util/Pair;
+    1  M com/mojang/math/Divisor.<init> (II)V
+    1  M com/mojang/math/OctahedralGroup.m_174944_ ()Lcom/mojang/math/OctahedralGroup;
+    1  M com/mojang/math/OctahedralGroup.m_56521_ (Lcom/mojang/math/OctahedralGroup;)Lcom/mojang/math/OctahedralGroup;
+    1  M com/mojang/math/Transformation.blockCornerToCenter ()Lcom/mojang/math/Transformation;
+    1  M com/mojang/math/Transformation.getNormalMatrix ()Lorg/joml/Matrix3f;
+    1  M com/mojang/math/Transformation.hashCode ()I
+    1  M com/mojang/math/Transformation.m_121103_ ()Lcom/mojang/math/Transformation;
+    1  M com/mojang/math/Transformation.transformNormal (Lorg/joml/Vector3f;)V
+    1  M com/mojang/realmsclient/RealmsMainScreen.m_193481_ ()Lcom/mojang/realmsclient/dto/RealmsServer;
+    1  M com/mojang/realmsclient/util/JsonUtils.m_90153_ (Ljava/lang/String;Lcom/google/gson/JsonObject;I)I
+    1  M com/mojang/realmsclient/util/JsonUtils.m_90161_ (Ljava/lang/String;Lcom/google/gson/JsonObject;Ljava/lang/String;)Ljava/lang/String;
+    1  M com/mojang/realmsclient/util/JsonUtils.m_90165_ (Ljava/lang/String;Lcom/google/gson/JsonObject;Z)Z
+    1  M com/mojang/serialization/Codec.checkRange (Ljava/lang/Number;Ljava/lang/Number;)Ljava/util/function/Function;
+    1  M com/mojang/serialization/Codec.mapEither (Lcom/mojang/serialization/MapCodec;Lcom/mojang/serialization/MapCodec;)Lcom/mojang/serialization/MapCodec;
+    1  M com/mojang/serialization/Codec.orElse (Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+    1  M com/mojang/serialization/Codec.orElseGet (Ljava/util/function/Supplier;)Lcom/mojang/serialization/Codec;
+    1  M com/mojang/serialization/Codec.simpleMap (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Keyable;)Lcom/mojang/serialization/codecs/SimpleMapCodec;
+    1  M com/mojang/serialization/DataResult.error (Ljava/util/function/Supplier;Lcom/mojang/serialization/Lifecycle;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/DataResult.promotePartial (Ljava/util/function/Consumer;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/Dynamic.<init> (Lcom/mojang/serialization/DynamicOps;)V
+    1  M com/mojang/serialization/Dynamic.asInt (I)I
+    1  M com/mojang/serialization/Dynamic.asNumber ()Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/Dynamic.asString ()Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/Dynamic.asString (Ljava/lang/String;)Ljava/lang/String;
+    1  M com/mojang/serialization/Dynamic.convert (Lcom/mojang/serialization/DynamicOps;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/serialization/Dynamic.createString (Ljava/lang/String;)Lcom/mojang/serialization/Dynamic;
+    1  M com/mojang/serialization/Dynamic.getOps ()Lcom/mojang/serialization/DynamicOps;
+    1  M com/mojang/serialization/Dynamic.set (Ljava/lang/String;Lcom/mojang/serialization/Dynamic;)Lcom/mojang/serialization/Dynamic;
+    1  M com/mojang/serialization/DynamicOps.compressMaps ()Z
+    1  M com/mojang/serialization/DynamicOps.createNumeric (Ljava/lang/Number;)Ljava/lang/Object;
+    1  M com/mojang/serialization/DynamicOps.emptyMap ()Ljava/lang/Object;
+    1  M com/mojang/serialization/DynamicOps.get (Ljava/lang/Object;Ljava/lang/String;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/DynamicOps.getList (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/DynamicOps.getStream (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/DynamicOps.listBuilder ()Lcom/mojang/serialization/ListBuilder;
+    1  M com/mojang/serialization/DynamicOps.mergeToList (Ljava/lang/Object;Ljava/util/List;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/DynamicOps.mergeToMap (Ljava/lang/Object;Lcom/mojang/serialization/MapLike;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/DynamicOps.mergeToMap (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/JsonOps.emptyMap ()Ljava/lang/Object;
+    1  M com/mojang/serialization/ListBuilder.add (Lcom/mojang/serialization/DataResult;)Lcom/mojang/serialization/ListBuilder;
+    1  M com/mojang/serialization/ListBuilder.build (Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/MapCodec.orElseGet (Ljava/util/function/Consumer;Ljava/util/function/Supplier;)Lcom/mojang/serialization/MapCodec;
+    1  M com/mojang/serialization/MapCodec.unit (Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;
+    1  M com/mojang/serialization/MapLike.get (Ljava/lang/Object;)Ljava/lang/Object;
+    1  M com/mojang/serialization/OptionalDynamic.asString ()Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/OptionalDynamic.orElseEmptyMap ()Lcom/mojang/serialization/Dynamic;
+    1  M com/mojang/serialization/OptionalDynamic.read (Lcom/mojang/serialization/Decoder;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/RecordBuilder.add (Ljava/lang/String;Ljava/lang/Object;)Lcom/mojang/serialization/RecordBuilder;
+    1  M com/mojang/serialization/codecs/EitherCodec.<init> (Lcom/mojang/serialization/Codec;Lcom/mojang/serialization/Codec;)V
+    1  M com/mojang/serialization/codecs/ListCodec.<init> (Lcom/mojang/serialization/Codec;)V
+    1  M com/mojang/serialization/codecs/ListCodec.fieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+    1  M com/mojang/serialization/codecs/OptionalFieldCodec.<init> (Ljava/lang/String;Lcom/mojang/serialization/Codec;)V
+    1  M com/mojang/serialization/codecs/PrimitiveCodec.encode (Ljava/lang/Object;Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;
+    1  M com/mojang/serialization/codecs/SimpleMapCodec.fieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+    1  M com/mojang/serialization/codecs/UnboundedMapCodec.optionalFieldOf (Ljava/lang/String;)Lcom/mojang/serialization/MapCodec;
+    1  M com/mojang/serialization/codecs/UnboundedMapCodec.orElse (Ljava/lang/Object;)Lcom/mojang/serialization/Codec;
+    1  M com/mojang/serialization/codecs/UnboundedMapCodec.xmap (Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;
+    1  M com/mojang/text2speech/Narrator.active ()Z
+    1  M com/mojang/util/UUIDTypeAdapter.<init> ()V

@@ -823,6 +823,67 @@ transformer discovers that family from the platform's own descriptors rather tha
 nothing in `forward.rules.tsv` marks any of it done — and a report that only understood rules put
 about 1,400 jar-references of already-finished work at the top of its list.
 
+#### Run it a second time for `com/mojang/`, and understand why that is a separate run
+
+```bash
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/MemberScan.java \
+    "<corpus-dir>" "com/mojang/" > api-report/lib-api-usage.txt
+
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/VanillaGaps.java \
+    api-report/lib-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    forge-compat/forge-compat.jar devenv/spi/loader-4.0.43.jar devenv/spi/bus-8.0.5.jar \
+    devenv/spi/distmarker.jar devenv/spi/dfu-1211.jar devenv/spi/brigadier-1211.jar \
+    devenv/spi/authlib-1211.jar devenv/spi/logging-1211.jar devenv/spi/text2speech.jar \
+    devenv/spi/guava-1211.jar devenv/spi/gson-1211.jar \
+    > api-report/lib-gaps.txt
+```
+
+**`MemberScan` takes one owner prefix, and every report downstream inherits its scope.** The
+vanilla queue has always been generated with `net/minecraft/`, so `com.mojang.blaze3d` — compiled
+into the same jar, obfuscated by the same mappings, and reworked in 1.21 harder than most of
+vanilla — was never in any report this project produced. It was not a small omission:
+`VertexConsumer.endVertex` alone is 157 of the 433 corpus jars, and every one of those is a
+`NoSuchMethodError` the first time the mod draws anything.
+
+The platform list is longer here because the answer depends on it. `com/mojang/logging` and
+`com/mojang/authlib` are ordinary shared libraries that both game versions ship; leaving them out
+does not report nothing, it reports them as *deleted from the target*, which is a finding-shaped
+hole in the index. **Every `-1211` jar has a 1.20.1 twin under a different name.** Mixing them up
+fails in the direction that is much harder to notice — a real gap silently resolves.
+
+The same scan is worth a third run for `it/unimi/dsi/` and `org/joml/`, which are equally invisible
+and equally not `net.minecraft`.
+
+### VertexChains — one question, asked before a pass is designed around the answer
+
+```bash
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar;devenv/spi/asm-analysis.jar" \
+    tools/VertexChains.java "<ATM10>/mods"
+```
+
+Translating **backward** means putting `endVertex()` back: 1.21 removed it, 1.20.1's builder
+requires it, and nothing in a 1.21 mod's bytecode marks where a vertex ends. The proposed answer is
+that the idiom is a fluent chain whose value is discarded —
+`consumer.addVertex(m,x,y,z).setColor(…).setUv(…)` compiles to a run of invocations ending in
+`POP` — so the `POP` *is* the end of the vertex and can be replaced with the call.
+
+This exists because "the idiom is always X" is exactly the kind of claim that is right often enough
+to feel safe and wrong often enough to corrupt geometry, in the one subsystem no harness here can
+test. It follows every chain rooted at `addVertex` through the setters, using `SourceInterpreter`
+to invert the producer map into consumers, and classifies what finally reads the value.
+
+| Terminal | Means |
+|---|---|
+| `POP` | The chain is a discarded statement. The pass works |
+| `VOID_FORM` | The 11-argument `addVertex`, which returns nothing and already ends its own vertex in 1.20.1's implementation. Needs no insertion |
+| `ASTORE` / `PUTFIELD` / `ARETURN` | The consumer outlives the statement. The `POP` is not the vertex boundary and the pass would end the vertex early |
+| `UNCONSUMED` | An instruction shape this tool does not model. Reported rather than folded into a passing number |
+
+**Read the percentage as a go/no-go, not as a score.** A shape the pass gets wrong does not produce
+a `NoSuchMethodError` that a sweep would catch; it produces a malformed vertex stream that fails
+somewhere else entirely.
+
 ### MixinGaps — the same question asked of *mixins*, which neither other report can see
 
 ```bash

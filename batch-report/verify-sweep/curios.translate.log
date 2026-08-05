@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 143 classes, moved 1 resources, rewrote 0 data files
 
@@ -50,6 +50,7 @@ Applied:
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB top/theillusivec4/curios/common/util/EquipCurioTrigger.codec()Lcom/mojang/serialization/Codec; (added by net/minecraft/advancements/CriterionTrigger)
+     1  ABSTRACT_STUB top/theillusivec4/curios/common/util/SetCurioAttributesFunction$Serializer.deserialize(Lcom/google/gson/JsonObject;Lcom/google/gson/JsonDeserializationContext;[Ljava/lang/Object;)Ljava/lang/Object; (added by easyport/vanilla/LootItemConditionalFunctionSerializer)
      1  MIXIN_SHADOW_FIELD_STUB (no longer on the target; became a mixin-added field) top/theillusivec4/curios/mixin/core/MixinApplyBonusCount.enchantment
      1  MIXIN_SOFT_FAIL (ModifyArg no longer resolves; injector disabled, mixin kept) top/theillusivec4/curios/mixin/core/MixinShearsItem.curios$applyFortuneToShears
      1  MIXIN_SOFT_FAIL (ModifyVariable no longer resolves; injector disabled, mixin kept) top/theillusivec4/curios/mixin/core/MixinApplyBonusCount.curios$applyFortune

@@ -346,6 +346,8 @@ Expect this to need runtime assistance, not pure AOT.
 | Enchantment JSON schema (`anvil_cost`, `min_cost`, `max_cost`, `weight`, `slots`, `supported_items`, `effects`, …) | 1.21 | **[mined]** 22 mods ship these; 0 in 1.20.1 |
 | Potion / MobEffect changes | 1.21 | Moderate |
 | Rendering: RenderType / ShaderInstance changes | 1.21 | Moderate; concentrated in mixin-heavy mods |
+| **blaze3d vertex protocol renamed wholesale** (`vertex`→`addVertex`, `color`→`setColor`, `endVertex` deleted) | 1.21 | **[mined]** High — `endVertex` alone is 157 of 433 jars. Rules + `VertexBridge`; see STATE |
+| `Tesselator.getBuilder` + `BufferBuilder.begin` fused into `Tesselator.begin` | 1.21 | High (104 jars) — **structural**, needs a dataflow rewrite rather than a rule |
 | **New vanilla content** (maces, trial chambers, blocks, tags) | 1.21 | **Backward direction only** — `content-backport` |
 
 ### Mappings

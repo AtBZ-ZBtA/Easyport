@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 589 classes, moved 2 resources, rewrote 0 data files
 
@@ -17,6 +17,8 @@ Applied:
      1  HOLDER_WRAP net/minecraft/world/item/ItemStack.enchant
      1  HOLDER_WRAP net/minecraft/world/level/storage/loot/functions/LootItemFunctionType.<init>
      1  HOLDER_WRAP net/minecraft/world/level/storage/loot/predicates/LootItemConditionType.<init>
+     4  METHOD_TO_STATIC com/mojang/blaze3d/vertex/BufferBuilder#vertex -> easyport/bridge/VertexBridge#vertex
+    16  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
      6  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getOrCreateTag -> easyport/bridge/ItemBridge#getOrCreateTag
      5  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
      3  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
@@ -24,6 +26,11 @@ Applied:
      1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Loading#getConfig -> easyport/bridge/ConfigBridge#getConfig
      1  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Reloading#getConfig -> easyport/bridge/ConfigBridge#getConfig
      5  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
+     8  RENAME_METHOD com/mojang/blaze3d/vertex/BufferBuilder#vertex -> addVertex
+     8  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#color -> setColor
+    12  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv -> setUv
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv2 -> setLight
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#vertex -> addVertex
      1  RENAME_METHOD net/neoforged/neoforge/common/crafting/CraftingHelper#register -> registerSerializer
      1  SRG_IN_TEXT
     76  TYPE_PREFIX net/minecraftforge/client/event/
@@ -84,7 +91,10 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleBlurConfig$1.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/core/particles/ParticleType)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleDropColoredConfig$1.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/core/particles/ParticleType)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/client/particle/ParticleDropColoredConfig$1.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/core/particles/ParticleType)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/ingredient/collection/IngredientCollectionPrototypeMap$QuantityApplier.equals(Ljava/lang/Object;)Z (added by com/google/common/base/Function)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/ingredient/collection/IngredientInstanceUnwrapperFunction.equals(Ljava/lang/Object;)Z (added by com/google/common/base/Function)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/loot/modifier/LootModifierInjectItem.codec()Lcom/mojang/serialization/MapCodec; (added by net/neoforged/neoforge/common/loot/IGlobalLootModifier)
+     1  ABSTRACT_STUB org/cyclops/cyclopscore/modcompat/jei/RecipeRegistryJeiRecipeWrapper$1.equals(Ljava/lang/Object;)Z (added by com/google/common/base/Function)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/persist/world/WorldStorage$NBTDataHolder.save(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/nbt/CompoundTag; (added by net/minecraft/world/level/saveddata/SavedData)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/recipe/type/RecipeSerializerCraftingShapedCustomOutput.codec()Lcom/mojang/serialization/MapCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)
      1  ABSTRACT_STUB org/cyclops/cyclopscore/recipe/type/RecipeSerializerCraftingShapedCustomOutput.streamCodec()Lnet/minecraft/network/codec/StreamCodec; (added by net/minecraft/world/item/crafting/RecipeSerializer)

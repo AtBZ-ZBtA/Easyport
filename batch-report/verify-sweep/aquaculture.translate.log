@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 120 classes, moved 257 resources, rewrote 110 data files
 
@@ -35,6 +35,8 @@ Applied:
      1  HOLDER_WRAP net/minecraft/world/entity/player/Player.getAttribute
      1  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
      1  HOLDER_WRAP net/minecraft/world/level/storage/loot/predicates/LootItemConditionType.<init>
+     3  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
+     3  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#normal -> easyport/bridge/VertexBridge#normal
      4  METHOD_TO_STATIC net/minecraft/world/entity/EntityType$Builder#setCustomClientFactory -> easyport/bridge/ItemBridge#setCustomClientFactory
      1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#areCapsCompatible -> easyport/bridge/CapabilityBridge#areCapsCompatible
      4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getOrCreateTag -> easyport/bridge/ItemBridge#getOrCreateTag
@@ -44,6 +46,11 @@ Applied:
      2  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
     13  RECIPE_CONDITIONS_NAMESPACED
     53  RECIPE_RESULT_ID
+     3  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#color -> setColor
+     2  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#overlayCoords -> setOverlay
+     2  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv -> setUv
+     2  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv2 -> setLight
+     3  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#vertex -> addVertex
      7  RENAME_METHOD net/minecraft/world/food/FoodProperties$Builder#saturationMod -> saturationModifier
      5  RENAME_METHOD net/minecraft/world/item/Item$Properties#defaultDurability -> durability
      1  RENAME_METHOD net/minecraft/world/level/storage/loot/BuiltInLootTables#register -> registerLootTable

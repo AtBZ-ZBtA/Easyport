@@ -1,9 +1,11 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 36 classes, moved 1 resources, rewrote 0 data files
 
 Applied:
      2  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     4  METHOD_TO_STATIC com/mojang/blaze3d/vertex/BufferBuilder#vertex -> easyport/bridge/VertexBridge#vertex
+     4  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
      2  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      2  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Loading#getConfig -> easyport/bridge/ConfigBridge#getConfig
      3  METHOD_TO_STATIC net/neoforged/fml/event/config/ModConfigEvent$Reloading#getConfig -> easyport/bridge/ConfigBridge#getConfig

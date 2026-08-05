@@ -19,6 +19,9 @@ CP="$CP;$S/distmarker.jar;$S/commons-lang3.jar;$S/gson.jar"
 # call on a buffer -- even writeVarInt, which is declared on FriendlyByteBuf itself. Only needed
 # to compile; at runtime Minecraft brings its own.
 CP="$CP;$S/netty-buffer.jar;$S/netty-common.jar;$S/brigadier.jar"
+# joml is not inside the NeoForge artifact, and blaze3d's vertex API takes Matrix3f/Matrix4f
+# directly, so VertexBridge will not compile without it.
+CP="$CP;$S/joml.jar"
 
 # Minimum expected class count. Not a precise figure -- just far enough above zero to catch a
 # compile that mostly failed, which is the failure mode that actually happened.

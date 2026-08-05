@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 382 classes, moved 2 resources, rewrote 0 data files
 
@@ -73,6 +73,7 @@ UNRESOLVED - these need the vanilla bridge or a structural rule:
      1  ABSTRACT_STUB dev/architectury/registry/level/biome/forge/BiomeModificationsImpl$BiomeModifierImpl.codec()Lcom/mojang/serialization/MapCodec; (added by net/neoforged/neoforge/common/world/BiomeModifier)
      1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) MixinLootDataManager
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/architectury/event/forge/EventHandlerImplCommon
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) dev/architectury/mixin/forge/MixinLootDataManager.reload
      1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) dev/architectury/mixin/forge/MixinMinecraft.onStopping
      1  MIXIN_SOFT_FAIL (ModifyArg no longer resolves; injector disabled, mixin kept) dev/architectury/mixin/forge/MixinChunkSerializer.modifyProtoChunkLevel
      1  TYPE_PREFIX target missing: net/neoforged/neoforge/client/event/TextureStitchEvent

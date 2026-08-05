@@ -4,7 +4,7 @@ Dense re-entry point. If you are picking this up cold (fresh context, new contri
 read this file and nothing else until you need depth. [ROADMAP.md](ROADMAP.md) has the full
 plan; this has where things actually stand.
 
-**Last updated:** 2026-08-04. See the phase sign-off blocks below for status.
+**Last updated:** 2026-08-05. See the phase sign-off blocks below for status.
 
 ---
 
@@ -29,6 +29,15 @@ java -cp "devenv/spi/asm.jar" tools/VanillaGaps.java \
     api-report/vanilla-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
     devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
     > api-report/vanilla-gaps.txt
+
+# The same question for com.mojang, which is a SEPARATE run because MemberScan takes one prefix
+# and everything downstream inherits it. blaze3d sat outside every report for months this way.
+# See api-report/README.md for the full platform list this one needs.
+java -cp "devenv/spi/asm.jar;devenv/spi/asm-tree.jar" tools/VanillaGaps.java \
+    api-report/lib-api-usage.txt rules/forward.rules.tsv mappings/srg2official.tsv \
+    devenv/neoforge-1.21.1/build/moddev/artifacts/neoforge-21.1.248.jar \
+    forge-compat/forge-compat.jar devenv/spi/*-1211.jar devenv/spi/joml.jar \
+    > api-report/lib-gaps.txt
 
 # What do mixins still point at that is not there? Reads the jars, not a usage file.
 # Pass a single jar instead of the folder to work one mod; it lists everything then.
@@ -261,6 +270,90 @@ never called.
 Also outstanding, smaller: `ForgeHooks` (91 jars) and `ForgeEventFactory` (80) were split across
 NeoForge's `EventHooks` and `CommonHooks` and need per-method rules rather than a type rename.
 
+#### The whole queue above was scoped to `net/minecraft/`, and one subsystem fell outside it
+
+`api-report/vanilla-api-usage.txt` is produced by `MemberScan <corpus> "net/minecraft/"`. Every
+report built on it — the ranking above, the gap counts, the decisions about what to build next —
+inherited that prefix. **`com.mojang.blaze3d` is not under `net/minecraft`**, though it ships in
+the same jar, is obfuscated by the same mappings, and was reworked in 1.21 harder than most of
+vanilla. Nothing this project produced had ever looked at it.
+
+What it was hiding, in jars of 433: `VertexConsumer.endVertex` 157, `uv` 127,
+`vertex(Matrix4f,…)` 119, `color` 97 and 99, `uv2` 88. Each is a `NoSuchMethodError` the first
+time the mod draws. `endVertex` is the highest-jar-count single member anywhere in the project's
+measurements, and it sat outside every report because of one argument to one scan.
+
+Now measured in `api-report/lib-gaps.txt` and mostly closed: the vertex protocol was renamed
+wholesale to `addVertex`/`set*`, so most of it is rename rules, with `easyport/bridge/VertexBridge`
+taking the members whose shape also changed. Corpus member references under `com/mojang/` went
+from 89.5% resolving to 93.5%, and the 22-mod verify sweep stayed 22/22 clean.
+
+Every rule in that block was checked against the disassembly of both versions rather than the
+method names, and two would have been wrong from the names alone: `uv2(int)` maps to `setLight`
+while `uv2(int,int)` maps to `setUv2`, and `overlayCoords(int,int)` maps to `setUv1`. The packed
+and unpacked forms of the same idea were renamed onto different targets.
+
+**What is left there is one wall, and it is the `Tesselator`/`BufferBuilder` lifecycle**
+(`getBuilder` 104, `begin` 104, `Tesselator.end` 76, `BufferBuilder.end` 60). 1.20.1 hands you a
+reusable builder and then tells it to begin; 1.21 constructs the builder *from* the mode and
+format. Fusing those means the value in the mod's local has to come from a call that has not
+happened yet, and a bridge cannot write into a caller's local. There is a design that works — have
+`getBuilder` return null, have `begin` build the real one into a thread-local, and route every
+subsequent vertex call through the bridge so a null receiver resolves to it — but it assumes one
+builder in flight per thread, and no harness here can test rendering. It is written down rather
+than built for that reason.
+
+**The two other non-vanilla prefixes were checked and are clean:** `org/joml/` (434 references)
+and `it/unimi/dsi/` (1,404) both resolve at 100%. So the scoping bug cost exactly one subsystem,
+which is worth knowing precisely — the instinct after finding a hole like this is to assume more
+of them.
+
+#### The backward side of the same rework, designed and deliberately not half-built
+
+Scanning ATM10 the same way says the mirror is just as big: `setUv` 136 jars,
+`addVertex(Matrix4f,…)` 124, `Tesselator.begin` 110, `BufferUploader.drawWithShader(MeshData)`
+100, `setColor` 99 and 98, `setLight` 92, `buildOrThrow` 86, 48 distinct members in all.
+
+Two of the three sub-problems are *easier* backward, and the asymmetry is worth stating because it
+is the opposite of the usual one. The lifecycle fusion that is a wall going forward is trivial
+going back — one call becoming two is what a bridge does, so `Tesselator.begin(mode, format)`
+becomes `getBuilder()` then `begin(mode, format)` and returns the builder. `MeshData` needs a shim
+type wrapping 1.20.1's `RenderedBuffer`, which is ordinary work.
+
+**The third sub-problem is the whole difficulty: `endVertex` has to be put back.** A 1.21.1 mod
+never calls it — a vertex is committed implicitly — and 1.20.1's builder requires it. Nothing in
+the mod's bytecode marks where a vertex ends.
+
+There is a real answer, and it has now been measured rather than assumed. The 1.21 idiom is a
+fluent chain whose value is discarded:
+`consumer.addVertex(m,x,y,z).setColor(…).setUv(…).setLight(…)` compiles to a run of invocations
+ending in a `POP`. **The `POP` is the end of the vertex**, exactly and syntactically, so the
+transformer can replace it with a call to `endVertex()`.
+
+`tools/VertexChains.java` exists to check that before anything is built on it, because "the idiom
+is always X" is right often enough to feel safe and wrong often enough to corrupt geometry in the
+one subsystem no harness here can test. Over all 479 ATM10 jars:
+
+| Chain ends at | n | Jars |
+|---|---|---|
+| `POP` | **5,033** | 166 |
+| `ASTORE` — consumer outlives the statement | 38 | 2 |
+| `ARETURN` — a helper returns the part-built vertex | 36 | 22 |
+| passed to a call | 27 | 1 |
+| `VOID_FORM` — the 11-argument `addVertex`, which needs no insertion | 24 | 16 |
+
+**97.6%, and the remainder is concentrated rather than smeared** — 172 jars contain a chain at
+all, and three of the four non-`POP` shapes live in 2, 1 and 16 jars. `ARETURN` is the one real
+hole: a helper that returns a part-built vertex ends it at *its caller's* `POP`, which is not
+reachable from inside the helper without an interprocedural pass. Those 22 jars get named in the
+report rather than quietly rewritten wrong.
+
+Not built yet on purpose: **this family is all-or-nothing.** Without the renames a mod dies with a
+loud `NoSuchMethodError`; with the renames but without `endVertex` it feeds a malformed vertex
+stream into vanilla's builder and fails somewhere far away, or draws corrupt geometry. Shipping
+the easy half would trade a clear failure for a confusing one, which is the wrong direction and
+the opposite of every other trade this project makes.
+
 The mixin layer is done (Phase 5, signed off below). What is left there is not load failures but
 595 injectors and accessors that load and no longer do anything, ranked in
 `api-report/mixin-gaps.txt`. That queue is dominated by **client rendering**, which `runData` never
@@ -297,8 +390,8 @@ loop. That is architecture, not coverage. **Registry content has been measured f
 start that 48.6% of pairs are Hard or Nightmare and nothing has changed that. A run of green
 results on a 14-mod sample is not the project nearly finished; it is the sample being small.
 
-The backward sweep puts a number on the rest: **4,142 distinct vanilla members and 350 types with
-no 1.20.1 counterpart**, roughly twice the forward gap, and weighted toward things 1.20.1 cannot
+The backward sweep puts a number on the rest: **3,425 distinct vanilla members and 339 types with
+no 1.20.1 counterpart**, close to twice the forward gap, and weighted toward things 1.20.1 cannot
 represent at all rather than things that merely moved.
 
 **The backward direction is started, not finished**, and it is the whole of what remains. See its
@@ -648,11 +741,18 @@ transformer runs to completion and produces a jar. What it does not say is the p
 
 | Measure | Backward | Forward, for scale |
 |---|---|---|
-| Distinct vanilla members with no counterpart | **4,142** | 1,968 of 25,288 references |
-| Distinct types absent from the target | **350** | 114 |
-| Jars needing an abstract stub | 226 | — |
-| Jars with a mixin injector defused | 107 | 96 |
-| Jars using a Java 21 construct with no 17 form | 75 | n/a |
+| Distinct vanilla members with no counterpart | **3,425** | 1,968 of 25,288 references |
+| Distinct types absent from the target | **339** | 114 |
+| Jars needing an abstract stub | 234 | — |
+| Jars with a mixin injector defused | 110 | 96 |
+| Jars using a Java 21 construct with no 17 form | 76 | n/a |
+
+**The member figure was 4,142 and the correction is worth more than the number.** Roughly 700 of
+those were the platform index reporting on itself: authlib and `com.mojang.logging` were on the
+classpath but not member-indexed, so every member of an indexed-but-unread owner came back absent,
+and `GameProfile.getId` was on the missing-API list. The three counts that went *up* moved for the
+same reason in reverse — indexing everything makes more of the corpus judgeable, so more abstract
+stubs and defused injectors are found rather than skipped. See gotcha 0.
 
 **Roughly twice the vanilla gap of the forward direction, and it is not symmetric drift.** 1.21
 added the data-component system, `StreamCodec`, `RegistryFriendlyByteBuf`, data-driven
@@ -1607,6 +1707,37 @@ public download.
 ---
 
 ## Hard-won gotchas — each of these cost real time
+
+0. **An index that is missing something reports a gap in the thing it is measuring, not in
+   itself.** This is one lesson and it produced four separate defects before the shape of it was
+   obvious, each wearing the costume of a finding:
+
+   - `MemberScan` is given an owner prefix, and the standing vanilla queue has always been
+     generated with `net/minecraft/`. `com.mojang.blaze3d` is not under it. 157 jars call a vertex
+     method 1.21 deleted, and no report this project produced had ever counted one of them.
+   - The backward platform did not carry DataFixerUpper. 275 of 445 "types absent from 1.20.1"
+     were DFU.
+   - It did not carry authlib or `com.mojang.logging` either, and those failed *differently*: the
+     owner was in `targetClasses` but had no member set, so 969 findings said things like
+     `GameProfile.getId does not exist in 1.20.1`.
+   - `Translate` member-indexed a chosen prefix of the platform, so `FriendlyByteBuf` — the
+     684-jar item near the top of the queue — inherits from an unindexed `io.netty.buffer.ByteBuf`
+     and could not be judged at all.
+
+   **Two rules came out of it, and the second matters more than the first.** Index the whole
+   platform: the platform jars *are* the API the target version offers, and indexing a subset is
+   not a cheaper version of the answer, it is a different question with the same output format.
+   The filter was measured at 1.7s per jar with and without, so it was not buying anything either.
+   And when the index cannot answer, **say so under its own name** — `SUPERTYPE_NOT_INDEXED`
+   rather than silence. An invented gap gets investigated and disproved; a vanished one is never
+   looked at again.
+
+   The other half of the same trap: **every shared library has a different version on each side.**
+   1.20.1 ships authlib 4.0.43, DFU 6.0.8, netty 4.1.82, fastutil 8.5.9; 1.21.1 ships 6.0.54,
+   8.0.16, 4.1.97, 8.5.12. Read them from `devenv/spi/mc-1.20.1.json` and from the MDK's resolved
+   `compileClasspath`, never from what happens to be newest in the Gradle cache. Putting a 1.21.1
+   library on the 1.20.1 platform makes a real gap *resolve*, which is the same error inverted and
+   far harder to notice than an invented one.
 
 1. **SRG contamination — SOLVED, but never mine without the mapping.** Forge 1.20.1 runs SRG
    member names (`m_61124_`); NeoForge 1.21.1 runs official Mojang names. Unmapped, 74.8% of

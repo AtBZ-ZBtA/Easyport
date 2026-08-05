@@ -1,11 +1,18 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 74 classes, moved 24 resources, rewrote 12 data files
 
 Applied:
     13  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#fromNamespaceAndPath
+     4  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
     11  RECIPE_RESULT_ID
      1  RECIPE_SHOW_NOTIFICATION_DROP
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#color -> setColor
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#normal -> setNormal
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#overlayCoords -> setOverlay
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv -> setUv
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv2 -> setLight
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#vertex -> addVertex
      3  TAG_NAMESPACE forge: -> c:
      9  TYPE_PREFIX net/minecraftforge/client/event/
     25  TYPE_PREFIX net/minecraftforge/client/model/

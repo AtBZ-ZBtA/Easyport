@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 153 classes, moved 1 resources, rewrote 0 data files
 
@@ -9,15 +9,20 @@ Applied:
      7  CTOR_TO_STATIC net/minecraft/resources/ResourceLocation#parse
      3  CTOR_TO_STATIC net/minecraft/world/entity/ai/attributes/AttributeModifier#attributeModifier
      1  EBS_BUS FORGE -> GAME
+     1  FIELD_TO_STATIC com/mojang/blaze3d/vertex/DefaultVertexFormat#POSITION_COLOR_TEX -> easyport/bridge/VertexBridge#positionColorTex
      2  HOLDER_WRAP net/minecraft/world/effect/MobEffectInstance.<init>
      1  HOLDER_WRAP net/minecraft/world/entity/LivingEntity.getAttribute
      1  HOLDER_WRAP net/minecraft/world/level/storage/loot/entries/LootPoolEntryType.<init>
+     4  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
      6  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
      2  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#hasTag -> easyport/bridge/ItemBridge#hasTag
      4  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#setTag -> easyport/bridge/ItemBridge#setTag
      4  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
      1  METHOD_TO_STATIC net/neoforged/neoforge/registries/RegisterEvent#getForgeRegistry -> easyport/bridge/RegistryBridge#getForgeRegistry
      1  MIXIN_SELECTOR_REPAIR ModifyConstant
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/BufferBuilder#vertex -> addVertex
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#color -> setColor
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv -> setUv
      2  SRG_IN_TEXT
     30  TYPE_PREFIX net/minecraftforge/client/event/
      2  TYPE_PREFIX net/minecraftforge/energy/
@@ -50,12 +55,16 @@ Applied:
     34  TYPE_RENAME net/minecraftforge/registries/RegisterEvent
 
 UNRESOLVED - these need the vanilla bridge or a structural rule:
+     1  ABSTRACT_STUB dev/shadowsoffire/placebo/loot/StackLootEntry$Serializer.deserialize(Lcom/google/gson/JsonObject;Lcom/google/gson/JsonDeserializationContext;II[Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (added by easyport/vanilla/LootPoolSingletonContainerSerializer)
      1  ABSTRACT_STUB dev/shadowsoffire/placebo/patreon/wings/Wing.renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V (added by net/minecraft/client/model/Model)
      1  HIERARCHY cannot extend final class: dev/shadowsoffire/placebo/color/GradientColor extends net/minecraft/network/chat/TextColor
      1  HIERARCHY override of a now-final method dropped: dev/shadowsoffire/placebo/reload/DynamicRegistry.getContext()Lnet/neoforged/neoforge/common/conditions/ICondition$IContext; (final on net/neoforged/neoforge/resource/ContextAwareReloadListener)
      2  HOLDER_WRAP ambiguous: net/minecraft/world/item/ItemStack.<init>(Lnet/minecraft/world/level/ItemLike;ILnet/minecraft/nbt/CompoundTag;)V
      1  MIXIN_DROP (target gone: net/minecraft/world/level/storage/loot/LootDataManager) LootTablesMixin
      1  MIXIN_ORPHAN (only a dropped mixin referenced it) dev/shadowsoffire/placebo/loot/LootSystem
+     1  MIXIN_SHADOW_FIELD_STUB (no longer on the target; became a mixin-added field) dev/shadowsoffire/placebo/mixin/LootTablesMixin.elements
+     1  MIXIN_SHADOW_FIELD_STUB (no longer on the target; became a mixin-added field) dev/shadowsoffire/placebo/mixin/LootTablesMixin.typeKeys
+     1  MIXIN_SOFT_FAIL (Inject no longer resolves; injector disabled, mixin kept) dev/shadowsoffire/placebo/mixin/LootTablesMixin.apply
 
 Wrote translated\placebo.jar
       translated\placebo.report.tsv

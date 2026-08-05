@@ -98,3 +98,7 @@ neoforge-compat/*.jar
 batch-report/backward/
 testkit/inspector-forge/out/
 testkit/inspector-forge/*.jar
+
+# Empty stderr files from the report generators. A run either fails loudly or leaves one of
+# these at zero bytes; committing the zero-byte case only ever produced diff noise.
+api-report/*.err

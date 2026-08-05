@@ -1,0 +1,124 @@
+=== VANILLA DRIFT, 1.20.1 -> 1.21.1, measured on the corpus ===
+
+referenced vanilla types      197
+member references checked     1061
+  still resolve               992  (93.5%)
+  SIGNATURE CHANGED           21
+  MEMBER GONE                 48
+TYPE GONE                     8
+
+resolved by Holder adaptation 0  (of the "still resolve" figure)
+resolved by ARG_FILL / ARG_DROP  1  (of the "still resolve" figure)
+resolved by an explicit rule  42  (of the "still resolve" figure)
+resolved by a COERCE conversion 0  (of the "still resolve" figure)
+REMOVED, reported not rewritten 0  (excluded from both)
+skipped, owner type is gone   20
+skipped, name still reads SRG 0  <- mapping health; want 0
+
+Jar counts, not call sites. One mod calling something forty times is
+one mod's worth of evidence.
+
+=== SIGNATURE CHANGED (21) ===
+The member is still there and takes something else. This is Phase 4's central
+problem -- a vanilla type changed shape underneath the signature. Read the two
+descriptors together; the difference names the type that moved.
+
+   51  com/mojang/blaze3d/vertex/BufferUploader.drawWithShader
+       calls (Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;)V
+         has  (Lcom/mojang/blaze3d/vertex/MeshData;)V
+   38  com/mojang/blaze3d/systems/RenderSystem.getModelViewStack
+       calls ()Lcom/mojang/blaze3d/vertex/PoseStack;
+         has  ()Lorg/joml/Matrix4fStack;
+   28  com/mojang/serialization/DataResult.getOrThrow
+       calls (ZLjava/util/function/Consumer;)Ljava/lang/Object;
+         has  ()Ljava/lang/Object;  |  (Ljava/util/function/Function;)Ljava/lang/Object;
+   22  com/mojang/blaze3d/vertex/BufferBuilder.<init>
+       calls (I)V
+         has  (Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+   21  com/mojang/blaze3d/vertex/VertexBuffer.upload
+       calls (Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;)V
+         has  (Lcom/mojang/blaze3d/vertex/MeshData;)V
+   14  com/mojang/blaze3d/vertex/VertexFormat.getElements
+       calls ()Lcom/google/common/collect/ImmutableList;
+         has  ()Ljava/util/List;
+    6  com/mojang/blaze3d/vertex/VertexFormat.getOffset
+       calls (I)I
+         has  (Lcom/mojang/blaze3d/vertex/VertexFormatElement;)I
+    5  com/mojang/blaze3d/vertex/SheetedDecalTextureGenerator.<init>
+       calls (Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Matrix4f;Lorg/joml/Matrix3f;F)V
+         has  (Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;F)V
+    5  com/mojang/blaze3d/vertex/VertexFormat.<init>
+       calls (Lcom/google/common/collect/ImmutableMap;)V
+         has  (Ljava/util/List;Ljava/util/List;Lit/unimi/dsi/fastutil/ints/IntList;I)V
+    3  com/mojang/blaze3d/vertex/VertexFormatElement.<init>
+       calls (ILcom/mojang/blaze3d/vertex/VertexFormatElement$Type;Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;I)V
+         has  (IILcom/mojang/blaze3d/vertex/VertexFormatElement$Type;Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;I)V
+
+       ... and 11 more used by fewer than 3 jars
+
+=== MEMBER GONE (48) ===
+No member of that name survives on the owner. Needs a rename rule, a bridge, or
+a REMOVED entry so the translate report names it rather than the JVM.
+
+  104  com/mojang/blaze3d/vertex/BufferBuilder.begin
+       calls (Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V
+  104  com/mojang/blaze3d/vertex/Tesselator.getBuilder
+       calls ()Lcom/mojang/blaze3d/vertex/BufferBuilder;
+   76  com/mojang/blaze3d/vertex/Tesselator.end
+       calls ()V
+   60  com/mojang/blaze3d/vertex/BufferBuilder.end
+       calls ()Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;
+   16  com/mojang/serialization/DataResult.get
+       calls ()Lcom/mojang/datafixers/util/Either;
+    8  com/mojang/authlib/GameProfile.isComplete
+       calls ()Z
+    6  com/mojang/blaze3d/vertex/VertexFormatElement$Usage.PADDING
+       calls Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+         (field)
+    5  com/mojang/blaze3d/vertex/BufferBuilder.clear
+       calls ()V
+    5  com/mojang/blaze3d/vertex/BufferBuilder.endOrDiscardIfEmpty
+       calls ()Lcom/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer;
+    4  com/mojang/blaze3d/vertex/BufferBuilder.setQuadSorting
+       calls (Lcom/mojang/blaze3d/vertex/VertexSorting;)V
+    4  com/mojang/blaze3d/vertex/DefaultVertexFormat.ELEMENT_PADDING
+       calls Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+         (field)
+    4  com/mojang/util/UUIDTypeAdapter.fromUUID
+       calls (Ljava/util/UUID;)Ljava/lang/String;
+    3  com/mojang/authlib/minecraft/MinecraftSessionService.fillProfileProperties
+       calls (Lcom/mojang/authlib/GameProfile;Z)Lcom/mojang/authlib/GameProfile;
+    3  com/mojang/blaze3d/vertex/BufferBuilder.nextElement
+       calls ()V
+    3  com/mojang/blaze3d/vertex/DefaultVertexFormat.ELEMENT_UV
+       calls Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+         (field)
+    3  com/mojang/blaze3d/vertex/VertexFormatElement$Type.getSize
+       calls ()I
+
+       ... and 32 more used by fewer than 3 jars
+
+=== TYPE GONE (8) ===
+The class itself was deleted. A mod jar cannot supply a replacement under
+net.minecraft -- module resolution refuses it -- so these are relocate-then-rename:
+a stand-in under easyport.vanilla plus a TYPE_RENAME.
+
+    9  com/mojang/serialization/DataResult$PartialResult
+    5  com/mojang/blaze3d/vertex/DefaultedVertexConsumer
+    4  com/mojang/blaze3d/vertex/BufferBuilder$RenderedBuffer
+    3  com/mojang/blaze3d/vertex/BufferVertexConsumer
+
+       ... and 4 more used by fewer than 3 jars
+
+=== BY OWNING TYPE (jar-weighted) ===
+weight = sum of jar counts over that type's broken members. Fix the
+head of this list, not the head of the lists above.
+
+  weight    sig   gone  type
+     226      6     20  com/mojang/blaze3d/vertex/BufferBuilder
+     180      0      2  com/mojang/blaze3d/vertex/Tesselator
+      52      2      0  com/mojang/blaze3d/vertex/BufferUploader
+      44      1      1  com/mojang/serialization/DataResult
+      43      1      3  com/mojang/blaze3d/systems/RenderSystem
+      28      4      1  com/mojang/blaze3d/vertex/VertexFormat
+      21      1      0  com/mojang/blaze3d/vertex/VertexBuffer

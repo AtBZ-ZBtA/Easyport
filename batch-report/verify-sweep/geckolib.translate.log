@@ -1,4 +1,4 @@
-Loaded 64225 SRG mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
+Forge 1.20.1 -> NeoForge 1.21.1: loaded 64225 member mappings, 188 type renames, 8 ctor rules, 0 removed-API entries
 
 Rewrote 261 classes, moved 1 resources, rewrote 0 data files
 
@@ -12,9 +12,14 @@ Applied:
     10  HOLDER_WRAP net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder.add
      2  HOLDER_WRAP net/minecraft/world/item/ArmorItem.<init>
      1  JARJAR_TRANSLATE (depth 1)
+     4  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#endVertex -> easyport/bridge/VertexBridge#endVertex
+     2  METHOD_TO_STATIC com/mojang/blaze3d/vertex/VertexConsumer#vertex -> easyport/bridge/VertexBridge#vertex
      1  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getOrCreateTag -> easyport/bridge/ItemBridge#getOrCreateTag
      2  METHOD_TO_STATIC net/minecraft/world/item/ItemStack#getTag -> easyport/bridge/ItemBridge#getTag
     18  METHOD_TO_STATIC net/minecraftforge/eventbus/api/IEventBus#post -> easyport/bridge/EventBusBridge#post
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#color -> setColor
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#uv2 -> setLight
+     4  RENAME_METHOD com/mojang/blaze3d/vertex/VertexConsumer#vertex -> addVertex
      2  SRG_IN_TEXT
     16  TYPE_PREFIX net/minecraftforge/client/event/
     21  TYPE_PREFIX net/minecraftforge/client/extensions/

@@ -27,8 +27,23 @@ PLATFORM=(devenv/spi/forge-1.20.1-official.jar devenv/spi/forge-bus-6.0.5.jar
           # member whose owner it cannot find, so an unindexed library reads as "this type does
           # not exist in 1.20.1" -- DataFixerUpper alone accounted for 275 of 445 supposedly
           # missing types, which is a measurement artefact wearing the costume of a finding.
+          #
+          # Every one of these must be the version *1.20.1 itself ships*, read from
+          # devenv/spi/mc-1.20.1.json, never the newest in the Gradle cache. A newer authlib in
+          # this list would report a member that 1.20.1 does not have as present, which is the
+          # same error inverted and harder to notice: it makes a gap disappear instead of
+          # inventing one. Unsuffixed names here are the 1.20.1 builds; -1211 ones are not.
           devenv/spi/dfu.jar devenv/spi/brigadier.jar devenv/spi/guava.jar
-          devenv/spi/gson.jar devenv/spi/commons-lang3.jar)
+          devenv/spi/gson.jar devenv/spi/commons-lang3.jar
+          devenv/spi/authlib-1201.jar devenv/spi/logging-1201.jar devenv/spi/text2speech.jar
+          devenv/spi/fastutil-1201.jar devenv/spi/joml.jar
+          # netty is here for one type: FriendlyByteBuf extends io.netty.buffer.ByteBuf, and
+          # without it the whole 684-jar FriendlyByteBuf surface reports as SUPERTYPE_NOT_INDEXED
+          # -- correctly, since an unindexed supertype means its members cannot be judged, which
+          # is precisely why the jar has to be here rather than the guard being loosened.
+          devenv/spi/netty-buffer-1201.jar devenv/spi/netty-common-1201.jar
+          devenv/spi/netty-codec-1201.jar devenv/spi/netty-handler-1201.jar
+          devenv/spi/netty-transport-1201.jar)
 
 OUT="batch-report/backward"
 # Overridable so two different mod lists do not accumulate into one table. Runs are appended and

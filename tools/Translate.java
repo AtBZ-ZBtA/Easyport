@@ -261,8 +261,21 @@ public class Translate {
                     // patched method fails the launch exactly like a deleted vanilla one. Nothing
                     // saw those before, because judging stopped at net/minecraft.
                     boolean shim = internal.startsWith("net/minecraftforge/");
-                    if (!internal.startsWith("net/minecraft/")
-                            && !internal.startsWith("net/neoforged/") && !shim) continue;
+                    // Everything on the platform is indexed, and the prefix filter that used to be
+                    // here is gone. It was an optimisation, and it cost three separate reporting
+                    // defects before the pattern was obvious:
+                    //
+                    //   * com.mojang.blaze3d, unindexed, so 157 jars' worth of a deleted vertex
+                    //     protocol appeared in no report this project produced.
+                    //   * com.mojang.authlib, unindexed, so the owner was in targetClasses with no
+                    //     member set and 969 findings said GameProfile.getId does not exist.
+                    //   * io.netty and com.google, unindexed, so FriendlyByteBuf -- the 684-jar
+                    //     item near the top of the queue -- could not be judged at all.
+                    //
+                    // The platform jars *are* the API the target version offers. Indexing a chosen
+                    // subset of that and reporting on the rest is not a cheaper version of the
+                    // answer, it is a different question with the same output format. Measured at
+                    // 1.7s per jar before and after, so the saving was not real either.
                     try {
                         ClassNode node = new ClassNode();
                         new ClassReader(read(zip, e)).accept(node,
@@ -701,9 +714,56 @@ public class Translate {
             return name;
         }
 
+        // The owner is on the platform but was never member-indexed, so there is no basis for
+        // saying anything about its members and the honest answer is to say nothing. This guard
+        // is why the previous version of this method lied: a class outside the indexed prefixes
+        // passed the targetClasses check and then failed the member check for the only reason it
+        // could -- there was no member set to check against.
+        if (!targetMembers.containsKey(owner)) return name;
+
+        // Same reasoning one level up: an inherited member is only absent if every class it could
+        // have been inherited *from* was examined. PropertyMap gets its Map methods from Guava's
+        // ForwardingMultimap, so `PropertyMap.values()` read as missing API on a type that is
+        // perfectly fine.
+        //
+        // Reported under its own name rather than silently dropped. A guard that turns findings
+        // into silence is the more dangerous of the two failure modes -- an invented gap gets
+        // investigated and disproved, a vanished one is never looked at again -- so the count of
+        // "could not judge" stays visible next to the count of "is missing".
+        String unindexed = firstUnindexedSupertype(owner);
+        if (unindexed != null) {
+            count(unresolved, "SUPERTYPE_NOT_INDEXED " + owner + " (inherits from " + unindexed
+                    + ", which no platform jar carries; its members cannot be judged)");
+            return name;
+        }
+
         count(unresolved, "NO_SRG_NAME " + owner + "." + name + (field ? " " : "") + desc
                 + " (not present in 1.20.1)");
         return name;
+    }
+
+    /**
+     * The first supertype of a platform class that was not member-indexed, or null if all were.
+     *
+     * {@code java.*} and {@code javax.*} do not count. They are the same classes under both game
+     * versions -- {@code Enum.ordinal}, {@code Supplier.get}, {@code Iterable.iterator} -- and
+     * requiring them would silence nearly every finding, since most of vanilla implements
+     * something from the JDK somewhere up its chain.
+     */
+    private String firstUnindexedSupertype(String owner) {
+        Deque<String> queue = new ArrayDeque<>();
+        Set<String> seen = new HashSet<>();
+        queue.add(owner);
+        while (!queue.isEmpty()) {
+            String c = queue.poll();
+            if (!seen.add(c) || c.startsWith("java/") || c.startsWith("javax/")) continue;
+            if (!targetMembers.containsKey(c)) return c;
+            String sup = targetSuper.get(c);
+            if (sup != null) queue.add(sup);
+            List<String> ifaces = targetIfaces.get(c);
+            if (ifaces != null) queue.addAll(ifaces);
+        }
+        return null;
     }
 
     /** Supertypes of a platform class, nearest first. Empty when the class is not indexed. */

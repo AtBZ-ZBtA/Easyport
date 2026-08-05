@@ -919,3 +919,55 @@ TAG_GONE	forge:storage_blocks/quartz
 TAG_GONE	forge:dusts/prismarine
 TAG_GONE	forge:heads
 TAG_GONE	forge:chorus_additionally_grows_on
+
+# --- blaze3d vertex protocol, 1.20.1 -> 1.21.1 -------------------------------------------------
+# Found late: every corpus scan this project runs was scoped to owners under net/minecraft/, and
+# com.mojang.blaze3d is not one even though it ships in the same obfuscated jar. See
+# api-report/lib-gaps.txt, and easyport/bridge/VertexBridge for the members that needed shape
+# changes rather than a rename.
+#
+# Rules exist per owner because a rule is keyed on the owner written at the call site, and the
+# corpus calls this family on both VertexConsumer and BufferBuilder. The 1.21.1 targets are
+# declared on VertexConsumer and inherited, which resolution handles.
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	vertex	(Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	addVertex	(Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	uv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setUv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	color	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setColor	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	color	(FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setColor	(FFFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	color	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setColor	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	uv2	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setLight	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	uv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setUv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	overlayCoords	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setOverlay	(I)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	overlayCoords	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setUv1	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexConsumer	normal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/VertexConsumer	setNormal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	vertex	(Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	addVertex	(Lorg/joml/Matrix4f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	color	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	setColor	(IIII)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	uv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	setUv	(FF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	uv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	setUv2	(II)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+RENAME_METHOD	com/mojang/blaze3d/vertex/BufferBuilder	normal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	com/mojang/blaze3d/vertex/BufferBuilder	setNormal	(FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	endVertex	()V	easyport/bridge/VertexBridge	endVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	endVertex	()V	easyport/bridge/VertexBridge	endVertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	vertex	(DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/bridge/VertexBridge	vertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	vertex	(DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/bridge/VertexBridge	vertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;DDD)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	normal	(Lorg/joml/Matrix3f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/bridge/VertexBridge	normal	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Matrix3f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	normal	(Lorg/joml/Matrix3f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;	easyport/bridge/VertexBridge	normal	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Matrix3f;FFF)Lcom/mojang/blaze3d/vertex/VertexConsumer;
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	vertex	(FFFFFFFFFIIFFF)V	easyport/bridge/VertexBridge	vertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFFFFFFFIIFFF)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	vertex	(FFFFFFFFFIIFFF)V	easyport/bridge/VertexBridge	vertex	(Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFFFFFFFIIFFF)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	defaultColor	(IIII)V	easyport/bridge/VertexBridge	defaultColor	(Lcom/mojang/blaze3d/vertex/VertexConsumer;IIII)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	defaultColor	(IIII)V	easyport/bridge/VertexBridge	defaultColor	(Lcom/mojang/blaze3d/vertex/VertexConsumer;IIII)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	unsetDefaultColor	()V	easyport/bridge/VertexBridge	unsetDefaultColor	(Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/BufferBuilder	unsetDefaultColor	()V	easyport/bridge/VertexBridge	unsetDefaultColor	(Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexConsumer	putBulkData	(Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFII)V	easyport/bridge/VertexBridge	putBulkData	(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;Lnet/minecraft/client/renderer/block/model/BakedQuad;FFFII)V
+RENAME_METHOD	com/mojang/blaze3d/vertex/PoseStack	mulPoseMatrix	(Lorg/joml/Matrix4f;)V	com/mojang/blaze3d/vertex/PoseStack	mulPose	(Lorg/joml/Matrix4f;)V
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	POSITION_COLOR_TEX	Lcom/mojang/blaze3d/vertex/VertexFormat;	easyport/bridge/VertexBridge	positionColorTex	()Lcom/mojang/blaze3d/vertex/VertexFormat;
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	ELEMENT_POSITION	Lcom/mojang/blaze3d/vertex/VertexFormatElement;	easyport/bridge/VertexBridge	elementPosition	()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	ELEMENT_COLOR	Lcom/mojang/blaze3d/vertex/VertexFormatElement;	easyport/bridge/VertexBridge	elementColor	()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	ELEMENT_UV0	Lcom/mojang/blaze3d/vertex/VertexFormatElement;	easyport/bridge/VertexBridge	elementUv0	()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	ELEMENT_UV1	Lcom/mojang/blaze3d/vertex/VertexFormatElement;	easyport/bridge/VertexBridge	elementUv1	()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	ELEMENT_UV2	Lcom/mojang/blaze3d/vertex/VertexFormatElement;	easyport/bridge/VertexBridge	elementUv2	()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+FIELD_TO_STATIC	com/mojang/blaze3d/vertex/DefaultVertexFormat	ELEMENT_NORMAL	Lcom/mojang/blaze3d/vertex/VertexFormatElement;	easyport/bridge/VertexBridge	elementNormal	()Lcom/mojang/blaze3d/vertex/VertexFormatElement;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getByteSize	()I	com/mojang/blaze3d/vertex/VertexFormatElement	byteSize	()I
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getUsage	()Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;	com/mojang/blaze3d/vertex/VertexFormatElement	usage	()Lcom/mojang/blaze3d/vertex/VertexFormatElement$Usage;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getType	()Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;	com/mojang/blaze3d/vertex/VertexFormatElement	type	()Lcom/mojang/blaze3d/vertex/VertexFormatElement$Type;
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getCount	()I	com/mojang/blaze3d/vertex/VertexFormatElement	count	()I
+RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getIndex	()I	com/mojang/blaze3d/vertex/VertexFormatElement	index	()I
+METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexFormat	getIntegerSize	()I	easyport/bridge/VertexBridge	getIntegerSize	(Lcom/mojang/blaze3d/vertex/VertexFormat;)I
