@@ -19,6 +19,14 @@ CP="$S/forge-1.20.1-official.jar;$S/forge-bus-6.0.5.jar;$S/forge-fmlcore.jar"
 CP="$CP;$S/forge-fmlloader.jar;$S/forge-forgespi.jar;$S/forge-javafmllanguage.jar"
 CP="$CP;$S/forge-distmarker.jar"
 
+# Shared libraries, named one by one rather than globbed. These are the same artifacts on both
+# sides -- DataFixerUpper, Guava, netty -- so pulling them in cannot smuggle NeoForge's API into
+# the compile. Vanilla signatures reference them constantly: Registry.key() returns something
+# whose supertype is com.mojang.serialization.Keyable, and without DFU the compiler cannot even
+# read the method.
+CP="$CP;$S/dfu.jar;$S/guava.jar;$S/gson.jar;$S/commons-lang3.jar;$S/brigadier.jar"
+CP="$CP;$S/netty-buffer.jar;$S/netty-common.jar;$S/nightconfig-core.jar;$S/slf4j-api.jar"
+
 # Deliberately NOT on the classpath: devenv/spi/*.jar wholesale, the way build-forge-compat.sh
 # does it. NeoForge's own loader and bus jars are in that directory, and compiling a
 # net.neoforged.* shim against the real net.neoforged.* is how you get a jar that compiles
@@ -34,7 +42,11 @@ fi
 
 rm -rf neoforge-compat/out && mkdir -p neoforge-compat/out
 
-if ! javac -nowarn -cp "$CP" -d neoforge-compat/out \
+# --release 17, because Minecraft 1.20.1 runs on Java 17 and a JVM refuses a class file newer
+# than itself outright. The JDK building this is 21, so without the flag the shim layer compiles
+# to version 65 and every class in it fails to define -- which is exactly the error the corpus
+# mods themselves produce, and just as fatal.
+if ! javac --release 17 -nowarn -cp "$CP" -d neoforge-compat/out \
      $(find neoforge-compat/src -name "*.java"); then
   echo "BUILD FAILED - neoforge-compat.jar left untouched" >&2
   exit 1

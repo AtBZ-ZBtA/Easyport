@@ -330,3 +330,34 @@ TYPE_RENAME	net/neoforged/neoforge/common/world/StructureModifier$Phase	net/mine
 ARG_FILL	net/neoforged/bus/api/IEventBus	easyport/neobridge/ModCtorBridge	modEventBus
 ARG_FILL	net/neoforged/fml/ModContainer	easyport/neobridge/ModCtorBridge	modContainer
 ARG_FILL	net/minecraftforge/api/distmarker/Dist	easyport/neobridge/ModCtorBridge	dist
+
+# --- Vanilla constructor argument order ------------------------------------------------------
+#
+# Inverted from the forward file: the old and new descriptors swap, and the narrowing hint drops,
+# because 1.20.1's parameter is the wider ParticleOptions and needs no cast to reach it.
+CTOR_SWAP2	net/minecraft/world/level/block/TorchBlock	(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/core/particles/ParticleOptions;)V
+CTOR_SWAP2	net/minecraft/world/level/block/WallTorchBlock	(Lnet/minecraft/core/particles/SimpleParticleType;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/core/particles/ParticleOptions;)V
+CTOR_SWAP2	net/minecraft/world/level/block/DropExperienceBlock	(Lnet/minecraft/util/valueproviders/IntProvider;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V	(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/util/valueproviders/IntProvider;)V
+
+# --- Vanilla members 1.21 added ---------------------------------------------------------------
+#
+# 1.21 gave BlockBehaviour a public properties() accessor. 1.20.1 keeps the field protected and
+# offers Properties.copy(BlockBehaviour) instead, so the instance call becomes a static one with
+# the receiver as its argument -- which is what METHOD_TO_STATIC is for.
+#
+# Not an exact equivalence, and the difference is worth knowing: properties() hands back the live
+# object, copy() makes a new one. Mods call this to derive a new block's properties from an
+# existing block, where copying is the intent anyway; a mod mutating the returned object expecting
+# to change the original would not be doing something 1.20.1 supports in any case.
+#
+# Both owners, because the call site's owner is whatever the mod's variable was typed as.
+METHOD_TO_STATIC	net/minecraft/world/level/block/Block	properties	()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;	net/minecraft/world/level/block/state/BlockBehaviour$Properties	copy	(Lnet/minecraft/world/level/block/state/BlockBehaviour;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+METHOD_TO_STATIC	net/minecraft/world/level/block/state/BlockBehaviour	properties	()Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;	net/minecraft/world/level/block/state/BlockBehaviour$Properties	copy	(Lnet/minecraft/world/level/block/state/BlockBehaviour;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
+
+# --- Renames justified by an identical surface, not by loader scanning -------------------------
+#
+# The forward file allows a rename on two grounds: the loader dispatches by the type, or the whole
+# surface is verified identical. This is the second. DeferredSoundType and ForgeSoundType have the
+# same superclass, the same five-Supplier constructor and the same five accessors -- checked with
+# javap against both platform jars, not assumed from the names.
+TYPE_RENAME	net/neoforged/neoforge/common/util/DeferredSoundType	net/minecraftforge/common/util/ForgeSoundType

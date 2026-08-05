@@ -23,6 +23,7 @@ import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
@@ -429,7 +430,7 @@ public class Translate {
                         resourcesMoved++;
                         name = moved;
                     }
-                    if (name.equals("META-INF/neoforge.mods.toml")) data = migrateDescriptor(data);
+                    if (name.equals(descriptorName())) data = migrateDescriptor(data);
                     if (name.startsWith("data/") && name.endsWith(".json")) {
                         data = migrateResourceJson(name, data);
                         if (isTagFile(name)) { holdTag(name, data); continue; }
@@ -477,6 +478,56 @@ public class Translate {
             }
         }
         report(out);
+    }
+
+    // ---- class file version, backward --------------------------------------------------
+
+    /** Java 17, which is what Minecraft 1.20.1 runs on. Java 21 is 65. */
+    private static final int JAVA_17 = 61;
+
+    /**
+     * Lowers the class file version so a Java 17 runtime will load the class at all.
+     *
+     * <h2>Why this is not optional and not rare</h2>
+     *
+     * Minecraft 1.20.1 runs on Java 17 and 1.21.1 on Java 21, and a JVM refuses a class file
+     * newer than itself outright — {@code UnsupportedClassVersionError}, thrown while defining
+     * the class, before any code runs. **111,713 classes across 466 of the 479 corpus jars are
+     * Java 21 bytecode**, so without this every backward-translated mod fails to load its first
+     * class. The forward direction has no equivalent problem, because a newer JVM accepts older
+     * class files; this asymmetry is one-way.
+     *
+     * <h2>What the version number does and does not buy</h2>
+     *
+     * Renumbering is enough for the overwhelming majority of classes: nothing between 17 and 21
+     * changed the class file format in a way that ordinary compiled code depends on. Records and
+     * sealed types are both Java 17. What is *not* expressible is a construct whose bootstrap
+     * method only exists in a newer JDK — pattern-matching switch compiles to an
+     * {@code invokedynamic} against {@code java.lang.runtime.SwitchBootstraps}, which a 17
+     * runtime cannot link.
+     *
+     * Those are reported rather than rewritten. Desugaring a pattern switch back into an if-chain
+     * is a real transform and not one to attempt speculatively; naming the class means the report
+     * says which mods need it before a launch does.
+     */
+    private void downgradeClassVersion(ClassNode node) {
+        if (!backward) return;
+        int major = node.version & 0xFFFF;
+        if (major <= JAVA_17) return;
+
+        for (MethodNode m : node.methods) {
+            if (m.instructions == null) continue;
+            for (var insn : m.instructions) {
+                if (!(insn instanceof InvokeDynamicInsnNode indy) || indy.bsm == null) continue;
+                String owner = indy.bsm.getOwner();
+                if (owner.equals("java/lang/runtime/SwitchBootstraps")) {
+                    count(unresolved, "JAVA21_ONLY_CONSTRUCT " + node.name + "." + m.name
+                            + " (pattern-matching switch; its bootstrap does not exist on Java 17)");
+                }
+            }
+        }
+        node.version = JAVA_17;
+        count(appliedCounts, "CLASS_VERSION_DOWNGRADE Java " + (major - 44) + " -> 17");
     }
 
     // ---- mod entry point, backward -----------------------------------------------------
@@ -697,6 +748,7 @@ public class Translate {
             }
         }), 0);
 
+        downgradeClassVersion(node);
         fixEventBusSubscriber(node);
         fixIllegalHierarchy(node);
         splitAbstractListeners(node);
@@ -3560,7 +3612,7 @@ public class Translate {
                     } else {
                         String moved = renamePath(entryName);
                         if (!moved.equals(entryName)) entryName = moved;
-                        if (entryName.equals("META-INF/neoforge.mods.toml")) data = migrateDescriptor(data);
+                        if (entryName.equals(descriptorName())) data = migrateDescriptor(data);
                         if (entryName.equals("META-INF/jarjar/metadata.json")) data = pruneJarJarIndex(data);
                         if (entryName.startsWith("data/") && entryName.endsWith(".json")) {
                             data = migrateResourceJson(entryName, data);
@@ -3732,6 +3784,19 @@ public class Translate {
      * every dependency block, so which value it should take depends on the `modId` declared
      * above it. This tracks the enclosing block instead of matching lines in isolation.
      */
+    /**
+     * The descriptor's name *after* renaming, which is what the migration has to trigger on.
+     *
+     * Getting this wrong is silent and total: renamePath moves the file first, so a check against
+     * the forward name never fires backward, and the mod ships a NeoForge descriptor under a
+     * Forge filename. Every dependency then still says `neoforge`, and Forge 1.20.1 rejects the
+     * file outright — which is at least loud, but only because Forge happens to validate a key
+     * NeoForge made optional.
+     */
+    private String descriptorName() {
+        return backward ? "META-INF/mods.toml" : "META-INF/neoforge.mods.toml";
+    }
+
     private byte[] migrateDescriptor(byte[] data) {
         return backward ? migrateDescriptorBackward(data) : migrateDescriptorForward(data);
     }
@@ -3748,12 +3813,31 @@ public class Translate {
         String[] lines = new String(data, StandardCharsets.UTF_8).split("\\R", -1);
         StringBuilder out = new StringBuilder();
         String depModId = null;
+        // Whether the dependency block being written has produced a `mandatory` key yet, and the
+        // indentation to give one if it has not. NeoForge made the key optional and defaults it
+        // to required; Forge 1.20.1 refuses the whole file without it -- "Missing required field
+        // mandatory in dependency" -- so a block that never mentioned `type` needs one invented.
+        boolean inDependency = false, sawMandatory = false;
+        String indent = "    ";
 
         for (String line : lines) {
             String trimmed = line.trim();
 
-            if (trimmed.startsWith("[[dependencies.")) depModId = null;
-            else if (trimmed.startsWith("[")) depModId = null;
+            boolean startsBlock = trimmed.startsWith("[");
+            if (startsBlock && inDependency && !sawMandatory) {
+                out.append(indent).append("mandatory=true\n");
+                sawMandatory = true;
+            }
+            if (startsBlock) {
+                inDependency = trimmed.startsWith("[[dependencies.");
+                sawMandatory = false;
+                depModId = null;
+            }
+            if (inDependency && !trimmed.isEmpty() && !startsBlock) {
+                int lead = line.indexOf(trimmed.charAt(0));
+                if (lead > 0) indent = line.substring(0, lead);
+            }
+            if (trimmed.startsWith("mandatory") || trimmed.startsWith("type")) sawMandatory = true;
 
             if (depModId == null || !trimmed.startsWith("versionRange")) {
                 var m = java.util.regex.Pattern.compile("modId\\s*=\\s*\"([^\"]+)\"").matcher(line);
@@ -3791,6 +3875,8 @@ public class Translate {
 
             out.append(line).append('\n');
         }
+        // A dependency block that ran to the end of the file rather than to the next header.
+        if (inDependency && !sawMandatory) out.append(indent).append("mandatory=true\n");
         return out.toString().getBytes(StandardCharsets.UTF_8);
     }
 
@@ -4511,7 +4597,35 @@ public class Translate {
      * name that had several. That is the same ambiguity the forward direction has always had in
      * reverse, and it is reported rather than hidden.
      */
+    /**
+     * True when the backward run should leave vanilla members under their official names.
+     *
+     * <h2>Why this exists, and why it is not a workaround</h2>
+     *
+     * Forge 1.20.1 has two naming worlds. A mod shipped to players carries **SRG** member names,
+     * which is what production resolves and what this transformer emits by default. A
+     * ForgeGradle *dev* environment — `gradlew runData`, the only backward harness available —
+     * runs vanilla under **official** names and cannot resolve SRG at all.
+     *
+     * That is not a claim about our output: an unmodified ATM9 jar, straight off CurseForge and
+     * never touched by this project, fails in `runData` with exactly the same
+     * `NoSuchFieldError: f_279569_`. The harness cannot load production jars, full stop.
+     *
+     * So the harness is given official names and tests everything else — the descriptor, the
+     * class-file downgrade, the synthesised constructor, the shim layer, the resources. **What it
+     * therefore cannot test is the naming step itself**, and nothing available here can. That is a
+     * real gap in backward verification and is recorded as one rather than papered over.
+     */
+    private static boolean officialNamedTarget() {
+        return "official".equalsIgnoreCase(System.getenv("EASYPORT_BACKWARD_NAMING"));
+    }
+
     private void loadMappings(Path p) throws IOException {
+        if (backward && officialNamedTarget()) {
+            count(appliedCounts, "NAMING_LEFT_OFFICIAL (EASYPORT_BACKWARD_NAMING=official; "
+                    + "this jar is for a dev environment, not for players)");
+            return;
+        }
         if (backward) {
             // The flat table cannot be inverted -- see toSrg. The owner-qualified one sits beside
             // it and is produced by the same run of SrgToOfficial.

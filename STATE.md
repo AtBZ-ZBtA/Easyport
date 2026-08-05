@@ -123,6 +123,9 @@ bash tools/build-neoforge-compat.sh       # the backward shim layer
 bash tools/build-service.sh               # easyport.jar, the in-game half; needs forge-compat first
 
 # Backward. Direction is detected from the jar; the rules file must agree or the run is refused.
+# EASYPORT_BACKWARD_NAMING=official for a dev-environment jar; omit it for one players will run.
+# bash tools/build-neoforge-compat.sh, then drop the jar in devenv/forge-1.20.1/run-data/mods/
+# and run: cd devenv/forge-1.20.1 && ./gradlew.bat runData --no-daemon --console=plain
 java -cp "$CP" tools/Translate.java <neoforge-mod.jar> out.jar \
     mappings/srg2official.tsv rules/backward.rules.tsv \
     devenv/spi/forge-*.jar neoforge-compat/neoforge-compat.jar
@@ -479,19 +482,60 @@ types — the mod event bus, the mod container, the physical side — are reacha
 1.20.1, which is the only reason the pass is possible at all. A parameter with no filler is
 reported, not guessed.
 
-#### Where it stands
+#### A backward mod now loads on Forge 1.20.1
+
+`devenv/forge-1.20.1` runs `runData` headless in about 13 seconds, the same shape as the forward
+harness, and it reads mods from `run-data/mods/`. **`additional_lights`, translated from its
+NeoForge 1.21.1 build, loads and constructs on Forge 1.20.1 and completes mod loading with no
+errors.** That exercises the whole chain: descriptor, class-file downgrade, naming, the
+synthesised constructor, the shim layer, the type renames and the resource migrations.
+
+**What is not yet verified is registry *content*.** `runData` never reaches a registry dump, so
+"loaded without error" is as far as this harness goes. The forward direction measures content with
+`testkit/inspector` plus `VerifyHarness`; the backward equivalent needs a 1.20.1 build of that and
+does not have one. Do not read the paragraph above as a coverage number.
+
+Getting there took five rounds, and every one of them was a real defect rather than a
+misconfiguration:
+
+| Round | Failure | Cause |
+|---|---|---|
+| 1 | `Missing required field mandatory` | the descriptor migration never ran — it triggered on the *forward* filename, and renamePath moves the file first |
+| 2 | `UnsupportedClassVersionError` | see below |
+| 3 | `constructed 0 mods` | Forge refuses a jar declaring a mod with no `@Mod` class; NeoForge accepts one, so forge-compat had got away with it |
+| 4 | `NoSuchFieldError: f_256840_` | see below |
+| 5 | `NoSuchMethodError`, three times | ordinary shim and vanilla-rule gaps: `Blocks.register`'s covariant return, `TorchBlock`'s swapped constructor, `Block.properties()` |
+
+**Minecraft 1.20.1 runs on Java 17 and 1.21.1 on Java 21**, and a JVM refuses a class file newer
+than itself before any code runs. **111,713 classes across 466 of the 479 corpus jars are Java 21
+bytecode.** Every class is renumbered to 61 now; constructs whose bootstrap only exists on a newer
+JDK — a pattern-matching switch against `SwitchBootstraps` — are reported rather than rewritten,
+because desugaring one is a real transform and not to be attempted speculatively. The forward
+direction has no equivalent problem: a newer JVM accepts older class files, so this asymmetry is
+one-way.
+
+**The dev harness cannot load production jars at all**, and that is not a statement about our
+output. Forge 1.20.1 has two naming worlds: a mod shipped to players carries SRG member names,
+which is what this transformer emits, while a ForgeGradle dev environment runs vanilla under
+official names. An unmodified ATM9 jar, straight off CurseForge, fails in `runData` with exactly
+the same `NoSuchFieldError`. So `EASYPORT_BACKWARD_NAMING=official` leaves names alone for harness
+runs, and **the naming step is the one thing the harness therefore cannot test.** Nothing available
+here can; it would take a production launch.
 
 | | |
 |---|---|
 | Backward vanilla references that resolve | **88.2%** of 27,060 (forward is 92.2%) |
 | NeoForge types the corpus references | 861 |
-| Resolved by a rename | 34 |
-| **Needing `neoforge-compat`** | **827**, ranked in `api-report-backward/unresolved-types.txt` |
-| `neoforge-compat` classes so far | 5 |
+| Resolved by a rename | 35 |
+| **Needing `neoforge-compat`** | **826**, ranked in `api-report-backward/unresolved-types.txt` |
+| `neoforge-compat` classes | 12 |
+| Mods that load on Forge 1.20.1 | 1 |
 
-`additional_lights` translates backward end to end: recipes migrated, members remapped to SRG, a
-no-arg constructor synthesised, and four verification errors left — all four missing shim types
-(`DeferredBlock`, `DeferredItem`, `DeferredHolder`, `DeferredSoundType`), which is the next work.
+The shim layer covers the head of the list by call weight — `DeferredRegister` (250 jars),
+`DeferredHolder` (220), the block and item specialisations, the event bus and the mod container.
+`DeferredRegister.createDataComponents` is deliberately absent: data components do not exist in
+1.20.1 in any form, so a shim would accept registrations and drop them, which is the
+silent-success failure this project refuses. 36 jars call it and are named in the report.
 
 #### Known-incomplete, deliberately
 
@@ -502,9 +546,10 @@ every mixin in a backward-translated mod points at a member Forge 1.20.1 resolve
 name — which fails at apply time and takes the launch with it, exactly as Phase 5 documented in
 the other direction.
 
-**No backward launch harness.** `devenv/forge-1.20.1` is an MDK and should support `runData` the
-same way, but it has not been wired into `VerifyHarness`, so there is no equivalent of
-`batch-verify.sh` for this direction and nothing here has been run.
+**No backward *content* harness.** `runData` works and proves a mod loads, but it is not wired
+into `VerifyHarness`, there is no backward `batch-verify.sh`, and no 1.20.1 build of
+`testkit/inspector` — so nothing measures what a translated mod actually registers. That is the
+single highest-value next piece: without it, every backward claim stops at "it loaded".
 
 **1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are
