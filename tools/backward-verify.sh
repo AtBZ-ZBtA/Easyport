@@ -25,7 +25,10 @@ PLATFORM=(devenv/spi/forge-1.20.1-official.jar devenv/spi/forge-bus-6.0.5.jar
           devenv/spi/forge-distmarker.jar neoforge-compat/neoforge-compat.jar)
 
 OUT="batch-report/backward"
-RESULTS="batch-report/backward-results.tsv"
+# Overridable so two different mod lists do not accumulate into one table. Runs are appended and
+# already-recorded mods are skipped, which is what makes a long run resumable -- and what makes a
+# second list silently merge into the first if they share a file.
+RESULTS="${EASYPORT_BACKWARD_RESULTS:-batch-report/backward-results.tsv}"
 mkdir -p "$OUT" "$MODS"
 
 for required in testkit/inspector-forge/inspector-forge.jar neoforge-compat/neoforge-compat.jar; do

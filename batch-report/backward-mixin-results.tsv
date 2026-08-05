@@ -1,0 +1,9 @@
+modId	referenceIds	candidateIds	missing	extra	registryPct	status
+lootr	12	0	12	0	0.0	LOADED_NOTHING
+polymorph	0	0	0	0	0	NO_CONTENT
+waystones	0	0	0	0	0	DEPS_MISSING
+almostunified	2	0	2	0	0.0	LOADED_NOTHING
+athena	0	0	0	0	0	NO_CONTENT
+attributefix	0	0	0	0	0	CANDIDATE_DEPS_MISSING
+bookshelf	4	0	4	0	0.0	LOADED_NOTHING
+create_enchantment_industry	0	0	0	0	0	DEPS_MISSING

@@ -501,6 +501,19 @@ translation are different jobs sharing one table.
 entirely the wrong thing. 5 of the 14 sampled mods are in that position. This is the same mistake
 the forward harness records from Phase 3, arriving from a new direction.
 
+**The reference side was silently broken for every mixin-carrying mod, and the symptom looked
+like a property of the mods.** `DevifyJar` renamed bytecode only; mixins address their targets as
+*text* — refmap JSON, `@At(target = ...)`, `@Accessor("f_12345_")`, and an access transformer is a
+file of them. Left in SRG, Mixin throws `Critical injection failure` during apply and takes the
+whole launch down, so the reference registered nothing and the harness dutifully reported
+`NO_CONTENT`. That is a plausible-looking answer — plenty of mods really do register nothing —
+which is exactly what made it dangerous. lootr, bookshelf and almostunified went from 0 reference
+ids to 12, 4 and 2 once the text was rewritten too, and **136 corpus mods carry mixins**.
+
+The lesson is the one Phase 3 already recorded from the other side: the bytecode remapper never
+sees a mixin. It was written down, in this tool's own javadoc, as something that would merely
+degrade behaviour. It aborts the launch.
+
 #### A backward mod now loads on Forge 1.20.1
 
 `devenv/forge-1.20.1` runs `runData` headless in about 13 seconds, the same shape as the forward
@@ -595,6 +608,11 @@ field.
 | `DEPS_MISSING` | 5 | the **reference** will not load either — harness limit, not translation |
 | `NO_CONTENT` | 5 | neither side registers anything |
 
+A second set of eight mixin-carrying mods is in `batch-report/backward-mixin-results.tsv`, kept
+separate because the harness appends and skips already-recorded ids — two lists sharing one file
+merge silently. **The reference side of that set did not work at all until `DevifyJar` learned to
+rewrite mixin coordinates**, which is the finding below.
+
 **2 of 4 measurable**, which is the honest denominator. `allthecompressed` reports 822 *extra*
 entries alongside its 9 missing, and that is feature drift rather than translation: its 4.4.0
 NeoForge build registers far more than the 3.0.2 Forge reference. Missing and extra are separate
@@ -616,8 +634,16 @@ every mixin in a backward-translated mod points at a member Forge 1.20.1 resolve
 name — which fails at apply time and takes the launch with it, exactly as Phase 5 documented in
 the other direction.
 
-**Mixin coordinates are still not translated backward** — see above. That is now the largest
-single hole, since the harness can measure everything except mixin behaviour and naming.
+**Mixin *naming* is still not translated backward**, and that is narrower than it first looked.
+Phase 5's machinery — repair, defuse per injector, stub, drop — turns out to work backward
+unchanged, because it asks the platform rather than a table: pointed at the 1.20.1 jar it drops a
+mixin whose target class 1.21 introduced, defuses injectors that no longer resolve, and stubs
+accessors onto members that are gone. So mixins **apply safely** in both directions today.
+
+What is missing is the official → SRG conversion of the coordinates themselves, for a jar players
+would run. It needs the owner-qualified table plus each selector's own owner, which all exists;
+it has simply not been written. The dev harness runs under official names and so cannot show the
+gap either way.
 
 **1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are
