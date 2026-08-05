@@ -189,12 +189,13 @@ survives, and the specific thing 1.21 added does not work. The alternative is a 
 load at all, taking its blocks and items with it.
 
 **What remains, ranked by `api-report/vanilla-gaps.txt`:** `ItemStack` NBT→components (1,207
-jar-weight, the four main methods already `REMOVED`-reported), `FriendlyByteBuf` and the
-`StreamCodec` migration (684), data-driven `Enchantments` which became `ResourceKey`s (492),
-`Ingredient` (349), and `BlockEntity` (312) — that last one is now *only* the override-declaration
-half, since `ARG_FILL` handles its call sites. Overrides are the one shape none of the five
-mechanisms reaches: a mod declaring `saveAdditional(CompoundTag)` no longer overrides anything, so
-it links, loads, and is never called.
+jar-weight, though its four commonest methods -- getTag, getOrCreateTag, setTag, hasTag -- are now
+bridged onto the CUSTOM_DATA component), `FriendlyByteBuf` and the `StreamCodec` migration (684),
+data-driven `Enchantments` which became `ResourceKey`s (492), `Ingredient` (349), and
+`BlockEntity` (312) — that last one is now *only* the override-declaration half, since `ARG_FILL`
+handles its call sites. Overrides are the one shape none of the seven mechanisms reaches: a mod
+declaring `saveAdditional(CompoundTag)` no longer overrides anything, so it links, loads, and is
+never called.
 
 Also outstanding, smaller: `ForgeHooks` (91 jars) and `ForgeEventFactory` (80) were split across
 NeoForge's `EventHooks` and `CommonHooks` and need per-method rules rather than a type rename.
