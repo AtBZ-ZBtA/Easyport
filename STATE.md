@@ -482,6 +482,25 @@ types — the mod event bus, the mod container, the physical side — are reacha
 1.20.1, which is the only reason the pass is possible at all. A parameter with no filler is
 reported, not guessed.
 
+#### The backward harness measures content, not just loading
+
+`bash tools/backward-verify.sh < batch-report/backward.tsv`. Three launches per mod — baseline,
+reference, candidate — with the baseline's ids subtracted from both sides, and the reference and
+candidate registry sets diffed id by id. Same input format as the forward harness with the roles
+swapped: the NeoForge jar is translated, the Forge jar is the answer.
+
+Two pieces had to exist first. **`testkit/inspector-forge`** is the probe, deliberately writing
+the identical JSON to the NeoForge one so the two directions stay comparable. **`tools/DevifyJar`**
+renames SRG members to official ones and does nothing else, because the reference — the author's
+own 1.20.1 build — cannot otherwise load in a dev environment at all. It must never grow into a
+second transformer; the only reason it is separate from `Translate` is that de-obfuscation and
+translation are different jobs sharing one table.
+
+**Classify a failed reference as a harness limit, not a translation failure.** `botanypots`' own
+1.20.1 build refuses to load without `bookshelf`, and calling that "registers nothing" blames
+entirely the wrong thing. 5 of the 14 sampled mods are in that position. This is the same mistake
+the forward harness records from Phase 3, arriving from a new direction.
+
 #### A backward mod now loads on Forge 1.20.1
 
 `devenv/forge-1.20.1` runs `runData` headless in about 13 seconds, the same shape as the forward
@@ -546,10 +565,8 @@ every mixin in a backward-translated mod points at a member Forge 1.20.1 resolve
 name — which fails at apply time and takes the launch with it, exactly as Phase 5 documented in
 the other direction.
 
-**No backward *content* harness.** `runData` works and proves a mod loads, but it is not wired
-into `VerifyHarness`, there is no backward `batch-verify.sh`, and no 1.20.1 build of
-`testkit/inspector` — so nothing measures what a translated mod actually registers. That is the
-single highest-value next piece: without it, every backward claim stops at "it loaded".
+**Mixin coordinates are still not translated backward** — see above. That is now the largest
+single hole, since the harness can measure everything except mixin behaviour and naming.
 
 **1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are

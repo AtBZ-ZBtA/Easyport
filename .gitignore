@@ -92,3 +92,9 @@ batch-report/batch-results.tsv.prev
 # Backward shim layer. Build output only; sources are in neoforge-compat/src.
 neoforge-compat/out/
 neoforge-compat/*.jar
+
+# Backward harness run artifacts. backward-results.tsv is the durable output and stays tracked;
+# the per-mod jars and logs are rebuilt on every run and one of them is a full mod jar.
+batch-report/backward/
+testkit/inspector-forge/out/
+testkit/inspector-forge/*.jar

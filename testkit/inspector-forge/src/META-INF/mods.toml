@@ -1,0 +1,16 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="CC0-1.0"
+
+[[mods]]
+modId="easyport_inspector"
+version="0.1.0"
+displayName="Easyport Inspector"
+description="Verification harness probe. Dumps registry contents so a translated mod can be compared against a reference port."
+
+[[dependencies.easyport_inspector]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="AFTER"
+    side="BOTH"

@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.RegistryObject;
 
 /**
@@ -109,6 +110,36 @@ public class DeferredRegister<T> {
             return held;
         }
 
+        /**
+         * The convenience overloads, which NeoForge added and Forge 1.20.1 has no counterpart to.
+         *
+         * They are not sugar in the shim's terms: a mod calling {@code registerBlock(name, ctor,
+         * properties)} names that exact descriptor, and a shim without it is a
+         * {@code NoSuchMethodError} at registration. allthecompressed is the corpus example.
+         *
+         * The {@code Function} form hands the constructor its properties, so the supplier is
+         * built here rather than by the caller.
+         */
+        public <I extends Block> DeferredBlock<I> registerBlock(
+                String name, java.util.function.Function<BlockBehaviour.Properties, ? extends I> ctor,
+                BlockBehaviour.Properties properties) {
+            return register(name, () -> ctor.apply(properties));
+        }
+
+        /** NeoForge defaults the properties when they are not given. */
+        public <I extends Block> DeferredBlock<I> registerBlock(
+                String name, java.util.function.Function<BlockBehaviour.Properties, ? extends I> ctor) {
+            return registerBlock(name, ctor, BlockBehaviour.Properties.of());
+        }
+
+        public DeferredBlock<Block> registerSimpleBlock(String name, BlockBehaviour.Properties properties) {
+            return register(name, () -> new Block(properties));
+        }
+
+        public DeferredBlock<Block> registerSimpleBlock(String name) {
+            return registerSimpleBlock(name, BlockBehaviour.Properties.of());
+        }
+
         @SuppressWarnings("unchecked")
         private <I extends Block> RegistryObject<I> rawRegister(String name, Supplier<? extends I> supplier) {
             return (RegistryObject<I>) unwrap().register(name, supplier);
@@ -128,6 +159,28 @@ public class DeferredRegister<T> {
             DeferredItem<I> held = new DeferredItem<>(this.<I>rawRegister(name, supplier));
             record(held);
             return held;
+        }
+
+        /** The item counterparts of {@link Blocks#registerBlock}. Same reason: mods name them. */
+        public <I extends Item> DeferredItem<I> registerItem(
+                String name, java.util.function.Function<Item.Properties, ? extends I> ctor,
+                Item.Properties properties) {
+            return register(name, () -> ctor.apply(properties));
+        }
+
+        public <I extends Item> DeferredItem<I> registerItem(
+                String name, java.util.function.Function<Item.Properties, ? extends I> ctor) {
+            return registerItem(name, ctor, new Item.Properties());
+        }
+
+        public DeferredItem<net.minecraft.world.item.BlockItem> registerSimpleBlockItem(
+                String name, Supplier<? extends Block> block, Item.Properties properties) {
+            return register(name, () -> new net.minecraft.world.item.BlockItem(block.get(), properties));
+        }
+
+        public DeferredItem<net.minecraft.world.item.BlockItem> registerSimpleBlockItem(
+                String name, Supplier<? extends Block> block) {
+            return registerSimpleBlockItem(name, block, new Item.Properties());
         }
 
         @SuppressWarnings("unchecked")

@@ -444,6 +444,59 @@ is unaffected — the source launcher does not require the file to sit in a matc
 
 ---
 
+## backward-verify.sh
+
+Measures what a backward-translated mod actually registers, against the author's own 1.20.1 build.
+
+```bash
+bash tools/build-neoforge-compat.sh
+bash tools/build-inspector-forge.sh
+bash tools/backward-verify.sh < batch-report/backward.tsv
+```
+
+Input is the same `modId<TAB>forgeJar<TAB>neoforgeJar` the forward harness reads, **with the roles
+swapped**: the NeoForge jar is translated and the Forge jar is the reference answer. Output
+accumulates in `batch-report/backward-results.tsv`.
+
+Three launches per mod — one baseline, one reference, one candidate — and the baseline's ids are
+subtracted from both sides so forge-compat's own content and the MDK's example mod do not count as
+coverage.
+
+### The reference has to be de-obfuscated first, and that is not a translation
+
+Forge 1.20.1 has two naming worlds. A mod shipped to players carries SRG member names; a
+ForgeGradle dev environment runs vanilla under official names and cannot resolve SRG at all — an
+unmodified ATM9 jar off CurseForge fails in `runData` with `NoSuchFieldError: f_279569_`. So the
+reference goes through `DevifyJar`, which renames SRG members to official ones **and does nothing
+else**. It must never grow into a second transformer; every rule and structural pass belongs in
+`Translate`, and the only reason this is separate is that de-obfuscation and translation are
+different jobs sharing one table.
+
+The candidate is translated with `EASYPORT_BACKWARD_NAMING=official` for the same reason.
+
+**What this harness therefore cannot test is the naming step itself.** Both sides are measured
+under official names, so a mistake in the official→SRG table would not show up here. Nothing
+available in this project can test it short of a production launch, and that is a real hole rather
+than a caveat.
+
+### What it does not measure
+
+Mixin refmaps and access transformers still name SRG members on the reference side, so a reference
+port whose behaviour depends on a mixin will not behave identically. Registry *content*, which is
+what this counts, comes from ordinary registration code.
+
+---
+
+## build-inspector-forge.sh
+
+Builds the Forge 1.20.1 verification probe — the backward counterpart of `testkit/inspector`,
+which is a NeoForge mod and cannot run there. It writes the identical `easyport-inspection.json`
+on purpose: the whole point is to compare a backward-translated mod against a reference the
+forward harness measured the same way, and a probe that reported differently would make the two
+directions incomparable for reasons unrelated to translation.
+
+---
+
 ## build-service.sh
 
 Builds `easyport.jar`, the in-game half of the project.
