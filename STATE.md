@@ -10,8 +10,30 @@ plan; this has where things actually stand.
 
 ## Resume here
 
+**The current phase is the one after the newest `### Phase N — COMPLETE` block below** — that is
+the only place status lives, and deriving it here rather than restating it is deliberate. Full
+definitions are in [ROADMAP.md](ROADMAP.md) §5; the short version, because the ordering is the
+useful part:
+
+| Phase | Question | Needs |
+|---|---|---|
+| 9 | Will the classes load? Corpus-wide type-check, both directions | nothing; unattended |
+| 10 | Does the mod load? Corpus-wide load rate, every failure attributed | machine time |
+| 11 | Does it register what the author's own port registers? 288 pairs, not 22 | machine time |
+| 12 | `content-backport` — 1.21.1 content for a 1.20.1 target | nothing |
+| 13 | Does it *play*? Rendering, gameplay, production SRG naming | a person at a keyboard |
+
+**Phases are ordered by what can be verified unattended, not by what is interesting to write.**
+9 through 12 need nobody present. 13 cannot be faked by any harness this project can build, and is
+kept separate so its contents are never quietly counted as done.
+
+**Phase 9's first task is the cheapest large measurement still unmade:** `verify-sweep` has only
+ever been pointed at 22 jars — the 8 libraries plus the first 14 mods alphabetically, which stops
+at "b". Running it over all 433 forward and 479 backward turns "433/433 translate" from a claim
+about the transformer into a claim about the output.
+
 **Work offline first. Launch only for what offline cannot answer.** This is the single biggest
-change to how this project is worked on, so it comes first.
+change to how this project is worked on, so it comes second only to knowing which phase you are in.
 
 ```bash
 # Will these classes load? Whole list, translated and type-checked, in about a minute each.
@@ -439,8 +461,10 @@ The backward sweep puts a number on the rest: **3,396 distinct vanilla members a
 no 1.20.1 counterpart**, close to twice the forward gap, and weighted toward things 1.20.1 cannot
 represent at all rather than things that merely moved.
 
-**The backward direction is started, not finished**, and it is the whole of what remains. See its
-own block below for what is built and what is not. Two things to carry into any work on it:
+**The backward direction is started, not finished**, but it is no longer the whole of what remains
+— Phase 8 found a forward subsystem, blaze3d, that no report had ever counted, and the forward
+queue below is real. See the backward block for what is built and what is not. Two things to carry
+into any work on it:
 `Translate` is now direction-aware and refuses a rules file whose `#direction:` header disagrees
 with the input jar, and **the backward direction has no launch harness at all**, so nothing in it
 has been run — only compiled, type-checked and measured.
@@ -851,6 +875,35 @@ names, so an official-named output looks correct in the one place it can be obse
 **1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are
 currently carried across untouched rather than dropped or synthesised.
+
+### Phase 8 — COMPLETE
+
+**Named after the fact.** This was not planned as a phase — it was the backward direction plus
+whatever the reports pointed at. It got a number because it turned out to have one subject, and
+that subject is the thing every later phase steers by.
+
+**Exit criterion, written in hindsight:** no report claims a gap that is not one, and no report is
+silent about a gap that is. Met, after four instances of the same defect — the full accounting is
+in gotcha 0 and in the blaze3d block above.
+
+| Delivered | |
+|---|---|
+| The blaze3d vertex protocol, both directions | rules + a `VertexBridge` each way; `closeVertexChains` for the backward `endVertex` insertion; `MeshData` and `ByteBufferBuilder` shims |
+| Whole-platform member indexing | the prefix filter is gone; `SUPERTYPE_NOT_INDEXED` where the index still cannot answer |
+| Per-side library pinning | every shared library at the version its own game ships, read from the manifests |
+| `Translate#emittedName` | every backward rule was writing official names into a jar that runs under SRG |
+| `tools/VertexChains.java` | measures a pass's central assumption before the pass is written |
+
+**What it changed about the numbers.** Backward distinct-members-with-no-counterpart went
+4,142 → 3,396, and roughly 700 of that difference was the index reporting on itself rather than on
+the corpus. Three counts went *up* — abstract stubs 226 → 234, defused injectors 107 → 110 —
+because indexing everything makes more of the corpus judgeable.
+
+**The lesson worth carrying forward** is not about blaze3d or authlib. It is that a measurement
+tool's scope is invisible in its output: every one of these defects produced a well-formatted
+report full of plausible findings, and the missing thing left no hole where anyone would look for
+one. Phases 9 through 11 are all measurement phases. Read gotcha 0 before trusting a new number
+from any of them.
 
 ### Phase 7 — COMPLETE
 

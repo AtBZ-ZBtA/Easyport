@@ -755,27 +755,150 @@ doubled, so the same platform jar was indexed twice under two spellings. Both ar
 recognises a jar it should leave alone; running on a Forge 1.20.1 instance and translating
 backward needs the backward rule set, which does not exist.
 
-### Phase 8 — `content-backport` · 2–4 weeks
-1.21.1 vanilla content as mod-added content for 1.20.1 targets. Backward direction only.
-Deferrable — forward direction ships without it.
+### Phase 8 — Measurement correctness · DONE
+
+**Named after the fact.** The work between Phase 7 and here was not planned as a phase — it was
+the backward direction plus whatever the reports pointed at. It turned out to have one subject,
+and it is worth a phase number because the subject is the thing every later phase steers by.
+
+**Exit criterion, written in hindsight:** no report claims a gap that is not one, and no report is
+silent about a gap that is. Met, after four instances of the same defect.
+
+| What was wrong | Cost |
+|---|---|
+| `MemberScan` prefix `net/minecraft/` scoped every downstream report | `com.mojang.blaze3d` invisible; `endVertex` alone is 157 of 433 jars |
+| DataFixerUpper absent from the backward platform | 275 of 445 "types absent from 1.20.1" |
+| authlib and `com.mojang.logging` on the classpath but not member-indexed | 969 findings, e.g. `GameProfile.getId does not exist` |
+| `Translate` member-indexed a prefix, so `FriendlyByteBuf` inherited from an unindexed `ByteBuf` | the 684-jar item could not be judged at all |
+
+One lesson: **an index missing something reports a gap in the thing it is measuring, not in
+itself.** Two rules came out of it — index the whole platform, and when the index cannot answer,
+say so under its own name rather than going quiet.
+
+Delivered alongside: the blaze3d vertex protocol in both directions (rules plus `VertexBridge`
+each way, `closeVertexChains` for the `endVertex` insertion backward, `MeshData` and
+`ByteBufferBuilder` shims), `tools/VertexChains.java`, and the discovery that **every backward
+rule was emitting official names into a jar that runs under SRG** — invisible because the only
+backward harness is a dev launch, which is the one environment where it looks right.
+
+---
+
+## The phases from here
+
+**Ordered by what can be verified, not by what is interesting to write.** That is the same
+principle as the earlier phases and it matters more now: authoring a rule is minutes, and finding
+out whether it was right is the whole cost. Each phase below states who has to be present.
+
+| Phase | Question it answers | Needs |
+|---|---|---|
+| 9 | Will the classes load? | nothing — offline, unattended |
+| 10 | Does the mod load? | the machine, headless; no user |
+| 11 | Does it register what the author's own port registers? | the machine, long runs |
+| 12 | `content-backport` | nothing — offline |
+| 13 | Does it *play*? | a person at a keyboard |
+
+**Phases 9 through 12 are all set-a-goal-and-walk-away work.** Phase 13 is not, and nothing in it
+can be faked by a harness this project can build.
+
+### Phase 9 — Every jar type-checks
+
+**Exit criterion:** `verify-sweep` runs over all 433 forward and all 479 backward jars, and every
+remaining verification error is either fixed or on a written list of walls with a reason beside it.
+The progress metric is the count of jars that type-check clean.
+
+The gate exists and has only ever been pointed at 22 jars — the 8 libraries plus the first 14 mods
+alphabetically, which stops at "b". **Running it corpus-wide is the cheapest large measurement
+still unmade**, and it is the thing that turns "433/433 translate" from a claim about the
+transformer into a claim about the output.
+
+Expect it to generate the work rather than confirm it is done. The known queue going in:
+
+| Forward | Jar weight |
+|---|---|
+| `ItemStack` NBT → data components (four commonest methods already bridged) | 1,207 |
+| `FriendlyByteBuf` / `StreamCodec` | 684 |
+| Data-driven enchantments, now `ResourceKey`s | 492 |
+| `Ingredient` | 349 |
+| `BlockEntity` override declarations — links, loads, never called | 312 |
+| `ForgeHooks` + `ForgeEventFactory` split across `EventHooks`/`CommonHooks` | 171 |
+| `Tesselator`/`BufferBuilder` lifecycle — needs a dataflow rewrite | 104 |
+
+| Backward | Jar weight |
+|---|---|
+| Networking: `IPayloadContext`, `PayloadRegistrar`, `PacketDistributor` | ~650 |
+| `Tags$Items`, `FluidStack`, `FMLEnvironment` | ~420 |
+| Capabilities | ~230 |
+| `IExtensionPoint`, `FMLModContainer`, `BakedModelWrapper`, `RegistryFriendlyByteBuf` | the immediate four |
+| Mixin coordinates: official → SRG, for a jar players would run | all mixin-carrying jars |
+
+**Walls, not queue items.** Some of these have no 1.20.1 representation at all — data components,
+armour-material registries, data-driven enchantments. A wall gets written down with its reason; it
+does not get a shim that accepts the call and drops it.
+
+### Phase 10 — Every jar loads
+
+**Exit criterion:** a load rate measured over the whole corpus in both directions, with every
+failure attributed to a named cause. Not "most mods load" — a table.
+
+`runData` is the harness both ways: headless, ~10s, **no EULA**. The forward side has never been
+run at corpus scale; the backward side has been run on 22 mods. This phase is mostly throughput
+engineering — batching launches, attributing failures automatically — and it is the phase where
+the wall-clock estimate is worth distrusting, because a launch is seconds of work and minutes of
+waiting.
+
+### Phase 11 — Content parity
+
+**Exit criterion:** registry contents compared id-by-id against the author's own port across the
+288 ground-truth pairs, with the match rate stated and the misses categorised.
+
+Currently **22 of 288 pairs, 7.6%, and two of them pass.** The harness for this exists in both
+directions (`batch-verify.sh`, `backward-verify.sh`) and the honest reading of the current numbers
+is that the architecture works on a sample too small to conclude anything from.
+
+Two known distortions to carry in: feature drift makes "extra" entries meaningless as a defect
+count — `allthecompressed` reports 822 extras because its NeoForge build is four major versions
+ahead — and a reference that will not load is a harness limit, not a translation failure.
+
+### Phase 12 — `content-backport`
+
+1.21.1 vanilla content as mod-added content for 1.20.1 targets. Backward only, deferrable, and the
+forward direction ships without it. Unchanged from the old Phase 8 except its number.
+
+### Phase 13 — What only a real game answers
+
+**Not a work queue — a list of things no harness here can reach**, kept so they are never quietly
+counted as done:
+
+- **Client rendering.** `runData` never draws a frame. 595 forward mixin coordinates load and do
+  nothing, dominated by rendering, and the backward vertex work is verified only to the point of
+  "type-checks and inserts the right instruction".
+- **Production SRG naming.** A ForgeGradle dev launch runs official names, so the naming step —
+  the thing that decides whether a backward jar works for a player at all — is the one step the
+  backward harness structurally cannot test.
+- **Gameplay behaviour.** A machine that crafts wrong, an entity that will not spawn, a recipe
+  that silently vanished. This is the difference between a demo and a tool.
 
 ### Milestones
 
+Phases 0–8 are done. What is left, with the estimates in the only unit that has held up —
+**verification wall-clock**, not authoring effort:
+
 | Milestone | Estimate | Gated by |
 |---|---|---|
-| Go/no-go + corpus difficulty breakdown | days | dev env setup, corpus delivery |
-| Verification harness live | days | dev environments |
-| First useful release (simple content, forward) | 1–2 weeks | verification loop |
-| 51% coverage ceiling (all non-mixin mods) | 1–2 months | verification throughput |
-| Past 51% — requires mixin repair | 2–4 months | 1,786 injection points |
-| High coverage, both directions | 3–6 months | per-mod bespoke work |
-| Long-tail closure toward 100% | continuous | play-testing, corpus growth |
+| Phase 9 — corpus-wide type-check, both directions | the sweep is hours; the queue it exposes is the real number | nothing |
+| Phase 10 — corpus-wide load rate | launch throughput, ~10s each × 900 jars × retries | machine time |
+| Phase 11 — content parity across 288 pairs | 3 launches per pair, and the reference has to load too | machine time |
+| Phase 12 — `content-backport` | deferrable; forward ships without it | nothing |
+| Phase 13 — rendering and gameplay | unbounded, and not automatable | a person playing |
 
-**Recalibration note.** Earlier drafts of this document estimated 14–20 months. That was
-in human-developer-months, which is the wrong unit for AI-authored work — it over-weighted
-authoring and under-weighted verification. These figures assume the corpus is in hand and
-verification is automated aggressively. If verification stays manual, the original numbers
-come back.
+**Two recalibrations, both learned the hard way.** Estimates in human-developer-months
+over-weighted authoring: Phase 7 was budgeted in weeks and took days, because Phase 0 had already
+answered its one hard question. But the opposite error is the live one — **measurement keeps
+turning one item into nine.** Phase 6 was scoped as "mostly already built" and became nine
+migrations, four of which fail silently. Phase 8 was not planned at all.
+
+So: the authoring estimates are reliable and small. The estimate that matters is how long it takes
+to find out something is wrong, and that one has never come in low.
 
 ---
 
@@ -783,18 +906,22 @@ come back.
 
 | Input | Status |
 |---|---|
-| Test corpus (ATM9 + ATM10) | **Outstanding — the one live blocker** |
+| Test corpus (ATM9 + ATM10) | In hand — 433 + 479 jars, 288 ground-truth pairs. **Never committed** |
 | Scope decision | Settled: everything in scope |
-| Licensing | Settled: clear |
-| Dev instances | Authorized; setting up |
-| GitHub repo | On request, when Phase 1 starts |
-| Owner's Java/bytecode fluency | **Still unanswered** — affects code style and how much internals get explained |
+| Licensing | Settled: clear. CC0 v1; end products are not distributed by us |
+| Dev instances | Both built — `devenv/neoforge-1.21.1`, `devenv/forge-1.20.1` |
+| GitHub repo | Live |
+| Owner's Java/bytecode fluency | Answered: internals are a black box. Explain outcomes, not implementations |
+| **A person to play the result** | **The one live blocker, and only for Phase 13** |
 
-### Corpus delivery
+Phase 13 is the only thing on this list waiting on a human. Everything in 9 through 12 runs
+unattended, which is the point of ordering them that way.
 
-Install both modpacks via the CurseForge/Prism launcher, then hand over the two `mods`
-folders (or their paths). Do not prune anything — unpaired mods on both sides are
-required test cases.
+### Corpus location
+
+Set `EASYPORT_SOURCE_MODS` and `EASYPORT_TARGET_MODS` to point the tools at a different pack —
+every tool takes the corpus as an argument rather than assuming where it lives. Do not prune a
+pack before pointing at it; unpaired mods on both sides are required test cases.
 
 Then:
 
@@ -834,7 +961,12 @@ decompile → patch → recompile is lossy and fragile at corpus scale.
   java agent? Call-site rewriting is preferable (no launch-arg requirement for users).
 - Reverse attribute-modifier mapping (`ResourceLocation` → UUID) needs a persisted table.
   Where does it live, and what happens on a miss?
-- How do we verify a translated jar beyond "it loaded"? Headless world-gen smoke test? This
-  is the difference between a demo and a tool, and it gates the coverage metric.
-- Coverage metric definition: per-jar? per-call-site? per-rule? Needs settling in Phase 0,
-  since it's the number the whole project steers by.
+- ~~How do we verify a translated jar beyond "it loaded"?~~ **Answered: registry-content diff.**
+  An inspector mod on each side dumps every registered id; the translated jar is compared against
+  the author's own port id by id, with missing and extra kept in separate columns so feature drift
+  cannot inflate or deflate the match. That is Phase 11. It does not reach behaviour — a block that
+  registers and does nothing still counts — which is why Phase 13 exists.
+- ~~Coverage metric definition: per-jar? per-call-site? per-rule?~~ **Answered: jars.** One mod
+  calling something forty times is one mod's worth of evidence, and every report in `api-report/`
+  ranks by jar count for that reason. Call-site counts flattered the wrong work every time they
+  were tried.
