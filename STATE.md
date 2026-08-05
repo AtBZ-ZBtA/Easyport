@@ -238,9 +238,28 @@ The mixin layer is done (Phase 5, signed off below). What is left there is not l
 `api-report/mixin-gaps.txt`. That queue is dominated by **client rendering**, which `runData` never
 exercises — so it is the one area where no harness this project has will catch a regression.
 
+**What is actually next, having checked rather than read the phase numbers off the roadmap.**
+Phases 0–5 are signed off below. Phase 6 as written is *mostly already built*: the datapack
+singularisation, tag renames, descriptor rename and dependency version ranges all went into
+`Translate` during Phase 2, because a mod that does not migrate its resources scores 0% and nothing
+after it can be measured. What is genuinely left forward-side is three small items —
+`pack.mcmeta` `pack_format` is still 15 in every translated jar, recipe `components` /
+`show_notification`, and the advancement `id` key. The rest of ROADMAP §Phase 6 is a list of trees
+that exist only in 1.21.1, which is **backward-direction work**.
+
+**Never use resource-coverage percentages as a measure of resource migration.** They carry the same
+feature drift that poisons rule mining: `allthecompressed` reports 6,612 missing resources because
+its reference is version 4.4.0 against a 3.0.2 source, and nearly all of that is content the author
+added. Treat a low percentage as a prompt to look at the diff, never as a defect count. The inverse
+error is just as easy — `blockui`'s GUI textures moving into a `<modid>_sprites/` directory looked
+like a systematic 1.21 migration until it was counted: `assets/<ns>/atlases/` appears in 77 of 433
+ATM9 jars and 78 of 479 ATM10 jars, so it is not a version change at all.
+
 **Not started:** backward direction (1.21.1 → 1.20.1). Only `rules/forward.rules.tsv` exists.
 The locked decision is omnidirectional, and everything so far reads as forward progress — do
-not mistake that for being halfway.
+not mistake that for being halfway. Phase 7 (the in-game service jar) is the other candidate and is
+cheap: Phase 0 proved same-launch injection works, so it is wrapping the CLI rather than new
+mechanism.
 
 ---
 
@@ -365,13 +384,15 @@ entirely and fails on `BuiltInRegistries.POTION`, whose *field descriptor* chang
 |---|---|---|
 | Libraries loading | 6 / 8 | **7 / 8** |
 | Mixin coordinates intact | — | **88.4%** (4,485 unchanged + 49 repaired of 5,129) |
-| Coordinates that do not resolve | 595 | 595, **none of them fatal** |
+| Coordinates that do not resolve | not measurable | 595, **none of them fatal** |
 | Libraries + sampled mods that type-check clean | 22 / 22 | 22 / 22 |
 
 **Read the second and third rows together, because the second one alone flatters the phase.** 595
-coordinates still do not do what their author intended, and the phase repaired only 49 of them. What
-changed is that every one this tooling can detect now switches itself off instead of taking the
-launch down — and that distinction is the whole phase, because a broken mixin is not like a broken
+coordinates still do not do what their author intended, and the phase repaired only 49 of them. The
+third row has no "before" figure on purpose: nothing could count these until `MixinGaps` existed, and
+the pre-phase number is not 595 in any comparable sense — the same breakage was there, distributed
+between mixin classes deleted wholesale and launches that aborted. What changed is that every one
+this tooling can detect now switches itself off instead of taking the launch down — and that distinction is the whole phase, because a broken mixin is not like a broken
 call. An unresolved member reference throws `NoSuchMethodError` on the path that reaches it; an
 unresolved mixin coordinate throws during mixin *apply*, which aborts **the entire launch, every mod
 in it**, including mods that had nothing to do with it.

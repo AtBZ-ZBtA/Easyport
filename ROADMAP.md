@@ -12,9 +12,13 @@ auto-translates a `/mods-from-other-version` folder into `/mods`.
 **Audience:** end users, not developers. A mod that doesn't port is a failure, not an
 edge case.
 
-**Status:** Phases 0–4 done. The transformer translates real mods that load and register content;
-what remains is mixins (Phase 5) and packaging (Phases 6–7). See the per-phase sign-off blocks
-below, and [STATE.md](STATE.md) for measured current state.
+**Status:** Phases 0–5 done, and most of Phase 6 with them — the resource migration went into the
+transformer during Phase 2 out of necessity. The transformer translates real mods that load, register
+content, and apply their mixins. What remains is the backward direction, the service jar (Phase 7),
+and a long tail of individually small gaps.
+
+> **This line has gone stale four times and is the one nobody updates and everybody trusts.**
+> Phase status lives in the `### Phase N — DONE` blocks below; check those before believing this.
 
 ---
 
@@ -612,11 +616,41 @@ coordinates that abort a launch **595 → 0**. The 595 still lose their behaviou
 The corpus-driven learning from the 1,786 pairs was **not** built. It was not needed for the exit
 criterion and the flat distribution argues against doing it blind. The pairs are still there.
 
-### Phase 6 — Resource/data migration · days
-Independent of the bytecode work — pullable earlier as a self-contained slice. **Work list
-mined from the corpus** (`tools/ResourceMiner.java`, output in `resource-report/`):
+### Phase 6 — Resource/data migration · **mostly already built, forward direction**
 
-**Directory renames (1.21 singularised the datapack tree):**
+It was pullable earlier as a self-contained slice, and that is what happened: the directory
+singularisation, the tag renames, `mods.toml` → `neoforge.mods.toml` and the dependency version
+ranges all went into `Translate` during Phase 2, because a mod that does not migrate its resources
+scores 0% on the harness and nothing after it can be measured. `additional_lights` reaches **100%
+resource coverage**, which is what that machinery working looks like.
+
+**So check what is left before planning this as a phase.** Forward-direction, the confirmed
+remainder is small and specific:
+
+| Item | State | Evidence |
+|---|---|---|
+| `pack.mcmeta` `pack_format` 15 → 34 | **not done** — translated jars still ship 15 | `unzip -p translated/additional_lights.jar pack.mcmeta` |
+| Recipe `components` added, `show_notification` removed | not done | `resource-report/json-key-deltas.tsv` |
+| Advancement `id` key (3 → 55 mods) | not done | same |
+| Everything in the tables below | **done** | `renamePath` / `migrateDescriptor` in `Translate.java` |
+
+**Do not use resource-coverage percentages as this phase's metric.** They are contaminated by the
+same feature drift that poisons rule mining (§2): `allthecompressed` shows 6,612 "missing" resources
+because its reference port is version 4.4.0 against a 3.0.2 source, and almost all of that is
+content the author added rather than anything migration should produce. A low resource percentage is
+a prompt to look, not a defect.
+
+That trap is easy to fall into from the other side too. `blockui` looked like a systematic 1.21 GUI
+migration — `textures/gui/*.png` moving into a `<modid>_sprites/` subdirectory with a new atlas JSON
+— and measuring it killed the theory: `assets/<ns>/atlases/` appears in 77 of 433 ATM9 jars and 78 of
+479 ATM10 jars, so it is not a version change at all. That was one mod restructuring itself.
+
+**The bulk of what remains below is backward-direction work**, because it is a list of trees that
+exist only in 1.21.1. Forward, they need nothing; backward, they must be synthesised or dropped.
+
+**Work list mined from the corpus** (`tools/ResourceMiner.java`, output in `resource-report/`):
+
+**Directory renames (1.21 singularised the datapack tree) — implemented, `DIR_RENAMES` / `TAG_RENAMES`:**
 
 | 1.20.1 | 1.21.1 | Mods |
 |---|---|---|
@@ -631,8 +665,11 @@ mined from the corpus** (`tools/ResourceMiner.java`, output in `resource-report/
 `data/<ns>/enchantment/` (22), `data/<ns>/data_maps/` (36), `data/<ns>/neoforge/` (42),
 `data/<ns>/jukebox_song/` (8), `data/<ns>/tags/data_component_type/` (5).
 
-**Other confirmed deltas:** `META-INF/mods.toml` → `META-INF/neoforge.mods.toml` (file rename,
-key set otherwise unchanged); `pack_format` 15 → 34; recipe `components` added and
+**Other confirmed deltas:** `META-INF/mods.toml` → `META-INF/neoforge.mods.toml` (file rename, key
+set otherwise unchanged) — **done**, along with the dependency version ranges, which the file rename
+alone does not cover: a renamed descriptor still declaring `minecraft [1.20.1,1.21)` gets past
+discovery and is refused during resolution, which is a more confusing failure than being rejected
+outright. Still outstanding: `pack_format` 15 → 34; recipe `components` added and
 `show_notification` removed; loot table `include` / `predicates` added.
 
 ### Phase 7 — In-game service jar · days
