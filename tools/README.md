@@ -412,6 +412,29 @@ unresolved. Unresolved entries are the point: they name exactly what to add next
 not successes. The jar loads; those specific behaviours are gone. So are `TAG_NO_COUNTERPART` and
 `RECIPE_CONDITIONAL_ALTERNATIVES_DROPPED` on the resource side.
 
+### Both directions, one transformer
+
+`Translate` translates either way. Direction is read from the input jar — a Forge mod declares
+`META-INF/mods.toml`, a NeoForge one declares `META-INF/neoforge.mods.toml`, the same test the
+loader applies — and cross-checked against the `#direction:` header the rules file carries. A
+mismatch is refused, because running a mod through the wrong rules does not fail, it produces a
+jar of confidently wrong renames.
+
+Almost nothing here is directional, which is why forking would have been the expensive choice.
+The seven Phase 4 mechanisms and all seven mixin passes ask the *platform jar* what the answer is
+rather than consulting a table, so handing them the other platform is the entire change. What is
+genuinely directional is small: the mapping table, the datapack renames, the descriptor, the
+resource migrations, and which rules file is loaded.
+
+**The one thing that could not simply be inverted is the mapping table.** SRG ids are globally
+unique so `srg -> official` is a function; official names are not, so the inverse is not. See
+`SrgToOfficial` above — the backward direction uses `official2srg.tsv`, keyed on owner + name +
+descriptor.
+
+Backward-only passes so far: the mod constructor rewrite (`MOD_CTOR_INJECTED`), which gives a
+NeoForge mod the no-argument constructor Forge 1.20.1 requires. Backward mixin coordinate
+translation is **not** implemented and reports itself per jar rather than passing silently.
+
 ### Why it is a package now
 
 `Translate.java` declares `package easyport.tools`. That is not tidiness: the in-game service jar

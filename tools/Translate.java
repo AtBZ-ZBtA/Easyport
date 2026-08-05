@@ -156,6 +156,34 @@ public class Translate {
     private final Map<String, Integer> unresolved = new TreeMap<>();
     private int classesRewritten = 0, resourcesMoved = 0, resourcesMigrated = 0;
 
+    /**
+     * Which way this run translates. False is Forge 1.20.1 -&gt; NeoForge 1.21.1.
+     *
+     * <h2>Why one tool and not two</h2>
+     *
+     * Almost nothing here is directional. The seven Phase 4 mechanisms and all seven mixin passes
+     * ask the *platform jar* what the answer is rather than consulting a table, so handing them
+     * 1.20.1 instead of 1.21.1 is the entire change — a Holder that gets unwrapped one way gets
+     * wrapped the other, by the same code reading a different descriptor. Forking the transformer
+     * would double the cost of every future fix to buy nothing.
+     *
+     * What is genuinely directional is small and lives in one place each: the mapping table's
+     * direction, the datapack singularisation, the descriptor rename, the resource migrations,
+     * and which rules file is loaded.
+     *
+     * <h2>How it is decided, and why it is checked twice</h2>
+     *
+     * Read from the input jar, because the jar already says: a Forge mod declares
+     * `META-INF/mods.toml` and a NeoForge one declares `META-INF/neoforge.mods.toml`. That is the
+     * same test the loader itself applies, so it cannot drift from reality.
+     *
+     * The rules file then has to agree. It declares its own direction in a `#direction:` header,
+     * and a mismatch is refused rather than translated — running a NeoForge mod through the
+     * forward rules would not fail, it would produce a jar full of confidently wrong renames, and
+     * this project has already measured what confidently wrong output costs.
+     */
+    private boolean backward = false;
+
     public static void main(String[] args) throws Exception {
         if (args.length < 4) {
             System.err.println("usage: java -cp \"<asm>;<asm-tree>;<asm-commons>\" tools/Translate.java "
@@ -307,10 +335,28 @@ public class Translate {
 
     public void run(Path in, Path out, Path mappings, Path rules) throws Exception {
         inputJar = in;
+
+        // Direction first: everything loaded below depends on it.
+        boolean rulesBackward = rulesAreBackward(rules);
+        try (ZipFile probe = new ZipFile(in.toFile())) {
+            backward = jarIsNeoForge(probe);
+        }
+        if (backward != rulesBackward) {
+            throw new IllegalStateException(String.format(
+                    "%s is a %s mod, but %s declares `#direction: %s`. Refusing: a rules file used "
+                  + "in the wrong direction does not fail, it produces a jar of confidently wrong "
+                  + "renames.",
+                    in.getFileName(), backward ? "NeoForge 1.21.1" : "Forge 1.20.1",
+                    rules.getFileName(), rulesBackward ? "backward" : "forward"));
+        }
+
         loadMappings(mappings);
         loadRules(rules);
-        System.out.printf("Loaded %d SRG mappings, %d type renames, %d ctor rules, %d removed-API entries%n",
-                          srgToOfficial.size(), typeRenames.size(), ctorRules.size(), removed.size());
+        System.out.printf("%s: loaded %d member mappings, %d type renames, %d ctor rules, "
+                        + "%d removed-API entries%n",
+                          backward ? "NeoForge 1.21.1 -> Forge 1.20.1" : "Forge 1.20.1 -> NeoForge 1.21.1",
+                          backward ? officialToSrg.size() : srgToOfficial.size(),
+                          typeRenames.size(), ctorRules.size(), removed.size());
 
         Files.createDirectories(out.toAbsolutePath().getParent());
         try (ZipFile zip = new ZipFile(in.toFile());
@@ -433,6 +479,166 @@ public class Translate {
         report(out);
     }
 
+    // ---- mod entry point, backward -----------------------------------------------------
+
+    /**
+     * Gives a NeoForge mod class the no-argument constructor Forge 1.20.1 requires.
+     *
+     * <h2>The problem, measured</h2>
+     *
+     * NeoForge injects into the mod constructor: 1.21.1 mods declare
+     * {@code MyMod(IEventBus bus, ModContainer container)} and FML supplies both. Forge 1.20.1
+     * does no such thing — it constructs the mod through a no-argument constructor and expects
+     * the mod to fetch what it needs from static context. **408 of the 479 corpus mods have a
+     * constructor that takes arguments**, so without this pass the overwhelming majority of them
+     * are found by the loader, fail to construct, and contribute nothing.
+     *
+     * This is the exact mirror of the {@code FMLJavaModLoadingContext} finding that topped the
+     * Phase 0 work list, and it is the one place where that finding's shape does *not* invert
+     * into something cheap. Forward it dissolved, because NeoForge kept
+     * {@code ModLoadingContext.get()} and a plain delegating shim reached the bus. Backward there
+     * is nothing to delegate to: the signature the loader looks for is the thing that is wrong,
+     * and no shim can change a constructor's descriptor.
+     *
+     * <h2>The transform</h2>
+     *
+     * A synthetic {@code ()V} that fills each parameter from static Forge context and chains to
+     * the original with {@code this(...)}, which is ordinary Java and needs no verifier
+     * concessions. The values come from the same {@code ARG_FILL} table the vanilla passes use,
+     * so what can be supplied is data rather than code — and a parameter with no filler is
+     * reported instead of guessed, leaving the mod visibly unconstructable rather than quietly
+     * half-built.
+     *
+     * The original constructor is kept. Nothing calls it any more, but a mod that reflects on its
+     * own constructors is commoner than it sounds, and removing it buys nothing.
+     */
+    private void injectNoArgModConstructor(ClassNode node) {
+        if (!backward) return;
+        boolean isMod = false;
+        if (node.visibleAnnotations != null) {
+            for (var an : node.visibleAnnotations) {
+                if (an.desc.equals("Lnet/minecraftforge/fml/common/Mod;")) isMod = true;
+            }
+        }
+        if (!isMod) return;
+
+        MethodNode candidate = null;
+        for (MethodNode m : node.methods) {
+            if (!m.name.equals("<init>")) continue;
+            if (m.desc.equals("()V")) return;              // already constructible by Forge
+            // The widest constructor is the one the author meant as the entry point; a narrower
+            // one usually exists only because it chains.
+            if (candidate == null
+                    || Type.getArgumentTypes(m.desc).length > Type.getArgumentTypes(candidate.desc).length) {
+                candidate = m;
+            }
+        }
+        if (candidate == null) return;
+
+        Type[] params = Type.getArgumentTypes(candidate.desc);
+        List<RenameRule> fillers = new ArrayList<>();
+        for (Type p : params) {
+            RenameRule f = p.getSort() == Type.OBJECT ? argFillers.get(p.getInternalName()) : null;
+            if (f == null) {
+                count(unresolved, "MOD_CTOR_UNFILLABLE " + node.name + candidate.desc
+                        + " (no ARG_FILL for " + p.getClassName() + "; Forge 1.20.1 cannot "
+                        + "construct this mod)");
+                return;
+            }
+            fillers.add(f);
+        }
+
+        MethodNode ctor = new MethodNode(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+        ctor.visitVarInsn(Opcodes.ALOAD, 0);
+        for (RenameRule f : fillers) {
+            ctor.visitMethodInsn(Opcodes.INVOKESTATIC, f.newOwner(), f.newName(), f.newDesc(), false);
+        }
+        ctor.visitMethodInsn(Opcodes.INVOKESPECIAL, node.name, "<init>", candidate.desc, false);
+        ctor.visitInsn(Opcodes.RETURN);
+        ctor.visitMaxs(params.length + 1, 1);
+        node.methods.add(ctor);
+        count(appliedCounts, "MOD_CTOR_INJECTED " + candidate.desc);
+    }
+
+    // ---- naming, backward --------------------------------------------------------------
+
+    /** owner + "\t" + name + "\t" + desc ("-" for a field) -&gt; the 1.20.1 SRG name. */
+    private final Map<String, String> officialToSrg = new HashMap<>();
+
+    /**
+     * An official 1.21.1 member name -&gt; the SRG name Forge 1.20.1 resolves it by.
+     *
+     * <h2>Why this is owner-qualified where the forward direction is not</h2>
+     *
+     * SRG ids are globally unique, so forward can use a flat name table. Official names are not:
+     * `getTag`, `tick` and `getName` occur on dozens of unrelated classes, and 26,255 of the
+     * 37,970 distinct official names in 1.20.1 belong to more than one SRG id. A flat inverse
+     * table therefore rewrites calls to whichever class happened to be last, silently.
+     *
+     * <h2>Inheritance</h2>
+     *
+     * A call to a subclass of a vanilla type names the subclass as owner while the member is
+     * declared on a supertype, so an exact-key lookup misses. The supertype chain is walked using
+     * the platform index — which for this direction is the 1.20.1 jar — and the first declaration
+     * found wins, which is the same resolution order the JVM uses.
+     *
+     * <h2>What a miss means</h2>
+     *
+     * A vanilla member with no 1.20.1 SRG name is a member 1.20.1 does not have. It stays
+     * official-named, which the Forge runtime cannot resolve, and it is reported: this is the
+     * backward direction's equivalent of an unresolved rule, and it is the honest answer rather
+     * than a plausible-looking guess.
+     */
+    private String toSrg(String owner, String name, String desc, boolean field) {
+        if (officialToSrg.isEmpty() || owner == null) return name;
+        String key = field ? "-" : desc;
+
+        String direct = officialToSrg.get(owner + "\t" + name + "\t" + key);
+        if (direct != null) return direct;
+
+        for (String up : supertypeChain(owner)) {
+            String found = officialToSrg.get(up + "\t" + name + "\t" + key);
+            if (found != null) return found;
+        }
+
+        // A constructor has no SRG identity in any version; it is always <init>.
+        if (name.equals("<init>") || name.equals("<clinit>")) return name;
+
+        // Only vanilla can be in the table. A mod's own members are not, and saying so for every
+        // one of them would bury the findings that matter.
+        if (!owner.startsWith("net/minecraft/") && !owner.startsWith("com/mojang/")) return name;
+
+        // Absent from the mapping but present in the 1.20.1 jar under this exact name: the member
+        // is simply not obfuscated, so its official name *is* its runtime name and there is
+        // nothing to do. Enum constants are the whole of this case -- Mojang's mappings do not
+        // list them, because `valueOf` and `name()` require the source names to survive -- and
+        // without this check every `RenderShape.MODEL` and `SoundSource.PLAYERS` reads as a
+        // missing API.
+        if (resolvedTargetMembers(owner).contains(name + " " + desc)) return name;
+
+        count(unresolved, "NO_SRG_NAME " + owner + "." + name + (field ? " " : "") + desc
+                + " (not present in 1.20.1)");
+        return name;
+    }
+
+    /** Supertypes of a platform class, nearest first. Empty when the class is not indexed. */
+    private List<String> supertypeChain(String owner) {
+        List<String> chain = new ArrayList<>();
+        Deque<String> queue = new ArrayDeque<>();
+        Set<String> seen = new HashSet<>();
+        queue.add(owner);
+        while (!queue.isEmpty()) {
+            String c = queue.poll();
+            if (!seen.add(c)) continue;
+            if (!c.equals(owner)) chain.add(c);
+            String sup = targetSuper.get(c);
+            if (sup != null) queue.add(sup);
+            List<String> ifaces = targetIfaces.get(c);
+            if (ifaces != null) queue.addAll(ifaces);
+        }
+        return chain;
+    }
+
     // ---- bytecode ----------------------------------------------------------------------
 
     private byte[] transformClass(byte[] data) {
@@ -441,13 +647,18 @@ public class Translate {
         ClassNode node = new ClassNode();
         reader.accept(new ClassRemapper(node, new Remapper() {
             @Override public String mapMethodName(String owner, String name, String desc) {
-                return srgToOfficial.getOrDefault(name, name);
+                return backward ? toSrg(owner, name, desc, false)
+                                : srgToOfficial.getOrDefault(name, name);
             }
             @Override public String mapFieldName(String owner, String name, String desc) {
-                return srgToOfficial.getOrDefault(name, name);
+                return backward ? toSrg(owner, name, desc, true)
+                                : srgToOfficial.getOrDefault(name, name);
             }
             @Override public String mapInvokeDynamicMethodName(String name, String desc) {
-                return srgToOfficial.getOrDefault(name, name);
+                // No owner is available here, and backward needs one. An indy call site names a
+                // *functional interface* method, which for vanilla types is always inherited from
+                // an interface this pass cannot see -- so it is left alone rather than guessed at.
+                return backward ? name : srgToOfficial.getOrDefault(name, name);
             }
             /**
              * Type renames, applied only to the explicitly listed types.
@@ -490,6 +701,9 @@ public class Translate {
         fixIllegalHierarchy(node);
         splitAbstractListeners(node);
         stubAddedAbstractMethods(node);
+        // After the type remapper, because it looks for the *renamed* @Mod descriptor -- the one
+        // FML 1.20.1 will scan for -- rather than the one the mod was compiled with.
+        injectNoArgModConstructor(node);
 
         // Mixin annotations address their targets as text, which the remapper never sees.
         remapAnnotationStrings(node.visibleAnnotations);
@@ -2185,6 +2399,19 @@ public class Translate {
      * and the coordinates pointing into it were stale.
      */
     private String remapSrgInText(String text) {
+        if (backward) {
+            // Not implemented backward, and silence here would be the worst possible handling.
+            // A mixin coordinate names an *official* 1.21.1 member and needs the owner-qualified
+            // table plus the selector's own owner to become an SRG name -- doable, and not done.
+            // Until it is, every mixin in a backward-translated mod points at a member Forge
+            // 1.20.1 resolves by a different name, which fails at apply time and takes the launch
+            // with it. Said once per jar so it cannot be missed.
+            if (text != null && SRG_TOKEN.matcher(text).find()) {
+                count(unresolved, "MIXIN_TEXT_NOT_TRANSLATED_BACKWARD (coordinates still name "
+                        + "official 1.21.1 members; Forge 1.20.1 resolves vanilla by SRG)");
+            }
+            return text;
+        }
         if (srgToOfficial.isEmpty() || text == null) return text;
         java.util.regex.Matcher m = SRG_TOKEN.matcher(text);
         StringBuilder sb = new StringBuilder();
@@ -3415,31 +3642,63 @@ public class Translate {
                 .getBytes(StandardCharsets.UTF_8);
     }
 
-    /** Applies the descriptor rename and the 1.21 datapack directory singularisation. */
+    /**
+     * Applies the descriptor rename and the datapack directory renames, in this run's direction.
+     *
+     * Backward is the same set of moves read the other way: `neoforge.mods.toml` back to
+     * `mods.toml`, the singularised datapack tree back to plurals, `c:` back to `forge:`, and
+     * `data/&lt;ns&gt;/neoforge/` back to `data/&lt;ns&gt;/forge/`.
+     */
     private String renamePath(String path) {
-        if (path.equals("META-INF/mods.toml")) return "META-INF/neoforge.mods.toml";
+        String descriptorFrom = backward ? "META-INF/neoforge.mods.toml" : "META-INF/mods.toml";
+        String descriptorTo = backward ? "META-INF/mods.toml" : "META-INF/neoforge.mods.toml";
+        if (path.equals(descriptorFrom)) return descriptorTo;
+
+        String commonFrom = backward ? "c" : "forge";
+        String commonTo = backward ? "forge" : "c";
+        String loaderFrom = backward ? "neoforge" : "forge";
+        String loaderTo = backward ? "forge" : "neoforge";
 
         String[] p = path.split("/");
         if (p.length >= 4 && p[0].equals("data")) {
             // The common-tag namespace. A mod that contributes to forge:ingots/copper ships
             // data/forge/tags/items/ingots/copper.json, and that file has to move with the
             // references to it or the mod stops agreeing with its own tag.
-            boolean commonTags = p[1].equals("forge") && p[2].equals("tags");
-            if (commonTags) p[1] = "c";
+            boolean commonTags = p[1].equals(commonFrom) && p[2].equals("tags");
+            if (commonTags) p[1] = commonTo;
             // Biome and structure modifiers: data/<ns>/forge/ -> data/<ns>/neoforge/. 59 of the
             // 433 corpus jars ship one, and the loader reads nothing outside its own namespace.
-            if (p[2].equals("forge")) p[2] = "neoforge";
+            if (p[2].equals(loaderFrom)) p[2] = loaderTo;
 
-            String renamed = DIR_RENAMES.get(p[2]);
+            String renamed = dirRenames().get(p[2]);
             if (renamed != null) p[2] = renamed;
             if (p[2].equals("tags") && p.length >= 5) {
-                String tagRenamed = TAG_RENAMES.get(p[3]);
+                String tagRenamed = tagRenames().get(p[3]);
                 if (tagRenamed != null) p[3] = tagRenamed;
             }
             String joined = String.join("/", p);
             return commonTags ? renameCommonTagFile(joined) : joined;
         }
         return path;
+    }
+
+    /**
+     * The directory renames for this direction.
+     *
+     * Inverted rather than written out twice. The forward table is a set of 1:1 renames, so its
+     * inverse is well defined, and a second hand-written table is a second place for the two to
+     * disagree — which would show up as a datapack the target loader silently does not read.
+     */
+    private Map<String, String> dirRenames() { return backward ? DIR_RENAMES_BACK : DIR_RENAMES; }
+    private Map<String, String> tagRenames() { return backward ? TAG_RENAMES_BACK : TAG_RENAMES; }
+
+    private static final Map<String, String> DIR_RENAMES_BACK = invert(DIR_RENAMES);
+    private static final Map<String, String> TAG_RENAMES_BACK = invert(TAG_RENAMES);
+
+    private static Map<String, String> invert(Map<String, String> m) {
+        Map<String, String> out = new LinkedHashMap<>();
+        m.forEach((k, v) -> out.put(v, k));
+        return out;
     }
 
     /**
@@ -3453,7 +3712,7 @@ public class Translate {
         String[] p = path.split("/", 5);            // data / c / tags / <type> / <rest>
         if (p.length < 5 || !p[4].endsWith(".json")) return path;
         String bare = p[4].substring(0, p[4].length() - 5);
-        String target = commonTagRenames.get("forge:" + bare);
+        String target = commonTagRenames().get((backward ? "c:" : "forge:") + bare);
         if (target == null) return path;
         int colon = target.indexOf(':');
         count(appliedCounts, "TAG_FILE_RENAME forge:" + bare + " -> " + target);
@@ -3473,7 +3732,69 @@ public class Translate {
      * every dependency block, so which value it should take depends on the `modId` declared
      * above it. This tracks the enclosing block instead of matching lines in isolation.
      */
-    private static byte[] migrateDescriptor(byte[] data) {
+    private byte[] migrateDescriptor(byte[] data) {
+        return backward ? migrateDescriptorBackward(data) : migrateDescriptorForward(data);
+    }
+
+    /**
+     * Migrates the mod descriptor, 1.21.1 -&gt; 1.20.1.
+     *
+     * The mirror of the forward pass and no more interesting, except that `type="required"` has
+     * to become `mandatory=true` rather than being dropped: Forge 1.20.1 treats a dependency with
+     * no `mandatory` key as malformed and refuses the file, so a silent omission here fails the
+     * mod at discovery rather than at resolution.
+     */
+    private static byte[] migrateDescriptorBackward(byte[] data) {
+        String[] lines = new String(data, StandardCharsets.UTF_8).split("\\R", -1);
+        StringBuilder out = new StringBuilder();
+        String depModId = null;
+
+        for (String line : lines) {
+            String trimmed = line.trim();
+
+            if (trimmed.startsWith("[[dependencies.")) depModId = null;
+            else if (trimmed.startsWith("[")) depModId = null;
+
+            if (depModId == null || !trimmed.startsWith("versionRange")) {
+                var m = java.util.regex.Pattern.compile("modId\\s*=\\s*\"([^\"]+)\"").matcher(line);
+                if (m.find()) {
+                    String id = m.group(1);
+                    if (id.equals("neoforge")) {
+                        line = line.replace("\"neoforge\"", "\"forge\"");
+                        depModId = "forge";
+                    } else {
+                        depModId = id;
+                    }
+                }
+            }
+
+            if (trimmed.startsWith("versionRange") && depModId != null) {
+                String range = switch (depModId) {
+                    case "forge" -> "[47,)";
+                    case "minecraft" -> "[1.20.1,1.21)";
+                    default -> null;
+                };
+                if (range != null) {
+                    line = line.replaceAll("versionRange\\s*=\\s*\"[^\"]*\"",
+                                           "versionRange=\"" + range + "\"");
+                }
+            }
+
+            if (trimmed.startsWith("type")) {
+                line = line.replaceAll("type\\s*=\\s*\"required\"", "mandatory=true")
+                           .replaceAll("type\\s*=\\s*\"optional\"", "mandatory=false");
+            }
+
+            if (trimmed.startsWith("loaderVersion")) {
+                line = line.replaceAll("loaderVersion\\s*=\\s*\"[^\"]*\"", "loaderVersion=\"[47,)\"");
+            }
+
+            out.append(line).append('\n');
+        }
+        return out.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+    private static byte[] migrateDescriptorForward(byte[] data) {
         String[] lines = new String(data, StandardCharsets.UTF_8).split("\\R", -1);
         StringBuilder out = new StringBuilder();
         String depModId = null;
@@ -3559,9 +3880,15 @@ public class Translate {
 
         boolean[] changed = { false };
         String category = category(path);
-        if (category.equals("recipe")) root = migrateRecipe(root, changed, path);
-        else if (category.equals("advancement")) root = migrateAdvancement(root, changed);
-        else if (category.equals("dimension_type")) root = migrateDimensionType(root, changed);
+        // Categories are named for the direction's *target*, because renamePath has already run:
+        // forward sees `recipe`, backward sees `recipes`.
+        if (category.equals(backward ? "recipes" : "recipe")) {
+            root = backward ? migrateRecipeBackward(root, changed) : migrateRecipe(root, changed, path);
+        } else if (category.equals(backward ? "advancements" : "advancement")) {
+            root = migrateAdvancementIcon(root, changed);
+        } else if (category.equals("dimension_type") && !backward) {
+            root = migrateDimensionType(root, changed);
+        }
         root = migrateJsonStrings(root, null, changed);
 
         if (!changed[0]) return data;
@@ -3737,23 +4064,73 @@ public class Translate {
         return out;
     }
 
-    /** The advancement display icon is an ItemStack and took the same `item` -&gt; `id` rename. */
+    /** The advancement display icon is an ItemStack and took the same `item` &lt;-&gt; `id` rename. */
     @SuppressWarnings("unchecked")
-    private Object migrateAdvancement(Object root, boolean[] changed) {
+    private Object migrateAdvancementIcon(Object root, boolean[] changed) {
+        String from = backward ? "id" : "item";
+        String to = backward ? "item" : "id";
         if (!(root instanceof Map<?, ?> m0)) return root;
         Map<String, Object> m = (Map<String, Object>) m0;
         if (!(m.get("display") instanceof Map<?, ?> d)) return m;
         Map<String, Object> display = (Map<String, Object>) d;
-        if (!(display.get("icon") instanceof Map<?, ?> i) || !i.containsKey("item")
-                || i.containsKey("id")) return m;
+        if (!(display.get("icon") instanceof Map<?, ?> i) || !i.containsKey(from)
+                || i.containsKey(to)) return m;
 
         Map<String, Object> outDisplay = new LinkedHashMap<>(display);
-        outDisplay.put("icon", renameKey((Map<String, Object>) i, "item", "id"));
+        outDisplay.put("icon", renameKey((Map<String, Object>) i, from, to));
         Map<String, Object> out = new LinkedHashMap<>(m);
         out.put("display", outDisplay);
         changed[0] = true;
-        count(appliedCounts, "ADVANCEMENT_ICON_ID");
+        count(appliedCounts, backward ? "ADVANCEMENT_ICON_ITEM" : "ADVANCEMENT_ICON_ID");
         return out;
+    }
+
+    /**
+     * Recipe migration, 1.21.1 -&gt; 1.20.1.
+     *
+     * Shorter than its forward counterpart because two of the forward steps have no inverse worth
+     * making. `forge:conditional` is not reintroduced — Forge 1.20.1 reads a bare `conditions`
+     * list on a recipe perfectly well, which is what the wrapper existed to generalise, so
+     * unwrapping forward and not rewrapping backward is a round trip that loses nothing.
+     * `show_notification` is not put back either: it is optional, defaulted, and inventing a
+     * value for it would be inventing behaviour.
+     */
+    @SuppressWarnings("unchecked")
+    private Object migrateRecipeBackward(Object root, boolean[] changed) {
+        if (!(root instanceof Map)) return root;
+        Map<String, Object> m = (Map<String, Object>) root;
+
+        if (m.containsKey("neoforge:conditions")) {
+            m = renameKey(m, "neoforge:conditions", "conditions");
+            changed[0] = true;
+            count(appliedCounts, "RECIPE_CONDITIONS_DENAMESPACED");
+        }
+
+        // 1.21.1 recipes may carry a `components` block on the result, describing data components
+        // that 1.20.1 has no concept of. There is no NBT translation for an arbitrary component
+        // map, so it is dropped and named -- the recipe still produces the item, without whatever
+        // the components were adding.
+        Object result = m.get("result");
+        if (result instanceof Map<?, ?> r0) {
+            Map<String, Object> r = (Map<String, Object>) r0;
+            if (r.containsKey("id") && !r.containsKey("item")) {
+                r = renameKey(r, "id", "item");
+                changed[0] = true;
+                count(appliedCounts, "RECIPE_RESULT_ITEM");
+            }
+            if (r.containsKey("components")) {
+                r = new LinkedHashMap<>(r);
+                r.remove("components");
+                changed[0] = true;
+                count(unresolved, "RECIPE_RESULT_COMPONENTS_DROPPED (1.20.1 has no data "
+                        + "components; the recipe still produces the item)");
+            }
+            if (r != result) {
+                m = new LinkedHashMap<>(m);
+                m.put("result", r);
+            }
+        }
+        return m;
     }
 
     /**
@@ -3811,33 +4188,52 @@ public class Translate {
         } else if ("tag".equals(key)) {
             String moved = migrateTag(s);
             if (moved != null) { changed[0] = true; return moved; }
-        } else if ("type".equals(key) && s.startsWith("forge:")) {
+        } else if ("type".equals(key) && s.startsWith(backward ? "neoforge:" : "forge:")) {
             // Datapack conditions, biome modifiers and structure modifiers all moved namespace
             // with the loader. The type sets are identical either side -- mod_loaded, not, and,
             // or, tag_empty, item_exists, false, add_features, add_spawns, remove_* -- so this is
             // a namespace swap and not a mapping.
+            String from = backward ? "neoforge:" : "forge:";
+            String to = backward ? "forge:" : "neoforge:";
             changed[0] = true;
             count(appliedCounts, "PLATFORM_TYPE_NAMESPACE " + s);
-            return "neoforge:" + s.substring(6);
+            return to + s.substring(from.length());
         }
         return node;
     }
 
-    /** A `forge:` tag -&gt; its 1.21 name, or null if this is not a forge tag. */
+    /** A common tag -&gt; its name on the other side, or null if it is not one. */
     private String migrateTag(String tag) {
-        if (!tag.startsWith("forge:")) return null;
-        String mapped = commonTagRenames.get(tag);
+        String from = backward ? "c:" : "forge:";
+        String to = backward ? "forge:" : "c:";
+        if (!tag.startsWith(from)) return null;
+        String mapped = commonTagRenames().get(tag);
         if (mapped != null) {
             count(appliedCounts, "TAG_RENAME " + tag + " -> " + mapped);
             return mapped;
         }
         if (tagsWithNoCounterpart.contains(tag)) {
             count(unresolved, "TAG_NO_COUNTERPART " + tag
-                    + " (namespace swapped; nothing in 1.21 defines it)");
+                    + " (namespace swapped; nothing on the other side defines it)");
         }
-        count(appliedCounts, "TAG_NAMESPACE forge: -> c:");
-        return "c:" + tag.substring(6);
+        count(appliedCounts, "TAG_NAMESPACE " + from + " -> " + to);
+        return to + tag.substring(from.length());
     }
+
+    /**
+     * The common-tag renames, which each rules file states in its own direction.
+     *
+     * Not inverted from the forward table, and that was a deliberate reversal of a first attempt.
+     * The forward table is many-to-one in places — 1.21 merged tags 1.20.1 kept apart, so
+     * `forge:tools/bows` and `forge:tools/bow` both land on `c:tools/bow` — and inverting a
+     * many-to-one map has to pick a winner by a rule nobody wrote down. Worse, the *default* is
+     * not symmetric either: forward, a `forge:` tag with no entry is swapped to `c:` and is
+     * almost always right, because 1.21 kept the names. Backward, 276 of NeoForge's 463 common
+     * tags have no 1.20.1 counterpart at all, so the same default invents a tag the game does not
+     * define far more often than not. Both facts are properties of the rule set, so they belong
+     * in the rule set.
+     */
+    private Map<String, String> commonTagRenames() { return commonTagRenames; }
 
     // ---- JSON --------------------------------------------------------------------------
 
@@ -4102,11 +4498,58 @@ public class Translate {
 
     // ---- inputs ------------------------------------------------------------------------
 
+    /**
+     * The member-name table, in whichever direction this run needs it.
+     *
+     * Forge 1.20.1 bytecode carries SRG member names; NeoForge 1.21.1 carries official ones. So
+     * forward reads the table as written and backward reads it inverted — the same 64,225 rows
+     * either way, which is why there is one table and not two.
+     *
+     * Inverting is not quite injective: several SRG names can map to one official name, since
+     * official names are reused across unrelated classes and SRG ids are not. The table is keyed
+     * on bare member names, so a collision means the backward direction picks one SRG id for a
+     * name that had several. That is the same ambiguity the forward direction has always had in
+     * reverse, and it is reported rather than hidden.
+     */
     private void loadMappings(Path p) throws IOException {
+        if (backward) {
+            // The flat table cannot be inverted -- see toSrg. The owner-qualified one sits beside
+            // it and is produced by the same run of SrgToOfficial.
+            Path owned = p.resolveSibling("official2srg.tsv");
+            if (!Files.isRegularFile(owned)) {
+                throw new IllegalStateException(owned + " is missing. The backward direction needs "
+                        + "the owner-qualified table; regenerate both with tools/SrgToOfficial.java.");
+            }
+            for (String line : Files.readAllLines(owned, StandardCharsets.UTF_8)) {
+                String[] c = line.split("\t");
+                if (c.length == 4 && !c[0].equals("owner")) {
+                    officialToSrg.put(c[0] + "\t" + c[1] + "\t" + c[2], c[3]);
+                }
+            }
+            return;
+        }
         for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
             String[] c = line.split("\t");
             if (c.length == 2 && !c[0].equals("srg")) srgToOfficial.put(c[0], c[1]);
         }
+    }
+
+    /** The direction a rules file declares, from its `#direction:` header. */
+    private static boolean rulesAreBackward(Path p) throws IOException {
+        for (String line : Files.readAllLines(p, StandardCharsets.UTF_8)) {
+            String t = line.trim();
+            if (!t.startsWith("#direction:")) continue;
+            return t.substring("#direction:".length()).trim().equalsIgnoreCase("backward");
+        }
+        throw new IllegalStateException(p + " has no `#direction:` header. Add "
+                + "`#direction: forward` or `#direction: backward` — a rules file used in the "
+                + "wrong direction produces confidently wrong output rather than an error.");
+    }
+
+    /** Which way a jar needs translating, read the same way the loader reads it. */
+    private static boolean jarIsNeoForge(ZipFile zip) {
+        return zip.getEntry("META-INF/neoforge.mods.toml") != null
+            && zip.getEntry("META-INF/mods.toml") == null;
     }
 
     private void loadRules(Path p) throws IOException {

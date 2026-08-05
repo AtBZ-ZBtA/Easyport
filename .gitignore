@@ -88,3 +88,7 @@ batch-report/resource-coverage.tsv
 # affect a batch in flight. A copy of tracked files; never edit or commit it.
 batch-report/.tools-snapshot/
 batch-report/batch-results.tsv.prev
+
+# Backward shim layer. Build output only; sources are in neoforge-compat/src.
+neoforge-compat/out/
+neoforge-compat/*.jar

@@ -16,6 +16,19 @@ import java.util.*;
  * translation; only members do. And because SRG member names are globally unique by
  * construction, a flat name -> name table is sufficient — no per-class keying required.
  *
+ * <h2>Two tables, because the inverse is not a function</h2>
+ *
+ * That last sentence holds in one direction only, and the backward direction discovered it the
+ * expensive way. SRG ids are globally unique, so srg -> official is a function and a flat table
+ * is enough. Official names are *not* unique — `getTag`, `tick` and `getName` occur on dozens of
+ * unrelated classes — so official -> srg is not a function at all. Inverting the flat table
+ * collapsed 64,225 rows onto 37,970 names and picked an arbitrary SRG id for 26,255 of them,
+ * which is a remapper that silently rewrites calls to whichever class happened to be last.
+ *
+ * So this also emits `official2srg.tsv`, keyed on owner + name + descriptor, which is unique by
+ * construction. It is the table the backward direction has to use, and the forward one is left
+ * exactly as it was.
+ *
  * Composition, since no published mapping goes directly from SRG to official:
  *
  *     Mojang mappings (ProGuard)   official -> obfuscated
@@ -29,8 +42,12 @@ public class SrgToOfficial {
 
     /** One class's obfuscated identity plus the official names of its members. */
     private static final class ObfClass {
+        /** Slashed official class name, needed to key the backward table by owner. */
+        String officialName;
         /** obfuscated member name + descriptor -> official name. Fields use a null descriptor. */
         final Map<String, String> members = new HashMap<>();
+        /** Same key -> the member's *official* descriptor, or "-" for a field. */
+        final Map<String, String> officialDescs = new HashMap<>();
     }
 
     public static void main(String[] args) throws IOException {
@@ -51,14 +68,22 @@ public class SrgToOfficial {
 
         System.out.println("Joining against joined.tsrg (obfuscated -> SRG) ...");
         Map<String, String> srgToOfficial = new TreeMap<>();
-        int unmatched = joinTsrg(tsrgFile, byObfClass, srgToOfficial);
+        Map<String, String> officialToSrg = new TreeMap<>();
+        int unmatched = joinTsrg(tsrgFile, byObfClass, srgToOfficial, officialToSrg);
         System.out.printf("  %d SRG members mapped, %d unmatched%n", srgToOfficial.size(), unmatched);
 
         StringBuilder sb = new StringBuilder("srg\tofficial\n");
         srgToOfficial.forEach((srg, off) -> sb.append(srg).append('\t').append(off).append('\n'));
         Files.writeString(out, sb.toString(), StandardCharsets.UTF_8);
 
-        System.out.printf("%nWrote %s%n", out.toAbsolutePath());
+        Path backOut = out.resolveSibling("official2srg.tsv");
+        StringBuilder bb = new StringBuilder("owner\tname\tdesc\tsrg\n");
+        officialToSrg.forEach((key, srg) -> bb.append(key).append('\t').append(srg).append('\n'));
+        Files.writeString(backOut, bb.toString(), StandardCharsets.UTF_8);
+        System.out.printf("  %d owner-qualified entries for the backward direction%n",
+                          officialToSrg.size());
+
+        System.out.printf("%nWrote %s%n      %s%n", out.toAbsolutePath(), backOut.toAbsolutePath());
         System.out.println("\nSpot checks:");
         for (String probe : List.of("m_41720_", "m_61124_", "f_279569_", "m_237115_")) {
             System.out.printf("  %-12s -> %s%n", probe, srgToOfficial.getOrDefault(probe, "(unmapped)"));
@@ -106,7 +131,8 @@ public class SrgToOfficial {
                 // coincide, but classes Mojang leaves unobfuscated (MinecraftServer and
                 // friends) keep their package and silently fail to join unless normalised.
                 currentObf = obf.replace('.', '/');
-                byObfClass.computeIfAbsent(currentObf, k -> new ObfClass());
+                ObfClass oc = byObfClass.computeIfAbsent(currentObf, k -> new ObfClass());
+                oc.officialName = line.substring(0, arrow).trim().replace('.', '/');
                 continue;
             }
             if (currentObf == null) continue;
@@ -131,11 +157,16 @@ public class SrgToOfficial {
             if (paren < 0) {
                 // Field: descriptor is not needed, names are unique within a class.
                 oc.members.put(obfName + "|", rest);
+                oc.officialDescs.put(obfName + "|", "-");
             } else {
                 String officialName = rest.substring(0, paren);
                 String params = rest.substring(paren + 1, rest.lastIndexOf(')'));
                 String desc = buildObfDescriptor(params, type, officialToObfClass);
                 oc.members.put(obfName + "|" + desc, officialName);
+                // The same builder with no obfuscation table yields the official descriptor,
+                // because every lookup falls through to the name it was given.
+                oc.officialDescs.put(obfName + "|" + desc,
+                                     buildObfDescriptor(params, type, Map.of()));
             }
         }
     }
@@ -189,7 +220,8 @@ public class SrgToOfficial {
      * *class* names here are irrelevant — Forge bytecode already uses official class names.
      */
     private static int joinTsrg(Path file, Map<String, ObfClass> byObfClass,
-                                Map<String, String> srgToOfficial) throws IOException {
+                                Map<String, String> srgToOfficial,
+                                Map<String, String> officialToSrg) throws IOException {
         int unmatched = 0;
         ObfClass current = null;
 
@@ -221,8 +253,12 @@ public class SrgToOfficial {
             if (!srgName.startsWith("m_") && !srgName.startsWith("f_")) continue;
 
             String official = current.members.get(key);
-            if (official != null) srgToOfficial.put(srgName, official);
-            else unmatched++;
+            if (official == null) { unmatched++; continue; }
+            srgToOfficial.put(srgName, official);
+            if (current.officialName != null) {
+                officialToSrg.put(current.officialName + "\t" + official + "\t"
+                                  + current.officialDescs.getOrDefault(key, "-"), srgName);
+            }
         }
         return unmatched;
     }

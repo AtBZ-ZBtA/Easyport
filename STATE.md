@@ -119,7 +119,14 @@ and behaviour, which need a real launch:
 
 ```bash
 bash tools/build-forge-compat.sh          # after ANY forge-compat change; clears the baseline
+bash tools/build-neoforge-compat.sh       # the backward shim layer
 bash tools/build-service.sh               # easyport.jar, the in-game half; needs forge-compat first
+
+# Backward. Direction is detected from the jar; the rules file must agree or the run is refused.
+java -cp "$CP" tools/Translate.java <neoforge-mod.jar> out.jar \
+    mappings/srg2official.tsv rules/backward.rules.tsv \
+    devenv/spi/forge-*.jar neoforge-compat/neoforge-compat.jar
+EASYPORT_DIRECTION=backward bash tools/verify-bytecode.sh out.jar
 bash tools/batch-verify.sh < batch-report/libs.tsv     # 8 highest-fan-in libraries
 bash tools/batch-verify.sh < batch-report/sample.tsv   # 14 mixed mods
 
@@ -275,11 +282,14 @@ error is just as easy — `blockui`'s GUI textures moving into a `<modid>_sprite
 like a systematic 1.21 migration until it was counted: `assets/<ns>/atlases/` appears in 77 of 433
 ATM9 jars and 78 of 479 ATM10 jars, so it is not a version change at all.
 
-**Not started, and it is the whole of what remains: the backward direction** (1.21.1 → 1.20.1).
-Only `rules/forward.rules.tsv` exists. Phases 0–7 are signed off below, both deliverables work, and
-every one of those phases moved in one direction — do not read that as being halfway. The forward
-side also still has a tail: 595 mixin coordinates that load and do nothing, the `BlockEntity`
-override shape no pass reaches, and the `ForgeHooks`/`ForgeEventFactory` split.
+**The backward direction is started, not finished**, and it is the whole of what remains. See its
+own block below for what is built and what is not. Two things to carry into any work on it:
+`Translate` is now direction-aware and refuses a rules file whose `#direction:` header disagrees
+with the input jar, and **the backward direction has no launch harness at all**, so nothing in it
+has been run — only compiled, type-checked and measured.
+
+The forward side also still has a tail: 595 mixin coordinates that load and do nothing, the
+`BlockEntity` override shape no pass reaches, and the `ForgeHooks`/`ForgeEventFactory` split.
 
 ---
 
@@ -394,6 +404,111 @@ Everything below is measured, not estimated.
   the work list at 241 mods — cannot be expressed as a symbol mapping at all**; the bus is
   injected into the mod constructor, so the constructor signature must change rather than any
   call site. Four rule kinds are needed: `RENAME`, `REMOVED`, `CONTEXTUAL`, `STRUCTURAL`.
+
+### Backward direction — IN PROGRESS
+
+**NeoForge 1.21.1 → Forge 1.20.1.** Started; nothing launch-tested yet, because the only harness
+this project has is a NeoForge 1.21.1 `runData` and the backward equivalent has not been stood up.
+Everything below is verified offline — compiled, type-checked, or measured against the corpus.
+
+#### One transformer, not two
+
+`Translate` is now direction-aware rather than forked. That is the right shape for a reason worth
+keeping: almost nothing in it is directional. The seven Phase 4 mechanisms and all seven mixin
+passes ask the *platform jar* what the answer is instead of consulting a table, so handing them
+1.20.1 rather than 1.21.1 is the entire change — a `Holder` unwrapped one way is wrapped the
+other, by the same code reading a different descriptor.
+
+**Direction is detected from the input jar and cross-checked against the rules file.** A Forge mod
+declares `META-INF/mods.toml`, a NeoForge one declares `META-INF/neoforge.mods.toml` — the same
+test the loader applies, so it cannot drift. Each rules file carries a `#direction:` header and a
+mismatch is refused: running a NeoForge mod through the forward rules does not fail, it produces a
+jar of confidently wrong renames.
+
+Forward output is byte-identical after the change, checked by diffing an unpacked jar against the
+Phase 6 sweep.
+
+#### Four asymmetries, each of which broke the obvious approach
+
+**The mapping table does not invert.** Forge 1.20.1 bytecode carries SRG member names and
+NeoForge 1.21.1 carries official ones, so the naive backward move is to read
+`mappings/srg2official.tsv` the other way round. It cannot be: SRG ids are globally unique, so
+srg→official is a function, but official names are not — `getTag`, `tick` and `getName` occur on
+dozens of classes. Inverting collapsed 64,225 rows onto 37,970 names and picked an arbitrary SRG
+id for **26,255** of them, which is a remapper that silently rewrites calls to whichever class was
+last. `SrgToOfficial` now also emits **`mappings/official2srg.tsv`**, keyed on owner + name +
+descriptor, 80,654 entries, unique by construction. The forward table is untouched.
+
+Lookups walk the supertype chain, because a call on a subclass names the subclass while the member
+is declared above it. A miss is reported as `NO_SRG_NAME` — **unless the member is present in the
+1.20.1 jar under its official name**, which means it was never obfuscated and there is nothing to
+do. Enum constants are the whole of that case; without the check every `RenderShape.MODEL` read as
+a missing API.
+
+**The common-tag default is wrong half the time.** Forward, a `forge:` tag with no rule is swapped
+to `c:` and is almost always right. Backward, of NeoForge's **348 common tag paths only 139 have a
+1.20.1 counterpart**; 36 more are renames and **173 do not exist in Forge 1.20.1 at all**. So
+`TAG_GONE` carries most of the weight in `backward.rules.tsv` rather than being a footnote. Tag
+rules are stated per direction rather than inverted in code, precisely because this default is not
+symmetric.
+
+**Most type renames must not be renames.** All 166 forward `net/minecraftforge/X` →
+`net/neoforged/Y` rules invert 1:1, and every inverted target exists in the Forge 1.20.1 platform.
+Adding all of them produced **118 rules that resolve to a type without the member the corpus calls
+on it** — the "rename resolves, mod dies on the first call" failure `RenameGaps` warns about.
+Classifying each candidate out of the NeoForge jar kept only what the loader actually scans:
+annotations, the enums annotations carry, and subclasses of `Event`. **38 renames; the other 128
+are shim work.** The 41 warnings that remain are the event families whose accessors NeoForge
+renamed along with the event — the inherited stopgap debt, stated in the rules file rather than
+discovered later.
+
+**The mod constructor is the headline blocker, and it is bigger than its forward counterpart.**
+NeoForge injects into the mod constructor; Forge 1.20.1 calls a no-argument one and expects the
+mod to fetch what it needs from static context. **408 of the 479 corpus mods declare the injected
+form** — they are found by the loader, fail to construct, and contribute nothing.
+
+This is the mirror of the `FMLJavaModLoadingContext` finding that topped the Phase 0 work list at
+241 mods, and it is the one place where that finding's shape does *not* invert into something
+cheap. Forward it dissolved, because NeoForge kept `ModLoadingContext.get()` and a delegating shim
+reached the bus. Backward there is nothing to delegate to: the signature the loader looks for is
+the thing that is wrong, and no shim can change a constructor's descriptor.
+
+`Translate` now synthesises the missing `()V`, filling each parameter from the same `ARG_FILL`
+table the vanilla passes use and chaining to the original with `this(...)`. All three injected
+types — the mod event bus, the mod container, the physical side — are reachable statically in
+1.20.1, which is the only reason the pass is possible at all. A parameter with no filler is
+reported, not guessed.
+
+#### Where it stands
+
+| | |
+|---|---|
+| Backward vanilla references that resolve | **88.2%** of 27,060 (forward is 92.2%) |
+| NeoForge types the corpus references | 861 |
+| Resolved by a rename | 34 |
+| **Needing `neoforge-compat`** | **827**, ranked in `api-report-backward/unresolved-types.txt` |
+| `neoforge-compat` classes so far | 5 |
+
+`additional_lights` translates backward end to end: recipes migrated, members remapped to SRG, a
+no-arg constructor synthesised, and four verification errors left — all four missing shim types
+(`DeferredBlock`, `DeferredItem`, `DeferredHolder`, `DeferredSoundType`), which is the next work.
+
+#### Known-incomplete, deliberately
+
+**Mixin coordinates are not translated backward at all**, and the transformer says so per jar
+rather than staying quiet. A coordinate names an official 1.21.1 member and needs the
+owner-qualified table plus the selector's own owner to become an SRG name. Until that exists,
+every mixin in a backward-translated mod points at a member Forge 1.20.1 resolves by a different
+name — which fails at apply time and takes the launch with it, exactly as Phase 5 documented in
+the other direction.
+
+**No backward launch harness.** `devenv/forge-1.20.1` is an MDK and should support `runData` the
+same way, but it has not been wired into `VerifyHarness`, so there is no equivalent of
+`batch-verify.sh` for this direction and nothing here has been run.
+
+**1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
+`data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are
+currently carried across untouched rather than dropped or synthesised.
 
 ### Phase 7 — COMPLETE
 

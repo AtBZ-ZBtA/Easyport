@@ -17,6 +17,7 @@ cd "$(dirname "$0")/.." || exit 1
 
 if [ $# -lt 1 ]; then
   echo "usage: verify-bytecode.sh <translated.jar> [extra-jar...]" >&2
+  echo "       EASYPORT_DIRECTION=backward to verify against Forge 1.20.1 instead" >&2
   exit 2
 fi
 
@@ -26,8 +27,21 @@ D="devenv/neoforge-1.21.1/build/moddev/artifacts"
 S="devenv/spi"
 CP="$S/asm.jar;$S/asm-tree.jar;$S/asm-analysis.jar"
 
-ARGS=("$JAR" "$D/neoforge-21.1.248.jar" "forge-compat/forge-compat.jar")
-for j in "$S"/*.jar; do ARGS+=("$j"); done
+# Which platform the jar is supposed to run on. Verifying a backward-translated jar against
+# NeoForge 1.21.1 answers a question nobody asked -- every 1.20.1 signature reads as an error and
+# the output is unusable rather than merely wrong.
+if [ "${EASYPORT_DIRECTION:-forward}" = "backward" ]; then
+  ARGS=("$JAR" "$S/forge-1.20.1-official.jar")
+  [ -f neoforge-compat/neoforge-compat.jar ] && ARGS+=("neoforge-compat/neoforge-compat.jar")
+else
+  ARGS=("$JAR" "$D/neoforge-21.1.248.jar" "forge-compat/forge-compat.jar")
+fi
+for j in "$S"/*.jar; do
+  # The other direction's platform jar must not be on the path: both declare net/minecraft, and
+  # whichever loads first decides what every vanilla signature looks like.
+  case "$(basename "$j")" in forge-1.20.1-official.jar) continue ;; esac
+  ARGS+=("$j")
+done
 
 # Minecraft's libraries, from whichever gradle cache has them. Not pinned to exact versions:
 # the verifier only needs the types to resolve, and a minor version difference in fastutil does

@@ -1,0 +1,332 @@
+#direction: backward
+# Easyport translation rules — NeoForge 1.21.1 -> Forge 1.20.1
+#
+# The mirror of forward.rules.tsv, and the same format: kind <TAB> from <TAB> to. See that file
+# for what each rule kind means; nothing here re-explains them.
+#
+# Read this first, because the direction is not symmetric in the way it looks.
+#
+# NAMING. A NeoForge 1.21.1 mod is compiled against *official* Mojang names. A Forge 1.20.1 mod
+# is compiled against *SRG* names, and that is what the 1.20.1 runtime resolves. So the backward
+# direction has to remap official -> SRG, which is mappings/srg2official.tsv read the other way
+# round. Analysis is done against a vanilla+Forge jar remapped to official names, so both sides
+# of every comparison speak the same language; only the emitted bytecode is SRG.
+#
+# DIRECTION OF LOSS. Forward, the hard cases are things 1.21 *added* that a 1.20.1 mod cannot
+# know about, and the fallback is usually an inert placeholder. Backward, the hard cases are
+# things 1.21 added that a 1.20.1 *game* cannot represent at all -- data components, data-driven
+# enchantments, the whole 1.21.1-only datapack tree. There is no 1.20.1 shape for some of it, and
+# a rule that invents one is worse than a rule that is missing. Expect REMOVED to carry more
+# weight here than it does forward.
+
+
+# --- Common tags: c: -> forge: ------------------------------------------------------------
+#
+# Mined from the two platform jars -- neoforge-21.1.248.jar against
+# forge-1.20.1-47.4.22-universal.jar -- for the same reason the forward set is: a data/c/tags/
+# file in some mod proves only that a mod author invented that name.
+#
+# THE DEFAULT IS NOT SYMMETRIC, and this is the single most important fact about translating
+# tags backward. Forward, a forge: tag with no rule is swapped to c: and is almost always right,
+# because 1.21 kept the names. Backward, of NeoForge's 348 common tag paths only 139 have a
+# 1.20.1 counterpart -- 36 more are renames, and 173 do not exist in Forge 1.20.1 at all. So the
+# plain swap is wrong about half the time, and TAG_GONE carries most of the weight below rather
+# than being a footnote.
+#
+# A TAG_GONE tag is still swapped to forge:, so a mod that both defines and uses its own copy
+# keeps agreeing with itself. What it loses is agreement with everything else -- and backward
+# that is a real loss, because nothing in 1.20.1 populates c:foods/fruit or c:tools/mace.
+
+COMMON_TAG	c:bricks/nether	forge:ingots/nether_brick
+COMMON_TAG	c:bricks/normal	forge:ingots/brick
+COMMON_TAG	c:cobblestones	forge:cobblestone
+COMMON_TAG	c:cobblestones/deepslate	forge:cobblestone/deepslate
+COMMON_TAG	c:cobblestones/infested	forge:cobblestone/infested
+COMMON_TAG	c:cobblestones/mossy	forge:cobblestone/mossy
+COMMON_TAG	c:cobblestones/normal	forge:cobblestone/normal
+COMMON_TAG	c:glass_blocks	forge:glass
+COMMON_TAG	c:glass_blocks/cheap	forge:glass/silica
+COMMON_TAG	c:glass_blocks/colorless	forge:glass/colorless
+COMMON_TAG	c:glass_blocks/tinted	forge:glass/tinted
+COMMON_TAG	c:gravels	forge:gravel
+COMMON_TAG	c:gunpowders	forge:gunpowder
+COMMON_TAG	c:is_aquatic	forge:is_water
+COMMON_TAG	c:is_dense_vegetation	forge:is_dense
+COMMON_TAG	c:is_dense_vegetation/overworld	forge:is_dense/overworld
+COMMON_TAG	c:is_mountain/peak	forge:is_peak
+COMMON_TAG	c:is_mountain/slope	forge:is_slope
+COMMON_TAG	c:is_sparse_vegetation	forge:is_sparse
+COMMON_TAG	c:is_sparse_vegetation/overworld	forge:is_sparse/overworld
+COMMON_TAG	c:is_tree/coniferous	forge:is_coniferous
+COMMON_TAG	c:leathers	forge:leather
+COMMON_TAG	c:netherracks	forge:netherrack
+COMMON_TAG	c:obsidians	forge:obsidian
+COMMON_TAG	c:sands	forge:sand
+COMMON_TAG	c:sands/colorless	forge:sand/colorless
+COMMON_TAG	c:sands/red	forge:sand/red
+COMMON_TAG	c:sandstone/blocks	forge:sandstone
+COMMON_TAG	c:stones	forge:stone
+COMMON_TAG	c:strings	forge:string
+COMMON_TAG	c:tools/bow	forge:tools/bows
+COMMON_TAG	c:tools/crossbow	forge:tools/crossbows
+COMMON_TAG	c:tools/fishing_rod	forge:tools/fishing_rods
+COMMON_TAG	c:tools/shear	forge:shears
+COMMON_TAG	c:tools/shield	forge:tools/shields
+COMMON_TAG	c:tools/spear	forge:tools/tridents
+
+# No 1.20.1 counterpart. Swapped anyway; nothing else will contribute to them.
+TAG_GONE	c:animal_foods
+TAG_GONE	c:beetroot_soup
+TAG_GONE	c:boats
+TAG_GONE	c:bricks
+TAG_GONE	c:buckets
+TAG_GONE	c:buckets/empty
+TAG_GONE	c:buckets/entity_water
+TAG_GONE	c:buckets/lava
+TAG_GONE	c:buckets/milk
+TAG_GONE	c:buckets/powder_snow
+TAG_GONE	c:buckets/water
+TAG_GONE	c:budding_blocks
+TAG_GONE	c:buds
+TAG_GONE	c:capturing_not_supported
+TAG_GONE	c:chains
+TAG_GONE	c:clusters
+TAG_GONE	c:concrete_powders
+TAG_GONE	c:concretes
+TAG_GONE	c:crops/cactus
+TAG_GONE	c:crops/cocoa_bean
+TAG_GONE	c:crops/melon
+TAG_GONE	c:crops/pumpkin
+TAG_GONE	c:crops/sugar_cane
+TAG_GONE	c:drinks
+TAG_GONE	c:drinks/honey
+TAG_GONE	c:drinks/juice
+TAG_GONE	c:drinks/magic
+TAG_GONE	c:drinks/milk
+TAG_GONE	c:drinks/ominous
+TAG_GONE	c:drinks/water
+TAG_GONE	c:drinks/watery
+TAG_GONE	c:dyed
+TAG_GONE	c:dyed/black
+TAG_GONE	c:dyed/blue
+TAG_GONE	c:dyed/brown
+TAG_GONE	c:dyed/cyan
+TAG_GONE	c:dyed/gray
+TAG_GONE	c:dyed/green
+TAG_GONE	c:dyed/light_blue
+TAG_GONE	c:dyed/light_gray
+TAG_GONE	c:dyed/lime
+TAG_GONE	c:dyed/magenta
+TAG_GONE	c:dyed/orange
+TAG_GONE	c:dyed/pink
+TAG_GONE	c:dyed/purple
+TAG_GONE	c:dyed/red
+TAG_GONE	c:dyed/white
+TAG_GONE	c:dyed/yellow
+TAG_GONE	c:enchantables
+TAG_GONE	c:entity_auxiliary_movement_enhancements
+TAG_GONE	c:entity_defense_enhancements
+TAG_GONE	c:entity_speed_enhancements
+TAG_GONE	c:experience
+TAG_GONE	c:fertilizers
+TAG_GONE	c:foods
+TAG_GONE	c:foods/berry
+TAG_GONE	c:foods/bread
+TAG_GONE	c:foods/candy
+TAG_GONE	c:foods/cooked_fish
+TAG_GONE	c:foods/cooked_meat
+TAG_GONE	c:foods/cookie
+TAG_GONE	c:foods/dough
+TAG_GONE	c:foods/edible_when_placed
+TAG_GONE	c:foods/food_poisoning
+TAG_GONE	c:foods/fruit
+TAG_GONE	c:foods/golden
+TAG_GONE	c:foods/pie
+TAG_GONE	c:foods/raw_fish
+TAG_GONE	c:foods/raw_meat
+TAG_GONE	c:foods/soup
+TAG_GONE	c:foods/vegetable
+TAG_GONE	c:gaseous
+TAG_GONE	c:glazed_terracottas
+TAG_GONE	c:hidden_from_displayers
+TAG_GONE	c:hidden_from_locator_selection
+TAG_GONE	c:hidden_from_recipe_viewers
+TAG_GONE	c:honey
+TAG_GONE	c:increase_block_drops
+TAG_GONE	c:increase_entity_drops
+TAG_GONE	c:is_aquatic_icy
+TAG_GONE	c:is_badlands
+TAG_GONE	c:is_beach
+TAG_GONE	c:is_birch_forest
+TAG_GONE	c:is_cold/nether
+TAG_GONE	c:is_dead
+TAG_GONE	c:is_deep_ocean
+TAG_GONE	c:is_dense_vegetation/end
+TAG_GONE	c:is_dense_vegetation/nether
+TAG_GONE	c:is_end
+TAG_GONE	c:is_floral
+TAG_GONE	c:is_flower_forest
+TAG_GONE	c:is_forest
+TAG_GONE	c:is_hill
+TAG_GONE	c:is_hot/end
+TAG_GONE	c:is_icy
+TAG_GONE	c:is_jungle
+TAG_GONE	c:is_magical
+TAG_GONE	c:is_modified
+TAG_GONE	c:is_nether
+TAG_GONE	c:is_nether_forest
+TAG_GONE	c:is_ocean
+TAG_GONE	c:is_old_growth
+TAG_GONE	c:is_outer_end_island
+TAG_GONE	c:is_overworld
+TAG_GONE	c:is_river
+TAG_GONE	c:is_savanna
+TAG_GONE	c:is_shallow_ocean
+TAG_GONE	c:is_snowy_plains
+TAG_GONE	c:is_sparse_vegetation/end
+TAG_GONE	c:is_sparse_vegetation/nether
+TAG_GONE	c:is_stony_shores
+TAG_GONE	c:is_taiga
+TAG_GONE	c:is_temperate
+TAG_GONE	c:is_temperate/end
+TAG_GONE	c:is_temperate/nether
+TAG_GONE	c:is_temperate/overworld
+TAG_GONE	c:is_tree/deciduous
+TAG_GONE	c:is_tree/jungle
+TAG_GONE	c:is_tree/savanna
+TAG_GONE	c:is_wet/end
+TAG_GONE	c:is_wet/nether
+TAG_GONE	c:is_windswept
+TAG_GONE	c:lava
+TAG_GONE	c:loom_patterns
+TAG_GONE	c:minecarts
+TAG_GONE	c:mushroom_stew
+TAG_GONE	c:music_discs
+TAG_GONE	c:no_default_monsters
+TAG_GONE	c:obsidians/crying
+TAG_GONE	c:obsidians/normal
+TAG_GONE	c:player_workstations/crafting_tables
+TAG_GONE	c:player_workstations/furnaces
+TAG_GONE	c:potion
+TAG_GONE	c:potions
+TAG_GONE	c:potions/bottle
+TAG_GONE	c:pumpkins
+TAG_GONE	c:pumpkins/carved
+TAG_GONE	c:pumpkins/jack_o_lanterns
+TAG_GONE	c:pumpkins/normal
+TAG_GONE	c:rabbit_stew
+TAG_GONE	c:relocation_not_supported
+TAG_GONE	c:rods/breeze
+TAG_GONE	c:ropes
+TAG_GONE	c:sandstone/red_blocks
+TAG_GONE	c:sandstone/red_slabs
+TAG_GONE	c:sandstone/red_stairs
+TAG_GONE	c:sandstone/slabs
+TAG_GONE	c:sandstone/stairs
+TAG_GONE	c:sandstone/uncolored_blocks
+TAG_GONE	c:sandstone/uncolored_slabs
+TAG_GONE	c:sandstone/uncolored_stairs
+TAG_GONE	c:seeds/torchflower
+TAG_GONE	c:shulker_boxes
+TAG_GONE	c:skulls
+TAG_GONE	c:slime_balls
+TAG_GONE	c:storage_blocks/bone_meal
+TAG_GONE	c:storage_blocks/dried_kelp
+TAG_GONE	c:storage_blocks/slime
+TAG_GONE	c:storage_blocks/wheat
+TAG_GONE	c:stripped_logs
+TAG_GONE	c:stripped_woods
+TAG_GONE	c:suspicious_stew
+TAG_GONE	c:teleporting_not_supported
+TAG_GONE	c:tools/brush
+TAG_GONE	c:tools/igniter
+TAG_GONE	c:tools/mace
+TAG_GONE	c:tools/melee_weapon
+TAG_GONE	c:tools/mining_tool
+TAG_GONE	c:tools/ranged_weapon
+TAG_GONE	c:tools/wrench
+TAG_GONE	c:villager_job_sites
+TAG_GONE	c:water
+TAG_GONE	c:weapon_damage_enhancements
+
+# --- Loader-scanned types: the must-rename set ---------------------------------------------
+#
+# Inverted wholesale from forward.rules.tsv, which is sound here for a reason worth stating:
+# that file's TYPE_RENAME set is not a convenience list, it is exactly the set of types the
+# *loader* looks up or dispatches by, where a shimmed copy is a different type as far as the
+# scan is concerned. That property is symmetric. FML 1.20.1 scans class files for
+# `Lnet/minecraftforge/fml/common/Mod;` exactly as FML 1.21.1 scans for its own, and the event
+# bus dispatches on the posted object's exact class either way.
+#
+# Checked, not assumed, on both counts that can be checked mechanically:
+#   * no forward rule shares a target, so the inversion is 1:1 and picks nothing arbitrarily
+#   * all 166 inverted targets exist in the Forge 1.20.1 platform (vanilla + universal +
+#     eventbus + fmlcore + fmlloader + forgespi + javafmllanguage + distmarker)
+#
+# What that does NOT check is whether the target has the members the corpus calls on it, which
+# is the failure RenameGaps' warning sections exist for. Run it backward before trusting any of
+# these.
+#
+# INHERITED DEBT, stated rather than discovered later. The forward file marks the LivingHurtEvent
+# / LivingDamageEvent / EntityItemPickupEvent renames as load-enabling stopgaps: the event is
+# right, the accessors were renamed with it, and a mod that actually receives one takes a
+# NoSuchMethodError. Inverting them inherits exactly that trade in the other direction.
+
+# Classified mechanically, not by hand: each candidate was read out of the NeoForge jar and kept
+# only if it is an annotation, an enum (which annotations carry as values), or a subclass of
+# net/neoforged/bus/api/Event. Everything else -- 128 of the 166 -- went to neoforge-compat,
+# because inverting them wholesale first produced 118 rules that resolve to a Forge type without
+# the member the corpus calls on it. That is the "rename resolves, mod dies on first call"
+# failure RenameGaps warns about, and it is what shim-first exists to avoid.
+
+TYPE_RENAME	net/neoforged/fml/common/Mod	net/minecraftforge/fml/common/Mod
+TYPE_RENAME	net/neoforged/fml/common/EventBusSubscriber	net/minecraftforge/fml/common/Mod$EventBusSubscriber
+TYPE_RENAME	net/neoforged/fml/common/EventBusSubscriber$Bus	net/minecraftforge/fml/common/Mod$EventBusSubscriber$Bus
+TYPE_RENAME	net/neoforged/bus/api/SubscribeEvent	net/minecraftforge/eventbus/api/SubscribeEvent
+TYPE_RENAME	net/neoforged/api/distmarker/Dist	net/minecraftforge/api/distmarker/Dist
+TYPE_RENAME	net/neoforged/api/distmarker/OnlyIn	net/minecraftforge/api/distmarker/OnlyIn
+TYPE_RENAME	net/neoforged/bus/api/Event	net/minecraftforge/eventbus/api/Event
+TYPE_RENAME	net/neoforged/bus/api/EventPriority	net/minecraftforge/eventbus/api/EventPriority
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/FMLCommonSetupEvent	net/minecraftforge/fml/event/lifecycle/FMLCommonSetupEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/FMLClientSetupEvent	net/minecraftforge/fml/event/lifecycle/FMLClientSetupEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/FMLDedicatedServerSetupEvent	net/minecraftforge/fml/event/lifecycle/FMLDedicatedServerSetupEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/FMLLoadCompleteEvent	net/minecraftforge/fml/event/lifecycle/FMLLoadCompleteEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/FMLConstructModEvent	net/minecraftforge/fml/event/lifecycle/FMLConstructModEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/InterModEnqueueEvent	net/minecraftforge/fml/event/lifecycle/InterModEnqueueEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/InterModProcessEvent	net/minecraftforge/fml/event/lifecycle/InterModProcessEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/ModLifecycleEvent	net/minecraftforge/fml/event/lifecycle/ModLifecycleEvent
+TYPE_RENAME	net/neoforged/fml/event/lifecycle/ParallelDispatchEvent	net/minecraftforge/fml/event/lifecycle/ParallelDispatchEvent
+TYPE_RENAME	net/neoforged/neoforge/registries/RegisterEvent	net/minecraftforge/registries/RegisterEvent
+TYPE_RENAME	net/neoforged/neoforge/registries/NewRegistryEvent	net/minecraftforge/registries/NewRegistryEvent
+TYPE_RENAME	net/neoforged/neoforge/client/event/TextureAtlasStitchedEvent	net/minecraftforge/client/event/TextureStitchEvent$Post
+TYPE_RENAME	net/neoforged/neoforge/common/world/BiomeModifier$Phase	net/minecraftforge/common/world/BiomeModifier$Phase
+TYPE_RENAME	net/neoforged/neoforge/event/entity/living/LivingIncomingDamageEvent	net/minecraftforge/event/entity/living/LivingAttackEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Pre	net/minecraftforge/event/entity/living/LivingHurtEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/living/LivingDamageEvent$Post	net/minecraftforge/event/entity/living/LivingDamageEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Pre	net/minecraftforge/event/entity/player/EntityItemPickupEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/player/ItemEntityPickupEvent$Post	net/minecraftforge/event/entity/player/PlayerEvent$ItemPickupEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/living/FinalizeSpawnEvent	net/minecraftforge/event/entity/living/MobSpawnEvent$FinalizeSpawn
+TYPE_RENAME	net/neoforged/neoforge/event/entity/living/LivingShieldBlockEvent	net/minecraftforge/event/entity/living/ShieldBlockEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/RegisterSpawnPlacementsEvent	net/minecraftforge/event/entity/SpawnPlacementRegisterEvent
+TYPE_RENAME	net/neoforged/neoforge/event/entity/RegisterSpawnPlacementsEvent$Operation	net/minecraftforge/event/entity/SpawnPlacementRegisterEvent$Operation
+TYPE_RENAME	net/neoforged/neoforge/event/level/BlockGrowFeatureEvent	net/minecraftforge/event/level/SaplingGrowTreeEvent
+TYPE_RENAME	net/neoforged/neoforge/event/level/block/CropGrowEvent$Pre	net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Pre
+TYPE_RENAME	net/neoforged/neoforge/event/level/block/CropGrowEvent$Post	net/minecraftforge/event/level/BlockEvent$CropGrowEvent$Post
+TYPE_RENAME	net/neoforged/neoforge/event/entity/player/CanPlayerSleepEvent	net/minecraftforge/event/entity/player/PlayerSleepInBedEvent
+TYPE_RENAME	net/neoforged/neoforge/registries/DataPackRegistryEvent$NewRegistry	net/minecraftforge/registries/DataPackRegistryEvent$NewRegistry
+TYPE_RENAME	net/neoforged/fml/VersionChecker$Status	net/minecraftforge/fml/VersionChecker$Status
+TYPE_RENAME	net/neoforged/fml/loading/FMLConfig$ConfigValue	net/minecraftforge/fml/loading/FMLConfig$ConfigValue
+TYPE_RENAME	net/neoforged/neoforge/common/world/StructureModifier$Phase	net/minecraftforge/common/world/StructureModifier$Phase
+
+# --- Mod constructor injection --------------------------------------------------------------
+#
+# NeoForge injects these into a mod's constructor; Forge 1.20.1 calls a no-argument one. 408 of
+# the 479 corpus mods declare the injected form, so Translate synthesises the missing ()V and
+# fills each parameter from here. Same ARG_FILL table the vanilla passes use -- what can be
+# supplied is data, and a parameter with no filler is reported rather than guessed.
+#
+# Dist is named post-rename, because it is one of the types the loader scans for inside
+# annotations and is therefore renamed to Forge's rather than shimmed.
+ARG_FILL	net/neoforged/bus/api/IEventBus	easyport/neobridge/ModCtorBridge	modEventBus
+ARG_FILL	net/neoforged/fml/ModContainer	easyport/neobridge/ModCtorBridge	modContainer
+ARG_FILL	net/minecraftforge/api/distmarker/Dist	easyport/neobridge/ModCtorBridge	dist

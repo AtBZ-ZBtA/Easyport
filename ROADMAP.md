@@ -14,9 +14,10 @@ edge case.
 
 **Status:** Phases 0–7 done. Both deliverables exist for the forward direction: the CLI translates
 real mods that load, register content and apply their mixins, and the service jar does the same
-thing from inside the game during the launch that needs it. **The backward direction is not
-started**, and it is the large remaining piece — everything to date reads as forward progress, and
-that is not the same as being halfway.
+thing from inside the game during the launch that needs it. **The backward direction is under
+way** — the transformer is direction-aware, the naming and tag asymmetries are solved, and the
+mod-constructor blocker that affects 408 of 479 corpus mods is fixed — but nothing in it has been
+launch-tested, because no backward harness exists yet. See STATE.md's backward block.
 
 > **This line has gone stale four times and is the one nobody updates and everybody trusts.**
 > Phase status lives in the `### Phase N — DONE` blocks below; check those before believing this.
