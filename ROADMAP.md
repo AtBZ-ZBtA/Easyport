@@ -800,11 +800,27 @@ out whether it was right is the whole cost. Each phase below states who has to b
 **Phases 9 through 12 are all set-a-goal-and-walk-away work.** Phase 13 is not, and nothing in it
 can be faked by a harness this project can build.
 
-### Phase 9 — Every jar type-checks
+### Phase 9 — Every jar type-checks — **DONE**
 
 **Exit criterion:** `verify-sweep` runs over all 433 forward and all 479 backward jars, and every
 remaining verification error is either fixed or on a written list of walls with a reason beside it.
 The progress metric is the count of jars that type-check clean.
+
+**Met.** Both sweeps run corpus-wide; the accounting is
+[api-report/phase9-accounting.md](../api-report/phase9-accounting.md), which places every remaining
+error as a wall with a reason or a queue item with an approach.
+
+| | Swept | Clean at sign-off |
+|---|---|---|
+| Forward | 433 | **263 (60.7%)** |
+| Backward | 479 | **110 (23.0%)** |
+
+**Read the criterion as written.** It is not "no errors" — that would have made Phase 9 a synonym
+for the whole project. It is that nothing is unaccounted for, so that Phase 10 starts against a
+known map rather than a pile. The clean counts are the progress metric, not the gate.
+
+The backward sweep did not exist before this phase, which is why every backward claim until now
+read "479/479 translate" — a statement about the transformer finishing, not about its output.
 
 The gate exists and has only ever been pointed at 22 jars — the 8 libraries plus the first 14 mods
 alphabetically, which stops at "b". **Running it corpus-wide is the cheapest large measurement

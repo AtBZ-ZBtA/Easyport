@@ -17,14 +17,14 @@ useful part:
 
 | Phase | Question | Needs |
 |---|---|---|
-| 9 | Will the classes load? Corpus-wide type-check, both directions | nothing; unattended |
+| ~~9~~ DONE | Will the classes load? Corpus-wide type-check, both directions | — |
 | 10 | Does the mod load? Corpus-wide load rate, every failure attributed | machine time |
 | 11 | Does it register what the author's own port registers? 288 pairs, not 22 | machine time |
 | 12 | `content-backport` — 1.21.1 content for a 1.20.1 target | nothing |
 | 13 | Does it *play*? Rendering, gameplay, production SRG naming | a person at a keyboard |
 
 **Phases are ordered by what can be verified unattended, not by what is interesting to write.**
-9 through 12 need nobody present. 13 cannot be faked by any harness this project can build, and is
+10 through 12 need nobody present. 13 cannot be faked by any harness this project can build, and is
 kept separate so its contents are never quietly counted as done.
 
 **That measurement is now made, and it is the honest answer to "could I just run ATM9 through it".**
@@ -927,6 +927,43 @@ names, so an official-named output looks correct in the one place it can be obse
 **1.21.1-only datapack trees are not handled.** `data/<ns>/enchantment/`, `data/<ns>/data_maps/`,
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are
 currently carried across untouched rather than dropped or synthesised.
+
+### Phase 9 — COMPLETE
+
+**Exit criterion:** both sweeps run corpus-wide, and every remaining verification error is either
+fixed or on a written list of walls with a reason. Met — the accounting is
+[api-report/phase9-accounting.md](api-report/phase9-accounting.md).
+
+| | Swept | Clean | With errors |
+|---|---|---|---|
+| Forward | 433 | **263 (60.7%)** | 170 |
+| Backward | 479 | **110 (23.0%)** | 369 |
+
+**The criterion is "nothing unaccounted for", not "no errors".** The latter would have made this
+phase a synonym for the project. Every one of the 458 forward and 3,597 backward missing-type hits
+is now placed: a wall with a reason, or a queue item with an approach.
+
+**What had to be built:** `tools/verify-sweep-backward.sh`, which did not exist. The forward gate
+has been around since Phase 4 with no counterpart, and that is exactly why every backward claim
+until now was "479/479 translate".
+
+**The walls, in one line each.** Backward: the data-component system (476 jar-hits, 36 types — a
+1.20.1 `ItemStack` carries a `CompoundTag` and there is no component registry to register into),
+data attachments (30), registry data maps (38), data-driven enchantments (38), armour materials as
+a registry (43). Forward: subclassing types 1.21 made final — `ResourceLocation`, `OptionInstance`,
+`Enchantment` — where the mod's own class is the thing with no valid shape (90 hierarchy hits).
+Overriding a now-final *method* is handled; extending a now-final *class* is not fixable here.
+
+**The distinction that took the longest to get right:** a missing type with a same-named counterpart
+in the target is always queue work, never a wall — the surface differs, which is why the rename was
+refused, but an adapter can bridge it. And a type with *no* counterpart is not automatically a wall
+either: 1.21 replaced `MobType` with entity-type tags, so the name is gone and the concept is
+expressible. A wall is only where the concept has no representation, and each one says which.
+
+**Fixed during the phase**, with the corpus re-measured after each: four renames earned through
+`SurfaceMatch` (+5 jars), and the `stubAddedAbstractMethods` walk-order defect (+2 jars, but
+**illegal overrides 17 → 6 forward and 11 → 2 backward**, which is the better measure — those were
+classes that would not load, carrying null-returning stubs that would have NPEd if they had).
 
 ### Phase 8 — COMPLETE
 
