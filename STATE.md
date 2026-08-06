@@ -27,10 +27,27 @@ useful part:
 9 through 12 need nobody present. 13 cannot be faked by any harness this project can build, and is
 kept separate so its contents are never quietly counted as done.
 
-**Phase 9's first task is the cheapest large measurement still unmade:** `verify-sweep` has only
-ever been pointed at 22 jars — the 8 libraries plus the first 14 mods alphabetically, which stops
-at "b". Running it over all 433 forward and 479 backward turns "433/433 translate" from a claim
-about the transformer into a claim about the output.
+**That measurement is now made, and it is the honest answer to "could I just run ATM9 through it".**
+
+| | Swept | Type-check clean | With errors |
+|---|---|---|---|
+| Forward (ATM9 → NeoForge 1.21.1) | 433 | **256 (59.1%)** | 177 |
+| Backward (ATM10 → Forge 1.20.1) | 479 | **110 (23.0%)** | 369 |
+
+That is "will these classes load", not "does the mod work" — Phases 10 and 11 ask those. The
+ranked queue is `api-report/phase9-queue.md`: 195 distinct blocking types forward, 413 backward,
+counted in jars.
+
+**The queue's shape decides the strategy, and the two directions differ completely.** Forward is a
+long flat tail — the worst single item blocks 29 of 433 jars, and no cluster dominates. Backward
+has a head: `CustomPacketPayload` alone blocks 193, `RegistryFriendlyByteBuf` 149, `RecipeInput` 89.
+
+**Neither is a renaming problem, and that was checked rather than assumed.** 179 backward
+NeoForge→Forge candidates went through `SurfaceMatch`: 5 earned it. 12 forward vanilla package
+moves went through it: **zero** earned it — 1.21 moved those classes *and* changed their members,
+and `world/inventory/RecipeHolder` → `world/item/crafting/RecipeHolder` is not even the same kind
+of thing (interface vs record). What is left needs bridges and shims with adapted surfaces, which
+is Phase 3/4-shaped work, not table entries.
 
 **Work offline first. Launch only for what offline cannot answer.** This is the single biggest
 change to how this project is worked on, so it comes second only to knowing which phase you are in.
@@ -1813,6 +1830,21 @@ public download.
 ---
 
 ## Hard-won gotchas — each of these cost real time
+
+0a. **Stopping a background sweep may kill only its wrapper.** `TaskStop` on a backgrounded
+   `bash wrapper.sh` ended the wrapper; the `verify-sweep.sh` loop it had started kept running.
+   The restart then wrote into the same output directory as the survivor, and the two of them
+   also wrote `translated/<modId>.jar` concurrently — so a verify could read a jar the other
+   process was mid-write on.
+
+   **It looked completely fine.** 438 summary rows, 266 clean, 171 with errors, error shapes that
+   were individually real. Nothing about the output said "two processes"; the tell was arithmetic
+   — 438 rows against 433 inputs and only 256 distinct mod ids — and it was found by checking a
+   total that had no reason to be checked.
+
+   Confirm with `Get-CimInstance Win32_Process -Filter "Name='bash.exe'"` and match on
+   `CommandLine`, then kill by PID. **Never edit a shell script while it is running**: bash reads
+   the file incrementally, so an edit lands mid-execution.
 
 0. **An index that is missing something reports a gap in the thing it is measuring, not in
    itself.** This is one lesson and it produced four separate defects before the shape of it was
