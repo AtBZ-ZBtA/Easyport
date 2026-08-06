@@ -132,16 +132,22 @@ blamed_jars() {
   # references it. This is a genuine translation gap rather than a harness one -- coremods are in
   # scope -- so it is attributed to the mod, not excused.
   if grep -q "ClassNotFoundException: net.minecraftforge.coremod.api.ASMAPI" "$1" 2>/dev/null; then
-    # Keyed on META-INF/coremods.json plus a .js mentioning ASMAPI. Broadening it to "any jar with
-    # a .js naming ASMAPI" was tried and is *worse*: `unzip -p jar '*.js'` does not glob the way
-    # `unzip -c` does, so the looser test matched nothing and the sweep went from 13 attributed
-    # over five rounds back to 11 over three. Narrow and working beats broad and silent.
+    # Every jar with a JS coremod naming ASMAPI, in ONE round. This is by far the largest cluster
+    # in the corpus, and getting it wrong is expensive in a way that is easy to miss: the generic
+    # signature bisect will happily find them one per round, nine launches each, and a 60-round run
+    # ended with 93 attributed and 341 jars still queued -- all of it grinding this one cause.
+    #
+    # Each .js is extracted *by name*. Neither `unzip -p jar '*.js'` nor `unzip -c jar '*.js'`
+    # globs reliably here, and both were tried: the first silently matched nothing, which made the
+    # scan look narrow when it was empty.
     for j in "$MODS"/*.jar; do
-      if unzip -p "$j" META-INF/coremods.json 2>/dev/null | grep -q . \
-         && unzip -c "$j" '*.js' 2>/dev/null | grep -q "ASMAPI"; then
-        printf '%s\tships a JS coremod calling net.minecraftforge.coremod.api.ASMAPI, which NeoForge does not have\n' \
-               "$(basename "$j")"
-      fi
+      for js in $(unzip -l "$j" 2>/dev/null | grep -oE "[^ ]+\.js$"); do
+        if unzip -p "$j" "$js" 2>/dev/null | grep -q "ASMAPI"; then
+          printf '%s\tships a JS coremod calling net.minecraftforge.coremod.api.ASMAPI, which NeoForge does not have\n' \
+                 "$(basename "$j")"
+          break
+        fi
+      done
     done
   fi
   # A mod written in Kotlin or Scala names its language provider, and FML names the jar that
