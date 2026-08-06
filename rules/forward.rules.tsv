@@ -971,3 +971,14 @@ RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getType	()Lcom/mojan
 RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getCount	()I	com/mojang/blaze3d/vertex/VertexFormatElement	count	()I
 RENAME_METHOD	com/mojang/blaze3d/vertex/VertexFormatElement	getIndex	()I	com/mojang/blaze3d/vertex/VertexFormatElement	index	()I
 METHOD_TO_STATIC	com/mojang/blaze3d/vertex/VertexFormat	getIntegerSize	()I	easyport/bridge/VertexBridge	getIntegerSize	(Lcom/mojang/blaze3d/vertex/VertexFormat;)I
+
+# --- Phase 9: renames earned by SurfaceMatch, from the corpus-wide type-check queue ------------
+# Each of these was a candidate because a jar failed to type-check without it, and each was then
+# put through tools/SurfaceMatch.java and kept only because the two types declare the same public
+# surface. Of the 20 candidates tried in this batch, 4 survived -- the refusals are the point of
+# the exercise, and IForgeItem (58 members against IItemExtension's 55) is why none of this is
+# done by name.
+TYPE_RENAME	net/minecraftforge/items/wrapper/EmptyHandler	net/neoforged/neoforge/items/wrapper/EmptyItemHandler
+TYPE_RENAME	net/minecraftforge/client/gui/widget/ForgeSlider	net/neoforged/neoforge/client/gui/widget/ExtendedSlider
+TYPE_RENAME	net/minecraftforge/common/data/ForgeAdvancementProvider	net/neoforged/neoforge/common/data/AdvancementProvider
+TYPE_RENAME	net/minecraftforge/common/data/ForgeAdvancementProvider$AdvancementGenerator	net/neoforged/neoforge/common/data/AdvancementProvider$AdvancementGenerator

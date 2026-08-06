@@ -49,6 +49,29 @@ and `world/inventory/RecipeHolder` → `world/item/crafting/RecipeHolder` is not
 of thing (interface vs record). What is left needs bridges and shims with adapted surfaces, which
 is Phase 3/4-shaped work, not table entries.
 
+**Where the leverage is.** 60 of the 177 dirty forward jars are blocked by exactly one type, and 28
+more by two — half the dirty set is within two fixes of clean. But the single-blocker distribution
+is flat: the biggest, `IForgeItem`, accounts for 8. There is no lever here, only a long handle.
+
+Four renames have been earned and taken so far (`EmptyHandler`→`EmptyItemHandler`,
+`ForgeSlider`→`ExtendedSlider`, `ForgeAdvancementProvider` and its nested `AdvancementGenerator`),
+worth **+5 jars, 256 → 261**, re-verified against the 29 mods that referenced them with no
+regressions.
+
+**Open defect, with everything established so far.** `fixIllegalHierarchy` renames a mod method
+that overrides something 1.21 made final; it fires 329 times across the corpus and does *not* fire
+for `deeperdarker`'s `DDChestBoat`, which still declares `isRemoved()Z` and `getBoundingBox()` —
+both final on `Entity` in 1.21.1, both confirmed by `javap` on the translated class. The class
+extends `net/minecraft/world/entity/vehicle/ChestBoat` directly, all of `ChestBoat`/`Boat`/
+`VehicleEntity`/`Entity` are in the 1.21.1 jar, the index and the lookup agree on the
+`name + " " + desc` key format, and the pass runs after the SRG remap so the names are official by
+then. Worth chasing because `Entity.getBoundingBox` blocks 7 jars and `isRemoved` 5, and because a
+pass that works 329 times and silently skips a case is the more dangerous kind of bug.
+
+Note when reading `.shapes.txt` diffs: `VerifyBytecode` surfaces **one** final-override per class,
+so a mod overriding two now-final methods appears to change its error rather than keep it. That
+looked like a regression once and was not.
+
 **Work offline first. Launch only for what offline cannot answer.** This is the single biggest
 change to how this project is worked on, so it comes second only to knowing which phase you are in.
 
