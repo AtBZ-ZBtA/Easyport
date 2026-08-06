@@ -1450,20 +1450,41 @@ public class Translate {
         roots.addAll(node.interfaces);
         if (roots.stream().noneMatch(targetMembers::containsKey)) return;
 
-        List<MethodNode> stubs = new ArrayList<>();
+        // Two passes over the hierarchy, and the order is the whole point.
+        //
+        // A lower class may already implement what a higher one declares abstract -- BlockBehaviour
+        // declares asBlock() and Block implements it -- so concrete methods have to be known before
+        // any abstract one is judged. Doing that *while* walking is not enough, because the walk is
+        // breadth-first and the two declarations can sit at different depths: ChestBoat implements
+        // ContainerEntity, which declares getBoundingBox() abstract one level away, while Entity
+        // provides it concretely four levels up. The interface won, and every chest-boat mod got a
+        // synthetic getBoundingBox() returning null -- an override of a *final* method, so the
+        // class would not even load, and had it loaded it would have NPEd on the first collision
+        // check. Precisely the illegal override fixIllegalHierarchy exists to remove, created after
+        // that pass had already run.
+        //
+        // So: collect every concrete member in the whole hierarchy first, then stub what is left.
+        List<String> order = new ArrayList<>();
         Set<String> seen = new HashSet<>();
         while (!roots.isEmpty()) {
             String cls = roots.poll();
             if (!seen.add(cls)) continue;
-            // A lower class in the chain may already implement what a higher one declares
-            // abstract, so its concrete methods count as implemented before this class's own
-            // abstract ones are judged. Skipping this stubbed Block.asBlock() to null on every
-            // block in the mod -- BlockBehaviour declares it abstract and Block implements it,
-            // and walking the chain without tracking that overrides the real implementation.
+            order.add(cls);
+            String sup0 = targetSuper.get(cls);
+            if (sup0 != null) roots.add(sup0);
+            List<String> ifs0 = targetIfaces.get(cls);
+            if (ifs0 != null) roots.addAll(ifs0);
+        }
+        for (String cls : order) {
             Set<String> abstractHere = targetAbstractMethods.getOrDefault(cls, Set.of());
             for (String member : targetMembers.getOrDefault(cls, Set.of())) {
                 if (member.contains("(") && !abstractHere.contains(member)) implemented.add(member);
             }
+        }
+
+        List<MethodNode> stubs = new ArrayList<>();
+        for (String cls : order) {
+            Set<String> abstractHere = targetAbstractMethods.getOrDefault(cls, Set.of());
             for (String member : abstractHere) {
                 if (!implemented.add(member)) continue;
                 int sp = member.indexOf(' ');
@@ -1488,10 +1509,6 @@ public class Translate {
                 count(unresolved, "ABSTRACT_STUB " + node.name + "." + name + desc
                                 + " (added by " + cls + ")");
             }
-            String sup = targetSuper.get(cls);
-            if (sup != null) roots.add(sup);
-            List<String> ifs = targetIfaces.get(cls);
-            if (ifs != null) roots.addAll(ifs);
         }
         node.methods.addAll(stubs);
     }
