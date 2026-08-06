@@ -106,3 +106,7 @@ api-report/*.err
 # Backward sweep output, the mirror of translated/.
 translated-backward/
 batch-report/verify-sweep-backward/
+
+# Phase 10 launch sweeps: one log per round over the whole corpus.
+batch-report/load-forward/
+batch-report/load-backward/

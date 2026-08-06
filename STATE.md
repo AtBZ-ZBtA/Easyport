@@ -928,6 +928,49 @@ names, so an official-named output looks correct in the one place it can be obse
 `data/<ns>/jukebox_song/` and `data/<ns>/tags/data_component_type/` have no 1.20.1 meaning and are
 currently carried across untouched rather than dropped or synthesised.
 
+### Phase 10 — IN PROGRESS
+
+**Exit criterion:** a load rate over the whole corpus in both directions, every failure attributed
+to a named cause. **Not met yet.** The harness is built and attributing correctly; the forward run
+is blocked three rounds in by a dev-environment conflict that is not a translation failure.
+
+**The harness: `tools/load-sweep.sh`.** Stage the whole pack, launch once, and let FML name who it
+died on — then quarantine those and relaunch. Converges in a handful of launches.
+
+**The first design was exactly backwards and cost an hour to disprove.** It split the corpus into
+batches of 40 and bisected on failure. **A missing mandatory dependency is a hard, launch-killing
+error in FML**, not a per-mod one — so batching splits a pack's dependency graph, every batch dies,
+and bisecting splits it further until each mod sits alone missing everything it needs. Forty jars
+produced forty "this mod kills the launch" verdicts, none of them true. A player loads a pack; the
+harness has to as well.
+
+**Four attribution shapes, each found by a round that reported nothing:**
+
+| FML says | Names | Meaning |
+|---|---|---|
+| `- Mod ae2things requires ae2 …` | mod id | dependency, from `ModSorter` |
+| `Failed to load mod file kotlinforforge-…jar` | **jar** | the locator rejected it outright |
+| `Missing language kotori_scala … wanted by quarryplus.jar` | **jar** | needs a language provider |
+| `Modules A and B export package P to module X` | module | module-path conflict |
+
+Attributed so far, all permanent rather than transient: **kotlinforforge** itself, and five mods
+that need a Kotlin or Scala language provider — `AEAdditions`, `betterp2p`, `advgenerators`,
+`bdlib`, `quarryplus`. A language provider is a mod of type `LANGPROVIDER` and this project does not
+translate one, so a Kotlin or Scala mod is a wall, not a queue item.
+
+**What is blocking the rest.** Round 3 dies on
+`Modules MixinExtras and mixinextras.neoforge export package com.llamalad7.mixinextras.utils to
+module minecraft`. The consumer is *minecraft itself*, so no mod can be blamed and no mod can be
+quarantined to clear it. Both providers are platform-side — NeoForge ships one, the dev environment
+supplies the other — and `Translate#shouldDropBundled` already strips mods' own bundled copies,
+which is why scanning every staged jar for the package finds nothing to remove.
+
+**This is a harness limitation, not a translation failure, and it must not be counted as one.**
+It is the same collision recorded in gotcha 12; what is new is that it fires with the pack staged
+rather than with one candidate. Next step is to find what pulls the dev environment's MixinExtras
+onto the module path — most likely a `mods.toml` dependency declaration that survives translation —
+rather than to work around it, because working around it would make the number unfalsifiable.
+
 ### Phase 9 — COMPLETE
 
 **Exit criterion:** both sweeps run corpus-wide, and every remaining verification error is either
