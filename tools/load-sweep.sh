@@ -52,7 +52,39 @@ for s in "${SUPPORT[@]}"; do
   [ -f "$s" ] || { echo "missing support jar: $s -- build it first" >&2; exit 1; }
 done
 
+# The NeoForge dev artifact ships MixinExtras twice over: once bundled in its own
+# META-INF/jarjar, and once more by the time the module layer is built -- so the moment any mod
+# *reads* a MixinExtras package, the JVM sees two providers and refuses the whole boot layer with
+#
+#   Modules mixinextras.neoforge and MixinExtras export package com.llamalad7.mixinextras...
+#
+# moddev already intends to exclude it: its VM args carry
+# -DignoreList=mixinextras-neoforge-0.5.3.jar. That mechanism names exactly this file and does not
+# succeed, so the bundled entry is removed here instead.
+#
+# This is a *dev-environment* fix and it is deliberately not a workaround in the sweep's logic.
+# Bisecting the conflict terminates and names a jar -- blockui, then AE2-Things, then the next --
+# but none of them is a culprit: the conflict fires on whichever mod reads MixinExtras first, so
+# quarantining one just promotes another. That path would have blamed much of the corpus for a
+# defect in the launcher and produced a confident, wrong load rate.
+dedupe_mixinextras() {
+  [ "$DIR_KIND" = "backward" ] && return 0
+  local art="$ENV_DIR/build/moddev/artifacts/neoforge-21.1.248.jar"
+  [ -f "$art" ] || return 0
+  unzip -l "$art" 2>/dev/null | grep -q "jarjar/mixinextras" || return 0
+  echo "removing the duplicate MixinExtras bundled in $(basename "$art")"
+  powershell.exe -NoProfile -Command "
+    Add-Type -AssemblyName System.IO.Compression.FileSystem;
+    \$z=[System.IO.Compression.ZipFile]::Open('$(cygpath -w "$art" 2>/dev/null || echo "$art")','Update');
+    \$z.Entries | Where-Object { \$_.FullName -like '*jarjar/mixinextras*' } | ForEach-Object { \$_.Delete() };
+    \$z.Dispose()" > /dev/null 2>&1
+}
+
 launch() {
+  # Before *every* launch, not once at the start: the moddev task regenerates the artifact when it
+  # runs, so stripping the duplicate once fixed round 1 and round 2 got it back. That looked like
+  # the fix not working rather than the fix being undone.
+  dedupe_mixinextras
   # stdin closed: Gradle inherits it otherwise and drains whatever list the caller is reading,
   # which looks exactly like an empty input file.
   ( cd "$ENV_DIR" && ./gradlew.bat runData --no-daemon --console=plain ) > "$1" 2>&1 < /dev/null
