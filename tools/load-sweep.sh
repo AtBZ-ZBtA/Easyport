@@ -34,7 +34,7 @@ cd "$(dirname "$0")/.." || exit 1
 
 DIR_KIND="${1:-forward}"
 JARDIR="${2:-translated}"
-MAX_ROUNDS="${3:-25}"
+MAX_ROUNDS="${3:-60}"
 
 if [ "$DIR_KIND" = "backward" ]; then
   ENV_DIR="devenv/forge-1.20.1"; RUN="run-data"
@@ -256,10 +256,41 @@ while [ "${#POOL[@]}" -gt 0 ] && [ "$round" -lt "$MAX_ROUNDS" ]; do
     continue
   fi
 
+  # Nobody named, and no known shape matched. Rather than add a parser per failure -- which is a
+  # round trip each and was how this sweep spent its first five rounds -- bisect on the *error
+  # signature itself*. Whatever jar the halving keeps is the one that reproduces this exact
+  # exception, and it is quarantined with the exception as its reason.
+  #
+  # This was avoided earlier for a specific and now-obsolete reason: while the MixinExtras
+  # duplicate was present, every half reproduced it, so bisection converged on whichever mod read
+  # the package first and blamed it for a dev-environment defect. That is fixed, so a bisect now
+  # lands on a jar that genuinely causes the failure. The objection was to bisecting *a
+  # platform-side cause*, not to bisecting.
   if [ "$n_blamed" -eq 0 ]; then
-    echo "round $round: launch failed with nobody named -- stopping, see $log" | tee -a "$OUT/rounds.log"
-    for j in "${POOL[@]}"; do printf '%s\tUNATTRIBUTED\t\n' "$(basename "$j" .jar)" >> "$OUT/results.tsv"; done
-    POOL=(); break
+    sig=$(grep -oE "(Exception in thread \"main\" |Caused by: )[a-zA-Z0-9_.]+(Exception|Error)(: [^\"]{0,80})?" "$log" \
+          | tail -1 | sed -E 's/^(Exception in thread "main" |Caused by: )//')
+    if [ -z "$sig" ]; then
+      echo "round $round: failed with no exception to bisect on -- stopping, see $log" | tee -a "$OUT/rounds.log"
+      for j in "${POOL[@]}"; do printf '%s\tUNATTRIBUTED\t\n' "$(basename "$j" .jar)" >> "$OUT/results.tsv"; done
+      POOL=(); break
+    fi
+    echo "round $round: unknown shape, bisecting on: $sig" | tee -a "$OUT/rounds.log"
+    key=$(echo "$sig" | sed -E 's/[^a-zA-Z0-9_. :]//g' | cut -c1-60)
+    probe=("${POOL[@]}")
+    while [ "${#probe[@]}" -gt 1 ]; do
+      h=$(( ${#probe[@]} / 2 ))
+      rm -f "$MODS"/*.jar; cp "${SUPPORT[@]}" "$MODS/"
+      for j in "${probe[@]:0:$h}"; do cp "$j" "$MODS/"; done
+      launch "$OUT/probe-$round.log"
+      if grep -qF "$key" "$OUT/probe-$round.log"; then probe=("${probe[@]:0:$h}")
+      else probe=("${probe[@]:$h}"); fi
+    done
+    trig=$(basename "${probe[0]}" .jar)
+    printf '%s\tFAILED\t%s\n' "$trig" "$sig" >> "$OUT/results.tsv"
+    echo "round $round: bisected to $trig" | tee -a "$OUT/rounds.log"
+    NEXT=(); for j in "${POOL[@]}"; do [ "$(basename "$j" .jar)" = "$trig" ] || NEXT+=("$j"); done
+    POOL=("${NEXT[@]}")
+    continue
   fi
 
   NEXT=()
