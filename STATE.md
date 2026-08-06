@@ -985,11 +985,25 @@ one. Left running it would have blamed a large fraction of the corpus, one mod p
 for a defect in the dev environment. **A bisect that terminates and names something is not the
 same as a bisect that found the cause.**
 
-**Next step, and it is a dev-environment fix rather than a translation one:** make MixinExtras
-reach the module layer once — either by stripping the bundled copy out of the NeoForge artifact
-used for launching, or by making the `ignoreList` entry match what FML actually names. Do not work
-around it inside the sweep; a workaround that quarantines mods would make the load rate
-unfalsifiable, which is the one property it has to have.
+**The fix is known and verified by hand.** Stripping
+`META-INF/jarjar/mixinextras-neoforge-0.5.3.jar` out of the NeoForge dev artifact and relaunching
+the full 435-jar pack clears the conflict completely — zero `llamalad7` mentions, and the launch
+moves on to the ordinary kotlinforforge failure that is round 1's normal first step.
+
+**What is left is one specific obstacle, and it is worth stating precisely so nobody re-derives
+it.** `runData` depends on moddev's `createMinecraftArtifacts`. Stripping the artifact makes it
+stale, so gradle **regenerates it during the same launch, before FML reads it** — the strip is
+undone between the two. That is why the fix works when run by hand against an up-to-date artifact
+and never works from inside `launch()`, no matter where in the sequence it is called.
+
+Two things were fixed along the way and are worth keeping: `cygpath -w` returns a *relative*
+Windows path, which PowerShell resolves against its own working directory and fails on silently —
+it needs `-a`. And deleting from `ZipArchive.Entries` while enumerating it throws; the selection
+has to be materialised with `@(...)` first.
+
+**Next step:** stop gradle from regenerating it — `-x createMinecraftArtifacts` on the launch, or
+strip the copy gradle produces *from* rather than the output. Do not work around it by quarantining
+mods; that path terminates and names a jar every round and every one of those names is wrong.
 
 ### Phase 9 — COMPLETE
 

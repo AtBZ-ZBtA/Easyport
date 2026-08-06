@@ -75,9 +75,9 @@ dedupe_mixinextras() {
   echo "removing the duplicate MixinExtras bundled in $(basename "$art")"
   powershell.exe -NoProfile -Command "
     Add-Type -AssemblyName System.IO.Compression.FileSystem;
-    \$z=[System.IO.Compression.ZipFile]::Open('$(cygpath -w "$art" 2>/dev/null || echo "$art")','Update');
-    \$z.Entries | Where-Object { \$_.FullName -like '*jarjar/mixinextras*' } | ForEach-Object { \$_.Delete() };
-    \$z.Dispose()" > /dev/null 2>&1
+    \$z=[System.IO.Compression.ZipFile]::Open('$(cygpath -w -a "$art" 2>/dev/null || echo "$art")','Update');
+    @(\$z.Entries | Where-Object { \$_.FullName -like '*jarjar/mixinextras*' }) | ForEach-Object { \$_.Delete() };
+    \$z.Dispose()" 2>&1 | head -3
 }
 
 launch() {
