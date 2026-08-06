@@ -958,18 +958,38 @@ that need a Kotlin or Scala language provider — `AEAdditions`, `betterp2p`, `a
 `bdlib`, `quarryplus`. A language provider is a mod of type `LANGPROVIDER` and this project does not
 translate one, so a Kotlin or Scala mod is a wall, not a queue item.
 
-**What is blocking the rest.** Round 3 dies on
-`Modules MixinExtras and mixinextras.neoforge export package com.llamalad7.mixinextras.utils to
-module minecraft`. The consumer is *minecraft itself*, so no mod can be blamed and no mod can be
-quarantined to clear it. Both providers are platform-side — NeoForge ships one, the dev environment
-supplies the other — and `Translate#shouldDropBundled` already strips mods' own bundled copies,
-which is why scanning every staged jar for the package finds nothing to remove.
+**What is blocking the rest, diagnosed to the artifact.** The sweep dies on
+`Module mixinextras.neoforge contains package com.llamalad7.mixinextras.…, module MixinExtras
+exports package … to mixinextras.neoforge`. Everything below was checked and ruled out, and the
+list is here so nobody repeats it:
 
-**This is a harness limitation, not a translation failure, and it must not be counted as one.**
-It is the same collision recorded in gotcha 12; what is new is that it fires with the pack staged
-rather than with one candidate. Next step is to find what pulls the dev environment's MixinExtras
-onto the module path — most likely a `mods.toml` dependency declaration that survives translation —
-rather than to work around it, because working around it would make the number unfalsifiable.
+| Suspected | Checked | Result |
+|---|---|---|
+| A mod bundles MixinExtras | every staged jar, top level | 0 |
+| A mod bundles it in `META-INF/jarjar/` | every nested jar, opened and listed | 0 |
+| A mod declares it as a dependency | every `neoforge.mods.toml` | 0 |
+| `crash_assistant` (the service initialising just before the failure) | removed, relaunched | conflict persists |
+| A single culprit jar | bisected on the exception alone | names a *different* mod each round |
+
+**The fault is the dev environment, and the artifact is identified.** NeoForge's own jar bundles
+`META-INF/jarjar/mixinextras-neoforge-0.5.3.jar`, and moddev's VM args carry
+`-DignoreList=mixinextras-neoforge-0.5.3.jar,…` — the mechanism that exists to prevent precisely
+this duplicate, naming precisely this file, and not succeeding. Two providers reach the module
+layer and the JVM refuses to choose.
+
+**Why the bisect result is a trap.** It does terminate, and it names a jar — `blockui`, then
+`AE2-Things`, then `Ad-Astra-Giselle-Addon` on successive rounds. Those are not culprits. The
+conflict only *fires* when some mod reads a MixinExtras package, so the bisect finds whichever
+such mod is alphabetically first in the remaining pool, and quarantining it just promotes the next
+one. Left running it would have blamed a large fraction of the corpus, one mod per nine launches,
+for a defect in the dev environment. **A bisect that terminates and names something is not the
+same as a bisect that found the cause.**
+
+**Next step, and it is a dev-environment fix rather than a translation one:** make MixinExtras
+reach the module layer once — either by stripping the bundled copy out of the NeoForge artifact
+used for launching, or by making the `ignoreList` entry match what FML actually names. Do not work
+around it inside the sweep; a workaround that quarantines mods would make the load rate
+unfalsifiable, which is the one property it has to have.
 
 ### Phase 9 — COMPLETE
 

@@ -79,15 +79,12 @@ map_jars_to_ids() {
 # they are LANGPROVIDER-type and their language provider does not translate.
 blamed_ids() {
   grep -oE "^\s+- Mod [a-zA-Z0-9_.-]+ .*" "$1" 2>/dev/null | sed -E 's/^\s+- Mod ([^ ]+) (.*)$/\1\t\2/'
-  # Modules A and B export package P to module X
-  #
-  # Both providers are platform-side -- NeoForge ships mixinextras.neoforge and the dev
-  # environment supplies MixinExtras -- so neither is a jar this sweep can quarantine. The
-  # *consumer* is: it is a mod, it is named, and it is the reason the JVM had to pick. Translation
-  # already strips bundled MixinExtras copies (Translate#shouldDropBundled), which is why nothing
-  # in the mods folder carries the package and a scan for it found nothing to blame.
-  grep -oE "Modules [a-zA-Z0-9_.]+ and [a-zA-Z0-9_.]+ export package [a-zA-Z0-9_.]+ to module [a-zA-Z0-9_.]+" "$1" 2>/dev/null \
-    | sed -E 's/Modules ([^ ]+) and ([^ ]+) export package ([^ ]+) to module (.*)/\4\treads \3, which \1 and \2 both export -- module-path conflict/' | sort -u
+  # Deliberately NOT parsing "Modules A and B export package P to module X" here. It looks like an
+  # attribution and is not: the consumer it names is usually `minecraft` itself, which maps to no
+  # jar, and emitting it made n_blamed non-zero, which in turn suppressed the bisect that is the
+  # only thing that *can* find the trigger. An unmappable name is worse than no name -- it stops
+  # the run reporting "blamed mods could not be mapped back to jars" while the real handler sits
+  # one branch away. That case is handled below.
 }
 
 blamed_jars() {
@@ -169,6 +166,41 @@ while [ "${#POOL[@]}" -gt 0 ] && [ "$round" -lt "$MAX_ROUNDS" ]; do
   { blamed_jars "$log"; blamed_split_package "$log"; } > "$OUT/blamed-jars-$round.tsv"
   n_blamed=$(( $(wc -l < "$OUT/blamed-$round.tsv") + $(wc -l < "$OUT/blamed-jars-$round.tsv") ))
   echo "round $round: launch failed, FML blamed $n_blamed mod(s)" | tee -a "$OUT/rounds.log"
+
+  # A module-path split package names no mod, because the two providers are platform-side and the
+  # consumer is `minecraft`. It only fires once some mod *reads* the package -- MixinExtras, whose
+  # annotations a lot of mods use -- so the trigger is a mod even though the fault is not.
+  #
+  # Bisecting is valid here and only here. It was invalid for the sweep as a whole because halving
+  # a pack breaks its dependency graph; this asks a narrower question -- does the ResolutionException
+  # appear -- and a half that dies of missing dependencies still answers it.
+  #
+  # The fault is the dev environment shipping two copies of the same library: NeoForge bundles
+  # META-INF/jarjar/mixinextras-neoforge-0.5.3.jar and moddev lists the same artifact in its
+  # -DignoreList, which is the mechanism meant to prevent exactly this and is not succeeding.
+  # So the mods found here are recorded as blocked by the harness, never as translation failures.
+  if [ "$n_blamed" -eq 0 ] && grep -q "com.llamalad7.mixinextras" "$log"; then
+    echo "round $round: module-path conflict; bisecting for the trigger" | tee -a "$OUT/rounds.log"
+    probe=("${POOL[@]}")
+    while [ "${#probe[@]}" -gt 1 ]; do
+      h=$(( ${#probe[@]} / 2 ))
+      rm -f "$MODS"/*.jar; cp "${SUPPORT[@]}" "$MODS/"
+      for j in "${probe[@]:0:$h}"; do cp "$j" "$MODS/"; done
+      launch "$OUT/probe-$round.log"
+      if grep -q "com.llamalad7.mixinextras" "$OUT/probe-$round.log"; then
+        probe=("${probe[@]:0:$h}")
+      else
+        probe=("${probe[@]:$h}")
+      fi
+    done
+    trig=$(basename "${probe[0]}" .jar)
+    printf '%s\tHARNESS_BLOCKED\tuses MixinExtras; the dev environment provides it twice and the module layer refuses\n' \
+           "$trig" >> "$OUT/results.tsv"
+    echo "round $round: trigger is $trig" | tee -a "$OUT/rounds.log"
+    NEXT=(); for j in "${POOL[@]}"; do [ "$(basename "$j" .jar)" = "$trig" ] || NEXT+=("$j"); done
+    POOL=("${NEXT[@]}")
+    continue
+  fi
 
   if [ "$n_blamed" -eq 0 ]; then
     echo "round $round: launch failed with nobody named -- stopping, see $log" | tee -a "$OUT/rounds.log"
