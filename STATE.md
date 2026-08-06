@@ -31,11 +31,11 @@ kept separate so its contents are never quietly counted as done.
 
 | | Swept | Type-check clean | With errors |
 |---|---|---|---|
-| Forward (ATM9 → NeoForge 1.21.1) | 433 | **256 (59.1%)** | 177 |
+| Forward (ATM9 → NeoForge 1.21.1) | 433 | **263 (60.7%)** | 170 |
 | Backward (ATM10 → Forge 1.20.1) | 479 | **110 (23.0%)** | 369 |
 
 That is "will these classes load", not "does the mod work" — Phases 10 and 11 ask those. The
-ranked queue is `api-report/phase9-queue.md`: 195 distinct blocking types forward, 413 backward,
+ranked queue is `api-report/phase9-queue.md`: 185 distinct blocking types forward, 405 backward,
 counted in jars.
 
 **The queue's shape decides the strategy, and the two directions differ completely.** Forward is a
@@ -55,18 +55,30 @@ is flat: the biggest, `IForgeItem`, accounts for 8. There is no lever here, only
 
 Four renames have been earned and taken so far (`EmptyHandler`→`EmptyItemHandler`,
 `ForgeSlider`→`ExtendedSlider`, `ForgeAdvancementProvider` and its nested `AdvancementGenerator`),
-worth **+5 jars, 256 → 261**, re-verified against the 29 mods that referenced them with no
+worth **+5 jars**, re-verified against the 29 mods that referenced them with no
 regressions.
 
-**Open defect, with everything established so far.** `fixIllegalHierarchy` renames a mod method
-that overrides something 1.21 made final; it fires 329 times across the corpus and does *not* fire
-for `deeperdarker`'s `DDChestBoat`, which still declares `isRemoved()Z` and `getBoundingBox()` —
-both final on `Entity` in 1.21.1, both confirmed by `javap` on the translated class. The class
-extends `net/minecraft/world/entity/vehicle/ChestBoat` directly, all of `ChestBoat`/`Boat`/
-`VehicleEntity`/`Entity` are in the 1.21.1 jar, the index and the lookup agree on the
-`name + " " + desc` key format, and the pass runs after the SRG remap so the names are official by
-then. Worth chasing because `Entity.getBoundingBox` blocks 7 jars and `isRemoved` 5, and because a
-pass that works 329 times and silently skips a case is the more dangerous kind of bug.
+**One defect chased to ground, and it was not where it looked.** `fixIllegalHierarchy` renames a
+mod method that overrides something 1.21 made final. It appeared to skip `deeperdarker`'s
+`DDChestBoat`, which came out declaring `getBoundingBox()` and `isRemoved()` — both final on
+`Entity`. It had not skipped anything: **the mod does not declare those methods.**
+`stubAddedAbstractMethods` was *adding* them, two lines later, after the pass that would have
+removed them had already run.
+
+`ChestBoat` implements `ContainerEntity`, which declares `getBoundingBox()` abstract one level
+away; `Entity` provides it concretely and finally four levels up. The walk was breadth-first and
+interleaved "collect concrete" with "stub abstract", so the nearer interface won and the class got
+a synthetic override of a final method returning `null`. Two failures for the price of one: the
+class would not load, and had it loaded a null bounding box NPEs on the first collision check.
+
+Fixed by splitting the walk — collect every concrete member across the whole hierarchy first, then
+stub only what is still abstract everywhere. **Illegal overrides across the corpus: forward
+17 → 6, backward 11 → 2.** Most of those jars have other errors so they did not flip to clean,
+which is why the headline moved only 256 → 263; the count of classes that would not load is the
+better measure of that fix.
+
+**The shape worth remembering:** a pass that validates its own output is not enough when a later
+pass can put the problem back. `fixIllegalHierarchy` was correct and ran at the wrong time.
 
 Note when reading `.shapes.txt` diffs: `VerifyBytecode` surfaces **one** final-override per class,
 so a mod overriding two now-final methods appears to change its error rather than keep it. That

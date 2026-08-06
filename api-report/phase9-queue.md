@@ -1,16 +1,17 @@
 # Phase 9 queue — types blocking the most jars, both directions
 
-Generated from the corpus-wide type-check sweeps. Counts are JARS, not error instances.
-Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
+Regenerated after the stubAddedAbstractMethods fix and the first four earned renames.
+Counts are JARS, not error instances.
 
-## FORWARD (433 jars, 195 distinct blocking types)
+Forward: 433 swept, **263 clean**. Backward: 479 swept, **110 clean**.
+
+## FORWARD (185 distinct blocking types)
 ```
      29 net/minecraft/world/item/crafting/Ingredient
      25 net/minecraft/world/level/storage/loot/functions/CopyNbtFunction$Builder
      23 net/minecraftforge/common/util/ITeleporter
      22 net/minecraft/world/level/block/grower/AbstractTreeGrower
      22 net/minecraft/world/entity/MobType
-     20 net/minecraftforge/common/data/ForgeAdvancementProvider$AdvancementGenerator
      17 net/minecraft/world/item/ArmorMaterial
      16 net/minecraftforge/common/world/ForgeBiomeModifiers$AddFeaturesBiomeModifier
      16 net/minecraft/world/item/enchantment/Enchantment
@@ -21,18 +22,14 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
      12 net/minecraft/world/level/saveddata/maps/MapDecoration$Type
      12 net/minecraft/world/level/pathfinder/BlockPathTypes
      12 net/minecraft/world/item/enchantment/EnchantmentCategory
-     11 net/minecraftforge/common/data/ForgeAdvancementProvider
      11 net/minecraftforge/common/IPlantable
-     10 net/minecraftforge/client/gui/widget/ForgeSlider
      10 net/minecraft/world/level/block/GlassBlock
      10 net/minecraft/world/level/block/AbstractGlassBlock
      10 net/minecraft/world/item/ArmorMaterials
       9 net/minecraftforge/common/ForgeTier
       9 net/minecraft/resources/ResourceLocation
       7 net/minecraftforge/common/crafting/IShapedRecipe
-      7 net/minecraft/world/phys/AABB
       7 net/minecraft/world/inventory/RecipeHolder
-      7 net/minecraft/world/entity/Entity/getBoundingBox
       7 net/minecraft/network/chat/contents/LiteralContents
       7 net/minecraft/core/BlockSource
       6 net/minecraftforge/common/world/ForgeBiomeModifiers$AddSpawnsBiomeModifier
@@ -41,9 +38,7 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       6 net/minecraft/world/item/FireworkRocketItem$Shape
       6 net/minecraft/data/recipes/CraftingRecipeBuilder$CraftingResult
       5 net/minecraftforge/client/model/pipeline/QuadBakingVertexConsumer$Buffered
-      5 net/minecraft/world/entity/Entity/isRemoved
       5 net/minecraft/client/resources/model/ModelResourceLocation
-      4 net/minecraftforge/items/wrapper/EmptyHandler
       4 net/minecraftforge/fluids/capability/wrappers/FluidBlockWrapper
       4 net/minecraft/world/level/storage/loot/LootDataResolver
       4 net/minecraft/world/level/chunk/ChunkStatus
@@ -75,11 +70,13 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       2 net/minecraftforge/common/crafting/ConditionalRecipe$Builder
       2 net/minecraftforge/common/capabilities/CapabilityProvider
       2 net/minecraftforge/client/model/ForgeFaceData
+      2 net/minecraft/world/phys/AABB
       2 net/minecraft/world/level/saveddata/maps/MapDecoration
       2 net/minecraft/world/item/enchantment/ProtectionEnchantment$Type
       2 net/minecraft/world/item/enchantment/Enchantment$Rarity
       2 net/minecraft/world/item/enchantment/DamageEnchantment
       2 net/minecraft/world/item/ItemStack
+      2 net/minecraft/world/entity/Entity/getBoundingBox
       2 net/minecraft/network/protocol/game/ServerboundCustomPayloadPacket
       2 net/minecraft/network/protocol/game/ClientboundCustomPayloadPacket
       2 net/minecraft/data/recipes/ShapelessRecipeBuilder$Result
@@ -156,11 +153,9 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       1 net/minecraft/client/gui/screens/LanguageSelectScreen
       1 net/minecraft/client/gui/screens/AccessibilityOptionsScreen
       1 net/minecraft/client/gui/components/toasts/SystemToast$SystemToastIds
-      1 net/minecraft/client/gui/components/events/AbstractContainerEventHandler/setDragging
       1 net/minecraft/advancements/critereon/EnchantedItemTrigger$TriggerInstance
       1 net/minecraft/advancements/critereon/DeserializationContext
       1 net/minecraft/advancements/FrameType
-      1 net/geforcemods/securitycraft/entity/SecuritySeaBoat
       1 net/bdew/lib/gui/ScaledResourceLocation
       1 io/input/ReaderInputStream
       1 io/OutputStreamWriter
@@ -180,11 +175,9 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       1 com/minecolonies/api/crafting/CountedIngredient
       1 com/legacy/structure
       1 com/legacy/blue
-      1 com/kyanite/deeperdarker/content/entities/DDChestBoat
       1 com/kyanite/deeperdarker/content/enchantments/CatalysisEnchantment
       1 com/klikli
       1 com/hollingsworth/arsnouveau/api/recipe/PotionIngredient
-      1 com/gregtechceu/gtceu/common/entity/GTChestBoat
       1 com/gregtechceu/gtceu/api/recipe/ingredient/SizedIngredient
       1 com/gregtechceu/gtceu/api/recipe/ingredient/IntProviderIngredient
       1 com/gregtechceu/gtceu/api/recipe/ingredient/FluidContainerIngredient
@@ -198,11 +191,10 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       1 com/blakebr0/ironjetpacks/crafting/ingredient/JetpackTierIngredient
       1 com/blakebr0/ironjetpacks/crafting/ingredient/JetpackComponentIngredient
       1 com/aetherteam/aether/integration/quark/AccessoriesBackpackScreen$N
-      1 com/aetherteam/aether/entity/miscellaneous/SkyrootChestBoat
       1 com/aetherteam/aether/client/gui/screen/inventory/AccessoriesScreen$N
 ```
 
-## BACKWARD (479 jars, 413 distinct blocking types)
+## BACKWARD (405 distinct blocking types)
 ```
     193 net/minecraft/network/protocol/common/custom/CustomPacketPayload
     149 net/minecraft/network/RegistryFriendlyByteBuf
@@ -299,7 +291,6 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       9 net/minecraft/world/item/component/FireworkExplosion$Shape
       9 net/minecraft/world/item/component/BundleContents
       9 net/minecraft/world/item/JukeboxSong
-      9 net/minecraft/world/entity/Entity/isRemoved
       9 net/minecraft/client/gui/components/WidgetSprites
       8 net/neoforged/neoforge/registries/datamaps/builtin/FurnaceFuel
       8 net/neoforged/neoforge/network/handling/IPayloadContext
@@ -458,10 +449,6 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       2 io/InputStream
       2 io/FileReader
       2 io/DataInputStream
-      1 net/regions
-      1 net/potionstudios/biomeswevegone/world/entity/boats/BWGChestBoatEntity
-      1 net/p3pp3rf1y/sophisticatedstorageinmotion/entity/StorageMinecart
-      1 net/p3pp3rf1y/sophisticatedstorageinmotion/entity/StorageBoat
       1 net/neoforged/neoforge/registries/datamaps/builtin/ParrotImitation
       1 net/neoforged/neoforge/registries/datamaps/builtin/MonsterRoomMob
       1 net/neoforged/neoforge/registries/datamaps/builtin/BiomeVillagerType
@@ -555,6 +542,7 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       1 net/minecraft/world/entity/monster/Bogged
       1 net/minecraft/world/entity/animal/armadillo/Armadillo$ArmadilloState
       1 net/minecraft/world/entity/animal/armadillo/Armadillo
+      1 net/minecraft/world/entity/Entity/isRemoved
       1 net/minecraft/world/effect/MobEffect$AttributeTemplate
       1 net/minecraft/util/ExtraCodecs$StrictUnboundedMapCodec
       1 net/minecraft/util/ArrayListDeque
@@ -602,7 +590,6 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       1 net/minecraft/advancements/critereon/DefaultBlockInteractionTrigger$TriggerInstance
       1 net/minecraft/advancements/AdvancementNode
       1 net/irisshaders/iris/gui/option/ShadowDistanceOption
-      1 net/geforcemods/securitycraft/entity/SecuritySeaBoat
       1 io/wispforest/owo/itemgroup/OwoItemGroup$SearchOnlyEntries
       1 io/Reader
       1 io/RandomAccessFile
@@ -612,9 +599,6 @@ Forward: 433 swept, 256 clean. Backward: 479 swept, 110 clean.
       1 io/BufferedWriter
       1 com/supermartijn642/fusion/texture/FusionSpriteContents$N$1FusionInterpolationData
       1 com/supermartijn642/fusion/texture/FusionSpriteContents$N
-      1 com/stal111/forbidden
       1 com/mojang/blaze3d/platform/NativeImage
-      1 com/kyanite/deeperdarker/content/entities/DDChestBoat
       1 com/anthonyhilyard/prism/text/DynamicColor
-      1 com/aetherteam/aether/entity/miscellaneous/SkyrootChestBoat
 ```
