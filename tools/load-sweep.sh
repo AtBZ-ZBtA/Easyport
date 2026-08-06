@@ -127,6 +127,23 @@ blamed_ids() {
 blamed_jars() {
   grep -oE "Failed to load mod file [A-Za-z0-9._+-]+\.jar" "$1" 2>/dev/null \
     | sed -E 's/Failed to load mod file (.*)/\1\tfailed to load as a mod file/' | sort -u
+  # A JS coremod calling Forge's ASMAPI. NeoForge has no such class, the failure is a bare
+  # ClassNotFoundException naming nobody, and the jar is found by looking for the coremod that
+  # references it. This is a genuine translation gap rather than a harness one -- coremods are in
+  # scope -- so it is attributed to the mod, not excused.
+  if grep -q "ClassNotFoundException: net.minecraftforge.coremod.api.ASMAPI" "$1" 2>/dev/null; then
+    # Keyed on META-INF/coremods.json plus a .js mentioning ASMAPI. Broadening it to "any jar with
+    # a .js naming ASMAPI" was tried and is *worse*: `unzip -p jar '*.js'` does not glob the way
+    # `unzip -c` does, so the looser test matched nothing and the sweep went from 13 attributed
+    # over five rounds back to 11 over three. Narrow and working beats broad and silent.
+    for j in "$MODS"/*.jar; do
+      if unzip -p "$j" META-INF/coremods.json 2>/dev/null | grep -q . \
+         && unzip -c "$j" '*.js' 2>/dev/null | grep -q "ASMAPI"; then
+        printf '%s\tships a JS coremod calling net.minecraftforge.coremod.api.ASMAPI, which NeoForge does not have\n' \
+               "$(basename "$j")"
+      fi
+    done
+  fi
   # A mod written in Kotlin or Scala names its language provider, and FML names the jar that
   # wanted it. The provider is itself a mod of type LANGPROVIDER, which this project does not
   # translate -- so this is a real and permanent cause, not a transient one.
@@ -265,14 +282,25 @@ while [ "${#POOL[@]}" -gt 0 ] && [ "$round" -lt "$MAX_ROUNDS" ]; do
       stem=$(echo "${b%.jar}" | sed -E 's/[-_].*//' | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9')
       [ -n "$stem" ] && hit=$(awk -F'\t' -v s="$stem" 'tolower($1)==s {print $2; exit}' "$OUT/blamed-$round.tsv")
     fi
-    # Still nothing: the blamed id may belong to a mod nested inside this jar's jarjar, so FML's
-    # jar->id line never mentions it. Ask the descriptor. flightlib is the case -- it needs
-    # kotlinforforge, which round 1 quarantined, and it is shipped inside another jar.
+    # Still nothing: the blamed id may belong to a mod *nested* inside this jar's jarjar, so FML's
+    # jar->id line never mentions it and neither does this jar's own descriptor. flightlib is the
+    # case -- it needs kotlinforforge, which round 1 quarantined, and it ships inside another mod.
+    #
+    # So the outer descriptor is checked first (cheap), then each bundled jar's (not). Only ever
+    # reached for a blamed id nothing else could place, which is a handful per run.
     if [ -z "$hit" ] && [ -s "$OUT/blamed-$round.tsv" ]; then
       while IFS=$'\t' read -r bid breason; do
         [ -z "$bid" ] && continue
         if unzip -p "$j" META-INF/neoforge.mods.toml 2>/dev/null \
              | grep -qE "^\s*modId\s*=\s*\"$bid\""; then hit="$breason"; break; fi
+        for nested in $(unzip -l "$j" 2>/dev/null | grep -oE "META-INF/jarjar/[^ ]+\.jar"); do
+          if unzip -p "$j" "$nested" 2>/dev/null > "$OUT/.nested.jar" \
+             && unzip -p "$OUT/.nested.jar" META-INF/neoforge.mods.toml 2>/dev/null \
+                  | grep -qE "^\s*modId\s*=\s*\"$bid\""; then
+            hit="$breason (bundled inside this jar)"; break
+          fi
+        done
+        [ -n "$hit" ] && break
       done < "$OUT/blamed-$round.tsv"
     fi
     if [ -n "$hit" ]; then printf '%s\tFAILED\t%s\n' "${b%.jar}" "$hit" >> "$OUT/results.tsv"
