@@ -73,11 +73,11 @@ dedupe_mixinextras() {
   [ -f "$art" ] || return 0
   unzip -l "$art" 2>/dev/null | grep -q "jarjar/mixinextras" || return 0
   echo "removing the duplicate MixinExtras bundled in $(basename "$art")"
-  powershell.exe -NoProfile -Command "
-    Add-Type -AssemblyName System.IO.Compression.FileSystem;
-    \$z=[System.IO.Compression.ZipFile]::Open('$(cygpath -w -a "$art" 2>/dev/null || echo "$art")','Update');
-    @(\$z.Entries | Where-Object { \$_.FullName -like '*jarjar/mixinextras*' }) | ForEach-Object { \$_.Delete() };
-    \$z.Dispose()" 2>&1 | head -3
+  # cygpath needs -a: without it the path is *relative*, PowerShell resolves it against its own
+  # working directory, and ZipFile.Open fails silently -- the call did nothing at all for a while.
+  powershell.exe -NoProfile -ExecutionPolicy Bypass \
+      -File "$(cygpath -w -a tools/dedupe-mixinextras.ps1)" \
+      -Jar "$(cygpath -w -a "$art")" 2>&1 | head -3
 }
 
 launch() {
@@ -87,7 +87,12 @@ launch() {
   dedupe_mixinextras
   # stdin closed: Gradle inherits it otherwise and drains whatever list the caller is reading,
   # which looks exactly like an empty input file.
-  ( cd "$ENV_DIR" && ./gradlew.bat runData --no-daemon --console=plain ) > "$1" 2>&1 < /dev/null
+  # -x createMinecraftArtifacts is what makes dedupe_mixinextras stick. runData depends on that
+  # task; stripping the artifact makes it stale, so gradle regenerated it during the same launch,
+  # before FML read it -- the edit was undone in between, every time, which is why the fix worked
+  # by hand and never from in here. Excluding the task leaves the stripped artifact alone.
+  ( cd "$ENV_DIR" && ./gradlew.bat runData -x createMinecraftArtifacts \
+        --no-daemon --console=plain ) > "$1" 2>&1 < /dev/null
 }
 
 # jar -> mod ids, from FML's own discovery line:
@@ -259,6 +264,16 @@ while [ "${#POOL[@]}" -gt 0 ] && [ "$round" -lt "$MAX_ROUNDS" ]; do
     if [ -z "$hit" ]; then
       stem=$(echo "${b%.jar}" | sed -E 's/[-_].*//' | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9')
       [ -n "$stem" ] && hit=$(awk -F'\t' -v s="$stem" 'tolower($1)==s {print $2; exit}' "$OUT/blamed-$round.tsv")
+    fi
+    # Still nothing: the blamed id may belong to a mod nested inside this jar's jarjar, so FML's
+    # jar->id line never mentions it. Ask the descriptor. flightlib is the case -- it needs
+    # kotlinforforge, which round 1 quarantined, and it is shipped inside another jar.
+    if [ -z "$hit" ] && [ -s "$OUT/blamed-$round.tsv" ]; then
+      while IFS=$'\t' read -r bid breason; do
+        [ -z "$bid" ] && continue
+        if unzip -p "$j" META-INF/neoforge.mods.toml 2>/dev/null \
+             | grep -qE "^\s*modId\s*=\s*\"$bid\""; then hit="$breason"; break; fi
+      done < "$OUT/blamed-$round.tsv"
     fi
     if [ -n "$hit" ]; then printf '%s\tFAILED\t%s\n' "${b%.jar}" "$hit" >> "$OUT/results.tsv"
     else NEXT+=("$j"); fi
